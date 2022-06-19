@@ -6,7 +6,7 @@
         {
             "label": "build all",
             "type": "shell",
-            "command": "/usr/bin/cmake --build ./build --config Debug --target all -- -j 8",
+            "command": "/usr/bin/cmake --build ./build --config Debug --target all -- -j8",
             "problemMatcher": [
                 "$gcc"
             ],
@@ -14,6 +14,15 @@
                 "kind": "build",
                 "isDefault": true
             }
-        }
+        },
+        {
+            "label": "rebuild",
+            "type": "shell",
+            "command": "/usr/bin/cmake --build ./build --config Debug --clean-first --target all -- -j8",
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+
     ]
 }
