@@ -8,7 +8,7 @@ template <class T>
 JsonNumericField<T>::JsonNumericField(const char *name, T value, bool optional) : JsonBaseField(name, optional) {
 	this->Value = value;
 
-	static_assert(jsonNumericSupportedTyped<T>, "The function expected a type that matches nodes type");
+	static_assert(jsonNumericSupportedTypes<T>, "The function expected a type that matches nodes type");
 }
 
 template <class T>

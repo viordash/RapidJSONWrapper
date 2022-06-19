@@ -3,7 +3,7 @@
 #include "JsonBaseField.h"
 
 template <typename T>
-constexpr bool jsonNumericSupportedTyped = std::is_same<T, int>::value			 //
+constexpr bool jsonNumericSupportedTypes = std::is_same<T, int>::value			 //
 										   || std::is_same<T, int64_t>::value	 //
 										   || std::is_same<T, int32_t>::value	 //
 										   || std::is_same<T, int16_t>::value	 //
