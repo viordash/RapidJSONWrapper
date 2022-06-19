@@ -1,3 +1,5 @@
-{ BasedOnStyle: LLVM, IndentWidth: 4, TabWidth: 4, UseTab: Always, Language: Cpp, AlignConsecutiveAssignments: false, AlignTrailingComments: true, ColumnLimit: 160,
+{ BasedOnStyle: LLVM, IndentWidth: 4, TabWidth: 4, UseTab: Always, Language: Cpp, AlignConsecutiveAssignments: false, 
+AlignTrailingComments: true, ColumnLimit: 160,
 BreakBeforeTernaryOperators: true, BreakBeforeBinaryOperators: All, SortIncludes: false, 
-NamespaceIndentation: All, IndentCaseLabels: true, AllowShortFunctionsOnASingleLine: None }
+NamespaceIndentation: All, IndentCaseLabels: true, AllowShortFunctionsOnASingleLine: None,
+AlwaysBreakTemplateDeclarations: Yes }
