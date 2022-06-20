@@ -2,3 +2,4 @@
 
 #include "JsonStringField.h"
 #include "JsonNumericField.h"
+#include "JsonObject.h"
