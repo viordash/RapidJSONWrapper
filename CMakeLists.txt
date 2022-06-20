@@ -23,6 +23,10 @@ add_executable(RapidJSONWrapper
 add_executable(JsonStringFieldTestsGroup    
     ${SOURCE_FILES}
     Tests/JsonStringFieldTestsGroup.cpp)
+
+add_executable(JsonNumericFieldTestsGroup    
+    ${SOURCE_FILES}
+    Tests/JsonNumericFieldTestsGroup.cpp)
     
 
 
@@ -33,3 +37,4 @@ include(CPack)
 enable_testing()
 
 add_test(JsonStringFieldTestsGroup JsonStringFieldTestsGroup)
+add_test(JsonNumericFieldTestsGroup JsonNumericFieldTestsGroup)

@@ -32,6 +32,7 @@ TEST(JsonFieldTestsGroup, JsonField_VeryLong_Name_Test) {
 
 	CHECK_EQUAL(strlen(testable.Name), 355);
 	STRCMP_CONTAINS("testString0 testString1 testString2 testString3 testString4 ", testable.Name);
+	return EXIT_SUCCESS;
 }
 
 TEST(JsonFieldTestsGroup, JsonStringField_ReadFromJson_Test) {
@@ -46,6 +47,7 @@ TEST(JsonFieldTestsGroup, JsonStringField_ReadFromJson_Test) {
 	doc.Parse("{\"testString\":null}");
 	CHECK(testable.ReadFromJson(&doc));
 	CHECK_TRUE(testable.IsNull());
+	return EXIT_SUCCESS;
 }
 
 TEST(JsonFieldTestsGroup, JsonStringField_WriteToJson_Test) {
@@ -63,6 +65,7 @@ TEST(JsonFieldTestsGroup, JsonStringField_WriteToJson_Test) {
 	const char *jsonStr = buffer.GetString();
 
 	STRCMP_EQUAL(jsonStr, "{\"testString\":\"1234567\"}");
+	return EXIT_SUCCESS;
 }
 
 TEST(JsonFieldTestsGroup, JsonStringField_And_VeryLong_Value_Test) {
@@ -72,12 +75,15 @@ TEST(JsonFieldTestsGroup, JsonStringField_And_VeryLong_Value_Test) {
 	STRCMP_EQUAL(testable.Value,
 				 "0123456789A 0123456789B 0123456789C 0123456789D 0123456789E 0123456789F 0123456789D 0123456789E 0123456789D 012345678 0123456789D "
 				 "0123456789E9E 0123456789D 0123456789E  0123456789D 0123456789E 0123456789D 0123 0123456789D 012345678 0123456789D 0123456789E");
+
+	return EXIT_SUCCESS;
 }
 
 TEST(JsonFieldTestsGroup, JsonStringField_Size_Test) {
 	JsonStringField testable("testString", "1234567890ABCDEF", 8);
 	CHECK_EQUAL(testable.GetSize(), 8);
 	STRCMP_EQUAL(testable.Value, "1234567");
+	return EXIT_SUCCESS;
 }
 
 TEST(JsonFieldTestsGroup, JsonStringField_Equals_Test) {
@@ -93,6 +99,7 @@ TEST(JsonFieldTestsGroup, JsonStringField_Equals_Test) {
 	JsonStringField testable3("testStringWrong", "test");
 	CHECK_FALSE(testable3.Equals(&testable2));
 	CHECK_FALSE(testable2.Equals(&testable3));
+	return EXIT_SUCCESS;
 }
 
 TEST(JsonFieldTestsGroup, JsonStringField_ReadFromJson_Field_Optional_Test) {
@@ -107,6 +114,7 @@ TEST(JsonFieldTestsGroup, JsonStringField_ReadFromJson_Field_Optional_Test) {
 	CHECK_TRUE(testableWithOptional->ReadFromJson(&doc));
 	CHECK_TRUE(testableWithOptional->IsNull());
 	delete testableWithOptional;
+	return EXIT_SUCCESS;
 }
 
 int main(const int argc, const char *argv[]) {
