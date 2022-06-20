@@ -46,6 +46,7 @@ TEST(JsonFieldTestsGroup, JsonUIntField_WriteToJson_Test) {
 TEST(JsonFieldTestsGroup, JsonUIntField_Size_Test) {
 	JsonNumericField<uint32_t> testable("testUInt0 testUInt1", 0);
 	CHECK_EQUAL(testable.GetSize(), 4);
+	return EXIT_SUCCESS;
 }
 
 TEST(JsonFieldTestsGroup, JsonUIntField_Equals_Test) {
