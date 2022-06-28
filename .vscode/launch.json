@@ -89,7 +89,7 @@
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],
-            "console": "externalTerminal"
+            "console": "integratedTerminal"
         },  
         {
             "name": "(Windows) JsonObjectTestsGroup",
@@ -100,7 +100,7 @@
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],
-            "console": "externalTerminal"
+            "console": "integratedTerminal"
         },
     ]
 }
