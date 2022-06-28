@@ -13,7 +13,7 @@ class JsonObject {
 	virtual ~JsonObject();
 
 	typedef std::vector<JsonBaseField *> TFields;
-	virtual const TFields &GetFields() const = 0;
+	TFields fields;
 
   protected:
   private:
