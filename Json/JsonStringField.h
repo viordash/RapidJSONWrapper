@@ -2,10 +2,10 @@
 
 #include "JsonBaseField.h"
 
-class JsonStringField : public JsonBaseField {
+struct JsonStringField : public JsonBaseField {
   public:
 	JsonStringField(const char *name, const char *value, int size = 256, bool optional = false);
-	~JsonStringField();
+	virtual ~JsonStringField();
 	char *Value;
 
 	int GetSize() override {

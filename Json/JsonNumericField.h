@@ -15,7 +15,7 @@ constexpr bool jsonNumericSupportedTypes = std::is_same<T, int>::value			 //
 										   || std::is_same<T, float>::value;
 
 template <class T>
-class JsonNumericField : public JsonBaseField {
+struct JsonNumericField : public JsonBaseField {
   public:
 	JsonNumericField(const char *name, T value, bool optional = false);
 	T Value;

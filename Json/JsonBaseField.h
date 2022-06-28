@@ -7,20 +7,21 @@ typedef void *RapidJsonDocument;
 #include <stdint.h>
 #include <type_traits>
 
-class JsonBaseField {
+struct JsonBaseField {
   public:
 	JsonBaseField(const char *name, bool optional);
-	virtual ~JsonBaseField();
 	const char *Name;
 
-	JsonBaseField(JsonBaseField &&) = delete;
-	JsonBaseField(const JsonBaseField &) = delete;
+	virtual int GetSize() {
+		return -1;
+	};
 
-	virtual int GetSize() = 0;
+	virtual bool ReadFromJson(RapidJsonValue value) {
+		return false;
+	};
 
-	virtual bool ReadFromJson(RapidJsonValue value) = 0;
-	virtual void WriteToJson(RapidJsonDocument doc) = 0;
-	virtual void CloneFrom(JsonBaseField *otherJsonBaseField) = 0;
+	virtual void WriteToJson(RapidJsonDocument doc){};
+	virtual void CloneFrom(JsonBaseField *otherJsonBaseField){};
 	virtual bool Equals(JsonBaseField *otherJsonBaseField);
 
 	virtual int IsNull() {

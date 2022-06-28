@@ -6,6 +6,7 @@
 
 template <class T>
 JsonNumericField<T>::JsonNumericField(const char *name, T value, bool optional) : JsonBaseField(name, optional) {
+	printf("ctor JsonNumericField: %s\n", name);
 	this->Value = value;
 
 	static_assert(jsonNumericSupportedTypes<T>, "The function expected a type that matches nodes type");

@@ -10,16 +10,16 @@ JsonObject::JsonObject() {
 
 JsonObject::~JsonObject() {
 	printf("~JsonObject()\n");
-	for (const auto &field : fields) {
-		delete field;
-	}
+	//for (const auto &field : fields) {
+	//	delete field;
+	//}
 }
 
 JsonBaseField *JsonObject::SeachFieldByName(const char *name) {
-	for (const auto &field : fields) {
-		if (strcmp(field->Name, name) == 0) {
-			return field;
-		}
-	}
+	//for (const auto &field : fields) {
+	//	if (strcmp(field->Name, name) == 0) {
+	//		return field;
+	//	}
+	//}
 	return NULL;
 }

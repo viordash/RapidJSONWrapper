@@ -10,9 +10,6 @@ JsonBaseField::JsonBaseField(const char *name, bool optional) {
 	this->optional = optional;
 }
 
-JsonBaseField::~JsonBaseField() {
-}
-
 bool JsonBaseField::Equals(JsonBaseField *otherJsonBaseField) {
 	return strcmp(Name, otherJsonBaseField->Name) == 0;
 };

@@ -8,10 +8,12 @@ JsonStringField::JsonStringField(const char *name, const char *value, int size, 
 	Value = new char[size];
 	this->size = size;
 	SetValue(value);
+	printf("ctor JsonStringField: %s\n", name);
 }
 
 JsonStringField::~JsonStringField() {
 	delete[] Value;
+	printf("~JsonStringField: %s\n", Name);
 }
 
 bool JsonStringField::ReadFromJson(RapidJsonValue value) {
