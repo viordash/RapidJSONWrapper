@@ -84,12 +84,12 @@ void JsonNumericField<T>::WriteToJson(RapidJsonDocument doc) {
 }
 
 template <class T>
-void JsonNumericField<T>::CloneFrom(JsonBaseField *otherJsonField) {
-	Value = ((JsonNumericField *)otherJsonField)->Value;
+void JsonNumericField<T>::CloneFrom(JsonBaseField *other) {
+	Value = ((JsonNumericField *)other)->Value;
 }
 
 template <class T>
-bool JsonNumericField<T>::Equals(JsonBaseField *otherJsonField) {
-	return JsonBaseField::Equals(otherJsonField) //
-		   && Value == ((JsonNumericField *)otherJsonField)->Value;
+bool JsonNumericField<T>::Equals(JsonBaseField *other) {
+	return JsonBaseField::Equals(other) //
+		   && Value == ((JsonNumericField *)other)->Value;
 }

@@ -21,9 +21,8 @@ struct JsonBaseField {
 	};
 
 	virtual void WriteToJson(RapidJsonDocument doc){};
-	virtual void CloneFrom(JsonBaseField *otherJsonBaseField){};
-	virtual bool Equals(JsonBaseField *otherJsonBaseField);
-
+	virtual void CloneFrom(JsonBaseField *other){};
+	virtual bool Equals(JsonBaseField *other);
 
   protected:
 	bool optional;

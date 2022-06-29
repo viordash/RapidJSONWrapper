@@ -13,9 +13,9 @@ struct JsonStringField : public JsonBaseField {
 	}
 	bool ReadFromJson(RapidJsonValue value) override;
 	void WriteToJson(RapidJsonDocument doc) override;
-	void CloneFrom(JsonBaseField *otherJsonField) override;
+	void CloneFrom(JsonBaseField *other) override;
 	void SetValue(const char *data);
-	bool Equals(JsonBaseField *otherJsonField) override;
+	bool Equals(JsonBaseField *other) override;
 
   protected:
 	int size;

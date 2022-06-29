@@ -26,9 +26,9 @@ struct JsonNumericField : public JsonBaseField {
 
 	bool ReadFromJson(RapidJsonValue value);
 	void WriteToJson(RapidJsonDocument doc);
-	void CloneFrom(JsonBaseField *otherJsonField);
+	void CloneFrom(JsonBaseField *other);
 	void SetValue(T value) {
 		Value = value;
 	}
-	bool Equals(JsonBaseField *otherJsonField);
+	bool Equals(JsonBaseField *other);
 };

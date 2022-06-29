@@ -9,8 +9,8 @@ JsonBaseField::JsonBaseField(const char *name, bool optional) {
 	this->optional = optional;
 }
 
-bool JsonBaseField::Equals(JsonBaseField *otherJsonBaseField) {
-	return strcmp(Name, otherJsonBaseField->Name) == 0;
+bool JsonBaseField::Equals(JsonBaseField *other) {
+	return strcmp(Name, other->Name) == 0;
 };
 
 bool JsonBaseField::HasMember(RapidJsonValue value) {

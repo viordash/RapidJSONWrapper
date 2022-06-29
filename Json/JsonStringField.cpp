@@ -17,7 +17,7 @@ JsonStringField::~JsonStringField() {
 }
 
 bool JsonStringField::ReadFromJson(RapidJsonValue value) {
-	if (!HasMember(value)) {		
+	if (!HasMember(value)) {
 		SetValue(NULL);
 		return optional;
 	}
@@ -46,8 +46,8 @@ void JsonStringField::WriteToJson(RapidJsonDocument doc) {
 	jsonDoc->AddMember(rapidjson::StringRef(Name), json_val, allocator);
 }
 
-void JsonStringField::CloneFrom(JsonBaseField *otherJsonField) {
-	SetValue(((JsonStringField *)otherJsonField)->Value);
+void JsonStringField::CloneFrom(JsonBaseField *other) {
+	SetValue(((JsonStringField *)other)->Value);
 }
 
 void JsonStringField::SetValue(const char *value) {
@@ -59,7 +59,7 @@ void JsonStringField::SetValue(const char *value) {
 	}
 }
 
-bool JsonStringField::Equals(JsonBaseField *otherJsonField) {
-	return JsonBaseField::Equals(otherJsonField) //
-		   && strcmp(Value, ((JsonStringField *)otherJsonField)->Value) == 0;
+bool JsonStringField::Equals(JsonBaseField *other) {
+	return JsonBaseField::Equals(other) //
+		   && strcmp(Value, ((JsonStringField *)other)->Value) == 0;
 }
