@@ -53,7 +53,6 @@ bool JsonNumericField<T>::ReadFromJson(RapidJsonValue value) {
 	}
 
 	if (jsonVal.IsNull()) {
-		hasValue = false;
 		return true;
 	}
 	return false;

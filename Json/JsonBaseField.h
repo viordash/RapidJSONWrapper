@@ -24,12 +24,8 @@ struct JsonBaseField {
 	virtual void CloneFrom(JsonBaseField *otherJsonBaseField){};
 	virtual bool Equals(JsonBaseField *otherJsonBaseField);
 
-	virtual int IsNull() {
-		return !hasValue;
-	}
 
   protected:
-	bool hasValue;
 	bool optional;
 
 	bool HasMember(RapidJsonValue value);

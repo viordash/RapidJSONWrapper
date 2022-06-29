@@ -6,7 +6,6 @@
 
 JsonBaseField::JsonBaseField(const char *name, bool optional) {
 	Name = name;
-	hasValue = false;
 	this->optional = optional;
 }
 
@@ -17,9 +16,7 @@ bool JsonBaseField::Equals(JsonBaseField *otherJsonBaseField) {
 bool JsonBaseField::HasMember(RapidJsonValue value) {
 	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
 	if (jsonValue->HasMember(Name)) {
-		hasValue = true;
 		return true;
 	}
-	hasValue = false;
 	return false;
 }
