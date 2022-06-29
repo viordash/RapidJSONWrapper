@@ -17,7 +17,8 @@ JsonStringField::~JsonStringField() {
 }
 
 bool JsonStringField::ReadFromJson(RapidJsonValue value) {
-	if (!HasMember(value)) {
+	if (!HasMember(value)) {		
+		SetValue(NULL);
 		return optional;
 	}
 
@@ -30,6 +31,7 @@ bool JsonStringField::ReadFromJson(RapidJsonValue value) {
 	}
 
 	if (jsonVal.IsNull()) {
+		SetValue(NULL);
 		return true;
 	}
 	return false;

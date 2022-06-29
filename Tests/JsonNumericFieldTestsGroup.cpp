@@ -16,11 +16,10 @@ TEST(JsonFieldTestsGroup, JsonUIntField_ReadFromJson_Test) {
 	doc.Parse("{\"testUInt\":153}");
 	CHECK(testable.ReadFromJson(&doc));
 	CHECK_EQUAL(testable.Value, 153);
-	CHECK_FALSE(testable.IsNull());
 
 	doc.Parse("{\"testUInt\":null}");
 	CHECK(testable.ReadFromJson(&doc));
-	CHECK_TRUE(testable.IsNull());
+	CHECK_EQUAL(testable.Value, 0);
 
 	return EXIT_SUCCESS;
 }
@@ -69,10 +68,10 @@ TEST(JsonFieldTestsGroup, JsonUIntField_ReadFromJson_Field_Optional_Test) {
 	CHECK_FALSE(testableFieldMustExists->ReadFromJson(&doc));
 	delete testableFieldMustExists;
 
-	auto testableWithOptional = new JsonNumericField<uint32_t>("testUInt0", 0, true);
+	auto testableWithOptional = new JsonNumericField<uint32_t>("testUInt0", 123, true);
 	doc.Parse("{\"otherField\":153}");
 	CHECK_TRUE(testableWithOptional->ReadFromJson(&doc));
-	CHECK_TRUE(testableWithOptional->IsNull());
+	CHECK_EQUAL(testableWithOptional->Value, 0);
 	delete testableWithOptional;
 
 	return EXIT_SUCCESS;

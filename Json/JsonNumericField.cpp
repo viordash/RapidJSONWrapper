@@ -15,6 +15,7 @@ JsonNumericField<T>::JsonNumericField(const char *name, T value, bool optional) 
 template <class T>
 bool JsonNumericField<T>::ReadFromJson(RapidJsonValue value) {
 	if (!HasMember(value)) {
+		SetValue(0);
 		return optional;
 	}
 	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
@@ -53,6 +54,7 @@ bool JsonNumericField<T>::ReadFromJson(RapidJsonValue value) {
 	}
 
 	if (jsonVal.IsNull()) {
+		SetValue(0);
 		return true;
 	}
 	return false;

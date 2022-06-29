@@ -42,11 +42,10 @@ TEST(JsonFieldTestsGroup, JsonStringField_ReadFromJson_Test) {
 	doc.Parse("{\"testString\":\"User1\"}");
 	CHECK(testable.ReadFromJson(&doc));
 	STRCMP_EQUAL(testable.Value, "User1");
-	CHECK_FALSE(testable.IsNull());
 
 	doc.Parse("{\"testString\":null}");
 	CHECK(testable.ReadFromJson(&doc));
-	CHECK_TRUE(testable.IsNull());
+	STRCMP_EQUAL(testable.Value, "");
 	return EXIT_SUCCESS;
 }
 
@@ -112,7 +111,7 @@ TEST(JsonFieldTestsGroup, JsonStringField_ReadFromJson_Field_Optional_Test) {
 	auto testableWithOptional = new JsonStringField("testString", "1234567", 256, true);
 	doc.Parse("{\"otherField\":\"User1\"}");
 	CHECK_TRUE(testableWithOptional->ReadFromJson(&doc));
-	CHECK_TRUE(testableWithOptional->IsNull());
+	STRCMP_EQUAL(testableWithOptional->Value, "");
 	delete testableWithOptional;
 	return EXIT_SUCCESS;
 }
