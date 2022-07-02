@@ -9,36 +9,61 @@
 #include "Json.h"
 #include "TestsCommon.h"
 
+// class JsonCField;
+// class JsonFieldsContainer {
+//   public:
+// 	std::vector<JsonCField *> Fields;
+
+// 	void Add(JsonCField *field) {
+// 		Fields.push_back(field);
+// 	}
+// };
+
+// class JsonCField {
+//   public:
+// 	const char *Name;
+// 	JsonCField(JsonFieldsContainer *container, const char *name, bool optional) {
+// 		Name = name;
+// 		this->optional = optional;
+// 		printf("JsonCField() name:'%s', optional:%d\n", name, optional);
+// 		container->Add(this);
+// 	}
+
+//   protected:
+// 	bool optional;
+// };
+
+// class JsonCIntField : public JsonCField {
+//   public:
+// 	JsonCIntField(JsonFieldsContainer *container, const char *name, bool optional = false) : JsonCField(container, name, optional) {
+// 		Value = 0;
+// 	}
+
+//   protected:
+// 	int Value;
+// };
+
 class ObjectC : public JsonObject {
   public:
-	const static std::vector<JsonBaseField> fields1;
+	JsonIntField fieldInt1;
+	JsonIntField fieldInt2;
+	JsonIntField fieldInt3;
 
-	ObjectC() {
-		Fields = fieldsOrg;
+	ObjectC()
+		: fieldInt1(this, "field1", false), //
+		  fieldInt2(this, "field2", false), //
+		  fieldInt3(this, "field3", false) {
+		printf("ObjectC()\n");
 	};
 
-	~ObjectC() {
-		printf("~ObjectC()\n");
-	}
-
-  protected:
   private:
-	const static JsonObjectFields fieldsOrg;
-};
-
-const JsonObjectFields ObjectC::fieldsOrg = {
-	JsonStringField("field1", ""),			 //
-	JsonStringField("field2", ""),			 //
-	JsonNumericField<uint32_t>("field3", 0), //
-	JsonNumericField<uint32_t>("field4", 0), //
-	JsonNumericField<int>("field5", 0)		 //
 };
 
 void Test(int count) {
 	ObjectC childObject;
 
-	for (auto &field : childObject.Fields.Items) {
-		std::cout << field.Name << ' ';
+	for (auto &field : childObject.Fields) {
+		std::cout << field->Name << ' ';
 	}
 	std::cout << count << '\n';
 }
@@ -48,19 +73,25 @@ int main(const int argc, const char *argv[]) {
 		Test(i);
 	}
 
-	ObjectC childObjectC;
-	for (auto &field : childObjectC.Fields.Items) {
-		std::cout << field.Name << ' ';
+	ObjectC childObjectC0;
+	for (auto &field : childObjectC0.Fields) {
+		std::cout << field->Name << ' ';
 	}
 	std::cout << '\n';
 
-	auto fff = childObjectC.Fields.Items;
-	fff.push_back(JsonStringField("field10", ""));
+	// ObjectC1 childObjectC1;
+	// for (auto &field : childObjectC1.Fields.Items) {
+	//	std::cout << field.Name << ' ';
+	//}
+	// std::cout << '\n';
 
-	ObjectC childObjectC1;
-	for (auto &field : childObjectC1.Fields.Items) {
-		std::cout << field.Name << ' ';
-	}
+	// auto fff = childObjectC.Fields.Items;
+	// fff.push_back(JsonStringField("field10", ""));
+
+	// ObjectC childObjectC1;
+	// for (auto &field : childObjectC1.Fields.Items) {
+	//	std::cout << field.Name << ' ';
+	//}
 	std::cout << '\n';
 
 	return EXIT_SUCCESS;

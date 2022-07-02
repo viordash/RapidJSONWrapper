@@ -10,6 +10,7 @@ include_directories(rapidjson/include Json)
 
 set(SOURCE_FILES     
     Json/templates.cpp
+    Json/JsonField.cpp
     Json/JsonBaseField.cpp
     Json/JsonStringField.cpp
     Json/JsonNumericField.cpp
