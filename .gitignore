@@ -35,3 +35,5 @@
 *.dat
 
 build/
+
+Garbage/
