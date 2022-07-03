@@ -47,18 +47,37 @@
 class ObjectC : public JsonFieldsContainer {
   public:
 	JsonField<int> field1;
-	JsonField<int> field2;
-	JsonField<int> field3;
-	JsonField<float> field4;
+	JsonField<int8_t> field2;
+	JsonField<int16_t> field3;
+	JsonField<int32_t> field4;
+	JsonField<uint8_t> field5;
+	JsonField<uint16_t> field6;
+	JsonField<uint32_t> field7;
+	JsonField<float> field8;
+	JsonField<double> field9;
+	JsonField<char *> field10;
 
 	ObjectC()
-		:								 //
-		  field1(this, "field1", false), //
-		  field2(this, "field2", false), //
-		  field3(this, "field3", false), //
-		  field4(this, "field4", false)	 //
-	{
+		:						  //
+		  field1(this, "field1"), //
+		  field2(this, "field2"), //
+		  field3(this, "field3"), //
+		  field4(this, "field4"), //
+		  field5(this, "field5"), //
+		  field6(this, "field6"), //
+		  field7(this, "field7"), //
+		  field8(this, "field8"), //
+		  field9(this, "field9"), //
+		  field10(this, "field10") {
 		printf("ObjectC()\n");
+		field1.SetValue(12);
+		field7.SetValue(54);
+		field8.SetValue(78.25);
+		field9.SetValue(278.25);
+
+		char buffer[256];
+		sprintf(buffer, "www 111 fff rrrr 64333333 time: %u", (uint32_t)time(NULL));
+		field10.SetValue(buffer);
 	};
 
   private:
@@ -70,50 +89,12 @@ void Test(int count) {
 	for (auto &field : childObject.Fields) {
 		std::cout << field->Name << ' ';
 	}
+	std::cout << childObject.field10.Value << ' ';
 	std::cout << count << '\n';
 }
 
-// template <class T, int size> // size является non-type параметром шаблона
-// class StaticArray_Base {
-//   protected:
-//	// Параметр size отвечает за длину массива
-//	T m_array[size];
-//
-//   public:
-//	T *getArray() {
-//		return m_array;
-//	}
-//
-//	T &operator[](int index) {
-//		return m_array[index];
-//	}
-//	virtual void print() {
-//		for (int i = 0; i < size; i++)
-//			std::cout << m_array[i] << ' ';
-//		std::cout << "\n";
-//	}
-// };
-
-// template <class T, int size> // size является non-type параметром шаблона
-// class StaticArray : public JsonNumericField<T, size> {
-//   public:
-//	StaticArray() {
-//	}
-// };
-//
-// template <int size> // size является non-type параметром шаблона
-// class StaticArray<double, size> : public JsonNumericField<double, size> {
-//   public:
-//	virtual void print() override {
-//		for (int i = 0; i < size; i++)
-//			std::cout << std::scientific << this->m_array[i] << " ";
-//		// Примечание: Префикс this-> на вышеприведенной строке необходим. Почему? Читайте здесь - https://stackoverflow.com/a/6592617
-//		std::cout << "\n";
-//	}
-// };
-
 int main(const int argc, const char *argv[]) {
-	for (size_t i = 0; i < 1000; i++) {
+	for (size_t i = 0; i < 10000; i++) {
 		Test(i);
 	}
 
@@ -121,6 +102,7 @@ int main(const int argc, const char *argv[]) {
 	for (auto &field : childObjectC0.Fields) {
 		std::cout << field->Name << ' ';
 	}
+	std::cout << childObjectC0.field10.Value << ' ';
 	std::cout << '\n';
 
 	// ObjectC1 childObjectC1;

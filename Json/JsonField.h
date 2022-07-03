@@ -20,7 +20,7 @@ class JsonField : public JsonBaseField {
 	void CloneFrom(JsonBaseField *other) override final {
 		Value = ((JsonField *)other)->Value;
 	}
-	void SetValue(T value) {
+	void SetValue(const T value) {
 		Value = value;
 	}
 	bool Equals(JsonBaseField *other) override final {

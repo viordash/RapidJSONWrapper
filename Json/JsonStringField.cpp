@@ -7,7 +7,7 @@
 bool JsonField<char *>::ReadFromJsonCore(RapidJsonVal value) {
 	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
 	if (jsonValue->IsString()) {
-		SetValue((char *)jsonValue->GetString(), jsonValue->GetStringLength());
+		SetValue(jsonValue->GetString(), jsonValue->GetStringLength());
 		return true;
 	}
 	return false;
@@ -18,7 +18,7 @@ void JsonField<char *>::WriteToJsonCore(RapidJsonVal value) {
 	jsonValue->SetString(Value, GetSize() - 1);
 }
 
-void JsonField<char *>::SetValue(char *value, size_t len) {
+void JsonField<char *>::SetValue(const char *value, size_t len) {
 	if (value != NULL) {
 		if (len == 0) {
 			len = strlen(value);

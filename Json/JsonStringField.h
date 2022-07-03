@@ -27,7 +27,7 @@ class JsonField<char *> : public JsonBaseField {
 	void CloneFrom(JsonBaseField *other) override final {
 		Value = ((JsonField *)other)->Value;
 	}
-	void SetValue(char *value, size_t len = 0);
+	void SetValue(const char *value, size_t len = 0);
 	bool Equals(JsonBaseField *other) override final {
 		return JsonBaseField::Equals(other) //
 			   && strcmp(Value, ((JsonField *)other)->Value) == 0;
