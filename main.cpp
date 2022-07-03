@@ -8,10 +8,10 @@ int main(const int argc, const char *argv[]) {
 
 	// JsonStringField<(const char *)"testName", false, 256> testable1("test");
 
-	JsonStringField testableString("testName", "test1");
-	JsonNumericField<uint32_t> testableUint("testName", 100);
+	// JsonStringField testableString("testName", "test1");
+	// JsonNumericField<uint32_t> testableUint("testName", 100);
 
-	std::cout << testableString.Name << " " << testableString.Value << std::endl;
-	std::cout << testableUint.Name << " " << testableUint.Value << std::endl;
+	// std::cout << testableString.Name << " " << testableString.Value << std::endl;
+	// std::cout << testableUint.Name << " " << testableUint.Value << std::endl;
 	return EXIT_SUCCESS;
 }

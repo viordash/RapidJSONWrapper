@@ -12,7 +12,7 @@ JsonObject::~JsonObject() {
 	printf("~JsonObject()\n");
 }
 
-JsonField *JsonObject::SeachFieldByName(const char *name) {
+JsonBaseField *JsonObject::SeachFieldByName(const char *name) {
 	for (const auto &field : Fields) {
 		if (strcmp(field->Name, name) == 0) {
 			return field;

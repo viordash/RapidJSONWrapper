@@ -1,31 +1,32 @@
 #pragma once
 
-typedef void *RapidJsonValue;
+typedef void *RapidJsonVal;
+typedef void *RapidJsonValues;
 typedef void *RapidJsonDocument;
 
 #include <string.h>
 #include <stdint.h>
-#include <type_traits>
+#include "JsonFieldsContainer.h"
 
-struct JsonBaseField {
+class JsonBaseField {
   public:
-	JsonBaseField(const char *name, bool optional);
 	const char *Name;
 
-	virtual int GetSize() {
-		return -1;
-	};
+	JsonBaseField(JsonFieldsContainer *container, const char *name, bool optional);
+	virtual ~JsonBaseField(){};
+	virtual size_t GetSize() = 0;
 
-	virtual bool ReadFromJson(RapidJsonValue value) {
-		return false;
-	};
+	bool ReadFromJson(RapidJsonValues values);
+	virtual bool ReadFromJsonCore(RapidJsonVal value) = 0;
 
-	virtual void WriteToJson(RapidJsonDocument doc){};
-	virtual void CloneFrom(JsonBaseField *other){};
+	void WriteToJson(RapidJsonDocument doc);
+	virtual void WriteToJsonCore(RapidJsonVal value) = 0;
+	virtual void CloneFrom(JsonBaseField *other) = 0;
 	virtual bool Equals(JsonBaseField *other);
 
   protected:
 	bool optional;
 
-	bool HasMember(RapidJsonValue value);
+	bool HasMember(RapidJsonValues values);
+	virtual void ResetValue() = 0;
 };

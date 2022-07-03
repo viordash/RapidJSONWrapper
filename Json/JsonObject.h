@@ -10,5 +10,5 @@ class JsonObject : public JsonFieldsContainer {
 
   protected:
   private:
-	JsonField *SeachFieldByName(const char *name);
+	JsonBaseField *SeachFieldByName(const char *name);
 };

@@ -2,12 +2,12 @@
 
 #include <vector>
 
-class JsonField;
+class JsonBaseField;
 class JsonFieldsContainer {
   public:
-	std::vector<JsonField *> Fields;
+	std::vector<JsonBaseField *> Fields;
 
-	void Add(JsonField *field) {
+	void Add(JsonBaseField *field) {
 		Fields.push_back(field);
 	}
 };
