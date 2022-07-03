@@ -140,6 +140,7 @@ TEST(JsonFieldTestsGroup, JsonUIntField_Equals_Test) {
 	CHECK_FALSE(testable1.Equals(&testable4));
 	testable4.SetValue(1);
 	CHECK_FALSE(testable1.Equals(&testable4));
+	CHECK_FALSE(testable4.Equals(&testable1));
 
 	JsonField<uint8_t> testable5(&container, "test");
 	CHECK_FALSE(testable1.Equals(&testable5));

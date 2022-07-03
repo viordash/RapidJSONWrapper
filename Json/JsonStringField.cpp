@@ -4,62 +4,50 @@
 #include "rapidjson/stringbuffer.h"
 #include "JsonStringField.h"
 
-JsonStringField::JsonStringField(const char *name, const char *value, int size, bool optional) : JsonBaseField(name, optional) {
-	Value = new char[size];
-	this->size = size;
-	SetValue(value);
-	printf("ctor JsonStringField: %s\n", name);
-}
-
-JsonStringField::~JsonStringField() {
-	delete[] Value;
-	printf("~JsonStringField: %s\n", Name);
-}
-
-bool JsonStringField::ReadFromJson(RapidJsonValue value) {
-	if (!HasMember(value)) {
-		SetValue(NULL);
-		return optional;
-	}
-
+bool JsonField<char *>::ReadFromJsonCore(RapidJsonVal value) {
 	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
-	auto &jsonVal = (*jsonValue)[Name];
-
-	if (jsonVal.IsString()) {
-		SetValue(jsonVal.GetString());
-		return true;
-	}
-
-	if (jsonVal.IsNull()) {
-		SetValue(NULL);
+	if (jsonValue->IsString()) {
+		SetValue((char *)jsonValue->GetString(), jsonValue->GetStringLength());
 		return true;
 	}
 	return false;
 }
 
-void JsonStringField::WriteToJson(RapidJsonDocument doc) {
-	rapidjson::Value json_val;
-	rapidjson::Document *jsonDoc = (rapidjson::Document *)doc;
-	rapidjson::Document::AllocatorType &allocator = jsonDoc->GetAllocator();
-
-	json_val.SetString(rapidjson::StringRef(Value));
-	jsonDoc->AddMember(rapidjson::StringRef(Name), json_val, allocator);
+void JsonField<char *>::WriteToJsonCore(RapidJsonVal value) {
+	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
+	jsonValue->SetString(Value, GetSize() - 1);
 }
 
-void JsonStringField::CloneFrom(JsonBaseField *other) {
-	SetValue(((JsonStringField *)other)->Value);
-}
-
-void JsonStringField::SetValue(const char *value) {
-	if (value == NULL) {
-		Value[0] = 0;
+void JsonField<char *>::SetValue(char *value, size_t len) {
+	if (value != NULL) {
+		if (len == 0) {
+			len = strlen(value);
+		}
 	} else {
-		strncpy(Value, value, GetSize() - 1);
-		Value[GetSize() - 1] = 0;
+		len = 0;
 	}
-}
+	if (len >= maxSize) {
+		len = maxSize - 1;
+	}
 
-bool JsonStringField::Equals(JsonBaseField *other) {
-	return JsonBaseField::Equals(other) //
-		   && strcmp(Value, ((JsonStringField *)other)->Value) == 0;
+	if (len == size - 1) {
+		if (value != NULL) {
+			memcpy(Value, value, len);
+		}
+		Value[len] = 0;
+		return;
+	}
+
+	if (Value != NULL) {
+		char *t = Value;
+		Value = NULL;
+		delete[] t;
+	}
+
+	size = len + 1;
+	Value = new char[size];
+	if (value != NULL) {
+		memcpy(Value, value, len);
+	}
+	Value[len] = 0;
 }

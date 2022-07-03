@@ -1,11 +1,5 @@
 #pragma once
 
-typedef void *RapidJsonVal;
-typedef void *RapidJsonValues;
-typedef void *RapidJsonDocument;
-
-#include <string.h>
-#include <stdint.h>
 #include "JsonBaseField.h"
 
 template <class T>

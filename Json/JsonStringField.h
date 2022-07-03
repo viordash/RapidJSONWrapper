@@ -1,22 +1,43 @@
 #pragma once
 
-#include "JsonBaseField.h"
+#include "JsonField.h"
 
-struct JsonStringField : public JsonBaseField {
+template <>
+class JsonField<char *> : public JsonBaseField {
   public:
-	JsonStringField(const char *name, const char *value, int size = 256, bool optional = false);
-	virtual ~JsonStringField();
 	char *Value;
 
-	int GetSize() override {
+	JsonField(JsonFieldsContainer *container, const char *name, size_t maxSize = 8192, bool optional = false) : JsonBaseField(container, name, optional) {
+		this->maxSize = maxSize;
+		Value = NULL;
+		size = 0;
+		ResetValue();
+	}
+
+	~JsonField() {
+		delete[] Value;
+	}
+
+	size_t GetSize() override final {
 		return size;
 	}
-	bool ReadFromJson(RapidJsonValue value) override;
-	void WriteToJson(RapidJsonDocument doc) override;
-	void CloneFrom(JsonBaseField *other) override;
-	void SetValue(const char *data);
-	bool Equals(JsonBaseField *other) override;
+
+	bool ReadFromJsonCore(RapidJsonVal value) override final;
+	void WriteToJsonCore(RapidJsonVal value) override final;
+	void CloneFrom(JsonBaseField *other) override final {
+		Value = ((JsonField *)other)->Value;
+	}
+	void SetValue(char *value, size_t len = 0);
+	bool Equals(JsonBaseField *other) override final {
+		return JsonBaseField::Equals(other) //
+			   && strcmp(Value, ((JsonField *)other)->Value) == 0;
+	}
+
+	void ResetValue() override {
+		SetValue(NULL);
+	}
 
   protected:
-	int size;
+	size_t maxSize;
+	size_t size;
 };
