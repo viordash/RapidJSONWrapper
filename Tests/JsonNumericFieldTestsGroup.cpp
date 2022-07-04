@@ -367,12 +367,12 @@ TEST(JsonFieldTestsGroup, JsonBoolField_Equals_Test) {
 TEST(JsonFieldTestsGroup, ReadFromJson_Field_Optional_Test) {
 	JsonFieldsContainer container;
 	rapidjson::Document doc;
-	auto testableFieldMustExists = new JsonField<uint32_t>(&container, "testUInt0");
+	auto testableFieldMustExists = new JsonField<uint32_t, false>(&container, "testUInt0");
 	doc.Parse("{\"otherField\":153}");
 	CHECK_FALSE(testableFieldMustExists->ReadFromJson(&doc));
 	delete testableFieldMustExists;
 
-	auto testableWithOptional = new JsonField<uint32_t>(&container, "testUInt0", true);
+	auto testableWithOptional = new JsonField<uint32_t, true>(&container, "testUInt0");
 	testableWithOptional->SetValue(123);
 	doc.Parse("{\"otherField\":153}");
 	CHECK_TRUE(testableWithOptional->ReadFromJson(&doc));

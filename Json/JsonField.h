@@ -2,12 +2,12 @@
 
 #include "JsonBaseField.h"
 
-template <class T>
+template <class T, bool optional = false>
 class JsonField : public JsonBaseField {
   public:
 	T Value;
 
-	JsonField(JsonFieldsContainer *container, const char *name, bool optional = false) : JsonBaseField(container, name, optional) {
+	JsonField(JsonFieldsContainer *container, const char *name) : JsonBaseField(container, name, optional) {
 		ResetValue();
 	}
 

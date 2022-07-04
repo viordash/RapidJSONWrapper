@@ -115,7 +115,7 @@ TEST(JsonFieldTestsGroup, JsonStringField_ReadFromJson_Field_Optional_Test) {
 	CHECK_FALSE(testableFieldMustExists->ReadFromJson(&doc));
 	delete testableFieldMustExists;
 
-	auto testableWithOptional = new JsonField<char *>(&container, "testString", 8192, true);
+	auto testableWithOptional = new JsonField<char *, true>(&container, "testString", 8192);
 	doc.Parse("{\"otherField\":\"User1\"}");
 	CHECK_TRUE(testableWithOptional->ReadFromJson(&doc));
 	STRCMP_EQUAL(testableWithOptional->Value, "");

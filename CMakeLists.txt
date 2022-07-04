@@ -11,7 +11,6 @@ include_directories(rapidjson/include Json)
 set(SOURCE_FILES     
     Json/JsonField.cpp
     Json/JsonBaseField.cpp
-    Json/JsonStringField.cpp
     Json/JsonObject.cpp
 )
 

@@ -4,180 +4,219 @@
 #include "rapidjson/stringbuffer.h"
 #include "JsonField.h"
 
-template <>
-bool JsonField<bool>::ReadFromJsonCore(RapidJsonVal value) {
-	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
-	if (jsonValue->IsBool()) {
-		SetValue(jsonValue->GetBool());
-		return true;
+#define ReadFromJsonCore_T(type, value)                                                                                                                        \
+	{                                                                                                                                                          \
+		rapidjson::Value *jsonValue = (rapidjson::Value *)value;                                                                                               \
+		if (jsonValue->Is##type()) {                                                                                                                           \
+			SetValue(jsonValue->Get##type());                                                                                                                  \
+			return true;                                                                                                                                       \
+		}                                                                                                                                                      \
+		return false;                                                                                                                                          \
 	}
-	return false;
+
+template <>
+bool JsonField<bool, true>::ReadFromJsonCore(RapidJsonVal value) {
+	ReadFromJsonCore_T(Bool, value);
+}
+template <>
+bool JsonField<bool, false>::ReadFromJsonCore(RapidJsonVal value) {
+	ReadFromJsonCore_T(Bool, value);
 }
 
 template <>
-bool JsonField<int>::ReadFromJsonCore(RapidJsonVal value) {
-	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
-	if (jsonValue->IsInt()) {
-		SetValue(jsonValue->GetInt());
-		return true;
-	}
-	return false;
+bool JsonField<int, true>::ReadFromJsonCore(RapidJsonVal value) {
+	ReadFromJsonCore_T(Int, value);
+}
+template <>
+bool JsonField<int, false>::ReadFromJsonCore(RapidJsonVal value) {
+	ReadFromJsonCore_T(Int, value);
 }
 
 template <>
-bool JsonField<int8_t>::ReadFromJsonCore(RapidJsonVal value) {
-	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
-	if (jsonValue->IsInt()) {
-		SetValue(jsonValue->GetInt());
-		return true;
-	}
-	return false;
+bool JsonField<int8_t, true>::ReadFromJsonCore(RapidJsonVal value) {
+	ReadFromJsonCore_T(Int, value);
+}
+template <>
+bool JsonField<int8_t, false>::ReadFromJsonCore(RapidJsonVal value) {
+	ReadFromJsonCore_T(Int, value);
 }
 
 template <>
-bool JsonField<int16_t>::ReadFromJsonCore(RapidJsonVal value) {
-	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
-	if (jsonValue->IsInt()) {
-		SetValue(jsonValue->GetInt());
-		return true;
-	}
-	return false;
+bool JsonField<int16_t, true>::ReadFromJsonCore(RapidJsonVal value) {
+	ReadFromJsonCore_T(Int, value);
+}
+template <>
+bool JsonField<int16_t, false>::ReadFromJsonCore(RapidJsonVal value) {
+	ReadFromJsonCore_T(Int, value);
 }
 
 template <>
-bool JsonField<int64_t>::ReadFromJsonCore(RapidJsonVal value) {
-	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
-	if (jsonValue->IsInt64()) {
-		SetValue(jsonValue->GetInt64());
-		return true;
-	}
-	return false;
+bool JsonField<int64_t, true>::ReadFromJsonCore(RapidJsonVal value) {
+	ReadFromJsonCore_T(Int64, value);
+}
+template <>
+bool JsonField<int64_t, false>::ReadFromJsonCore(RapidJsonVal value) {
+	ReadFromJsonCore_T(Int64, value);
 }
 
 template <>
-bool JsonField<unsigned int>::ReadFromJsonCore(RapidJsonVal value) {
-	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
-	if (jsonValue->IsUint()) {
-		SetValue(jsonValue->GetUint());
-		return true;
-	}
-	return false;
+bool JsonField<unsigned int, true>::ReadFromJsonCore(RapidJsonVal value) {
+	ReadFromJsonCore_T(Uint, value);
+}
+template <>
+bool JsonField<unsigned int, false>::ReadFromJsonCore(RapidJsonVal value) {
+	ReadFromJsonCore_T(Uint, value);
 }
 
 template <>
-bool JsonField<uint8_t>::ReadFromJsonCore(RapidJsonVal value) {
-	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
-	if (jsonValue->IsUint()) {
-		SetValue(jsonValue->GetUint());
-		return true;
-	}
-	return false;
+bool JsonField<uint8_t, true>::ReadFromJsonCore(RapidJsonVal value) {
+	ReadFromJsonCore_T(Uint, value);
+}
+template <>
+bool JsonField<uint8_t, false>::ReadFromJsonCore(RapidJsonVal value) {
+	ReadFromJsonCore_T(Uint, value);
 }
 
 template <>
-bool JsonField<uint16_t>::ReadFromJsonCore(RapidJsonVal value) {
-	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
-	if (jsonValue->IsUint()) {
-		SetValue(jsonValue->GetUint());
-		return true;
-	}
-	return false;
+bool JsonField<uint16_t, true>::ReadFromJsonCore(RapidJsonVal value) {
+	ReadFromJsonCore_T(Uint, value);
+}
+template <>
+bool JsonField<uint16_t, false>::ReadFromJsonCore(RapidJsonVal value) {
+	ReadFromJsonCore_T(Uint, value);
 }
 
 template <>
-bool JsonField<uint64_t>::ReadFromJsonCore(RapidJsonVal value) {
-	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
-	if (jsonValue->IsUint64()) {
-		SetValue(jsonValue->GetUint64());
-		return true;
-	}
-	return false;
+bool JsonField<uint64_t, true>::ReadFromJsonCore(RapidJsonVal value) {
+	ReadFromJsonCore_T(Uint64, value);
+}
+template <>
+bool JsonField<uint64_t, false>::ReadFromJsonCore(RapidJsonVal value) {
+	ReadFromJsonCore_T(Uint64, value);
 }
 
 template <>
-bool JsonField<float>::ReadFromJsonCore(RapidJsonVal value) {
-	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
-	if (jsonValue->IsFloat()) {
-		SetValue(jsonValue->GetFloat());
-		return true;
-	}
-	return false;
+bool JsonField<float, true>::ReadFromJsonCore(RapidJsonVal value) {
+	ReadFromJsonCore_T(Float, value);
+}
+template <>
+bool JsonField<float, false>::ReadFromJsonCore(RapidJsonVal value) {
+	ReadFromJsonCore_T(Float, value);
 }
 
 template <>
-bool JsonField<double>::ReadFromJsonCore(RapidJsonVal value) {
-	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
-	if (jsonValue->IsDouble()) {
-		SetValue(jsonValue->GetDouble());
-		return true;
-	}
-	return false;
+bool JsonField<double, true>::ReadFromJsonCore(RapidJsonVal value) {
+	ReadFromJsonCore_T(Double, value);
+}
+template <>
+bool JsonField<double, false>::ReadFromJsonCore(RapidJsonVal value) {
+	ReadFromJsonCore_T(Double, value);
 }
 /*
 
 */
+
+#define WriteToJsonCore_T(type, value)                                                                                                                         \
+	{                                                                                                                                                          \
+		rapidjson::Value *jsonValue = (rapidjson::Value *)value;                                                                                               \
+		jsonValue->Set##type(Value);                                                                                                                           \
+	}
+
 template <>
-void JsonField<bool>::WriteToJsonCore(RapidJsonVal value) {
-	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
-	jsonValue->SetBool(Value);
+void JsonField<bool, true>::WriteToJsonCore(RapidJsonVal value) {
+	WriteToJsonCore_T(Bool, value);
+}
+template <>
+void JsonField<bool, false>::WriteToJsonCore(RapidJsonVal value) {
+	WriteToJsonCore_T(Bool, value);
 }
 
 template <>
-void JsonField<int>::WriteToJsonCore(RapidJsonVal value) {
-	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
-	jsonValue->SetInt(Value);
+void JsonField<int, true>::WriteToJsonCore(RapidJsonVal value) {
+	WriteToJsonCore_T(Int, value);
+}
+template <>
+void JsonField<int, false>::WriteToJsonCore(RapidJsonVal value) {
+	WriteToJsonCore_T(Int, value);
 }
 
 template <>
-void JsonField<int8_t>::WriteToJsonCore(RapidJsonVal value) {
-	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
-	jsonValue->SetInt(Value);
+void JsonField<int8_t, true>::WriteToJsonCore(RapidJsonVal value) {
+	WriteToJsonCore_T(Int, value);
+}
+template <>
+void JsonField<int8_t, false>::WriteToJsonCore(RapidJsonVal value) {
+	WriteToJsonCore_T(Int, value);
 }
 
 template <>
-void JsonField<int16_t>::WriteToJsonCore(RapidJsonVal value) {
-	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
-	jsonValue->SetInt(Value);
+void JsonField<int16_t, true>::WriteToJsonCore(RapidJsonVal value) {
+	WriteToJsonCore_T(Int, value);
+}
+template <>
+void JsonField<int16_t, false>::WriteToJsonCore(RapidJsonVal value) {
+	WriteToJsonCore_T(Int, value);
 }
 
 template <>
-void JsonField<int64_t>::WriteToJsonCore(RapidJsonVal value) {
-	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
-	jsonValue->SetInt64(Value);
+void JsonField<int64_t, true>::WriteToJsonCore(RapidJsonVal value) {
+	WriteToJsonCore_T(Int64, value);
+}
+template <>
+void JsonField<int64_t, false>::WriteToJsonCore(RapidJsonVal value) {
+	WriteToJsonCore_T(Int64, value);
 }
 
 template <>
-void JsonField<unsigned int>::WriteToJsonCore(RapidJsonVal value) {
-	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
-	jsonValue->SetUint(Value);
+void JsonField<unsigned int, true>::WriteToJsonCore(RapidJsonVal value) {
+	WriteToJsonCore_T(Uint, value);
+}
+template <>
+void JsonField<unsigned int, false>::WriteToJsonCore(RapidJsonVal value) {
+	WriteToJsonCore_T(Uint, value);
 }
 
 template <>
-void JsonField<uint8_t>::WriteToJsonCore(RapidJsonVal value) {
-	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
-	jsonValue->SetUint(Value);
+void JsonField<uint8_t, true>::WriteToJsonCore(RapidJsonVal value) {
+	WriteToJsonCore_T(Uint, value);
+}
+template <>
+void JsonField<uint8_t, false>::WriteToJsonCore(RapidJsonVal value) {
+	WriteToJsonCore_T(Uint, value);
 }
 
 template <>
-void JsonField<uint16_t>::WriteToJsonCore(RapidJsonVal value) {
-	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
-	jsonValue->SetUint(Value);
+void JsonField<uint16_t, true>::WriteToJsonCore(RapidJsonVal value) {
+	WriteToJsonCore_T(Uint, value);
+}
+template <>
+void JsonField<uint16_t, false>::WriteToJsonCore(RapidJsonVal value) {
+	WriteToJsonCore_T(Uint, value);
 }
 
 template <>
-void JsonField<uint64_t>::WriteToJsonCore(RapidJsonVal value) {
-	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
-	jsonValue->SetUint64(Value);
+void JsonField<uint64_t, true>::WriteToJsonCore(RapidJsonVal value) {
+	WriteToJsonCore_T(Uint64, value);
+}
+template <>
+void JsonField<uint64_t, false>::WriteToJsonCore(RapidJsonVal value) {
+	WriteToJsonCore_T(Uint64, value);
 }
 
 template <>
-void JsonField<float>::WriteToJsonCore(RapidJsonVal value) {
-	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
-	jsonValue->SetFloat(Value);
+void JsonField<float, true>::WriteToJsonCore(RapidJsonVal value) {
+	WriteToJsonCore_T(Float, value);
+}
+template <>
+void JsonField<float, false>::WriteToJsonCore(RapidJsonVal value) {
+	WriteToJsonCore_T(Float, value);
 }
 
 template <>
-void JsonField<double>::WriteToJsonCore(RapidJsonVal value) {
-	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
-	jsonValue->SetDouble(Value);
+void JsonField<double, true>::WriteToJsonCore(RapidJsonVal value) {
+	WriteToJsonCore_T(Double, value);
+}
+template <>
+void JsonField<double, false>::WriteToJsonCore(RapidJsonVal value) {
+	WriteToJsonCore_T(Double, value);
 }
