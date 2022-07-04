@@ -3,11 +3,11 @@
 #include "JsonField.h"
 
 template <bool optional>
-class JsonField<char *, optional> : public JsonBaseField {
+class JsonField<char *, optional> : public JsonOptionalField<optional> {
   public:
 	char *Value;
 
-	JsonField(JsonFieldsContainer *container, const char *name, size_t maxSize = 8192) : JsonBaseField(container, name, optional) {
+	JsonField(JsonFieldsContainer *container, const char *name, size_t maxSize = 8192) : JsonOptionalField<optional>(container, name) {
 		this->maxSize = maxSize;
 		Value = NULL;
 		size = 0;

@@ -3,11 +3,11 @@
 #include "JsonBaseField.h"
 
 template <class T, bool optional = false>
-class JsonField : public JsonBaseField {
+class JsonField : public JsonOptionalField<optional> {
   public:
 	T Value;
 
-	JsonField(JsonFieldsContainer *container, const char *name) : JsonBaseField(container, name, optional) {
+	JsonField(JsonFieldsContainer *container, const char *name) : JsonOptionalField<optional>(container, name) {
 		ResetValue();
 	}
 
