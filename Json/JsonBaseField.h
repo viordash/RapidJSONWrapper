@@ -35,24 +35,7 @@ class JsonOptionalField : public JsonBaseField {
 	}
 	virtual ~JsonOptionalField(){};
 
-	bool ReadFromJson(RapidJsonValues values) override final {
-		if (!HasMember(values)) {
-			this->ResetValue();
-			return optional;
-		}
-		rapidjson::Value *jsonValue = (rapidjson::Value *)values;
-		auto &jsonVal = (*jsonValue)[Name];
-
-		if (this->ReadFromJsonCore(&jsonVal)) {
-			return true;
-		}
-
-		if (jsonVal.IsNull()) {
-			this->ResetValue();
-			return true;
-		}
-		return false;
-	}
+	bool ReadFromJson(RapidJsonValues values) override final;
 	virtual bool ReadFromJsonCore(RapidJsonVal value) = 0;
 
   protected:

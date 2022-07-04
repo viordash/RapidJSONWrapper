@@ -30,3 +30,30 @@ void JsonBaseField::WriteToJson(RapidJsonDocument doc) {
 
 	jsonDoc->AddMember(rapidjson::StringRef(Name), jsonVal, allocator);
 }
+
+#define ReadFromJson_T(values, optional)                                                                                                                       \
+	{                                                                                                                                                          \
+		if (!HasMember(values)) {                                                                                                                              \
+			this->ResetValue();                                                                                                                                \
+			return optional;                                                                                                                                   \
+		}                                                                                                                                                      \
+		rapidjson::Value *jsonValue = (rapidjson::Value *)values;                                                                                              \
+		auto &jsonVal = (*jsonValue)[Name];                                                                                                                    \
+		if (this->ReadFromJsonCore(&jsonVal)) {                                                                                                                \
+			return true;                                                                                                                                       \
+		}                                                                                                                                                      \
+		if (jsonVal.IsNull()) {                                                                                                                                \
+			this->ResetValue();                                                                                                                                \
+			return true;                                                                                                                                       \
+		}                                                                                                                                                      \
+		return false;                                                                                                                                          \
+	}
+
+template <>
+bool JsonOptionalField<true>::ReadFromJson(RapidJsonValues values) {
+	ReadFromJson_T(values, true);
+}
+template <>
+bool JsonOptionalField<false>::ReadFromJson(RapidJsonValues values) {
+	ReadFromJson_T(values, false);
+}
