@@ -9,8 +9,9 @@ include(CTest)
 include_directories(rapidjson/include Json)
 
 set(SOURCE_FILES     
-    Json/JsonField.cpp
     Json/JsonBaseField.cpp
+    Json/JsonField.cpp
+    Json/JsonStringField.cpp
     Json/JsonObject.cpp
 )
 
