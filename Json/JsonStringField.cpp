@@ -4,7 +4,7 @@
 #include "rapidjson/stringbuffer.h"
 #include "JsonStringField.h"
 
-#define ReadFromJsonCore_T(value)                                                                                                                              \
+#define TryParseInternal_T(value)                                                                                                                              \
 	{                                                                                                                                                          \
 		rapidjson::Value *jsonValue = (rapidjson::Value *)value;                                                                                               \
 		if (jsonValue->IsString()) {                                                                                                                           \
@@ -15,24 +15,24 @@
 	}
 
 template <>
-bool JsonField<char *, true>::ReadFromJsonCore(RapidJsonVal value) {
-	ReadFromJsonCore_T(value);
+bool JsonField<char *, true>::TryParseInternal(RapidJsonVal value) {
+	TryParseInternal_T(value);
 }
 template <>
-bool JsonField<char *, false>::ReadFromJsonCore(RapidJsonVal value) {
-	ReadFromJsonCore_T(value);
+bool JsonField<char *, false>::TryParseInternal(RapidJsonVal value) {
+	TryParseInternal_T(value);
 }
 /*
 
 */
 
 template <>
-void JsonField<char *, true>::WriteToJsonCore(RapidJsonVal value) {
+void JsonField<char *, true>::WriteToInternal(RapidJsonVal value) {
 	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
 	jsonValue->SetString(Value, GetSize() - 1);
 }
 template <>
-void JsonField<char *, false>::WriteToJsonCore(RapidJsonVal value) {
+void JsonField<char *, false>::WriteToInternal(RapidJsonVal value) {
 	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
 	jsonValue->SetString(Value, GetSize() - 1);
 }

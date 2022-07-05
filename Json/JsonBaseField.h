@@ -16,10 +16,10 @@ class JsonBaseField {
 	virtual ~JsonBaseField(){};
 	virtual size_t GetSize() = 0;
 
-	virtual bool ReadFromJson(RapidJsonValues values) = 0;
+	virtual bool TryParse(RapidJsonValues values) = 0;
 
-	void WriteToJson(RapidJsonDocument doc);
-	virtual void WriteToJsonCore(RapidJsonVal value) = 0;
+	void WriteTo(RapidJsonDocument doc);
+	virtual void WriteToInternal(RapidJsonVal value) = 0;
 	virtual void CloneFrom(JsonBaseField *other) = 0;
 	virtual bool Equals(JsonBaseField *other);
 
@@ -35,8 +35,8 @@ class JsonOptionalField : public JsonBaseField {
 	}
 	virtual ~JsonOptionalField(){};
 
-	bool ReadFromJson(RapidJsonValues values) override final;
-	virtual bool ReadFromJsonCore(RapidJsonVal value) = 0;
+	bool TryParse(RapidJsonValues values) override final;
+	virtual bool TryParseInternal(RapidJsonVal value) = 0;
 
   protected:
 };

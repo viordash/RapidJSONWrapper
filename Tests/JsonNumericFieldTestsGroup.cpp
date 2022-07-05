@@ -26,7 +26,7 @@ TEST(JsonFieldTestsGroup, JsonUIntField_SetValue_Test) {
 	CHECK_EQUAL(testable4.Value, 255);
 	return EXIT_SUCCESS;
 }
-TEST(JsonFieldTestsGroup, JsonUIntField_ReadFromJson_Test) {
+TEST(JsonFieldTestsGroup, JsonUIntField_TryParse_Test) {
 	JsonFieldsContainer container;
 	JsonField<unsigned int> testable1(&container, "test");
 	JsonField<uint32_t> testable2(&container, "test");
@@ -35,20 +35,20 @@ TEST(JsonFieldTestsGroup, JsonUIntField_ReadFromJson_Test) {
 
 	rapidjson::Document doc;
 	doc.Parse("{\"test\":153000}");
-	CHECK(testable1.ReadFromJson(&doc));
-	CHECK(testable2.ReadFromJson(&doc));
-	CHECK(testable3.ReadFromJson(&doc));
-	CHECK(testable4.ReadFromJson(&doc));
+	CHECK(testable1.TryParse(&doc));
+	CHECK(testable2.TryParse(&doc));
+	CHECK(testable3.TryParse(&doc));
+	CHECK(testable4.TryParse(&doc));
 	CHECK_EQUAL(testable1.Value, 153000);
 	CHECK_EQUAL(testable2.Value, 153000);
 	CHECK_EQUAL(testable3.Value, 21928);
 	CHECK_EQUAL(testable4.Value, 168);
 
 	doc.Parse("{\"test\":null}");
-	CHECK(testable1.ReadFromJson(&doc));
-	CHECK(testable2.ReadFromJson(&doc));
-	CHECK(testable3.ReadFromJson(&doc));
-	CHECK(testable4.ReadFromJson(&doc));
+	CHECK(testable1.TryParse(&doc));
+	CHECK(testable2.TryParse(&doc));
+	CHECK(testable3.TryParse(&doc));
+	CHECK(testable4.TryParse(&doc));
 	CHECK_EQUAL(testable1.Value, 0);
 	CHECK_EQUAL(testable2.Value, 0);
 	CHECK_EQUAL(testable3.Value, 0);
@@ -56,7 +56,7 @@ TEST(JsonFieldTestsGroup, JsonUIntField_ReadFromJson_Test) {
 	return EXIT_SUCCESS;
 }
 
-TEST(JsonFieldTestsGroup, JsonUIntField_WriteToJson_Test) {
+TEST(JsonFieldTestsGroup, JsonUIntField_WriteTo_Test) {
 	JsonFieldsContainer container;
 	JsonField<unsigned int> testable1(&container, "test");
 	JsonField<uint32_t> testable2(&container, "test");
@@ -70,7 +70,7 @@ TEST(JsonFieldTestsGroup, JsonUIntField_WriteToJson_Test) {
 	{
 		rapidjson::Document doc;
 		doc.SetObject();
-		testable1.WriteToJson(&doc);
+		testable1.WriteTo(&doc);
 		rapidjson::StringBuffer buffer;
 		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 		doc.Accept(writer);
@@ -79,7 +79,7 @@ TEST(JsonFieldTestsGroup, JsonUIntField_WriteToJson_Test) {
 	{
 		rapidjson::Document doc;
 		doc.SetObject();
-		testable2.WriteToJson(&doc);
+		testable2.WriteTo(&doc);
 		rapidjson::StringBuffer buffer;
 		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 		doc.Accept(writer);
@@ -88,7 +88,7 @@ TEST(JsonFieldTestsGroup, JsonUIntField_WriteToJson_Test) {
 	{
 		rapidjson::Document doc;
 		doc.SetObject();
-		testable3.WriteToJson(&doc);
+		testable3.WriteTo(&doc);
 		rapidjson::StringBuffer buffer;
 		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 		doc.Accept(writer);
@@ -97,7 +97,7 @@ TEST(JsonFieldTestsGroup, JsonUIntField_WriteToJson_Test) {
 	{
 		rapidjson::Document doc;
 		doc.SetObject();
-		testable4.WriteToJson(&doc);
+		testable4.WriteTo(&doc);
 		rapidjson::StringBuffer buffer;
 		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 		doc.Accept(writer);
@@ -167,7 +167,7 @@ TEST(JsonFieldTestsGroup, JsonIntField_SetValue_Test) {
 	CHECK_EQUAL(testable4.Value, -1);
 	return EXIT_SUCCESS;
 }
-TEST(JsonFieldTestsGroup, JsonIntField_ReadFromJson_Test) {
+TEST(JsonFieldTestsGroup, JsonIntField_TryParse_Test) {
 	JsonFieldsContainer container;
 	JsonField<int> testable1(&container, "test");
 	JsonField<int32_t> testable2(&container, "test");
@@ -176,20 +176,20 @@ TEST(JsonFieldTestsGroup, JsonIntField_ReadFromJson_Test) {
 
 	rapidjson::Document doc;
 	doc.Parse("{\"test\":153000}");
-	CHECK(testable1.ReadFromJson(&doc));
-	CHECK(testable2.ReadFromJson(&doc));
-	CHECK(testable3.ReadFromJson(&doc));
-	CHECK(testable4.ReadFromJson(&doc));
+	CHECK(testable1.TryParse(&doc));
+	CHECK(testable2.TryParse(&doc));
+	CHECK(testable3.TryParse(&doc));
+	CHECK(testable4.TryParse(&doc));
 	CHECK_EQUAL(testable1.Value, 153000);
 	CHECK_EQUAL(testable2.Value, 153000);
 	CHECK_EQUAL(testable3.Value, 21928);
 	CHECK_EQUAL(testable4.Value, -88);
 
 	doc.Parse("{\"test\":null}");
-	CHECK(testable1.ReadFromJson(&doc));
-	CHECK(testable2.ReadFromJson(&doc));
-	CHECK(testable3.ReadFromJson(&doc));
-	CHECK(testable4.ReadFromJson(&doc));
+	CHECK(testable1.TryParse(&doc));
+	CHECK(testable2.TryParse(&doc));
+	CHECK(testable3.TryParse(&doc));
+	CHECK(testable4.TryParse(&doc));
 	CHECK_EQUAL(testable1.Value, 0);
 	CHECK_EQUAL(testable2.Value, 0);
 	CHECK_EQUAL(testable3.Value, 0);
@@ -197,7 +197,7 @@ TEST(JsonFieldTestsGroup, JsonIntField_ReadFromJson_Test) {
 	return EXIT_SUCCESS;
 }
 
-TEST(JsonFieldTestsGroup, JsonIntField_WriteToJson_Test) {
+TEST(JsonFieldTestsGroup, JsonIntField_WriteTo_Test) {
 	JsonFieldsContainer container;
 	JsonField<int> testable1(&container, "test");
 	JsonField<int32_t> testable2(&container, "test");
@@ -211,7 +211,7 @@ TEST(JsonFieldTestsGroup, JsonIntField_WriteToJson_Test) {
 	{
 		rapidjson::Document doc;
 		doc.SetObject();
-		testable1.WriteToJson(&doc);
+		testable1.WriteTo(&doc);
 		rapidjson::StringBuffer buffer;
 		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 		doc.Accept(writer);
@@ -220,7 +220,7 @@ TEST(JsonFieldTestsGroup, JsonIntField_WriteToJson_Test) {
 	{
 		rapidjson::Document doc;
 		doc.SetObject();
-		testable2.WriteToJson(&doc);
+		testable2.WriteTo(&doc);
 		rapidjson::StringBuffer buffer;
 		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 		doc.Accept(writer);
@@ -229,7 +229,7 @@ TEST(JsonFieldTestsGroup, JsonIntField_WriteToJson_Test) {
 	{
 		rapidjson::Document doc;
 		doc.SetObject();
-		testable3.WriteToJson(&doc);
+		testable3.WriteTo(&doc);
 		rapidjson::StringBuffer buffer;
 		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 		doc.Accept(writer);
@@ -238,7 +238,7 @@ TEST(JsonFieldTestsGroup, JsonIntField_WriteToJson_Test) {
 	{
 		rapidjson::Document doc;
 		doc.SetObject();
-		testable4.WriteToJson(&doc);
+		testable4.WriteTo(&doc);
 		rapidjson::StringBuffer buffer;
 		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 		doc.Accept(writer);
@@ -311,29 +311,29 @@ TEST(JsonFieldTestsGroup, JsonBoolField_SetValue_Test) {
 	CHECK_EQUAL(testable1.Value, true);
 	return EXIT_SUCCESS;
 }
-TEST(JsonFieldTestsGroup, JsonBoolField_ReadFromJson_Test) {
+TEST(JsonFieldTestsGroup, JsonBoolField_TryParse_Test) {
 	JsonFieldsContainer container;
 	JsonField<bool> testable1(&container, "test");
 
 	rapidjson::Document doc;
 	doc.Parse("{\"test\":true}");
-	CHECK(testable1.ReadFromJson(&doc));
+	CHECK(testable1.TryParse(&doc));
 	CHECK_EQUAL(testable1.Value, true);
 
 	doc.Parse("{\"test\":null}");
-	CHECK(testable1.ReadFromJson(&doc));
+	CHECK(testable1.TryParse(&doc));
 	CHECK_EQUAL(testable1.Value, false);
 	return EXIT_SUCCESS;
 }
 
-TEST(JsonFieldTestsGroup, JsonBoolField_WriteToJson_Test) {
+TEST(JsonFieldTestsGroup, JsonBoolField_WriteTo_Test) {
 	JsonFieldsContainer container;
 	JsonField<bool> testable1(&container, "test");
 	testable1.SetValue(true);
 
 	rapidjson::Document doc;
 	doc.SetObject();
-	testable1.WriteToJson(&doc);
+	testable1.WriteTo(&doc);
 	rapidjson::StringBuffer buffer;
 	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 	doc.Accept(writer);
@@ -364,18 +364,18 @@ TEST(JsonFieldTestsGroup, JsonBoolField_Equals_Test) {
 	return EXIT_SUCCESS;
 }
 
-TEST(JsonFieldTestsGroup, ReadFromJson_Field_Optional_Test) {
+TEST(JsonFieldTestsGroup, TryParse_Field_Optional_Test) {
 	JsonFieldsContainer container;
 	rapidjson::Document doc;
 	auto testableFieldMustExists = new JsonField<uint32_t>(&container, "testUInt0");
 	doc.Parse("{\"otherField\":153}");
-	CHECK_FALSE(testableFieldMustExists->ReadFromJson(&doc));
+	CHECK_FALSE(testableFieldMustExists->TryParse(&doc));
 	delete testableFieldMustExists;
 
 	auto testableWithOptional = new JsonField<uint32_t, true>(&container, "testUInt0");
 	testableWithOptional->SetValue(123);
 	doc.Parse("{\"otherField\":153}");
-	CHECK_TRUE(testableWithOptional->ReadFromJson(&doc));
+	CHECK_TRUE(testableWithOptional->TryParse(&doc));
 	CHECK_EQUAL(testableWithOptional->Value, 0);
 	delete testableWithOptional;
 
@@ -384,24 +384,24 @@ TEST(JsonFieldTestsGroup, ReadFromJson_Field_Optional_Test) {
 
 int main(const int argc, const char *argv[]) {
 	TEST_RUN(JsonFieldTestsGroup, JsonUIntField_SetValue_Test);
-	TEST_RUN(JsonFieldTestsGroup, JsonUIntField_ReadFromJson_Test);
-	TEST_RUN(JsonFieldTestsGroup, JsonUIntField_WriteToJson_Test);
+	TEST_RUN(JsonFieldTestsGroup, JsonUIntField_TryParse_Test);
+	TEST_RUN(JsonFieldTestsGroup, JsonUIntField_WriteTo_Test);
 	TEST_RUN(JsonFieldTestsGroup, JsonUIntField_Size_Test);
 	TEST_RUN(JsonFieldTestsGroup, JsonUIntField_Equals_Test);
 
 	TEST_RUN(JsonFieldTestsGroup, JsonIntField_SetValue_Test);
-	TEST_RUN(JsonFieldTestsGroup, JsonIntField_ReadFromJson_Test);
-	TEST_RUN(JsonFieldTestsGroup, JsonIntField_WriteToJson_Test);
+	TEST_RUN(JsonFieldTestsGroup, JsonIntField_TryParse_Test);
+	TEST_RUN(JsonFieldTestsGroup, JsonIntField_WriteTo_Test);
 	TEST_RUN(JsonFieldTestsGroup, JsonIntField_Size_Test);
 	TEST_RUN(JsonFieldTestsGroup, JsonIntField_Equals_Test);
 
 	TEST_RUN(JsonFieldTestsGroup, JsonBoolField_SetValue_Test);
-	TEST_RUN(JsonFieldTestsGroup, JsonBoolField_ReadFromJson_Test);
-	TEST_RUN(JsonFieldTestsGroup, JsonBoolField_WriteToJson_Test);
+	TEST_RUN(JsonFieldTestsGroup, JsonBoolField_TryParse_Test);
+	TEST_RUN(JsonFieldTestsGroup, JsonBoolField_WriteTo_Test);
 	TEST_RUN(JsonFieldTestsGroup, JsonBoolField_Size_Test);
 	TEST_RUN(JsonFieldTestsGroup, JsonBoolField_Equals_Test);
 
-	TEST_RUN(JsonFieldTestsGroup, ReadFromJson_Field_Optional_Test);
+	TEST_RUN(JsonFieldTestsGroup, TryParse_Field_Optional_Test);
 
 	return EXIT_SUCCESS;
 }

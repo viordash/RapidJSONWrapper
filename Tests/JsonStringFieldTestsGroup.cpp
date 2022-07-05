@@ -21,22 +21,22 @@ TEST(JsonFieldTestsGroup, JsonField_VeryLong_Name_Test) {
 	return EXIT_SUCCESS;
 }
 
-TEST(JsonFieldTestsGroup, JsonStringField_ReadFromJson_Test) {
+TEST(JsonFieldTestsGroup, JsonStringField_TryParse_Test) {
 	JsonFieldsContainer container;
 	JsonField<char *> testable(&container, "testString");
 
 	rapidjson::Document doc;
 	doc.Parse("{\"testString\":\"User1\"}");
-	CHECK(testable.ReadFromJson(&doc));
+	CHECK(testable.TryParse(&doc));
 	STRCMP_EQUAL(testable.Value, "User1");
 
 	doc.Parse("{\"testString\":null}");
-	CHECK(testable.ReadFromJson(&doc));
+	CHECK(testable.TryParse(&doc));
 	STRCMP_EQUAL(testable.Value, "");
 	return EXIT_SUCCESS;
 }
 
-TEST(JsonFieldTestsGroup, JsonStringField_WriteToJson_Test) {
+TEST(JsonFieldTestsGroup, JsonStringField_WriteTo_Test) {
 	JsonFieldsContainer container;
 	JsonField<char *> testable(&container, "testString");
 	testable.SetValue("1234567");
@@ -44,7 +44,7 @@ TEST(JsonFieldTestsGroup, JsonStringField_WriteToJson_Test) {
 	rapidjson::Document doc;
 	doc.SetObject();
 
-	testable.WriteToJson(&doc);
+	testable.WriteTo(&doc);
 
 	rapidjson::StringBuffer buffer;
 	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
@@ -84,17 +84,17 @@ TEST(JsonFieldTestsGroup, JsonStringField_Equals_Test) {
 	return EXIT_SUCCESS;
 }
 
-TEST(JsonFieldTestsGroup, JsonStringField_ReadFromJson_Field_Optional_Test) {
+TEST(JsonFieldTestsGroup, JsonStringField_TryParse_Field_Optional_Test) {
 	rapidjson::Document doc;
 	JsonFieldsContainer container;
 	auto testableFieldMustExists = new JsonField<char *>(&container, "testString");
 	doc.Parse("{\"otherField\":\"User1\"}");
-	CHECK_FALSE(testableFieldMustExists->ReadFromJson(&doc));
+	CHECK_FALSE(testableFieldMustExists->TryParse(&doc));
 	delete testableFieldMustExists;
 
 	auto testableWithOptional = new JsonField<char *, true>(&container, "testString");
 	doc.Parse("{\"otherField\":\"User1\"}");
-	CHECK_TRUE(testableWithOptional->ReadFromJson(&doc));
+	CHECK_TRUE(testableWithOptional->TryParse(&doc));
 	STRCMP_EQUAL(testableWithOptional->Value, "");
 	delete testableWithOptional;
 	return EXIT_SUCCESS;
@@ -136,11 +136,11 @@ TEST(JsonFieldTestsGroup, JsonStringField_SetValue_With_Too_Larger_Size_Test) {
 
 int main(const int argc, const char *argv[]) {
 	TEST_RUN(JsonFieldTestsGroup, JsonField_VeryLong_Name_Test);
-	TEST_RUN(JsonFieldTestsGroup, JsonStringField_ReadFromJson_Test);
-	TEST_RUN(JsonFieldTestsGroup, JsonStringField_WriteToJson_Test);
+	TEST_RUN(JsonFieldTestsGroup, JsonStringField_TryParse_Test);
+	TEST_RUN(JsonFieldTestsGroup, JsonStringField_WriteTo_Test);
 	TEST_RUN(JsonFieldTestsGroup, JsonStringField_Size_Test);
 	TEST_RUN(JsonFieldTestsGroup, JsonStringField_Equals_Test);
-	TEST_RUN(JsonFieldTestsGroup, JsonStringField_ReadFromJson_Field_Optional_Test);
+	TEST_RUN(JsonFieldTestsGroup, JsonStringField_TryParse_Field_Optional_Test);
 	TEST_RUN(JsonFieldTestsGroup, JsonStringField_SetValue_Does_Not_Realloc_Buffer_When_Length_Equals_Test);
 	TEST_RUN(JsonFieldTestsGroup, JsonStringField_SetValue_With_Too_Larger_Size_Test);
 

@@ -21,8 +21,8 @@ class JsonField<char *, optional> : public JsonOptionalField<optional> {
 		return size;
 	}
 
-	bool ReadFromJsonCore(RapidJsonVal value) override final;
-	void WriteToJsonCore(RapidJsonVal value) override final;
+	bool TryParseInternal(RapidJsonVal value) override final;
+	void WriteToInternal(RapidJsonVal value) override final;
 
 	void CloneFrom(JsonBaseField *other) override final {
 		Value = ((JsonField *)other)->Value;
