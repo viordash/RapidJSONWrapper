@@ -30,8 +30,8 @@ class JsonField<char *, optional> : public JsonOptionalField<optional> {
 	void SetValue(const char *value, size_t len = 0) {
 		SetValueCore(value, len);
 	}
-	bool Equals(JsonBaseField *other) override final {
-		return JsonBaseField::Equals(other) //
+	bool EqualTo(JsonBaseField *other) override final {
+		return JsonBaseField::EqualTo(other) //
 			   && strcmp(Value, ((JsonField *)other)->Value) == 0;
 	}
 

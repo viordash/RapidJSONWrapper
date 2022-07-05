@@ -9,7 +9,7 @@ JsonBaseField::JsonBaseField(JsonFieldsContainer *container, const char *name) {
 	container->Add(this);
 }
 
-bool JsonBaseField::Equals(JsonBaseField *other) {
+bool JsonBaseField::EqualTo(JsonBaseField *other) {
 	return strcmp(Name, other->Name) == 0;
 };
 

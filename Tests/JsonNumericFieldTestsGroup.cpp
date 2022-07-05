@@ -9,7 +9,7 @@
 #include "Json.h"
 #include "TestsCommon.h"
 
-TEST(JsonFieldTestsGroup, JsonUIntField_SetValue_Test) {
+TEST(JsonNumericFieldGroup, JsonUIntField_SetValue_Test) {
 	JsonFieldsContainer container;
 	JsonField<unsigned int> testable1(&container, "test");
 	JsonField<uint32_t> testable2(&container, "test");
@@ -26,7 +26,7 @@ TEST(JsonFieldTestsGroup, JsonUIntField_SetValue_Test) {
 	CHECK_EQUAL(testable4.Value, 255);
 	return EXIT_SUCCESS;
 }
-TEST(JsonFieldTestsGroup, JsonUIntField_TryParse_Test) {
+TEST(JsonNumericFieldGroup, JsonUIntField_TryParse_Test) {
 	JsonFieldsContainer container;
 	JsonField<unsigned int> testable1(&container, "test");
 	JsonField<uint32_t> testable2(&container, "test");
@@ -56,7 +56,7 @@ TEST(JsonFieldTestsGroup, JsonUIntField_TryParse_Test) {
 	return EXIT_SUCCESS;
 }
 
-TEST(JsonFieldTestsGroup, JsonUIntField_WriteTo_Test) {
+TEST(JsonNumericFieldGroup, JsonUIntField_WriteTo_Test) {
 	JsonFieldsContainer container;
 	JsonField<unsigned int> testable1(&container, "test");
 	JsonField<uint32_t> testable2(&container, "test");
@@ -106,7 +106,7 @@ TEST(JsonFieldTestsGroup, JsonUIntField_WriteTo_Test) {
 	return EXIT_SUCCESS;
 }
 
-TEST(JsonFieldTestsGroup, JsonUIntField_Size_Test) {
+TEST(JsonNumericFieldGroup, JsonUIntField_Size_Test) {
 	JsonFieldsContainer container;
 	JsonField<unsigned int> testable1(&container, "testUInt0");
 	CHECK_EQUAL(testable1.GetSize(), 4);
@@ -119,38 +119,38 @@ TEST(JsonFieldTestsGroup, JsonUIntField_Size_Test) {
 	return EXIT_SUCCESS;
 }
 
-TEST(JsonFieldTestsGroup, JsonUIntField_Equals_Test) {
+TEST(JsonNumericFieldGroup, JsonUIntField_EqualTo_Test) {
 	JsonFieldsContainer container;
 	JsonField<uint32_t> testable1(&container, "test");
 	JsonField<uint32_t> testable2(&container, "test");
 	testable2.SetValue(1);
-	CHECK_FALSE(testable1.Equals(&testable2));
-	CHECK_FALSE(testable2.Equals(&testable1));
+	CHECK_FALSE(testable1.EqualTo(&testable2));
+	CHECK_FALSE(testable2.EqualTo(&testable1));
 
 	testable1.SetValue(1);
-	CHECK_TRUE(testable1.Equals(&testable2));
-	CHECK_TRUE(testable2.Equals(&testable1));
+	CHECK_TRUE(testable1.EqualTo(&testable2));
+	CHECK_TRUE(testable2.EqualTo(&testable1));
 
 	JsonField<unsigned int> testable3(&container, "test");
-	CHECK_FALSE(testable1.Equals(&testable3));
+	CHECK_FALSE(testable1.EqualTo(&testable3));
 	testable3.SetValue(1);
-	CHECK_TRUE(testable1.Equals(&testable3));
+	CHECK_TRUE(testable1.EqualTo(&testable3));
 
 	JsonField<uint16_t> testable4(&container, "test");
-	CHECK_FALSE(testable1.Equals(&testable4));
+	CHECK_FALSE(testable1.EqualTo(&testable4));
 	testable4.SetValue(1);
-	CHECK_FALSE(testable1.Equals(&testable4));
-	CHECK_FALSE(testable4.Equals(&testable1));
+	CHECK_FALSE(testable1.EqualTo(&testable4));
+	CHECK_FALSE(testable4.EqualTo(&testable1));
 
 	JsonField<uint8_t> testable5(&container, "test");
-	CHECK_FALSE(testable1.Equals(&testable5));
+	CHECK_FALSE(testable1.EqualTo(&testable5));
 	testable5.SetValue(1);
-	CHECK_FALSE(testable1.Equals(&testable5));
+	CHECK_FALSE(testable1.EqualTo(&testable5));
 
 	return EXIT_SUCCESS;
 }
 
-TEST(JsonFieldTestsGroup, JsonIntField_SetValue_Test) {
+TEST(JsonNumericFieldGroup, JsonIntField_SetValue_Test) {
 	JsonFieldsContainer container;
 	JsonField<int> testable1(&container, "test");
 	JsonField<int32_t> testable2(&container, "test");
@@ -167,7 +167,7 @@ TEST(JsonFieldTestsGroup, JsonIntField_SetValue_Test) {
 	CHECK_EQUAL(testable4.Value, -1);
 	return EXIT_SUCCESS;
 }
-TEST(JsonFieldTestsGroup, JsonIntField_TryParse_Test) {
+TEST(JsonNumericFieldGroup, JsonIntField_TryParse_Test) {
 	JsonFieldsContainer container;
 	JsonField<int> testable1(&container, "test");
 	JsonField<int32_t> testable2(&container, "test");
@@ -197,7 +197,7 @@ TEST(JsonFieldTestsGroup, JsonIntField_TryParse_Test) {
 	return EXIT_SUCCESS;
 }
 
-TEST(JsonFieldTestsGroup, JsonIntField_WriteTo_Test) {
+TEST(JsonNumericFieldGroup, JsonIntField_WriteTo_Test) {
 	JsonFieldsContainer container;
 	JsonField<int> testable1(&container, "test");
 	JsonField<int32_t> testable2(&container, "test");
@@ -247,7 +247,7 @@ TEST(JsonFieldTestsGroup, JsonIntField_WriteTo_Test) {
 	return EXIT_SUCCESS;
 }
 
-TEST(JsonFieldTestsGroup, JsonIntField_Size_Test) {
+TEST(JsonNumericFieldGroup, JsonIntField_Size_Test) {
 	JsonFieldsContainer container;
 	JsonField<int> testable1(&container, "testUInt0");
 	CHECK_EQUAL(testable1.GetSize(), 4);
@@ -260,32 +260,32 @@ TEST(JsonFieldTestsGroup, JsonIntField_Size_Test) {
 	return EXIT_SUCCESS;
 }
 
-TEST(JsonFieldTestsGroup, JsonIntField_Equals_Test) {
+TEST(JsonNumericFieldGroup, JsonIntField_EqualTo_Test) {
 	JsonFieldsContainer container;
 	JsonField<int32_t> testable1(&container, "test");
 	JsonField<int32_t> testable2(&container, "test");
 	testable2.SetValue(1);
-	CHECK_FALSE(testable1.Equals(&testable2));
-	CHECK_FALSE(testable2.Equals(&testable1));
+	CHECK_FALSE(testable1.EqualTo(&testable2));
+	CHECK_FALSE(testable2.EqualTo(&testable1));
 
 	testable1.SetValue(1);
-	CHECK_TRUE(testable1.Equals(&testable2));
-	CHECK_TRUE(testable2.Equals(&testable1));
+	CHECK_TRUE(testable1.EqualTo(&testable2));
+	CHECK_TRUE(testable2.EqualTo(&testable1));
 
 	JsonField<unsigned int> testable3(&container, "test");
-	CHECK_FALSE(testable1.Equals(&testable3));
+	CHECK_FALSE(testable1.EqualTo(&testable3));
 	testable3.SetValue(1);
-	CHECK_TRUE(testable1.Equals(&testable3));
+	CHECK_TRUE(testable1.EqualTo(&testable3));
 
 	JsonField<uint16_t> testable4(&container, "test");
-	CHECK_FALSE(testable1.Equals(&testable4));
+	CHECK_FALSE(testable1.EqualTo(&testable4));
 	testable4.SetValue(1);
-	CHECK_FALSE(testable1.Equals(&testable4));
+	CHECK_FALSE(testable1.EqualTo(&testable4));
 
 	JsonField<uint8_t> testable5(&container, "test");
-	CHECK_FALSE(testable1.Equals(&testable5));
+	CHECK_FALSE(testable1.EqualTo(&testable5));
 	testable5.SetValue(1);
-	CHECK_FALSE(testable1.Equals(&testable5));
+	CHECK_FALSE(testable1.EqualTo(&testable5));
 
 	return EXIT_SUCCESS;
 }
@@ -296,7 +296,7 @@ TEST(JsonFieldTestsGroup, JsonIntField_Equals_Test) {
 
 */
 
-TEST(JsonFieldTestsGroup, JsonBoolField_SetValue_Test) {
+TEST(JsonNumericFieldGroup, JsonBoolField_SetValue_Test) {
 	JsonFieldsContainer container;
 	JsonField<bool> testable1(&container, "test");
 	testable1.SetValue(0xFFFFFFFF);
@@ -311,7 +311,7 @@ TEST(JsonFieldTestsGroup, JsonBoolField_SetValue_Test) {
 	CHECK_EQUAL(testable1.Value, true);
 	return EXIT_SUCCESS;
 }
-TEST(JsonFieldTestsGroup, JsonBoolField_TryParse_Test) {
+TEST(JsonNumericFieldGroup, JsonBoolField_TryParse_Test) {
 	JsonFieldsContainer container;
 	JsonField<bool> testable1(&container, "test");
 
@@ -326,7 +326,7 @@ TEST(JsonFieldTestsGroup, JsonBoolField_TryParse_Test) {
 	return EXIT_SUCCESS;
 }
 
-TEST(JsonFieldTestsGroup, JsonBoolField_WriteTo_Test) {
+TEST(JsonNumericFieldGroup, JsonBoolField_WriteTo_Test) {
 	JsonFieldsContainer container;
 	JsonField<bool> testable1(&container, "test");
 	testable1.SetValue(true);
@@ -342,29 +342,29 @@ TEST(JsonFieldTestsGroup, JsonBoolField_WriteTo_Test) {
 	return EXIT_SUCCESS;
 }
 
-TEST(JsonFieldTestsGroup, JsonBoolField_Size_Test) {
+TEST(JsonNumericFieldGroup, JsonBoolField_Size_Test) {
 	JsonFieldsContainer container;
 	JsonField<bool> testable1(&container, "testUInt0");
 	CHECK_EQUAL(testable1.GetSize(), 1);
 	return EXIT_SUCCESS;
 }
 
-TEST(JsonFieldTestsGroup, JsonBoolField_Equals_Test) {
+TEST(JsonNumericFieldGroup, JsonBoolField_EqualTo_Test) {
 	JsonFieldsContainer container;
 	JsonField<bool> testable1(&container, "test");
 	JsonField<bool> testable2(&container, "test");
 	testable2.SetValue(true);
-	CHECK_FALSE(testable1.Equals(&testable2));
-	CHECK_FALSE(testable2.Equals(&testable1));
+	CHECK_FALSE(testable1.EqualTo(&testable2));
+	CHECK_FALSE(testable2.EqualTo(&testable1));
 
 	testable1.SetValue(true);
-	CHECK_TRUE(testable1.Equals(&testable2));
-	CHECK_TRUE(testable2.Equals(&testable1));
+	CHECK_TRUE(testable1.EqualTo(&testable2));
+	CHECK_TRUE(testable2.EqualTo(&testable1));
 
 	return EXIT_SUCCESS;
 }
 
-TEST(JsonFieldTestsGroup, TryParse_Field_Optional_Test) {
+TEST(JsonNumericFieldGroup, TryParse_Field_Optional_Test) {
 	JsonFieldsContainer container;
 	rapidjson::Document doc;
 	auto testableFieldMustExists = new JsonField<uint32_t>(&container, "testUInt0");
@@ -383,25 +383,26 @@ TEST(JsonFieldTestsGroup, TryParse_Field_Optional_Test) {
 }
 
 int main(const int argc, const char *argv[]) {
-	TEST_RUN(JsonFieldTestsGroup, JsonUIntField_SetValue_Test);
-	TEST_RUN(JsonFieldTestsGroup, JsonUIntField_TryParse_Test);
-	TEST_RUN(JsonFieldTestsGroup, JsonUIntField_WriteTo_Test);
-	TEST_RUN(JsonFieldTestsGroup, JsonUIntField_Size_Test);
-	TEST_RUN(JsonFieldTestsGroup, JsonUIntField_Equals_Test);
+	TEST_RUN(JsonNumericFieldGroup, JsonUIntField_SetValue_Test);
+	TEST_RUN(JsonNumericFieldGroup, JsonUIntField_TryParse_Test);
+	TEST_RUN(JsonNumericFieldGroup, JsonUIntField_WriteTo_Test);
+	TEST_RUN(JsonNumericFieldGroup, JsonUIntField_Size_Test);
+	TEST_RUN(JsonNumericFieldGroup, JsonUIntField_EqualTo_Test);
 
-	TEST_RUN(JsonFieldTestsGroup, JsonIntField_SetValue_Test);
-	TEST_RUN(JsonFieldTestsGroup, JsonIntField_TryParse_Test);
-	TEST_RUN(JsonFieldTestsGroup, JsonIntField_WriteTo_Test);
-	TEST_RUN(JsonFieldTestsGroup, JsonIntField_Size_Test);
-	TEST_RUN(JsonFieldTestsGroup, JsonIntField_Equals_Test);
+	TEST_RUN(JsonNumericFieldGroup, JsonIntField_SetValue_Test);
+	TEST_RUN(JsonNumericFieldGroup, JsonIntField_TryParse_Test);
+	TEST_RUN(JsonNumericFieldGroup, JsonIntField_WriteTo_Test);
+	TEST_RUN(JsonNumericFieldGroup, JsonIntField_Size_Test);
+	TEST_RUN(JsonNumericFieldGroup, JsonIntField_EqualTo_Test);
 
-	TEST_RUN(JsonFieldTestsGroup, JsonBoolField_SetValue_Test);
-	TEST_RUN(JsonFieldTestsGroup, JsonBoolField_TryParse_Test);
-	TEST_RUN(JsonFieldTestsGroup, JsonBoolField_WriteTo_Test);
-	TEST_RUN(JsonFieldTestsGroup, JsonBoolField_Size_Test);
-	TEST_RUN(JsonFieldTestsGroup, JsonBoolField_Equals_Test);
+	TEST_RUN(JsonNumericFieldGroup, JsonBoolField_SetValue_Test);
+	TEST_RUN(JsonNumericFieldGroup, JsonBoolField_TryParse_Test);
+	TEST_RUN(JsonNumericFieldGroup, JsonBoolField_WriteTo_Test);
+	TEST_RUN(JsonNumericFieldGroup, JsonBoolField_Size_Test);
+	TEST_RUN(JsonNumericFieldGroup, JsonBoolField_EqualTo_Test);
 
-	TEST_RUN(JsonFieldTestsGroup, TryParse_Field_Optional_Test);
+	TEST_RUN(JsonNumericFieldGroup, TryParse_Field_Optional_Test);
 
+	printf("JsonNumericFieldGroup success");
 	return EXIT_SUCCESS;
 }

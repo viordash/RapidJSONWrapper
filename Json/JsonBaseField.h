@@ -21,7 +21,7 @@ class JsonBaseField {
 	void WriteTo(RapidJsonDocument doc);
 	virtual void WriteToInternal(RapidJsonVal value) = 0;
 	virtual void CloneFrom(JsonBaseField *other) = 0;
-	virtual bool Equals(JsonBaseField *other);
+	virtual bool EqualTo(JsonBaseField *other);
 
   protected:
 	bool HasMember(RapidJsonValues values);

@@ -23,8 +23,8 @@ class JsonField : public JsonOptionalField<optional> {
 	void SetValue(const T value) {
 		Value = value;
 	}
-	bool Equals(JsonBaseField *other) override final {
-		return JsonBaseField::Equals(other)		//
+	bool EqualTo(JsonBaseField *other) override final {
+		return JsonBaseField::EqualTo(other)		//
 			   && GetSize() == other->GetSize() //
 			   && Value == ((JsonField *)other)->Value;
 	}
