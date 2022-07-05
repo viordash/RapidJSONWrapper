@@ -49,9 +49,6 @@ void JsonField<char *, false>::WriteToJsonCore(RapidJsonVal value) {
 	} else {                                                                                                                                                   \
 		len = 0;                                                                                                                                               \
 	}                                                                                                                                                          \
-	if (len >= maxSize) {                                                                                                                                      \
-		len = maxSize - 1;                                                                                                                                     \
-	}                                                                                                                                                          \
 	if (len == size - 1) {                                                                                                                                     \
 		if (value != NULL) {                                                                                                                                   \
 			memcpy(Value, value, len);                                                                                                                         \

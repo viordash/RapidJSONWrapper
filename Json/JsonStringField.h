@@ -7,8 +7,7 @@ class JsonField<char *, optional> : public JsonOptionalField<optional> {
   public:
 	char *Value;
 
-	JsonField(JsonFieldsContainer *container, const char *name, size_t maxSize = 8192) : JsonOptionalField<optional>(container, name) {
-		this->maxSize = maxSize;
+	JsonField(JsonFieldsContainer *container, const char *name) : JsonOptionalField<optional>(container, name) {
 		Value = NULL;
 		size = 0;
 		ResetValue();
@@ -39,6 +38,5 @@ class JsonField<char *, optional> : public JsonOptionalField<optional> {
 	}
 
   protected:
-	size_t maxSize;
 	size_t size;
 };

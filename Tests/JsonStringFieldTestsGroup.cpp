@@ -56,35 +56,12 @@ TEST(JsonFieldTestsGroup, JsonStringField_WriteToJson_Test) {
 	return EXIT_SUCCESS;
 }
 
-TEST(JsonFieldTestsGroup, JsonStringField_And_VeryLong_Value_Test) {
-	JsonFieldsContainer container;
-	JsonField<char *> testable(&container, "testString", 256);
-
-	testable.SetValue("0123456789A 0123456789B 0123456789C 0123456789D 0123456789E 0123456789F 0123456789D 0123456789E "
-					  "0123456789D 012345678 0123456789D 0123456789E9E 0123456789D 0123456789E  0123456789D 0123456789E "
-					  "0123456789D 0123 0123456789D 012345678 0123456789D 0123456789E9E456789E");
-	STRCMP_EQUAL(testable.Value,
-				 "0123456789A 0123456789B 0123456789C 0123456789D 0123456789E 0123456789F 0123456789D 0123456789E 0123456789D 012345678 0123456789D "
-				 "0123456789E9E 0123456789D 0123456789E  0123456789D 0123456789E 0123456789D 0123 0123456789D 012345678 0123456789D 0123456789E");
-
-	return EXIT_SUCCESS;
-}
-
 TEST(JsonFieldTestsGroup, JsonStringField_Size_Test) {
 	JsonFieldsContainer container;
 	JsonField<char *> testable(&container, "testString");
 	testable.SetValue("1234567890ABCDEF", 8);
 	CHECK_EQUAL(testable.GetSize(), 8 + 1);
 	STRCMP_EQUAL(testable.Value, "12345678");
-	return EXIT_SUCCESS;
-}
-
-TEST(JsonFieldTestsGroup, JsonStringField_MaxSize_Test) {
-	JsonFieldsContainer container;
-	JsonField<char *> testable(&container, "testString", 10);
-	testable.SetValue("1234567890ABCDEF1234567890ABCDEF");
-	CHECK_EQUAL(testable.GetSize(), 10);
-	STRCMP_EQUAL(testable.Value, "123456789");
 	return EXIT_SUCCESS;
 }
 
@@ -115,7 +92,7 @@ TEST(JsonFieldTestsGroup, JsonStringField_ReadFromJson_Field_Optional_Test) {
 	CHECK_FALSE(testableFieldMustExists->ReadFromJson(&doc));
 	delete testableFieldMustExists;
 
-	auto testableWithOptional = new JsonField<char *, true>(&container, "testString", 8192);
+	auto testableWithOptional = new JsonField<char *, true>(&container, "testString");
 	doc.Parse("{\"otherField\":\"User1\"}");
 	CHECK_TRUE(testableWithOptional->ReadFromJson(&doc));
 	STRCMP_EQUAL(testableWithOptional->Value, "");
@@ -145,14 +122,14 @@ TEST(JsonFieldTestsGroup, JsonStringField_SetValue_Does_Not_Realloc_Buffer_When_
 	return EXIT_SUCCESS;
 }
 
-TEST(JsonFieldTestsGroup, JsonStringField_SetValue_When_Length_Incorrect_Test) {
+TEST(JsonFieldTestsGroup, JsonStringField_SetValue_With_Too_Larger_Size_Test) {
 	JsonFieldsContainer container;
-	JsonField<char *> testable(&container, "testString", 20);
+	JsonField<char *> testable(&container, "testString");
 	CHECK_EQUAL(testable.GetSize(), 1);
 
 	testable.SetValue("0123456789", 10000);
 	STRCMP_EQUAL(testable.Value, "0123456789");
-	CHECK_EQUAL(testable.GetSize(), 20);
+	CHECK_EQUAL(testable.GetSize(), 10001);
 
 	return EXIT_SUCCESS;
 }
@@ -161,13 +138,11 @@ int main(const int argc, const char *argv[]) {
 	TEST_RUN(JsonFieldTestsGroup, JsonField_VeryLong_Name_Test);
 	TEST_RUN(JsonFieldTestsGroup, JsonStringField_ReadFromJson_Test);
 	TEST_RUN(JsonFieldTestsGroup, JsonStringField_WriteToJson_Test);
-	TEST_RUN(JsonFieldTestsGroup, JsonStringField_And_VeryLong_Value_Test);
 	TEST_RUN(JsonFieldTestsGroup, JsonStringField_Size_Test);
-	TEST_RUN(JsonFieldTestsGroup, JsonStringField_MaxSize_Test);
 	TEST_RUN(JsonFieldTestsGroup, JsonStringField_Equals_Test);
 	TEST_RUN(JsonFieldTestsGroup, JsonStringField_ReadFromJson_Field_Optional_Test);
 	TEST_RUN(JsonFieldTestsGroup, JsonStringField_SetValue_Does_Not_Realloc_Buffer_When_Length_Equals_Test);
-	TEST_RUN(JsonFieldTestsGroup, JsonStringField_SetValue_When_Length_Incorrect_Test);
+	TEST_RUN(JsonFieldTestsGroup, JsonStringField_SetValue_With_Too_Larger_Size_Test);
 
 	return EXIT_SUCCESS;
 }
