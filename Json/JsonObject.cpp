@@ -142,7 +142,7 @@ int JsonObject::GetSize() {
 	return buffer.GetSize();
 }
 
-bool JsonObject::Equals(JsonObject *other) {
+bool JsonObject::EqualTo(JsonObject *other) {
 	if (other == NULL) {
 		return false;
 	}
@@ -152,7 +152,7 @@ bool JsonObject::Equals(JsonObject *other) {
 	}
 
 	for (size_t i = 0; i < Fields.size(); i++) {
-		if (!Fields[i]->Equals(other->Fields[i])) {
+		if (!Fields[i]->EqualTo(other->Fields[i])) {
 			return false;
 		}
 	}

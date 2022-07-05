@@ -24,7 +24,7 @@ class JsonObject : public JsonFieldsContainer {
 	virtual void CloneFrom(JsonObject *other);
 
 	int GetSize();
-	virtual bool Equals(JsonObject *other);
+	virtual bool EqualTo(JsonObject *other);
 
   protected:
   private:
