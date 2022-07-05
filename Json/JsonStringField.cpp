@@ -26,53 +26,42 @@ bool JsonField<char *, false>::ReadFromJsonCore(RapidJsonVal value) {
 
 */
 
-#define WriteToJsonCore_T(value)                                                                                                                               \
-	{                                                                                                                                                          \
-		rapidjson::Value *jsonValue = (rapidjson::Value *)value;                                                                                               \
-		jsonValue->SetString(Value, GetSize() - 1);                                                                                                            \
-	}
-
 template <>
 void JsonField<char *, true>::WriteToJsonCore(RapidJsonVal value) {
-	WriteToJsonCore_T(value);
+	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
+	jsonValue->SetString(Value, GetSize() - 1);
 }
 template <>
 void JsonField<char *, false>::WriteToJsonCore(RapidJsonVal value) {
-	WriteToJsonCore_T(value);
+	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
+	jsonValue->SetString(Value, GetSize() - 1);
 }
 
-#define SetValue_T(value, len)                                                                                                                                 \
-	if (value != NULL) {                                                                                                                                       \
-		if (len == 0) {                                                                                                                                        \
-			len = strlen(value);                                                                                                                               \
-		}                                                                                                                                                      \
-	} else {                                                                                                                                                   \
-		len = 0;                                                                                                                                               \
-	}                                                                                                                                                          \
-	if (len == size - 1) {                                                                                                                                     \
-		if (value != NULL) {                                                                                                                                   \
-			memcpy(Value, value, len);                                                                                                                         \
-		}                                                                                                                                                      \
-		Value[len] = 0;                                                                                                                                        \
-		return;                                                                                                                                                \
-	}                                                                                                                                                          \
-	if (Value != NULL) {                                                                                                                                       \
-		char *t = Value;                                                                                                                                       \
-		Value = NULL;                                                                                                                                          \
-		delete[] t;                                                                                                                                            \
-	}                                                                                                                                                          \
-	size = len + 1;                                                                                                                                            \
-	Value = new char[size];                                                                                                                                    \
-	if (value != NULL) {                                                                                                                                       \
-		memcpy(Value, value, len);                                                                                                                             \
-	}                                                                                                                                                          \
+template <bool optional>
+void JsonField<char *, optional>::SetValueCore(const char *value, size_t len) {
+	if (value != NULL) {
+		if (len == 0) {
+			len = strlen(value);
+		}
+	} else {
+		len = 0;
+	}
+	if (len == size - 1) {
+		if (value != NULL) {
+			memcpy(Value, value, len);
+		}
+		Value[len] = 0;
+		return;
+	}
+	if (Value != NULL) {
+		char *t = Value;
+		Value = NULL;
+		delete[] t;
+	}
+	size = len + 1;
+	Value = new char[size];
+	if (value != NULL) {
+		memcpy(Value, value, len);
+	}
 	Value[len] = 0;
-
-template <>
-void JsonField<char *, true>::SetValue(const char *value, size_t len) {
-	SetValue_T(value, len);
-}
-template <>
-void JsonField<char *, false>::SetValue(const char *value, size_t len) {
-	SetValue_T(value, len);
 }
