@@ -26,6 +26,7 @@ class JsonObject : public JsonFieldsContainer {
 	int GetSize();
 	virtual bool EqualTo(JsonObject *other);
 
+	void Reset();
   protected:
   private:
 	JsonBaseField *SeachFieldByName(const char *name);

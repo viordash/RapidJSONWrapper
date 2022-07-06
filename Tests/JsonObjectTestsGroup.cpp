@@ -274,6 +274,21 @@ TEST(JsonObjectTestsGroup, JsonObject_GetSize_Test) {
 	return EXIT_SUCCESS;
 }
 
+TEST(JsonObjectTestsGroup, JsonObject_Reset_Test) {
+	GoodsDto goods(2, 1657052789, "group", "name", 58.25, 48.2);
+	goods.Reset();
+	CHECK_EQUAL(goods.Id.Value, 0);
+	CHECK_EQUAL(goods.Created.Value, 0);
+	STRCMP_EQUAL(goods.Group.Value, "");
+	STRCMP_EQUAL(goods.Name.Value, "");
+	CHECK_EQUAL(goods.Price.Value, 0.0);
+	CHECK_EQUAL(goods.Quantity.Value, 0.0);
+	CHECK_EQUAL(goods.Deleted.Value, false);
+	STRCMP_EQUAL(goods.StoreName.Value, "");
+
+	return EXIT_SUCCESS;
+}
+
 int main(const int argc, const char *argv[]) {
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_Parse_Test);
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_Parse_With_Optionaly_Fields_Test);
@@ -287,6 +302,7 @@ int main(const int argc, const char *argv[]) {
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_WriteTo_Async_Test);
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_EqualTo_Test);
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_GetSize_Test);
+	TEST_RUN(JsonObjectTestsGroup, JsonObject_Reset_Test);
 
 	printf("JsonObjectTestsGroup success");
 	return EXIT_SUCCESS;

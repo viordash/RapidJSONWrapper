@@ -29,8 +29,9 @@ class JsonField : public JsonOptionalField<optional> {
 			   && Value == ((JsonField *)other)->Value;
 	}
 
-  protected:
 	void Reset() override final {
 		SetValue(0);
 	}
+
+  protected:
 };

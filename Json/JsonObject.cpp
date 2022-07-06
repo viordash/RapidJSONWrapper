@@ -159,3 +159,8 @@ bool JsonObject::EqualTo(JsonObject *other) {
 
 	return true;
 }
+void JsonObject::Reset() {
+	for (const auto &field : Fields) {
+		field->Reset();
+	}
+}

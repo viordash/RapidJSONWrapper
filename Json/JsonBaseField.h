@@ -22,9 +22,10 @@ class JsonBaseField {
 	virtual void CloneFrom(JsonBaseField *other) = 0;
 	virtual bool EqualTo(JsonBaseField *other);
 
+	virtual void Reset() = 0;
+
   protected:
 	bool HasMember(RapidJsonValues values);
-	virtual void Reset() = 0;
 };
 
 template <bool optional>
