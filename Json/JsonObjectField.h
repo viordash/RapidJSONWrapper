@@ -35,6 +35,7 @@ class JsonField<JsonObject *, optional> : public JsonOptionalField<optional> {
 
   protected:
 	void Reset() override final {
+		Object->Reset();
 	}
 
   private:
