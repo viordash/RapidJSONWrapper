@@ -7,11 +7,11 @@
 #define TryParseInternal_T(type, value)                                                                                                                        \
 	{                                                                                                                                                          \
 		rapidjson::Value *jsonValue = (rapidjson::Value *)value;                                                                                               \
-		if (jsonValue->Is##type()) {                                                                                                                           \
-			SetValue(jsonValue->Get##type());                                                                                                                  \
-			return true;                                                                                                                                       \
+		if (!jsonValue->Is##type()) {                                                                                                                          \
+			return false;                                                                                                                                      \
 		}                                                                                                                                                      \
-		return false;                                                                                                                                          \
+		SetValue(jsonValue->Get##type());                                                                                                                      \
+		return true;                                                                                                                                           \
 	}
 
 template <>

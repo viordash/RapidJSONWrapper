@@ -35,12 +35,11 @@ class JsonField<char *, optional> : public JsonOptionalField<optional> {
 			   && strcmp(Value, ((JsonField *)other)->Value) == 0;
 	}
 
-	void ResetValue() override {
-		SetValue(NULL);
-	}
-
   protected:
 	size_t size;
+	void ResetValue() override final {
+		SetValue(NULL);
+	}
 
   private:
 	void SetValueCore(const char *value, size_t len);

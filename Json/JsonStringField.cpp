@@ -7,11 +7,11 @@
 #define TryParseInternal_T(value)                                                                                                                              \
 	{                                                                                                                                                          \
 		rapidjson::Value *jsonValue = (rapidjson::Value *)value;                                                                                               \
-		if (jsonValue->IsString()) {                                                                                                                           \
-			SetValue(jsonValue->GetString(), jsonValue->GetStringLength());                                                                                    \
-			return true;                                                                                                                                       \
+		if (!jsonValue->IsString()) {                                                                                                                           \
+			return false;                                                                                                                                      \
 		}                                                                                                                                                      \
-		return false;                                                                                                                                          \
+		SetValue(jsonValue->GetString(), jsonValue->GetStringLength());                                                                                        \
+		return true;                                                                                                                                           \
 	}
 
 template <>

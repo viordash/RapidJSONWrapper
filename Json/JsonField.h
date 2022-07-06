@@ -24,12 +24,13 @@ class JsonField : public JsonOptionalField<optional> {
 		Value = value;
 	}
 	bool EqualTo(JsonBaseField *other) override final {
-		return JsonBaseField::EqualTo(other)		//
+		return JsonBaseField::EqualTo(other)	//
 			   && GetSize() == other->GetSize() //
 			   && Value == ((JsonField *)other)->Value;
 	}
 
-	void ResetValue() override {
+  protected:
+	void ResetValue() override final {
 		SetValue(0);
 	}
 };
