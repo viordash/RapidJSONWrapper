@@ -13,6 +13,7 @@ set(SOURCE_FILES
     Json/JsonField.cpp
     Json/JsonStringField.cpp
     Json/JsonObject.cpp
+    Json/JsonObjectField.cpp
 )
 
 add_executable(RapidJSONWrapper     
