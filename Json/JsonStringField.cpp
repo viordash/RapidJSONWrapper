@@ -7,7 +7,7 @@
 #define TryParseInternal_T(value)                                                                                                                              \
 	{                                                                                                                                                          \
 		rapidjson::Value *jsonValue = (rapidjson::Value *)value;                                                                                               \
-		if (!jsonValue->IsString()) {                                                                                                                           \
+		if (!jsonValue->IsString()) {                                                                                                                          \
 			return false;                                                                                                                                      \
 		}                                                                                                                                                      \
 		SetValue(jsonValue->GetString(), jsonValue->GetStringLength());                                                                                        \
@@ -27,14 +27,20 @@ bool JsonField<char *, false>::TryParseInternal(RapidJsonVal value) {
 */
 
 template <>
-void JsonField<char *, true>::WriteToInternal(RapidJsonVal value) {
-	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
-	jsonValue->SetString(Value, GetSize() - 1);
+void JsonField<char *, true>::WriteTo(RapidJsonDocument doc) {
+	rapidjson::Value jsonVal;
+	rapidjson::Document *jsonDoc = (rapidjson::Document *)doc;
+	rapidjson::Document::AllocatorType &allocator = jsonDoc->GetAllocator();
+	jsonVal.SetString(Value, GetSize() - 1);
+	jsonDoc->AddMember(rapidjson::StringRef(Name), jsonVal, allocator);
 }
 template <>
-void JsonField<char *, false>::WriteToInternal(RapidJsonVal value) {
-	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
-	jsonValue->SetString(Value, GetSize() - 1);
+void JsonField<char *, false>::WriteTo(RapidJsonDocument doc) {
+	rapidjson::Value jsonVal;
+	rapidjson::Document *jsonDoc = (rapidjson::Document *)doc;
+	rapidjson::Document::AllocatorType &allocator = jsonDoc->GetAllocator();
+	jsonVal.SetString(Value, GetSize() - 1);
+	jsonDoc->AddMember(rapidjson::StringRef(Name), jsonVal, allocator);
 }
 
 template <bool optional>

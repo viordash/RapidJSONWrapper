@@ -22,7 +22,7 @@ class JsonField<char *, optional> : public JsonOptionalField<optional> {
 	}
 
 	bool TryParseInternal(RapidJsonVal value) override final;
-	void WriteToInternal(RapidJsonVal value) override final;
+	void WriteTo(RapidJsonDocument doc) override final;
 
 	void CloneFrom(JsonBaseField *other) override final {
 		Value = ((JsonField *)other)->Value;

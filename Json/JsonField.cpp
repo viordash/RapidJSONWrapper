@@ -116,107 +116,110 @@ bool JsonField<double, false>::TryParseInternal(RapidJsonVal value) {
 
 */
 
-#define WriteToInternal_T(type, value)                                                                                                                         \
+#define WriteToInternal(type, doc)                                                                                                                           \
 	{                                                                                                                                                          \
-		rapidjson::Value *jsonValue = (rapidjson::Value *)value;                                                                                               \
-		jsonValue->Set##type(Value);                                                                                                                           \
+		rapidjson::Value jsonVal;                                                                                                                              \
+		rapidjson::Document *jsonDoc = (rapidjson::Document *)doc;                                                                                             \
+		rapidjson::Document::AllocatorType &allocator = jsonDoc->GetAllocator();                                                                               \
+		jsonVal.Set##type(Value);                                                                                                                              \
+		jsonDoc->AddMember(rapidjson::StringRef(Name), jsonVal, allocator);                                                                                    \
 	}
 
 template <>
-void JsonField<bool, true>::WriteToInternal(RapidJsonVal value) {
-	WriteToInternal_T(Bool, value);
+void JsonField<bool, true>::WriteTo(RapidJsonDocument doc) {
+	WriteToInternal(Bool, doc);
 }
 template <>
-void JsonField<bool, false>::WriteToInternal(RapidJsonVal value) {
-	WriteToInternal_T(Bool, value);
-}
-
-template <>
-void JsonField<int, true>::WriteToInternal(RapidJsonVal value) {
-	WriteToInternal_T(Int, value);
-}
-template <>
-void JsonField<int, false>::WriteToInternal(RapidJsonVal value) {
-	WriteToInternal_T(Int, value);
+void JsonField<bool, false>::WriteTo(RapidJsonDocument doc) {
+	WriteToInternal(Bool, doc);
 }
 
 template <>
-void JsonField<int8_t, true>::WriteToInternal(RapidJsonVal value) {
-	WriteToInternal_T(Int, value);
+void JsonField<int, true>::WriteTo(RapidJsonDocument doc) {
+	WriteToInternal(Int, doc);
 }
 template <>
-void JsonField<int8_t, false>::WriteToInternal(RapidJsonVal value) {
-	WriteToInternal_T(Int, value);
-}
-
-template <>
-void JsonField<int16_t, true>::WriteToInternal(RapidJsonVal value) {
-	WriteToInternal_T(Int, value);
-}
-template <>
-void JsonField<int16_t, false>::WriteToInternal(RapidJsonVal value) {
-	WriteToInternal_T(Int, value);
+void JsonField<int, false>::WriteTo(RapidJsonDocument doc) {
+	WriteToInternal(Int, doc);
 }
 
 template <>
-void JsonField<int64_t, true>::WriteToInternal(RapidJsonVal value) {
-	WriteToInternal_T(Int64, value);
+void JsonField<int8_t, true>::WriteTo(RapidJsonDocument doc) {
+	WriteToInternal(Int, doc);
 }
 template <>
-void JsonField<int64_t, false>::WriteToInternal(RapidJsonVal value) {
-	WriteToInternal_T(Int64, value);
-}
-
-template <>
-void JsonField<unsigned int, true>::WriteToInternal(RapidJsonVal value) {
-	WriteToInternal_T(Uint, value);
-}
-template <>
-void JsonField<unsigned int, false>::WriteToInternal(RapidJsonVal value) {
-	WriteToInternal_T(Uint, value);
+void JsonField<int8_t, false>::WriteTo(RapidJsonDocument doc) {
+	WriteToInternal(Int, doc);
 }
 
 template <>
-void JsonField<uint8_t, true>::WriteToInternal(RapidJsonVal value) {
-	WriteToInternal_T(Uint, value);
+void JsonField<int16_t, true>::WriteTo(RapidJsonDocument doc) {
+	WriteToInternal(Int, doc);
 }
 template <>
-void JsonField<uint8_t, false>::WriteToInternal(RapidJsonVal value) {
-	WriteToInternal_T(Uint, value);
-}
-
-template <>
-void JsonField<uint16_t, true>::WriteToInternal(RapidJsonVal value) {
-	WriteToInternal_T(Uint, value);
-}
-template <>
-void JsonField<uint16_t, false>::WriteToInternal(RapidJsonVal value) {
-	WriteToInternal_T(Uint, value);
+void JsonField<int16_t, false>::WriteTo(RapidJsonDocument doc) {
+	WriteToInternal(Int, doc);
 }
 
 template <>
-void JsonField<uint64_t, true>::WriteToInternal(RapidJsonVal value) {
-	WriteToInternal_T(Uint64, value);
+void JsonField<int64_t, true>::WriteTo(RapidJsonDocument doc) {
+	WriteToInternal(Int64, doc);
 }
 template <>
-void JsonField<uint64_t, false>::WriteToInternal(RapidJsonVal value) {
-	WriteToInternal_T(Uint64, value);
-}
-
-template <>
-void JsonField<float, true>::WriteToInternal(RapidJsonVal value) {
-	WriteToInternal_T(Float, value);
-}
-template <>
-void JsonField<float, false>::WriteToInternal(RapidJsonVal value) {
-	WriteToInternal_T(Float, value);
+void JsonField<int64_t, false>::WriteTo(RapidJsonDocument doc) {
+	WriteToInternal(Int64, doc);
 }
 
 template <>
-void JsonField<double, true>::WriteToInternal(RapidJsonVal value) {
-	WriteToInternal_T(Double, value);
+void JsonField<unsigned int, true>::WriteTo(RapidJsonDocument doc) {
+	WriteToInternal(Uint, doc);
 }
 template <>
-void JsonField<double, false>::WriteToInternal(RapidJsonVal value) {
-	WriteToInternal_T(Double, value);
+void JsonField<unsigned int, false>::WriteTo(RapidJsonDocument doc) {
+	WriteToInternal(Uint, doc);
+}
+
+template <>
+void JsonField<uint8_t, true>::WriteTo(RapidJsonDocument doc) {
+	WriteToInternal(Uint, doc);
+}
+template <>
+void JsonField<uint8_t, false>::WriteTo(RapidJsonDocument doc) {
+	WriteToInternal(Uint, doc);
+}
+
+template <>
+void JsonField<uint16_t, true>::WriteTo(RapidJsonDocument doc) {
+	WriteToInternal(Uint, doc);
+}
+template <>
+void JsonField<uint16_t, false>::WriteTo(RapidJsonDocument doc) {
+	WriteToInternal(Uint, doc);
+}
+
+template <>
+void JsonField<uint64_t, true>::WriteTo(RapidJsonDocument doc) {
+	WriteToInternal(Uint64, doc);
+}
+template <>
+void JsonField<uint64_t, false>::WriteTo(RapidJsonDocument doc) {
+	WriteToInternal(Uint64, doc);
+}
+
+template <>
+void JsonField<float, true>::WriteTo(RapidJsonDocument doc) {
+	WriteToInternal(Float, doc);
+}
+template <>
+void JsonField<float, false>::WriteTo(RapidJsonDocument doc) {
+	WriteToInternal(Float, doc);
+}
+
+template <>
+void JsonField<double, true>::WriteTo(RapidJsonDocument doc) {
+	WriteToInternal(Double, doc);
+}
+template <>
+void JsonField<double, false>::WriteTo(RapidJsonDocument doc) {
+	WriteToInternal(Double, doc);
 }

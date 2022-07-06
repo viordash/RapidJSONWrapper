@@ -18,8 +18,7 @@ class JsonBaseField {
 
 	virtual bool TryParse(RapidJsonValues values) = 0;
 
-	void WriteTo(RapidJsonDocument doc);
-	virtual void WriteToInternal(RapidJsonVal value) = 0;
+	virtual void WriteTo(RapidJsonDocument doc) = 0;
 	virtual void CloneFrom(JsonBaseField *other) = 0;
 	virtual bool EqualTo(JsonBaseField *other);
 

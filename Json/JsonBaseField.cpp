@@ -21,17 +21,7 @@ bool JsonBaseField::HasMember(RapidJsonValues values) {
 	return false;
 }
 
-void JsonBaseField::WriteTo(RapidJsonDocument doc) {
-	rapidjson::Value jsonVal;
-	rapidjson::Document *jsonDoc = (rapidjson::Document *)doc;
-	rapidjson::Document::AllocatorType &allocator = jsonDoc->GetAllocator();
-
-	this->WriteToInternal(&jsonVal);
-
-	jsonDoc->AddMember(rapidjson::StringRef(Name), jsonVal, allocator);
-}
-
-#define TryParse_T(values, optional)                                                                                                                       \
+#define TryParse_T(values, optional)                                                                                                                           \
 	{                                                                                                                                                          \
 		if (!HasMember(values)) {                                                                                                                              \
 			this->ResetValue();                                                                                                                                \
