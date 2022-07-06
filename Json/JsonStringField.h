@@ -25,7 +25,7 @@ class JsonField<char *, optional> : public JsonOptionalField<optional> {
 	void WriteTo(RapidJsonDocument doc) override final;
 
 	void CloneFrom(JsonBaseField *other) override final {
-		Value = ((JsonField *)other)->Value;
+		SetValue(((JsonField *)other)->Value, ((JsonField *)other)->GetSize());
 	}
 	void SetValue(const char *value, size_t len = 0) {
 		SetValueCore(value, len);
