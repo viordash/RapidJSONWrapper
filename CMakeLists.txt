@@ -29,6 +29,10 @@ add_executable(JsonNumericFieldTestsGroup
     ${SOURCE_FILES}
     Tests/JsonNumericFieldTestsGroup.cpp)
 
+add_executable(JsonObjectFieldTestsGroup    
+    ${SOURCE_FILES}
+    Tests/JsonObjectFieldTestsGroup.cpp)
+
 add_executable(JsonObjectTestsGroup    
     ${SOURCE_FILES}
     Tests/JsonObjectTestsGroup.cpp)
@@ -43,4 +47,5 @@ enable_testing()
 
 add_test(JsonStringFieldTestsGroup JsonStringFieldTestsGroup)
 add_test(JsonNumericFieldTestsGroup JsonNumericFieldTestsGroup)
+add_test(JsonObjectFieldTestsGroup JsonObjectFieldTestsGroup)
 add_test(JsonObjectTestsGroup JsonObjectTestsGroup)

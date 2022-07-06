@@ -23,7 +23,7 @@ class JsonField<JsonObject *, optional> : public JsonOptionalField<optional> {
 	void CloneFrom(JsonBaseField *other) override final {
 		Object->CloneFrom((((JsonField *)other)->Object));
 	}
-	void SetValue(const JsonObject *object) {
+	void SetObject(const JsonObject *object) {
 		if (object != NULL) {
 			Object->CloneFrom((JsonObject *)object);
 		}
@@ -35,7 +35,6 @@ class JsonField<JsonObject *, optional> : public JsonOptionalField<optional> {
 
   protected:
 	void ResetValue() override final {
-		SetValue(NULL);
 	}
 
   private:

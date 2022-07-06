@@ -9,7 +9,7 @@
 #include "Json.h"
 #include "TestsCommon.h"
 
-typedef enum TUserRole { uAdmin, uViewer };
+typedef enum { uAdmin, uViewer } TUserRole;
 
 class UserDto : public JsonObject {
   public:

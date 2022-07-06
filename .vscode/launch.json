@@ -81,6 +81,25 @@
             ]
         },
         {
+            "name": "(gdb) JsonObjectFieldTestsGroup",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/JsonObjectFieldTestsGroup",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
             "name": "(Windows) Launch",
             "type": "cppvsdbg",
             "request": "launch",
@@ -118,6 +137,17 @@
             "type": "cppvsdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/Debug/JsonStringFieldTestsGroup.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${fileDirname}",
+            "environment": [],
+            "console": "integratedTerminal"
+        },  
+        {
+            "name": "(Windows) JsonObjectFieldTestsGroup",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/Debug/JsonObjectFieldTestsGroup.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
