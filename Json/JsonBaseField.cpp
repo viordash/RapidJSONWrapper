@@ -24,7 +24,7 @@ bool JsonBaseField::HasMember(RapidJsonValues values) {
 #define TryParse_T(values, optional)                                                                                                                           \
 	{                                                                                                                                                          \
 		if (!HasMember(values)) {                                                                                                                              \
-			this->ResetValue();                                                                                                                                \
+			this->Reset();                                                                                                                                \
 			return optional;                                                                                                                                   \
 		}                                                                                                                                                      \
 		rapidjson::Value *jsonValue = (rapidjson::Value *)values;                                                                                              \
@@ -33,7 +33,7 @@ bool JsonBaseField::HasMember(RapidJsonValues values) {
 			return true;                                                                                                                                       \
 		}                                                                                                                                                      \
 		if (jsonVal.IsNull()) {                                                                                                                                \
-			this->ResetValue();                                                                                                                                \
+			this->Reset();                                                                                                                                \
 			return true;                                                                                                                                       \
 		}                                                                                                                                                      \
 		return false;                                                                                                                                          \

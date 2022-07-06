@@ -24,7 +24,7 @@ class JsonBaseField {
 
   protected:
 	bool HasMember(RapidJsonValues values);
-	virtual void ResetValue() = 0;
+	virtual void Reset() = 0;
 };
 
 template <bool optional>

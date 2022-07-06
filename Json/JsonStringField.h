@@ -10,7 +10,7 @@ class JsonField<char *, optional> : public JsonOptionalField<optional> {
 	JsonField(JsonFieldsContainer *container, const char *name) : JsonOptionalField<optional>(container, name) {
 		Value = NULL;
 		size = 0;
-		ResetValue();
+		Reset();
 	}
 
 	~JsonField() {
@@ -37,7 +37,7 @@ class JsonField<char *, optional> : public JsonOptionalField<optional> {
 
   protected:
 	size_t size;
-	void ResetValue() override final {
+	void Reset() override final {
 		SetValue(NULL);
 	}
 

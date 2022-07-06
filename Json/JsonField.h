@@ -8,7 +8,7 @@ class JsonField : public JsonOptionalField<optional> {
 	T Value;
 
 	JsonField(JsonFieldsContainer *container, const char *name) : JsonOptionalField<optional>(container, name) {
-		ResetValue();
+		Reset();
 	}
 
 	size_t GetSize() override final {
@@ -30,7 +30,7 @@ class JsonField : public JsonOptionalField<optional> {
 	}
 
   protected:
-	void ResetValue() override final {
+	void Reset() override final {
 		SetValue(0);
 	}
 };
