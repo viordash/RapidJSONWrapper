@@ -38,7 +38,8 @@ class GoodsDto : public JsonObject {
 	JsonField<bool, true> Deleted;
 	JsonField<char *, true> StoreName;
 
-	GoodsDto(int id, uint32_t created, const char *group, const char *name, float price, double quantity, bool deleted, const char *storeName) : GoodsDto() {
+	GoodsDto(int id, uint32_t created, const char *group, const char *name, float price, double quantity, bool deleted = false, const char *storeName = "")
+		: GoodsDto() {
 		Id.SetValue(id);
 		Created.SetValue(created);
 		Group.SetValue(group);
@@ -228,20 +229,20 @@ TEST(JsonObjectTestsGroup, JsonObject_WriteTo_With_Limited_Buffer_Test) {
 
 static void *TestParent = NULL;
 static char *TestAsyncBuffer = NULL;
-static void OnJsonStringReady(void *parent, const char *jsonStr, int size) {
+static void OnReady(void *parent, const char *json, int size) {
 	TestParent = parent;
 	TestAsyncBuffer = new char[size + 1];
-	memcpy(TestAsyncBuffer, jsonStr, size);
+	memcpy(TestAsyncBuffer, json, size);
 	TestAsyncBuffer[size] = 0;
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_WriteTo_Async_Test) {
-	char buffer[2048];
-	GoodsDto goods(2, 1657052789, "group", "name", 58.25, 48.2, false, "storeName");
-	goods.WriteTo(buffer, sizeof(buffer));
+	GoodsDto goods(2, 1657052789, "group", "name", 58.25, 48.2);
+	goods.WriteTo((void *)987654321, OnReady);
 
-	STRCMP_EQUAL(buffer, "{\"Id\":2,\"Created\":1657052789,\"Group\":\"group\",\"Name\":\"name\",\"Price\":58.25,\"Quantity\":48.2,\"Deleted\":false,"
-						 "\"StoreName\":\"storeName\"}");
+	CHECK_EQUAL(TestParent, (void *)987654321);
+	STRCMP_EQUAL(TestAsyncBuffer, "{\"Id\":2,\"Created\":1657052789,\"Group\":\"group\",\"Name\":\"name\",\"Price\":58.25,\"Quantity\":48.2,\"Deleted\":false,"
+								  "\"StoreName\":\"\"}");
 	return EXIT_SUCCESS;
 }
 
@@ -261,6 +262,18 @@ TEST(JsonObjectTestsGroup, JsonObject_EqualTo_Test) {
 	return EXIT_SUCCESS;
 }
 
+TEST(JsonObjectTestsGroup, JsonObject_GetSize_Test) {
+	GoodsDto goods;
+	CHECK_EQUAL(goods.GetSize(), 99);
+	goods.Group.SetValue("1");
+	CHECK_EQUAL(goods.GetSize(), 100);
+	goods.Id.SetValue(1);
+	CHECK_EQUAL(goods.GetSize(), 100);
+	goods.Id.SetValue(10);
+	CHECK_EQUAL(goods.GetSize(), 101);
+	return EXIT_SUCCESS;
+}
+
 int main(const int argc, const char *argv[]) {
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_Parse_Test);
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_Parse_With_Optionaly_Fields_Test);
@@ -271,7 +284,9 @@ int main(const int argc, const char *argv[]) {
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_Parse_With_Begin_End_Stages_Test);
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_WriteTo_Test);
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_WriteTo_With_Limited_Buffer_Test);
+	TEST_RUN(JsonObjectTestsGroup, JsonObject_WriteTo_Async_Test);
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_EqualTo_Test);
+	TEST_RUN(JsonObjectTestsGroup, JsonObject_GetSize_Test);
 
 	printf("JsonObjectTestsGroup success");
 	return EXIT_SUCCESS;

@@ -98,16 +98,16 @@ int JsonObject::WriteTo(char *outBuffer, int outBufferSize) {
 	return size;
 }
 
-int JsonObject::WriteTo(void *parent, TOnJsonStringReady onJsonStringReady) {
+int JsonObject::WriteTo(void *parent, TOnReady onReady) {
 	rapidjson::Document doc;
 	WriteTo(&doc);
 	rapidjson::StringBuffer buffer;
 	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 	doc.Accept(writer);
 
-	const char *jsonStr = buffer.GetString();
+	const char *json = buffer.GetString();
 	int size = buffer.GetSize();
-	onJsonStringReady(parent, jsonStr, size);
+	onReady(parent, json, size);
 	return size;
 }
 
