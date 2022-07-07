@@ -10,7 +10,7 @@
 		if (!jsonValue->IsString()) {                                                                                                                          \
 			return false;                                                                                                                                      \
 		}                                                                                                                                                      \
-		SetValue(jsonValue->GetString(), jsonValue->GetStringLength());                                                                                        \
+		SetValueCore(jsonValue->GetString(), jsonValue->GetStringLength());                                                                                    \
 		return true;                                                                                                                                           \
 	}
 
@@ -31,7 +31,7 @@ void JsonField<char *, true>::WriteTo(RapidJsonDocument doc) {
 	rapidjson::Value jsonVal;
 	rapidjson::Document *jsonDoc = (rapidjson::Document *)doc;
 	rapidjson::Document::AllocatorType &allocator = jsonDoc->GetAllocator();
-	jsonVal.SetString(Value, GetSize() - 1);
+	jsonVal.SetString(value, GetSize() - 1);
 	jsonDoc->AddMember(rapidjson::StringRef(Name), jsonVal, allocator);
 }
 template <>
@@ -39,7 +39,7 @@ void JsonField<char *, false>::WriteTo(RapidJsonDocument doc) {
 	rapidjson::Value jsonVal;
 	rapidjson::Document *jsonDoc = (rapidjson::Document *)doc;
 	rapidjson::Document::AllocatorType &allocator = jsonDoc->GetAllocator();
-	jsonVal.SetString(Value, GetSize() - 1);
+	jsonVal.SetString(value, GetSize() - 1);
 	jsonDoc->AddMember(rapidjson::StringRef(Name), jsonVal, allocator);
 }
 
@@ -54,20 +54,20 @@ void JsonField<char *, optional>::SetValueCore(const char *value, size_t len) {
 	}
 	if (len == size - 1) {
 		if (value != NULL) {
-			memcpy(Value, value, len);
+			memcpy(this->value, value, len);
 		}
-		Value[len] = 0;
+		this->value[len] = 0;
 		return;
 	}
-	if (Value != NULL) {
-		char *t = Value;
-		Value = NULL;
+	if (this->value != NULL) {
+		char *t = this->value;
+		this->value = NULL;
 		delete[] t;
 	}
 	size = len + 1;
-	Value = new char[size];
+	this->value = new char[size];
 	if (value != NULL) {
-		memcpy(Value, value, len);
+		memcpy(this->value, value, len);
 	}
-	Value[len] = 0;
+	this->value[len] = 0;
 }

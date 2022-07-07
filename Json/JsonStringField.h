@@ -4,17 +4,36 @@
 
 template <bool optional>
 class JsonField<char *, optional> : public JsonOptionalField<optional> {
-  public:
-	char *Value;
+	class JsonFieldValue {
+	  public:
+		JsonFieldValue(JsonField *owner) {
+			this->owner = owner;
+		}
 
-	JsonField(JsonFieldsContainer *container, const char *name) : JsonOptionalField<optional>(container, name) {
-		Value = NULL;
+		char *operator=(const char *right) {
+			owner->SetValueCore(right, 0);
+			return owner->value;
+		}
+
+		operator char *() const {
+			return owner->value;
+		}
+
+	  private:
+		JsonField *owner;
+	};
+
+  public:
+	JsonFieldValue Value;
+
+	JsonField(JsonFieldsContainer *container, const char *name) : JsonOptionalField<optional>(container, name), Value(this) {
+		value = NULL;
 		size = 0;
 		Reset();
 	}
 
 	~JsonField() {
-		delete[] Value;
+		delete[] value;
 	}
 
 	size_t GetSize() override final {
@@ -25,21 +44,22 @@ class JsonField<char *, optional> : public JsonOptionalField<optional> {
 	void WriteTo(RapidJsonDocument doc) override final;
 
 	void CloneFrom(JsonBaseField *other) override final {
-		SetValue(((JsonField *)other)->Value, ((JsonField *)other)->GetSize());
+		SetValueCore(((JsonField *)other)->value, ((JsonField *)other)->GetSize());
 	}
 	void SetValue(const char *value, size_t len = 0) {
 		SetValueCore(value, len);
 	}
 	bool EqualTo(JsonBaseField *other) override final {
 		return JsonBaseField::EqualTo(other) //
-			   && strcmp(Value, ((JsonField *)other)->Value) == 0;
+			   && strcmp(value, ((JsonField *)other)->value) == 0;
 	}
 
 	void Reset() override final {
-		SetValue(NULL);
+		SetValueCore(NULL, 0);
 	}
 
   protected:
+	char *value;
 	size_t size;
 
   private:

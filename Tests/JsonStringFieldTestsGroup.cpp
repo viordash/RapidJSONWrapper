@@ -39,7 +39,7 @@ TEST(JsonStringFieldGroup, JsonStringField_TryParse_Test) {
 TEST(JsonStringFieldGroup, JsonStringField_WriteTo_Test) {
 	JsonFieldsContainer container;
 	JsonField<char *> testable(&container, "testString");
-	testable.SetValue("1234567");
+	testable.Value = "1234567";
 
 	rapidjson::Document doc;
 	doc.SetObject();
@@ -69,16 +69,16 @@ TEST(JsonStringFieldGroup, JsonStringField_EqualTo_Test) {
 	JsonFieldsContainer container;
 	JsonField<char *> testable1(&container, "testString");
 	JsonField<char *> testable2(&container, "testString");
-	testable2.SetValue("test");
+	testable2.Value = "test";
 	CHECK_FALSE(testable1.EqualTo(&testable2));
 	CHECK_FALSE(testable2.EqualTo(&testable1));
 
-	testable1.SetValue("test");
+	testable1.Value = "test";
 	CHECK_TRUE(testable1.EqualTo(&testable2));
 	CHECK_TRUE(testable2.EqualTo(&testable1));
 
 	JsonField<char *> testable3(&container, "testStringWrong");
-	testable3.SetValue("test");
+	testable3.Value = "test";
 	CHECK_FALSE(testable3.EqualTo(&testable2));
 	CHECK_FALSE(testable2.EqualTo(&testable3));
 	return EXIT_SUCCESS;
@@ -105,16 +105,16 @@ TEST(JsonStringFieldGroup, JsonStringField_SetValue_Does_Not_Realloc_Buffer_When
 	JsonField<char *> testable(&container, "testString");
 	STRCMP_EQUAL(testable.Value, "");
 
-	testable.SetValue("0123456789");
+	testable.Value = "0123456789";
 	STRCMP_EQUAL(testable.Value, "0123456789");
 	CHECK_EQUAL(testable.GetSize(), 11);
-	auto buffer = testable.Value;
-	testable.SetValue("2345678901");
+	auto buffer = (char *)testable.Value;
+	testable.Value = "2345678901";
 	STRCMP_EQUAL(testable.Value, "2345678901");
 	CHECK_EQUAL(testable.GetSize(), 11);
 	CHECK(buffer == testable.Value);
 
-	testable.SetValue("0123456789A");
+	testable.Value = "0123456789A";
 	STRCMP_EQUAL(testable.Value, "0123456789A");
 	CHECK_EQUAL(testable.GetSize(), 12);
 	CHECK(buffer != testable.Value);
@@ -138,7 +138,7 @@ TEST(JsonStringFieldGroup, JsonStringField_CloneFrom_Test) {
 	JsonFieldsContainer container;
 	JsonField<char *> testable1(&container, "testString");
 	JsonField<char *> testable2(&container, "testString");
-	testable2.SetValue("test");
+	testable2.Value = "test";
 	testable1.CloneFrom(&testable2);
 	STRCMP_EQUAL(testable1.Value, "test");
 	return EXIT_SUCCESS;
