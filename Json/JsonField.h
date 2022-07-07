@@ -4,29 +4,46 @@
 
 template <class T, bool optional = false>
 class JsonField : public JsonOptionalField<optional> {
-  public:
-	T Value;
+	class JsonFieldValue {
+	  public:
+		JsonFieldValue(JsonField *owner) {
+			this->owner = owner;
+		}
 
-	JsonField(JsonFieldsContainer *container, const char *name) : JsonOptionalField<optional>(container, name) {
+		T operator=(const T right) {
+			owner->SetValue(right);
+			return owner->value;
+		}
+
+		operator T() const {
+			return owner->value;
+		}
+
+	  private:
+		JsonField *owner;
+	};
+
+  public:
+	JsonFieldValue Value;
+
+	JsonField(JsonFieldsContainer *container, const char *name) : JsonOptionalField<optional>(container, name), Value(this) {
 		Reset();
 	}
 
 	size_t GetSize() override final {
-		return sizeof(Value);
+		return sizeof(value);
 	}
 
 	bool TryParseInternal(RapidJsonVal value) override final;
 	void WriteTo(RapidJsonDocument doc) override final;
 	void CloneFrom(JsonBaseField *other) override final {
-		Value = ((JsonField *)other)->Value;
+		value = ((JsonField *)other)->value;
 	}
-	void SetValue(const T value) {
-		Value = value;
-	}
+
 	bool EqualTo(JsonBaseField *other) override final {
 		return JsonBaseField::EqualTo(other)	//
 			   && GetSize() == other->GetSize() //
-			   && Value == ((JsonField *)other)->Value;
+			   && value == ((JsonField *)other)->value;
 	}
 
 	void Reset() override final {
@@ -34,4 +51,8 @@ class JsonField : public JsonOptionalField<optional> {
 	}
 
   protected:
+	T value;
+	void SetValue(const T value) {
+		this->value = value;
+	}
 };
