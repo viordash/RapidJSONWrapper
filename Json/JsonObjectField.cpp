@@ -14,7 +14,7 @@
 		if (jsonValue->ObjectEmpty()) {                                                                                                                        \
 			return true;                                                                                                                                       \
 		}                                                                                                                                                      \
-		return Object->TryParse((RapidJsonValues)jsonValue);                                                                                                   \
+		return object->TryParse((RapidJsonValues)jsonValue);                                                                                                   \
 	}
 
 template <>
@@ -33,18 +33,17 @@ template <>
 void JsonField<JsonObject *, true>::WriteTo(RapidJsonDocument doc) {
 	rapidjson::Document *jsonDoc = (rapidjson::Document *)doc;
 	rapidjson::Document::AllocatorType &allocator = jsonDoc->GetAllocator();
-	rapidjson::Document object(&allocator);
-	object.SetObject();
-	Object->WriteTo(&object);
-	jsonDoc->AddMember(rapidjson::StringRef(Name), object, allocator);
+	rapidjson::Document jObject(&allocator);
+	jObject.SetObject();
+	object->WriteTo(&jObject);
+	jsonDoc->AddMember(rapidjson::StringRef(Name), jObject, allocator);
 }
 template <>
 void JsonField<JsonObject *, false>::WriteTo(RapidJsonDocument doc) {
 	rapidjson::Document *jsonDoc = (rapidjson::Document *)doc;
 	rapidjson::Document::AllocatorType &allocator = jsonDoc->GetAllocator();
-	rapidjson::Document object(&allocator);
-	object.SetObject();
-	Object->WriteTo(&object);
-	jsonDoc->AddMember(rapidjson::StringRef(Name), object, allocator);
+	rapidjson::Document jObject(&allocator);
+	jObject.SetObject();
+	object->WriteTo(&jObject);
+	jsonDoc->AddMember(rapidjson::StringRef(Name), jObject, allocator);
 }
-
