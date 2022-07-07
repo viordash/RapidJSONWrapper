@@ -289,6 +289,23 @@ TEST(JsonObjectTestsGroup, JsonObject_Reset_Test) {
 	return EXIT_SUCCESS;
 }
 
+TEST(JsonObjectTestsGroup, JsonObject_CloneFrom_Test) {
+	GoodsDto goods1(2, 1657052100, "group0", "name0", 580.25, 480.2, false, "storeName0");
+	GoodsDto goods2(100, 1657052800, "group1", "name1", 58.25, 48.2, true, "storeName1");
+	goods1.CloneFrom(&goods2);
+
+	CHECK_EQUAL(goods1.Id.Value, 100);
+	CHECK_EQUAL(goods1.Created.Value, 1657052800);
+	STRCMP_EQUAL(goods1.Group.Value, "group1");
+	STRCMP_EQUAL(goods1.Name.Value, "name1");
+	CHECK_EQUAL(goods1.Price.Value, 58.25);
+	CHECK_EQUAL(goods1.Quantity.Value, 48.2);
+	CHECK_EQUAL(goods1.Deleted.Value, true);
+	STRCMP_EQUAL(goods1.StoreName.Value, "storeName1");
+
+	return EXIT_SUCCESS;
+}
+
 int main(const int argc, const char *argv[]) {
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_Parse_Test);
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_Parse_With_Optionaly_Fields_Test);
@@ -303,6 +320,7 @@ int main(const int argc, const char *argv[]) {
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_EqualTo_Test);
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_GetSize_Test);
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_Reset_Test);
+	TEST_RUN(JsonObjectTestsGroup, JsonObject_CloneFrom_Test);
 
 	printf("JsonObjectTestsGroup success");
 	return EXIT_SUCCESS;

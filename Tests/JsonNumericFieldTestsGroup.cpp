@@ -382,6 +382,16 @@ TEST(JsonNumericFieldGroup, TryParse_Field_Optional_Test) {
 	return EXIT_SUCCESS;
 }
 
+TEST(JsonNumericFieldGroup, CloneFrom_Test) {
+	JsonFieldsContainer container;
+	JsonField<uint32_t> testable1(&container, "testUInt0");
+	JsonField<uint32_t> testable2(&container, "testUInt0");
+	testable2.SetValue(123245);
+	testable1.CloneFrom(&testable2);
+	CHECK_EQUAL(testable1.Value, 123245);
+	return EXIT_SUCCESS;
+}
+
 int main(const int argc, const char *argv[]) {
 	TEST_RUN(JsonNumericFieldGroup, JsonUIntField_SetValue_Test);
 	TEST_RUN(JsonNumericFieldGroup, JsonUIntField_TryParse_Test);
@@ -402,6 +412,7 @@ int main(const int argc, const char *argv[]) {
 	TEST_RUN(JsonNumericFieldGroup, JsonBoolField_EqualTo_Test);
 
 	TEST_RUN(JsonNumericFieldGroup, TryParse_Field_Optional_Test);
+	TEST_RUN(JsonNumericFieldGroup, CloneFrom_Test);
 
 	printf("JsonNumericFieldGroup success");
 	return EXIT_SUCCESS;

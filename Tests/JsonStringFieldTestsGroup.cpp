@@ -134,6 +134,16 @@ TEST(JsonStringFieldGroup, JsonStringField_SetValue_With_Too_Larger_Size_Test) {
 	return EXIT_SUCCESS;
 }
 
+TEST(JsonStringFieldGroup, JsonStringField_CloneFrom_Test) {
+	JsonFieldsContainer container;
+	JsonField<char *> testable1(&container, "testString");
+	JsonField<char *> testable2(&container, "testString");
+	testable2.SetValue("test");
+	testable1.CloneFrom(&testable2);
+	STRCMP_EQUAL(testable1.Value, "test");
+	return EXIT_SUCCESS;
+}
+
 int main(const int argc, const char *argv[]) {
 	TEST_RUN(JsonStringFieldGroup, JsonField_VeryLong_Name_Test);
 	TEST_RUN(JsonStringFieldGroup, JsonStringField_TryParse_Test);
@@ -143,6 +153,7 @@ int main(const int argc, const char *argv[]) {
 	TEST_RUN(JsonStringFieldGroup, JsonStringField_TryParse_Field_Optional_Test);
 	TEST_RUN(JsonStringFieldGroup, JsonStringField_SetValue_Does_Not_Realloc_Buffer_When_Length_EqualTo_Test);
 	TEST_RUN(JsonStringFieldGroup, JsonStringField_SetValue_With_Too_Larger_Size_Test);
+	TEST_RUN(JsonStringFieldGroup, JsonStringField_CloneFrom_Test);
 
 	printf("JsonStringFieldGroup success");
 	return EXIT_SUCCESS;

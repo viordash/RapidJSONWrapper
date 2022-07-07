@@ -59,6 +59,25 @@ TEST(JsonObjectFieldGroup, JsonObjectField_TryParse_With_Null_Or_Empty_Object_Te
 	return EXIT_SUCCESS;
 }
 
+TEST(JsonObjectFieldGroup, JsonObjectField_TryParse_Field_Optional_Test) {
+	rapidjson::Document doc;
+	JsonFieldsContainer container;
+	UserDto user;
+	auto testableFieldMustExists = new JsonField<JsonObject *>(&container, "user", &user);
+	doc.Parse("{\"parent1\":\"user1\""
+			  ",\"otherField\":{\"name\":\"Joe Doe\",\"role\":1}}");
+	CHECK_FALSE(testableFieldMustExists->TryParse(&doc));
+	delete testableFieldMustExists;
+
+	auto testableWithOptional = new JsonField<JsonObject *, true>(&container, "user", &user);
+	doc.Parse("{\"parent1\":\"user1\""
+			  ",\"otherField\":{\"name\":\"Joe Doe\",\"role\":1}}");
+	CHECK_TRUE(testableWithOptional->TryParse(&doc));
+	STRCMP_EQUAL(((UserDto *)testableWithOptional->Object)->Name.Value, "");
+	delete testableWithOptional;
+	return EXIT_SUCCESS;
+}
+
 TEST(JsonObjectFieldGroup, JsonObjectField_WriteTo_Test) {
 	JsonFieldsContainer container;
 	UserDto userDto("Joe Doe", TUserRole::uViewer);
@@ -126,6 +145,7 @@ TEST(JsonObjectFieldGroup, JsonObjectField_CloneFrom_Test) {
 int main(const int argc, const char *argv[]) {
 	TEST_RUN(JsonObjectFieldGroup, JsonObjectField_TryParse_Test);
 	TEST_RUN(JsonObjectFieldGroup, JsonObjectField_TryParse_With_Null_Or_Empty_Object_Test);
+	TEST_RUN(JsonObjectFieldGroup, JsonObjectField_TryParse_Field_Optional_Test);
 	TEST_RUN(JsonObjectFieldGroup, JsonObjectField_WriteTo_Test);
 	TEST_RUN(JsonObjectFieldGroup, JsonObjectField_Size_Test);
 	TEST_RUN(JsonObjectFieldGroup, JsonObjectField_EqualTo_Test);
