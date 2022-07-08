@@ -13,6 +13,7 @@ set(SOURCE_FILES
     Json/JsonField.cpp
     Json/JsonStringField.cpp
     Json/JsonObject.cpp
+    Json/JsonArray.cpp
     Json/JsonObjectField.cpp
 )
 
