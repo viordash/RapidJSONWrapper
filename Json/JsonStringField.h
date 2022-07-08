@@ -51,8 +51,8 @@ class JsonField<char *, optional> : public JsonOptionalField<optional> {
 		SetCore(((JsonField *)other)->value, ((JsonField *)other)->GetSize());
 	}
 
-	bool EqualTo(JsonBaseField *other) override final {
-		return JsonBaseField::EqualTo(other) //
+	bool Equals(JsonBaseField *other) override final {
+		return JsonBaseField::Equals(other) //
 			   && strcmp(value, ((JsonField *)other)->value) == 0;
 	}
 

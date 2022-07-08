@@ -121,33 +121,33 @@ TEST(JsonNumericFieldGroup, JsonUIntField_Size_Test) {
 	return EXIT_SUCCESS;
 }
 
-TEST(JsonNumericFieldGroup, JsonUIntField_EqualTo_Test) {
+TEST(JsonNumericFieldGroup, JsonUIntField_Equals_Test) {
 	JsonFieldsContainer container;
 	JsonField<uint32_t> testable1(&container, "test");
 	JsonField<uint32_t> testable2(&container, "test");
 	testable2.Value = 1;
-	CHECK_FALSE(testable1.EqualTo(&testable2));
-	CHECK_FALSE(testable2.EqualTo(&testable1));
+	CHECK_FALSE(testable1.Equals(&testable2));
+	CHECK_FALSE(testable2.Equals(&testable1));
 
 	testable1.Value = 1;
-	CHECK_TRUE(testable1.EqualTo(&testable2));
-	CHECK_TRUE(testable2.EqualTo(&testable1));
+	CHECK_TRUE(testable1.Equals(&testable2));
+	CHECK_TRUE(testable2.Equals(&testable1));
 
 	JsonField<unsigned int> testable3(&container, "test");
-	CHECK_FALSE(testable1.EqualTo(&testable3));
+	CHECK_FALSE(testable1.Equals(&testable3));
 	testable3.Value = 1;
-	CHECK_TRUE(testable1.EqualTo(&testable3));
+	CHECK_TRUE(testable1.Equals(&testable3));
 
 	JsonField<uint16_t> testable4(&container, "test");
-	CHECK_FALSE(testable1.EqualTo(&testable4));
+	CHECK_FALSE(testable1.Equals(&testable4));
 	testable4.Value = 1;
-	CHECK_FALSE(testable1.EqualTo(&testable4));
-	CHECK_FALSE(testable4.EqualTo(&testable1));
+	CHECK_FALSE(testable1.Equals(&testable4));
+	CHECK_FALSE(testable4.Equals(&testable1));
 
 	JsonField<uint8_t> testable5(&container, "test");
-	CHECK_FALSE(testable1.EqualTo(&testable5));
+	CHECK_FALSE(testable1.Equals(&testable5));
 	testable5.Value = 1;
-	CHECK_FALSE(testable1.EqualTo(&testable5));
+	CHECK_FALSE(testable1.Equals(&testable5));
 
 	return EXIT_SUCCESS;
 }
@@ -262,32 +262,32 @@ TEST(JsonNumericFieldGroup, JsonIntField_Size_Test) {
 	return EXIT_SUCCESS;
 }
 
-TEST(JsonNumericFieldGroup, JsonIntField_EqualTo_Test) {
+TEST(JsonNumericFieldGroup, JsonIntField_Equals_Test) {
 	JsonFieldsContainer container;
 	JsonField<int32_t> testable1(&container, "test");
 	JsonField<int32_t> testable2(&container, "test");
 	testable2.Value = 1;
-	CHECK_FALSE(testable1.EqualTo(&testable2));
-	CHECK_FALSE(testable2.EqualTo(&testable1));
+	CHECK_FALSE(testable1.Equals(&testable2));
+	CHECK_FALSE(testable2.Equals(&testable1));
 
 	testable1.Value = 1;
-	CHECK_TRUE(testable1.EqualTo(&testable2));
-	CHECK_TRUE(testable2.EqualTo(&testable1));
+	CHECK_TRUE(testable1.Equals(&testable2));
+	CHECK_TRUE(testable2.Equals(&testable1));
 
 	JsonField<unsigned int> testable3(&container, "test");
-	CHECK_FALSE(testable1.EqualTo(&testable3));
+	CHECK_FALSE(testable1.Equals(&testable3));
 	testable3.Value = 1;
-	CHECK_TRUE(testable1.EqualTo(&testable3));
+	CHECK_TRUE(testable1.Equals(&testable3));
 
 	JsonField<uint16_t> testable4(&container, "test");
-	CHECK_FALSE(testable1.EqualTo(&testable4));
+	CHECK_FALSE(testable1.Equals(&testable4));
 	testable4.Value = 1;
-	CHECK_FALSE(testable1.EqualTo(&testable4));
+	CHECK_FALSE(testable1.Equals(&testable4));
 
 	JsonField<uint8_t> testable5(&container, "test");
-	CHECK_FALSE(testable1.EqualTo(&testable5));
+	CHECK_FALSE(testable1.Equals(&testable5));
 	testable5.Value = 1;
-	CHECK_FALSE(testable1.EqualTo(&testable5));
+	CHECK_FALSE(testable1.Equals(&testable5));
 
 	return EXIT_SUCCESS;
 }
@@ -351,17 +351,17 @@ TEST(JsonNumericFieldGroup, JsonBoolField_Size_Test) {
 	return EXIT_SUCCESS;
 }
 
-TEST(JsonNumericFieldGroup, JsonBoolField_EqualTo_Test) {
+TEST(JsonNumericFieldGroup, JsonBoolField_Equals_Test) {
 	JsonFieldsContainer container;
 	JsonField<bool> testable1(&container, "test");
 	JsonField<bool> testable2(&container, "test");
 	testable2.Value = true;
-	CHECK_FALSE(testable1.EqualTo(&testable2));
-	CHECK_FALSE(testable2.EqualTo(&testable1));
+	CHECK_FALSE(testable1.Equals(&testable2));
+	CHECK_FALSE(testable2.Equals(&testable1));
 
 	testable1.Value = true;
-	CHECK_TRUE(testable1.EqualTo(&testable2));
-	CHECK_TRUE(testable2.EqualTo(&testable1));
+	CHECK_TRUE(testable1.Equals(&testable2));
+	CHECK_TRUE(testable2.Equals(&testable1));
 
 	return EXIT_SUCCESS;
 }
@@ -399,19 +399,19 @@ int main(const int argc, const char *argv[]) {
 	TEST_RUN(JsonNumericFieldGroup, JsonUIntField_TryParse_Test);
 	TEST_RUN(JsonNumericFieldGroup, JsonUIntField_WriteTo_Test);
 	TEST_RUN(JsonNumericFieldGroup, JsonUIntField_Size_Test);
-	TEST_RUN(JsonNumericFieldGroup, JsonUIntField_EqualTo_Test);
+	TEST_RUN(JsonNumericFieldGroup, JsonUIntField_Equals_Test);
 
 	TEST_RUN(JsonNumericFieldGroup, JsonIntField_SetValue_Test);
 	TEST_RUN(JsonNumericFieldGroup, JsonIntField_TryParse_Test);
 	TEST_RUN(JsonNumericFieldGroup, JsonIntField_WriteTo_Test);
 	TEST_RUN(JsonNumericFieldGroup, JsonIntField_Size_Test);
-	TEST_RUN(JsonNumericFieldGroup, JsonIntField_EqualTo_Test);
+	TEST_RUN(JsonNumericFieldGroup, JsonIntField_Equals_Test);
 
 	TEST_RUN(JsonNumericFieldGroup, JsonBoolField_SetValue_Test);
 	TEST_RUN(JsonNumericFieldGroup, JsonBoolField_TryParse_Test);
 	TEST_RUN(JsonNumericFieldGroup, JsonBoolField_WriteTo_Test);
 	TEST_RUN(JsonNumericFieldGroup, JsonBoolField_Size_Test);
-	TEST_RUN(JsonNumericFieldGroup, JsonBoolField_EqualTo_Test);
+	TEST_RUN(JsonNumericFieldGroup, JsonBoolField_Equals_Test);
 
 	TEST_RUN(JsonNumericFieldGroup, TryParse_Field_Optional_Test);
 	TEST_RUN(JsonNumericFieldGroup, CloneFrom_Test);

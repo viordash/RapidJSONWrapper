@@ -246,19 +246,19 @@ TEST(JsonObjectTestsGroup, JsonObject_WriteTo_Async_Test) {
 	return EXIT_SUCCESS;
 }
 
-TEST(JsonObjectTestsGroup, JsonObject_EqualTo_Test) {
+TEST(JsonObjectTestsGroup, JsonObject_Equals_Test) {
 	GoodsDto goods1(2, 1657052789, "group", "name", 58.25, 48.2, false, "storeName");
 	GoodsDto goods2(2, 1657052789, "group", "name", 58.25, 48.2, false, "storeName");
-	CHECK_TRUE(goods1.EqualTo(&goods2));
-	CHECK_TRUE(goods2.EqualTo(&goods1));
+	CHECK_TRUE(goods1.Equals(&goods2));
+	CHECK_TRUE(goods2.Equals(&goods1));
 
-	goods2.Created.SetValue(goods2.Created.Value + 1);
-	CHECK_FALSE(goods1.EqualTo(&goods2));
-	CHECK_FALSE(goods2.EqualTo(&goods1));
+	goods2.Created.Value = goods2.Created.Value + 1;
+	CHECK_FALSE(goods1.Equals(&goods2));
+	CHECK_FALSE(goods2.Equals(&goods1));
 
 	UserDto user("name", TUserRole::uViewer);
-	CHECK_FALSE(user.EqualTo(&goods1));
-	CHECK_FALSE(goods1.EqualTo(&user));
+	CHECK_FALSE(user.Equals(&goods1));
+	CHECK_FALSE(goods1.Equals(&user));
 	return EXIT_SUCCESS;
 }
 
@@ -317,7 +317,7 @@ int main(const int argc, const char *argv[]) {
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_WriteTo_Test);
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_WriteTo_With_Limited_Buffer_Test);
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_WriteTo_Async_Test);
-	TEST_RUN(JsonObjectTestsGroup, JsonObject_EqualTo_Test);
+	TEST_RUN(JsonObjectTestsGroup, JsonObject_Equals_Test);
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_GetSize_Test);
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_Reset_Test);
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_CloneFrom_Test);

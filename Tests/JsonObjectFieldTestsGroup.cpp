@@ -143,24 +143,24 @@ TEST(JsonObjectFieldGroup, JsonObjectField_Size_Test) {
 	return EXIT_SUCCESS;
 }
 
-TEST(JsonObjectFieldGroup, JsonObjectField_EqualTo_Test) {
+TEST(JsonObjectFieldGroup, JsonObjectField_Equals_Test) {
 	JsonFieldsContainer container;
 	UserDto user1("user1", TUserRole::uViewer);
 	UserDto user2("user2", TUserRole::uAdmin);
 
 	JsonField<JsonObject *> testable1(&container, "user", &user1);
 	JsonField<JsonObject *> testable2(&container, "user", &user2);
-	CHECK_FALSE(testable1.EqualTo(&testable2));
-	CHECK_FALSE(testable2.EqualTo(&testable1));
+	CHECK_FALSE(testable1.Equals(&testable2));
+	CHECK_FALSE(testable2.Equals(&testable1));
 
 	user1.Role.Value = TUserRole::uAdmin;
 	user2.Name.Value = "user1";
-	CHECK_TRUE(testable1.EqualTo(&testable2));
-	CHECK_TRUE(testable2.EqualTo(&testable1));
+	CHECK_TRUE(testable1.Equals(&testable2));
+	CHECK_TRUE(testable2.Equals(&testable1));
 
 	JsonField<JsonObject *> testable3(&container, "testStringWrong", &user2);
-	CHECK_FALSE(testable3.EqualTo(&testable2));
-	CHECK_FALSE(testable2.EqualTo(&testable3));
+	CHECK_FALSE(testable3.Equals(&testable2));
+	CHECK_FALSE(testable2.Equals(&testable3));
 	return EXIT_SUCCESS;
 }
 
@@ -184,7 +184,7 @@ int main(const int argc, const char *argv[]) {
 	TEST_RUN(JsonObjectFieldGroup, JsonObjectField_TryParse_Field_Optional_Test);
 	TEST_RUN(JsonObjectFieldGroup, JsonObjectField_WriteTo_Test);
 	TEST_RUN(JsonObjectFieldGroup, JsonObjectField_Size_Test);
-	TEST_RUN(JsonObjectFieldGroup, JsonObjectField_EqualTo_Test);
+	TEST_RUN(JsonObjectFieldGroup, JsonObjectField_Equals_Test);
 	TEST_RUN(JsonObjectFieldGroup, JsonObjectField_CloneFrom_Test);
 
 	printf("JsonObjectFieldGroup success");

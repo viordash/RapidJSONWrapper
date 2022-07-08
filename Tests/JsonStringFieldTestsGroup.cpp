@@ -65,22 +65,22 @@ TEST(JsonStringFieldGroup, JsonStringField_Size_Test) {
 	return EXIT_SUCCESS;
 }
 
-TEST(JsonStringFieldGroup, JsonStringField_EqualTo_Test) {
+TEST(JsonStringFieldGroup, JsonStringField_Equals_Test) {
 	JsonFieldsContainer container;
 	JsonField<char *> testable1(&container, "testString");
 	JsonField<char *> testable2(&container, "testString");
 	testable2.Value = "test";
-	CHECK_FALSE(testable1.EqualTo(&testable2));
-	CHECK_FALSE(testable2.EqualTo(&testable1));
+	CHECK_FALSE(testable1.Equals(&testable2));
+	CHECK_FALSE(testable2.Equals(&testable1));
 
 	testable1.Value = "test";
-	CHECK_TRUE(testable1.EqualTo(&testable2));
-	CHECK_TRUE(testable2.EqualTo(&testable1));
+	CHECK_TRUE(testable1.Equals(&testable2));
+	CHECK_TRUE(testable2.Equals(&testable1));
 
 	JsonField<char *> testable3(&container, "testStringWrong");
 	testable3.Value = "test";
-	CHECK_FALSE(testable3.EqualTo(&testable2));
-	CHECK_FALSE(testable2.EqualTo(&testable3));
+	CHECK_FALSE(testable3.Equals(&testable2));
+	CHECK_FALSE(testable2.Equals(&testable3));
 	return EXIT_SUCCESS;
 }
 
@@ -100,7 +100,7 @@ TEST(JsonStringFieldGroup, JsonStringField_TryParse_Field_Optional_Test) {
 	return EXIT_SUCCESS;
 }
 
-TEST(JsonStringFieldGroup, JsonStringField_SetValue_Does_Not_Realloc_Buffer_When_Length_EqualTo_Test) {
+TEST(JsonStringFieldGroup, JsonStringField_SetValue_Does_Not_Realloc_Buffer_When_Length_Equals_Test) {
 	JsonFieldsContainer container;
 	JsonField<char *> testable(&container, "testString");
 	STRCMP_EQUAL(testable.Value, "");
@@ -149,9 +149,9 @@ int main(const int argc, const char *argv[]) {
 	TEST_RUN(JsonStringFieldGroup, JsonStringField_TryParse_Test);
 	TEST_RUN(JsonStringFieldGroup, JsonStringField_WriteTo_Test);
 	TEST_RUN(JsonStringFieldGroup, JsonStringField_Size_Test);
-	TEST_RUN(JsonStringFieldGroup, JsonStringField_EqualTo_Test);
+	TEST_RUN(JsonStringFieldGroup, JsonStringField_Equals_Test);
 	TEST_RUN(JsonStringFieldGroup, JsonStringField_TryParse_Field_Optional_Test);
-	TEST_RUN(JsonStringFieldGroup, JsonStringField_SetValue_Does_Not_Realloc_Buffer_When_Length_EqualTo_Test);
+	TEST_RUN(JsonStringFieldGroup, JsonStringField_SetValue_Does_Not_Realloc_Buffer_When_Length_Equals_Test);
 	TEST_RUN(JsonStringFieldGroup, JsonStringField_SetValue_With_Too_Larger_Size_Test);
 	TEST_RUN(JsonStringFieldGroup, JsonStringField_CloneFrom_Test);
 

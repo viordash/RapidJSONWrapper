@@ -40,8 +40,8 @@ class JsonField : public JsonOptionalField<optional> {
 		value = ((JsonField *)other)->value;
 	}
 
-	bool EqualTo(JsonBaseField *other) override final {
-		return JsonBaseField::EqualTo(other)	//
+	bool Equals(JsonBaseField *other) override final {
+		return JsonBaseField::Equals(other)	//
 			   && GetSize() == other->GetSize() //
 			   && value == ((JsonField *)other)->value;
 	}

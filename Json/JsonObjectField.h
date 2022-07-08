@@ -21,9 +21,9 @@ class JsonField<JsonObject *, optional> : public JsonOptionalField<optional> {
 	void CloneFrom(JsonBaseField *other) override final {
 		object->CloneFrom((((JsonField *)other)->object));
 	}
-	bool EqualTo(JsonBaseField *other) override final {
-		return JsonBaseField::EqualTo(other) //
-			   && object->EqualTo(((JsonField *)other)->object);
+	bool Equals(JsonBaseField *other) override final {
+		return JsonBaseField::Equals(other) //
+			   && object->Equals(((JsonField *)other)->object);
 	}
 
 	template <typename TObj>

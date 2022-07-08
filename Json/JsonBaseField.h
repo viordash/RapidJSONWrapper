@@ -20,7 +20,7 @@ class JsonBaseField {
 
 	virtual void WriteTo(RapidJsonDocument doc) = 0;
 	virtual void CloneFrom(JsonBaseField *other) = 0;
-	virtual bool EqualTo(JsonBaseField *other);
+	virtual bool Equals(JsonBaseField *other);
 
 	virtual void Reset() = 0;
 
