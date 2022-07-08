@@ -59,7 +59,7 @@ TEST(JsonStringFieldGroup, JsonStringField_WriteTo_Test) {
 TEST(JsonStringFieldGroup, JsonStringField_Size_Test) {
 	JsonFieldsContainer container;
 	JsonField<char *> testable(&container, "testString");
-	testable.SetValue("1234567890ABCDEF", 8);
+	testable.Value.Set("1234567890ABCDEF", 8);
 	CHECK_EQUAL(testable.GetSize(), 8 + 1);
 	STRCMP_EQUAL(testable.Value, "12345678");
 	return EXIT_SUCCESS;
@@ -127,7 +127,7 @@ TEST(JsonStringFieldGroup, JsonStringField_SetValue_With_Too_Larger_Size_Test) {
 	JsonField<char *> testable(&container, "testString");
 	CHECK_EQUAL(testable.GetSize(), 1);
 
-	testable.SetValue("0123456789", 10000);
+	testable.Value.Set("0123456789", 10000);
 	STRCMP_EQUAL(testable.Value, "0123456789");
 	CHECK_EQUAL(testable.GetSize(), 10001);
 

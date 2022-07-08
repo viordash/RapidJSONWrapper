@@ -11,12 +11,16 @@ class JsonField<char *, optional> : public JsonOptionalField<optional> {
 		}
 
 		char *operator=(const char *right) {
-			owner->SetValueCore(right, 0);
+			owner->SetCore(right, 0);
 			return owner->value;
 		}
 
 		operator char *() const {
 			return owner->value;
+		}
+
+		void Set(const char *value, size_t len) {
+			owner->SetCore(value, len);
 		}
 
 	  private:
@@ -44,18 +48,16 @@ class JsonField<char *, optional> : public JsonOptionalField<optional> {
 	void WriteTo(RapidJsonDocument doc) override final;
 
 	void CloneFrom(JsonBaseField *other) override final {
-		SetValueCore(((JsonField *)other)->value, ((JsonField *)other)->GetSize());
+		SetCore(((JsonField *)other)->value, ((JsonField *)other)->GetSize());
 	}
-	void SetValue(const char *value, size_t len = 0) {
-		SetValueCore(value, len);
-	}
+
 	bool EqualTo(JsonBaseField *other) override final {
 		return JsonBaseField::EqualTo(other) //
 			   && strcmp(value, ((JsonField *)other)->value) == 0;
 	}
 
 	void Reset() override final {
-		SetValueCore(NULL, 0);
+		SetCore(NULL, 0);
 	}
 
   protected:
@@ -63,5 +65,5 @@ class JsonField<char *, optional> : public JsonOptionalField<optional> {
 	size_t size;
 
   private:
-	void SetValueCore(const char *value, size_t len);
+	void SetCore(const char *value, size_t len);
 };

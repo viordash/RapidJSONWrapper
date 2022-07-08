@@ -10,7 +10,7 @@
 		if (!jsonValue->IsString()) {                                                                                                                          \
 			return false;                                                                                                                                      \
 		}                                                                                                                                                      \
-		SetValueCore(jsonValue->GetString(), jsonValue->GetStringLength());                                                                                    \
+		SetCore(jsonValue->GetString(), jsonValue->GetStringLength());                                                                                    \
 		return true;                                                                                                                                           \
 	}
 
@@ -44,7 +44,7 @@ void JsonField<char *, false>::WriteTo(RapidJsonDocument doc) {
 }
 
 template <bool optional>
-void JsonField<char *, optional>::SetValueCore(const char *value, size_t len) {
+void JsonField<char *, optional>::SetCore(const char *value, size_t len) {
 	if (value != NULL) {
 		if (len == 0) {
 			len = strlen(value);

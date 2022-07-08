@@ -17,8 +17,8 @@ class UserDto : public JsonObject {
 	JsonField<uint32_t, true> Role;
 
 	UserDto(const char *name, TUserRole role) : UserDto() {
-		Name.SetValue(name);
-		Role.SetValue(role);
+		Name.Value = name;
+		Role.Value = role;
 	};
 
 	UserDto()
@@ -40,14 +40,14 @@ class GoodsDto : public JsonObject {
 
 	GoodsDto(int id, uint32_t created, const char *group, const char *name, float price, double quantity, bool deleted = false, const char *storeName = "")
 		: GoodsDto() {
-		Id.SetValue(id);
-		Created.SetValue(created);
-		Group.SetValue(group);
-		Name.SetValue(name);
-		Price.SetValue(price);
-		Quantity.SetValue(quantity);
-		Deleted.SetValue(deleted);
-		StoreName.SetValue(storeName);
+		Id.Value = id;
+		Created.Value = created;
+		Group.Value = group;
+		Name.Value = name;
+		Price.Value = price;
+		Quantity.Value = quantity;
+		Deleted.Value = deleted;
+		StoreName.Value = storeName;
 	};
 
 	GoodsDto()
@@ -265,11 +265,11 @@ TEST(JsonObjectTestsGroup, JsonObject_EqualTo_Test) {
 TEST(JsonObjectTestsGroup, JsonObject_GetSize_Test) {
 	GoodsDto goods;
 	CHECK_EQUAL(goods.GetSize(), 99);
-	goods.Group.SetValue("1");
+	goods.Group.Value = "1";
 	CHECK_EQUAL(goods.GetSize(), 100);
-	goods.Id.SetValue(1);
+	goods.Id.Value = 1;
 	CHECK_EQUAL(goods.GetSize(), 100);
-	goods.Id.SetValue(10);
+	goods.Id.Value = 10;
 	CHECK_EQUAL(goods.GetSize(), 101);
 	return EXIT_SUCCESS;
 }

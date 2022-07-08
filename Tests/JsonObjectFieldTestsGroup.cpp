@@ -17,8 +17,8 @@ class CarDto : public JsonObject {
 	JsonField<char *> Fabric;
 
 	CarDto(const char *color, const char *fabric) : CarDto() {
-		Color.SetValue(color);
-		Fabric.SetValue(fabric);
+		Color.Value = color;
+		Fabric.Value = fabric;
 	};
 
 	CarDto()
@@ -34,7 +34,7 @@ class UserCarDto : public JsonObject {
 	JsonField<JsonObject *> Car;
 
 	UserCarDto(const char *name, TUserRole role, CarDto *car) : UserCarDto(car) {
-		Name.SetValue(name);
+		Name.Value = name;
 		Role.Value = role;
 	};
 
@@ -50,7 +50,7 @@ class UserDto : public JsonObject {
 	JsonField<uint32_t, true> Role;
 
 	UserDto(const char *name, TUserRole role) : UserDto() {
-		Name.SetValue(name);
+		Name.Value = name;
 		Role.Value = role;
 	};
 
@@ -138,7 +138,7 @@ TEST(JsonObjectFieldGroup, JsonObjectField_Size_Test) {
 	UserDto userDto("", TUserRole::uViewer);
 	JsonField<JsonObject *> testable(&container, "user", &userDto);
 	CHECK_EQUAL(testable.GetSize(), 20);
-	userDto.Name.SetValue("J");
+	userDto.Name.Value = "J";
 	CHECK_EQUAL(testable.GetSize(), 21);
 	return EXIT_SUCCESS;
 }
@@ -154,7 +154,7 @@ TEST(JsonObjectFieldGroup, JsonObjectField_EqualTo_Test) {
 	CHECK_FALSE(testable2.EqualTo(&testable1));
 
 	user1.Role.Value = TUserRole::uAdmin;
-	user2.Name.SetValue("user1");
+	user2.Name.Value = "user1";
 	CHECK_TRUE(testable1.EqualTo(&testable2));
 	CHECK_TRUE(testable2.EqualTo(&testable1));
 
