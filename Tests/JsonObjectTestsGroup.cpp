@@ -16,10 +16,9 @@ class UserDto : public JsonObject {
 	JsonField<char *> Name;
 	JsonField<uint32_t, true> Role;
 
-	UserDto(const char *name, TUserRole role) : UserDto() {
-		Name.Value = name;
-		Role.Value = role;
-	};
+	UserDto(const char *name, TUserRole role)
+		: Name(this, "name", name), //
+		  Role(this, "role", role){};
 
 	UserDto()
 		: Name(this, "name"), //
@@ -39,15 +38,14 @@ class GoodsDto : public JsonObject {
 	JsonField<char *, true> StoreName;
 
 	GoodsDto(int id, uint32_t created, const char *group, const char *name, float price, double quantity, bool deleted = false, const char *storeName = "")
-		: GoodsDto() {
-		Id.Value = id;
-		Created.Value = created;
-		Group.Value = group;
-		Name.Value = name;
-		Price.Value = price;
-		Quantity.Value = quantity;
-		Deleted.Value = deleted;
-		StoreName.Value = storeName;
+		: Id(this, "Id", id),					//
+		  Created(this, "Created", created),	//
+		  Group(this, "Group", group),			//
+		  Name(this, "Name", name),				//
+		  Price(this, "Price", price),			//
+		  Quantity(this, "Quantity", quantity), //
+		  Deleted(this, "Deleted", deleted),	//
+		  StoreName(this, "StoreName", storeName) {
 	};
 
 	GoodsDto()

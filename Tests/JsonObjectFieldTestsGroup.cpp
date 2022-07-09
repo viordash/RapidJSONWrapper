@@ -16,10 +16,10 @@ class CarDto : public JsonObject {
 	JsonField<char *> Color;
 	JsonField<char *> Fabric;
 
-	CarDto(const char *color, const char *fabric) : CarDto() {
-		Color.Value = color;
-		Fabric.Value = fabric;
-	};
+	CarDto(const char *color, const char *fabric)
+		: Color(this, "color", color), //
+		  Fabric(this, "fabric", fabric) {
+	}
 
 	CarDto()
 		: Color(this, "color"), //
@@ -33,7 +33,9 @@ class UserCarDto : public JsonObject {
 	JsonField<uint32_t, true> Role;
 	JsonField<JsonObject *> Car;
 
-	UserCarDto(const char *name, TUserRole role, CarDto *car) : UserCarDto(car) {
+	UserCarDto(const char *name, TUserRole role, CarDto *car)
+		: Name(this, "name"), //
+		  Role(this, "role"), Car(this, "car", car) {
 		Name.Value = name;
 		Role.Value = role;
 	};
@@ -49,10 +51,10 @@ class UserDto : public JsonObject {
 	JsonField<char *> Name;
 	JsonField<uint32_t, true> Role;
 
-	UserDto(const char *name, TUserRole role) : UserDto() {
-		Name.Value = name;
-		Role.Value = role;
-	};
+	UserDto(const char *name, TUserRole role)
+		: Name(this, "name", name), //
+		  Role(this, "role", role) {
+	}
 
 	UserDto()
 		: Name(this, "name"), //
