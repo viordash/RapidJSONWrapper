@@ -6,6 +6,9 @@ template <class T, bool optional = false>
 class JsonField : public JsonOptionalField<optional> {
 	class JsonFieldValue {
 	  public:
+		JsonFieldValue(JsonField *owner, const T value) : JsonFieldValue(owner) {
+			owner->SetValue(value);
+		}
 		JsonFieldValue(JsonField *owner) {
 			this->owner = owner;
 		}
@@ -26,6 +29,9 @@ class JsonField : public JsonOptionalField<optional> {
   public:
 	JsonFieldValue Value;
 
+	JsonField(JsonFieldsContainer *container, const char *name, const T value) : JsonOptionalField<optional>(container, name), Value(this, value) {
+	}
+
 	JsonField(JsonFieldsContainer *container, const char *name) : JsonOptionalField<optional>(container, name), Value(this) {
 		Reset();
 	}
@@ -41,7 +47,7 @@ class JsonField : public JsonOptionalField<optional> {
 	}
 
 	bool Equals(JsonBaseField *other) override final {
-		return JsonBaseField::Equals(other)	//
+		return JsonBaseField::Equals(other)		//
 			   && GetSize() == other->GetSize() //
 			   && value == ((JsonField *)other)->value;
 	}

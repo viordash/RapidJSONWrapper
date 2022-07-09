@@ -60,14 +60,10 @@ TEST(JsonNumericFieldGroup, JsonUIntField_TryParse_Test) {
 
 TEST(JsonNumericFieldGroup, JsonUIntField_WriteTo_Test) {
 	JsonFieldsContainer container;
-	JsonField<unsigned int> testable1(&container, "test");
-	JsonField<uint32_t> testable2(&container, "test");
-	JsonField<uint16_t> testable3(&container, "test");
-	JsonField<uint8_t> testable4(&container, "test");
-	testable1.Value = 19;
-	testable2.Value = 20;
-	testable3.Value = 21;
-	testable4.Value = 22;
+	JsonField<unsigned int> testable1(&container, "test", 19);
+	JsonField<uint32_t> testable2(&container, "test", 20);
+	JsonField<uint16_t> testable3(&container, "test", 21);
+	JsonField<uint8_t> testable4(&container, "test", 22);
 
 	{
 		rapidjson::Document doc;
@@ -201,14 +197,10 @@ TEST(JsonNumericFieldGroup, JsonIntField_TryParse_Test) {
 
 TEST(JsonNumericFieldGroup, JsonIntField_WriteTo_Test) {
 	JsonFieldsContainer container;
-	JsonField<int> testable1(&container, "test");
-	JsonField<int32_t> testable2(&container, "test");
-	JsonField<int16_t> testable3(&container, "test");
-	JsonField<int8_t> testable4(&container, "test");
-	testable1.Value = 19;
-	testable2.Value = 20;
-	testable3.Value = 21;
-	testable4.Value = 22;
+	JsonField<int> testable1(&container, "test", 19);
+	JsonField<int32_t> testable2(&container, "test", 20);
+	JsonField<int16_t> testable3(&container, "test", 21);
+	JsonField<int8_t> testable4(&container, "test", 22);
 
 	{
 		rapidjson::Document doc;
@@ -330,8 +322,7 @@ TEST(JsonNumericFieldGroup, JsonBoolField_TryParse_Test) {
 
 TEST(JsonNumericFieldGroup, JsonBoolField_WriteTo_Test) {
 	JsonFieldsContainer container;
-	JsonField<bool> testable1(&container, "test");
-	testable1.Value = true;
+	JsonField<bool> testable1(&container, "test", true);
 
 	rapidjson::Document doc;
 	doc.SetObject();

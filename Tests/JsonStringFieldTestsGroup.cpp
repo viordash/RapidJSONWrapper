@@ -38,8 +38,7 @@ TEST(JsonStringFieldGroup, JsonStringField_TryParse_Test) {
 
 TEST(JsonStringFieldGroup, JsonStringField_WriteTo_Test) {
 	JsonFieldsContainer container;
-	JsonField<char *> testable(&container, "testString");
-	testable.Value = "1234567";
+	JsonField<char *> testable(&container, "testString", "1234567");
 
 	rapidjson::Document doc;
 	doc.SetObject();
@@ -62,14 +61,18 @@ TEST(JsonStringFieldGroup, JsonStringField_Size_Test) {
 	testable.Value.Set("1234567890ABCDEF", 8);
 	CHECK_EQUAL(testable.GetSize(), 8 + 1);
 	STRCMP_EQUAL(testable.Value, "12345678");
+
+	JsonField<char *> testableSizeInCtor(&container, "testString", "1234567890ABCDEF", 10);
+	CHECK_EQUAL(testableSizeInCtor.GetSize(), 10 + 1);
+	STRCMP_EQUAL(testableSizeInCtor.Value, "1234567890");
+
 	return EXIT_SUCCESS;
 }
 
 TEST(JsonStringFieldGroup, JsonStringField_Equals_Test) {
 	JsonFieldsContainer container;
 	JsonField<char *> testable1(&container, "testString");
-	JsonField<char *> testable2(&container, "testString");
-	testable2.Value = "test";
+	JsonField<char *> testable2(&container, "testString", "test");
 	CHECK_FALSE(testable1.Equals(&testable2));
 	CHECK_FALSE(testable2.Equals(&testable1));
 
@@ -137,8 +140,7 @@ TEST(JsonStringFieldGroup, JsonStringField_SetValue_With_Too_Larger_Size_Test) {
 TEST(JsonStringFieldGroup, JsonStringField_CloneFrom_Test) {
 	JsonFieldsContainer container;
 	JsonField<char *> testable1(&container, "testString");
-	JsonField<char *> testable2(&container, "testString");
-	testable2.Value = "test";
+	JsonField<char *> testable2(&container, "testString", "test");
 	testable1.CloneFrom(&testable2);
 	STRCMP_EQUAL(testable1.Value, "test");
 	return EXIT_SUCCESS;

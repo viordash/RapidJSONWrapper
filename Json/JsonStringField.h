@@ -6,8 +6,13 @@ template <bool optional>
 class JsonField<char *, optional> : public JsonOptionalField<optional> {
 	class JsonFieldValue {
 	  public:
+		JsonFieldValue(JsonField *owner, const char *value, size_t len) : JsonFieldValue(owner) {
+			owner->SetCore(value, len);
+		}
 		JsonFieldValue(JsonField *owner) {
 			this->owner = owner;
+			owner->value = NULL;
+			owner->size = 0;
 		}
 
 		char *operator=(const char *right) {
@@ -30,9 +35,11 @@ class JsonField<char *, optional> : public JsonOptionalField<optional> {
   public:
 	JsonFieldValue Value;
 
+	JsonField(JsonFieldsContainer *container, const char *name, const char *value, size_t len = 0)
+		: JsonOptionalField<optional>(container, name), Value(this, value, len) {
+	}
+
 	JsonField(JsonFieldsContainer *container, const char *name) : JsonOptionalField<optional>(container, name), Value(this) {
-		value = NULL;
-		size = 0;
 		Reset();
 	}
 
