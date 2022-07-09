@@ -111,7 +111,7 @@ bool JsonArray::TryParse(const char *jsonStr, int length) {
 }
 
 bool JsonArray::ParseItem(RapidJsonVal value, JsonObject *newItem) {
-	if (!newItem->TryParse(value)) {
+	if (!newItem->TryParse(value) || !newItem->Validate()) {
 		for (const auto &item : Items) {
 			delete item;
 		}

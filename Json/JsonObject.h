@@ -25,7 +25,10 @@ class JsonObject : public JsonFieldsContainer {
 
 	int GetSize();
 	virtual bool Equals(JsonObject *other);
-
+	
+	virtual bool Validate() {
+		return true;
+	}
 	void Reset();
   protected:
   private:
