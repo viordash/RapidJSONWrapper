@@ -4,11 +4,6 @@
 #include "rapidjson/stringbuffer.h"
 #include "JsonObject.h"
 
-JsonObject::JsonObject() {
-}
-
-JsonObject::~JsonObject() {
-}
 
 bool JsonObject::TryParse(RapidJsonValues value) {
 	rapidjson::Value *jsonValue = (rapidjson::Value *)value;

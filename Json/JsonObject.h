@@ -5,8 +5,6 @@
 
 class JsonObject : public JsonFieldsContainer {
   public:
-	JsonObject();
-	virtual ~JsonObject();
 
 	virtual bool TryParse(RapidJsonValues value);
 	bool TryParseByObject(RapidJsonValues value, const char *objectName);
