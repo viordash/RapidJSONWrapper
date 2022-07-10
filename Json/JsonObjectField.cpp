@@ -18,11 +18,11 @@
 	}
 
 template <>
-bool JsonField<JsonObject *, true>::TryParseInternal(RapidJsonVal value) {
+bool JsonField<JsonObject *, true>::TryParseInternal(RapidJsonValues value) {
 	TryParseInternal_T(value);
 }
 template <>
-bool JsonField<JsonObject *, false>::TryParseInternal(RapidJsonVal value) {
+bool JsonField<JsonObject *, false>::TryParseInternal(RapidJsonValues value) {
 	TryParseInternal_T(value);
 }
 /*

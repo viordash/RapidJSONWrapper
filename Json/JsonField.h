@@ -40,7 +40,7 @@ class JsonField : public JsonOptionalField<optional> {
 		return sizeof(value);
 	}
 
-	bool TryParseInternal(RapidJsonVal value) override final;
+	bool TryParseInternal(RapidJsonValues value) override final;
 	void WriteToDoc(RapidJsonDocument doc) override final;
 	void CloneFrom(JsonBaseField *other) override final {
 		value = ((JsonField *)other)->value;

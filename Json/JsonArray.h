@@ -22,7 +22,7 @@ class JsonBaseArray {
 	int GetSize();
 
   protected:
-	virtual bool ParseItem(RapidJsonVal value) = 0;
+	virtual bool ParseItem(RapidJsonValues value) = 0;
 	void WriteToCore(RapidJsonDocument doc, std::vector<JsonObject *> *items);
 };
 
@@ -122,7 +122,7 @@ class JsonArray : public JsonBaseArray {
 	}
 
   protected:
-	virtual bool ParseItem(RapidJsonVal value) {
+	virtual bool ParseItem(RapidJsonValues value) {
 		auto newItem = new TItem();
 		if (!newItem->TryParse(value) || !Add(newItem)) {
 			delete newItem;

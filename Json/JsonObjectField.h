@@ -15,7 +15,7 @@ class JsonField<JsonObject *, optional> : public JsonOptionalField<optional> {
 		return object->GetSize();
 	}
 
-	bool TryParseInternal(RapidJsonVal value) override final;
+	bool TryParseInternal(RapidJsonValues value) override final;
 	void WriteToDoc(RapidJsonDocument doc) override final;
 
 	void CloneFrom(JsonBaseField *other) override final {

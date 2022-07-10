@@ -1,6 +1,5 @@
 #pragma once
 
-typedef void *RapidJsonVal;
 typedef void *RapidJsonValues;
 typedef void *RapidJsonDocument;
 
@@ -39,7 +38,7 @@ class JsonOptionalField : public JsonBaseField {
 	virtual ~JsonOptionalField(){};
 
 	bool TryParse(RapidJsonValues values) override final;
-	virtual bool TryParseInternal(RapidJsonVal value) = 0;
+	virtual bool TryParseInternal(RapidJsonValues value) = 0;
 
   protected:
 };

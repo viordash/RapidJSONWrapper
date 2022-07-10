@@ -15,101 +15,101 @@
 	}
 
 template <>
-bool JsonField<bool, true>::TryParseInternal(RapidJsonVal value) {
+bool JsonField<bool, true>::TryParseInternal(RapidJsonValues value) {
 	TryParseInternal_T(Bool, value);
 }
 template <>
-bool JsonField<bool, false>::TryParseInternal(RapidJsonVal value) {
+bool JsonField<bool, false>::TryParseInternal(RapidJsonValues value) {
 	TryParseInternal_T(Bool, value);
 }
 
 template <>
-bool JsonField<int, true>::TryParseInternal(RapidJsonVal value) {
+bool JsonField<int, true>::TryParseInternal(RapidJsonValues value) {
 	TryParseInternal_T(Int, value);
 }
 template <>
-bool JsonField<int, false>::TryParseInternal(RapidJsonVal value) {
-	TryParseInternal_T(Int, value);
-}
-
-template <>
-bool JsonField<int8_t, true>::TryParseInternal(RapidJsonVal value) {
-	TryParseInternal_T(Int, value);
-}
-template <>
-bool JsonField<int8_t, false>::TryParseInternal(RapidJsonVal value) {
+bool JsonField<int, false>::TryParseInternal(RapidJsonValues value) {
 	TryParseInternal_T(Int, value);
 }
 
 template <>
-bool JsonField<int16_t, true>::TryParseInternal(RapidJsonVal value) {
+bool JsonField<int8_t, true>::TryParseInternal(RapidJsonValues value) {
 	TryParseInternal_T(Int, value);
 }
 template <>
-bool JsonField<int16_t, false>::TryParseInternal(RapidJsonVal value) {
+bool JsonField<int8_t, false>::TryParseInternal(RapidJsonValues value) {
 	TryParseInternal_T(Int, value);
 }
 
 template <>
-bool JsonField<int64_t, true>::TryParseInternal(RapidJsonVal value) {
+bool JsonField<int16_t, true>::TryParseInternal(RapidJsonValues value) {
+	TryParseInternal_T(Int, value);
+}
+template <>
+bool JsonField<int16_t, false>::TryParseInternal(RapidJsonValues value) {
+	TryParseInternal_T(Int, value);
+}
+
+template <>
+bool JsonField<int64_t, true>::TryParseInternal(RapidJsonValues value) {
 	TryParseInternal_T(Int64, value);
 }
 template <>
-bool JsonField<int64_t, false>::TryParseInternal(RapidJsonVal value) {
+bool JsonField<int64_t, false>::TryParseInternal(RapidJsonValues value) {
 	TryParseInternal_T(Int64, value);
 }
 
 template <>
-bool JsonField<unsigned int, true>::TryParseInternal(RapidJsonVal value) {
+bool JsonField<unsigned int, true>::TryParseInternal(RapidJsonValues value) {
 	TryParseInternal_T(Uint, value);
 }
 template <>
-bool JsonField<unsigned int, false>::TryParseInternal(RapidJsonVal value) {
-	TryParseInternal_T(Uint, value);
-}
-
-template <>
-bool JsonField<uint8_t, true>::TryParseInternal(RapidJsonVal value) {
-	TryParseInternal_T(Uint, value);
-}
-template <>
-bool JsonField<uint8_t, false>::TryParseInternal(RapidJsonVal value) {
+bool JsonField<unsigned int, false>::TryParseInternal(RapidJsonValues value) {
 	TryParseInternal_T(Uint, value);
 }
 
 template <>
-bool JsonField<uint16_t, true>::TryParseInternal(RapidJsonVal value) {
+bool JsonField<uint8_t, true>::TryParseInternal(RapidJsonValues value) {
 	TryParseInternal_T(Uint, value);
 }
 template <>
-bool JsonField<uint16_t, false>::TryParseInternal(RapidJsonVal value) {
+bool JsonField<uint8_t, false>::TryParseInternal(RapidJsonValues value) {
 	TryParseInternal_T(Uint, value);
 }
 
 template <>
-bool JsonField<uint64_t, true>::TryParseInternal(RapidJsonVal value) {
+bool JsonField<uint16_t, true>::TryParseInternal(RapidJsonValues value) {
+	TryParseInternal_T(Uint, value);
+}
+template <>
+bool JsonField<uint16_t, false>::TryParseInternal(RapidJsonValues value) {
+	TryParseInternal_T(Uint, value);
+}
+
+template <>
+bool JsonField<uint64_t, true>::TryParseInternal(RapidJsonValues value) {
 	TryParseInternal_T(Uint64, value);
 }
 template <>
-bool JsonField<uint64_t, false>::TryParseInternal(RapidJsonVal value) {
+bool JsonField<uint64_t, false>::TryParseInternal(RapidJsonValues value) {
 	TryParseInternal_T(Uint64, value);
 }
 
 template <>
-bool JsonField<float, true>::TryParseInternal(RapidJsonVal value) {
+bool JsonField<float, true>::TryParseInternal(RapidJsonValues value) {
 	TryParseInternal_T(Float, value);
 }
 template <>
-bool JsonField<float, false>::TryParseInternal(RapidJsonVal value) {
+bool JsonField<float, false>::TryParseInternal(RapidJsonValues value) {
 	TryParseInternal_T(Float, value);
 }
 
 template <>
-bool JsonField<double, true>::TryParseInternal(RapidJsonVal value) {
+bool JsonField<double, true>::TryParseInternal(RapidJsonValues value) {
 	TryParseInternal_T(Double, value);
 }
 template <>
-bool JsonField<double, false>::TryParseInternal(RapidJsonVal value) {
+bool JsonField<double, false>::TryParseInternal(RapidJsonValues value) {
 	TryParseInternal_T(Double, value);
 }
 /*
