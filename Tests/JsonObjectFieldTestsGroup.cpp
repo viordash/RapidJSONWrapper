@@ -32,17 +32,20 @@ class UserCarDto : public JsonObject {
 	JsonField<char *> Name;
 	JsonField<uint32_t, true> Role;
 	JsonField<JsonObject *> Car;
+	CarDto carDto;
 
-	UserCarDto(const char *name, TUserRole role, CarDto *car)
+	UserCarDto(const char *name, TUserRole role)
 		: Name(this, "name"), //
-		  Role(this, "role"), Car(this, "car", car) {
+		  Role(this, "role"), //
+		  Car(this, "car", &carDto) {
 		Name.Value = name;
 		Role.Value = role;
 	};
 
-	UserCarDto(CarDto *car)
+	UserCarDto()
 		: Name(this, "name"), //
-		  Role(this, "role"), Car(this, "car", car) {
+		  Role(this, "role"), //
+		  Car(this, "car", &carDto) {
 	}
 };
 
@@ -64,8 +67,8 @@ class UserDto : public JsonObject {
 
 TEST(JsonObjectFieldGroup, JsonObjectField_TryParse_Test) {
 	JsonFieldsContainer container;
-	CarDto carDto;
-	UserCarDto userCarDto(&carDto);
+
+	UserCarDto userCarDto;
 	JsonField<JsonObject *> testable(&container, "user", &userCarDto);
 
 	rapidjson::Document doc;
