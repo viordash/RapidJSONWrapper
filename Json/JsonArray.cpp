@@ -12,7 +12,7 @@ bool JsonBaseArray::TryParse(RapidJsonValues value) {
 	}
 
 	for (const auto &item : jsonValue->GetArray()) {
-		if (!ParseItem((RapidJsonValues)&item)) {
+		if (!TryParseItem((RapidJsonValues)&item)) {
 			return false;
 		}
 	}
