@@ -236,7 +236,7 @@ static void OnReady(void *parent, const char *json, int size) {
 
 TEST(JsonObjectTestsGroup, JsonObject_WriteTo_Async_Test) {
 	GoodsDto goods(2, 1657052789, "group", "name", 58.25, 48.2);
-	goods.WriteTo((void *)987654321, OnReady);
+	goods.WriteToAsync((void *)987654321, OnReady);
 
 	CHECK_EQUAL(TestParent, (void *)987654321);
 	STRCMP_EQUAL(TestAsyncBuffer, "{\"Id\":2,\"Created\":1657052789,\"Group\":\"group\",\"Name\":\"name\",\"Price\":58.25,\"Quantity\":48.2,\"Deleted\":false,"
