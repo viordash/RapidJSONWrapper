@@ -45,8 +45,7 @@ class GoodsDto : public JsonObject {
 		  Price(this, "Price", price),			//
 		  Quantity(this, "Quantity", quantity), //
 		  Deleted(this, "Deleted", deleted),	//
-		  StoreName(this, "StoreName", storeName) {
-	};
+		  StoreName(this, "StoreName", storeName){};
 
 	GoodsDto()
 		: Id(this, "Id"),			  //
@@ -241,6 +240,7 @@ TEST(JsonObjectTestsGroup, JsonObject_WriteTo_Async_Test) {
 	CHECK_EQUAL(TestParent, (void *)987654321);
 	STRCMP_EQUAL(TestAsyncBuffer, "{\"Id\":2,\"Created\":1657052789,\"Group\":\"group\",\"Name\":\"name\",\"Price\":58.25,\"Quantity\":48.2,\"Deleted\":false,"
 								  "\"StoreName\":\"\"}");
+	delete[] TestAsyncBuffer;
 	return EXIT_SUCCESS;
 }
 
