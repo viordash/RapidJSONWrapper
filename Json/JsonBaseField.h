@@ -12,6 +12,9 @@ class JsonBaseField {
   public:
 	const char *Name;
 
+	JsonBaseField(JsonBaseField &&) = delete;
+	JsonBaseField(const JsonBaseField &) = delete;
+
 	JsonBaseField(JsonFieldsContainer *container, const char *name);
 	virtual ~JsonBaseField(){};
 	virtual size_t GetSize() = 0;
