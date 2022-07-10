@@ -30,20 +30,20 @@ bool JsonField<JsonObject *, false>::TryParseInternal(RapidJsonVal value) {
 */
 
 template <>
-void JsonField<JsonObject *, true>::WriteTo(RapidJsonDocument doc) {
+void JsonField<JsonObject *, true>::WriteToDoc(RapidJsonDocument doc) {
 	rapidjson::Document *jsonDoc = (rapidjson::Document *)doc;
 	rapidjson::Document::AllocatorType &allocator = jsonDoc->GetAllocator();
 	rapidjson::Document jObject(&allocator);
 	jObject.SetObject();
-	object->WriteTo(&jObject);
+	object->WriteToDoc(&jObject);
 	jsonDoc->AddMember(rapidjson::StringRef(Name), jObject, allocator);
 }
 template <>
-void JsonField<JsonObject *, false>::WriteTo(RapidJsonDocument doc) {
+void JsonField<JsonObject *, false>::WriteToDoc(RapidJsonDocument doc) {
 	rapidjson::Document *jsonDoc = (rapidjson::Document *)doc;
 	rapidjson::Document::AllocatorType &allocator = jsonDoc->GetAllocator();
 	rapidjson::Document jObject(&allocator);
 	jObject.SetObject();
-	object->WriteTo(&jObject);
+	object->WriteToDoc(&jObject);
 	jsonDoc->AddMember(rapidjson::StringRef(Name), jObject, allocator);
 }

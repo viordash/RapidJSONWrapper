@@ -209,7 +209,7 @@ TEST(JsonObjectTestsGroup, JsonObject_Parse_With_Begin_End_Stages_Test) {
 TEST(JsonObjectTestsGroup, JsonObject_WriteTo_Test) {
 	char buffer[2048];
 	GoodsDto goods(2, 1657052789, "group", "name", 58.25, 48.2, false, "storeName");
-	CHECK_EQUAL(goods.WriteTo(buffer, sizeof(buffer)), 129);
+	CHECK_EQUAL(goods.WriteToString(buffer, sizeof(buffer)), 129);
 
 	STRCMP_EQUAL(buffer, "{\"Id\":2,\"Created\":1657052789,\"Group\":\"group\",\"Name\":\"name\",\"Price\":58.25,\"Quantity\":48.2,\"Deleted\":false,"
 						 "\"StoreName\":\"storeName\"}");
@@ -219,7 +219,7 @@ TEST(JsonObjectTestsGroup, JsonObject_WriteTo_Test) {
 TEST(JsonObjectTestsGroup, JsonObject_WriteTo_With_Limited_Buffer_Test) {
 	char buffer[32];
 	GoodsDto goods(2, 1657052789, "group", "name", 58.25, 48.2, false, "storeName");
-	CHECK_EQUAL(goods.WriteTo(buffer, sizeof(buffer)), 31);
+	CHECK_EQUAL(goods.WriteToString(buffer, sizeof(buffer)), 31);
 
 	STRCMP_EQUAL(buffer, "{\"Id\":2,\"Created\":1657052789,\"G");
 	return EXIT_SUCCESS;

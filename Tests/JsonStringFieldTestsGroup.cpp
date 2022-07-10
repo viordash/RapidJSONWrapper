@@ -43,7 +43,7 @@ TEST(JsonStringFieldGroup, JsonStringField_WriteTo_Test) {
 	rapidjson::Document doc;
 	doc.SetObject();
 
-	testable.WriteTo(&doc);
+	testable.WriteToDoc(&doc);
 
 	rapidjson::StringBuffer buffer;
 	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);

@@ -72,18 +72,18 @@ bool JsonObject::TryParse(const char *jsonStr, int length) {
 	return true;
 }
 
-void JsonObject::WriteTo(RapidJsonDocument doc) {
+void JsonObject::WriteToDoc(RapidJsonDocument doc) {
 	rapidjson::Document *jsonDoc = (rapidjson::Document *)doc;
 	jsonDoc->SetObject();
 
 	for (const auto &field : Fields) {
-		field->WriteTo(jsonDoc);
+		field->WriteToDoc(jsonDoc);
 	}
 }
 
-int JsonObject::WriteTo(char *outBuffer, int outBufferSize) {
+int JsonObject::WriteToString(char *outBuffer, int outBufferSize) {
 	rapidjson::Document doc;
-	WriteTo(&doc);
+	WriteToDoc(&doc);
 	rapidjson::StringBuffer buffer;
 	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 	doc.Accept(writer);
@@ -100,7 +100,7 @@ int JsonObject::WriteTo(char *outBuffer, int outBufferSize) {
 
 int JsonObject::WriteToAsync(void *parent, TOnReady onReady) {
 	rapidjson::Document doc;
-	WriteTo(&doc);
+	WriteToDoc(&doc);
 	rapidjson::StringBuffer buffer;
 	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 	doc.Accept(writer);
@@ -135,7 +135,7 @@ JsonBaseField *JsonObject::SeachFieldByName(const char *name) {
 
 int JsonObject::GetSize() {
 	rapidjson::Document doc;
-	WriteTo(&doc);
+	WriteToDoc(&doc);
 	rapidjson::StringBuffer buffer;
 	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 	doc.Accept(writer);

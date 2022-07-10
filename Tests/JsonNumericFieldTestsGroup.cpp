@@ -68,7 +68,7 @@ TEST(JsonNumericFieldGroup, JsonUIntField_WriteTo_Test) {
 	{
 		rapidjson::Document doc;
 		doc.SetObject();
-		testable1.WriteTo(&doc);
+		testable1.WriteToDoc(&doc);
 		rapidjson::StringBuffer buffer;
 		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 		doc.Accept(writer);
@@ -77,7 +77,7 @@ TEST(JsonNumericFieldGroup, JsonUIntField_WriteTo_Test) {
 	{
 		rapidjson::Document doc;
 		doc.SetObject();
-		testable2.WriteTo(&doc);
+		testable2.WriteToDoc(&doc);
 		rapidjson::StringBuffer buffer;
 		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 		doc.Accept(writer);
@@ -86,7 +86,7 @@ TEST(JsonNumericFieldGroup, JsonUIntField_WriteTo_Test) {
 	{
 		rapidjson::Document doc;
 		doc.SetObject();
-		testable3.WriteTo(&doc);
+		testable3.WriteToDoc(&doc);
 		rapidjson::StringBuffer buffer;
 		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 		doc.Accept(writer);
@@ -95,7 +95,7 @@ TEST(JsonNumericFieldGroup, JsonUIntField_WriteTo_Test) {
 	{
 		rapidjson::Document doc;
 		doc.SetObject();
-		testable4.WriteTo(&doc);
+		testable4.WriteToDoc(&doc);
 		rapidjson::StringBuffer buffer;
 		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 		doc.Accept(writer);
@@ -205,7 +205,7 @@ TEST(JsonNumericFieldGroup, JsonIntField_WriteTo_Test) {
 	{
 		rapidjson::Document doc;
 		doc.SetObject();
-		testable1.WriteTo(&doc);
+		testable1.WriteToDoc(&doc);
 		rapidjson::StringBuffer buffer;
 		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 		doc.Accept(writer);
@@ -214,7 +214,7 @@ TEST(JsonNumericFieldGroup, JsonIntField_WriteTo_Test) {
 	{
 		rapidjson::Document doc;
 		doc.SetObject();
-		testable2.WriteTo(&doc);
+		testable2.WriteToDoc(&doc);
 		rapidjson::StringBuffer buffer;
 		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 		doc.Accept(writer);
@@ -223,7 +223,7 @@ TEST(JsonNumericFieldGroup, JsonIntField_WriteTo_Test) {
 	{
 		rapidjson::Document doc;
 		doc.SetObject();
-		testable3.WriteTo(&doc);
+		testable3.WriteToDoc(&doc);
 		rapidjson::StringBuffer buffer;
 		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 		doc.Accept(writer);
@@ -232,7 +232,7 @@ TEST(JsonNumericFieldGroup, JsonIntField_WriteTo_Test) {
 	{
 		rapidjson::Document doc;
 		doc.SetObject();
-		testable4.WriteTo(&doc);
+		testable4.WriteToDoc(&doc);
 		rapidjson::StringBuffer buffer;
 		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 		doc.Accept(writer);
@@ -326,7 +326,7 @@ TEST(JsonNumericFieldGroup, JsonBoolField_WriteTo_Test) {
 
 	rapidjson::Document doc;
 	doc.SetObject();
-	testable1.WriteTo(&doc);
+	testable1.WriteToDoc(&doc);
 	rapidjson::StringBuffer buffer;
 	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 	doc.Accept(writer);

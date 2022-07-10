@@ -63,14 +63,14 @@ void JsonBaseArray::WriteToCore(RapidJsonDocument doc, std::vector<JsonBaseField
 	jsonDoc->SetArray();
 	for (const auto &item : *items) {
 		rapidjson::Document aChildDoc(&allocator);
-		item->WriteTo(&aChildDoc);
+		item->WriteToDoc(&aChildDoc);
 		jsonDoc->PushBack(aChildDoc, allocator);
 	}
 }
 
-int JsonBaseArray::WriteTo(char *outBuffer, int outBufferSize) {
+int JsonBaseArray::WriteToString(char *outBuffer, int outBufferSize) {
 	rapidjson::Document doc;
-	this->WriteTo(&doc);
+	this->WriteToDoc(&doc);
 	rapidjson::StringBuffer buffer;
 	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 	doc.Accept(writer);
@@ -87,7 +87,7 @@ int JsonBaseArray::WriteTo(char *outBuffer, int outBufferSize) {
 
 int JsonBaseArray::WriteToAsync(void *parent, TOnReady onReady) {
 	rapidjson::Document doc;
-	this->WriteTo(&doc);
+	this->WriteToDoc(&doc);
 	rapidjson::StringBuffer buffer;
 	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 	doc.Accept(writer);
@@ -100,7 +100,7 @@ int JsonBaseArray::WriteToAsync(void *parent, TOnReady onReady) {
 
 int JsonBaseArray::GetSize() {
 	rapidjson::Document doc;
-	this->WriteTo(&doc);
+	this->WriteToDoc(&doc);
 	rapidjson::StringBuffer buffer;
 	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 	doc.Accept(writer);

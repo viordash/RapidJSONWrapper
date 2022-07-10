@@ -27,7 +27,7 @@ bool JsonField<char *, false>::TryParseInternal(RapidJsonVal value) {
 */
 
 template <>
-void JsonField<char *, true>::WriteTo(RapidJsonDocument doc) {
+void JsonField<char *, true>::WriteToDoc(RapidJsonDocument doc) {
 	rapidjson::Value jsonVal;
 	rapidjson::Document *jsonDoc = (rapidjson::Document *)doc;
 	rapidjson::Document::AllocatorType &allocator = jsonDoc->GetAllocator();
@@ -35,7 +35,7 @@ void JsonField<char *, true>::WriteTo(RapidJsonDocument doc) {
 	jsonDoc->AddMember(rapidjson::StringRef(Name), jsonVal, allocator);
 }
 template <>
-void JsonField<char *, false>::WriteTo(RapidJsonDocument doc) {
+void JsonField<char *, false>::WriteToDoc(RapidJsonDocument doc) {
 	rapidjson::Value jsonVal;
 	rapidjson::Document *jsonDoc = (rapidjson::Document *)doc;
 	rapidjson::Document::AllocatorType &allocator = jsonDoc->GetAllocator();

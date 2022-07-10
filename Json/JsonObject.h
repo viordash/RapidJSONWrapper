@@ -15,8 +15,8 @@ class JsonObject : public JsonFieldsContainer {
 	RapidJsonDocument BeginTryParse(const char *jsonStr, int length = -1);
 	void EndTryParse(RapidJsonDocument doc);
 
-	void WriteTo(RapidJsonDocument doc);
-	int WriteTo(char *outBuffer, int outBufferSize);
+	void WriteToDoc(RapidJsonDocument doc);
+	int WriteToString(char *outBuffer, int outBufferSize);
 
 	typedef void (*TOnReady)(void *parent, const char *json, int size);
 	int WriteToAsync(void *parent, TOnReady onReady);

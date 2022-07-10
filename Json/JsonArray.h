@@ -11,8 +11,8 @@ class JsonBaseArray {
 	RapidJsonDocument BeginTryParse(const char *jsonStr, int length = -1);
 	void EndTryParse(RapidJsonDocument doc);
 
-	virtual void WriteTo(RapidJsonDocument doc) = 0;
-	int WriteTo(char *outBuffer, int outBufferSize);
+	virtual void WriteToDoc(RapidJsonDocument doc) = 0;
+	int WriteToString(char *outBuffer, int outBufferSize);
 
 	typedef void (*TOnReady)(void *parent, const char *json, int size);
 	int WriteToAsync(void *parent, TOnReady onReady);
@@ -125,7 +125,7 @@ class JsonArray : public JsonBaseArray {
 		}
 	}
 
-	virtual void WriteTo(RapidJsonDocument doc) override {
+	virtual void WriteToDoc(RapidJsonDocument doc) override {
 		WriteToCore(doc, (std::vector<JsonBaseField *> *)&Items);
 	}
 
