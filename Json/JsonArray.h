@@ -123,8 +123,9 @@ class JsonArray : public JsonBaseArray {
 
 	void Reset() {
 		for (const auto &item : Items) {
-			item->Reset();
+			delete item;
 		}
+		Items.clear();
 	}
 
 	virtual void WriteToDoc(RapidJsonDocument doc) override {
