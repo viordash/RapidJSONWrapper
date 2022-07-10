@@ -22,17 +22,13 @@ class UserDto : public JsonObject {
 
 static int maxCount = 10;
 
-class UsersList : public JsonArray {
+class UsersList : public JsonArray<UserDto> {
   public:
 	UsersList() {
 	}
 
-	JsonObject *CreateItem() override {
-		return (JsonObject *)(new UserDto());
-	}
-
-	bool Validate() override {
-		return Items.size() < maxCount;
+	bool Validate(UserDto *item) override {
+		return Items.size() < maxCount && item->Validate();
 	}
 };
 
@@ -44,13 +40,35 @@ TEST(JsonArrayTestsGroup, JsonArray_Parse_Test) {
 	CHECK_EQUAL(usersList.Items.size(), 3);
 
 	auto it = usersList.Items.begin();
-	STRCMP_EQUAL(((UserDto *)*it)->Name.Value, "User1");
-	CHECK_EQUAL(((UserDto *)*it)->Role.Value, 100);
+	STRCMP_EQUAL((*it)->Name.Value, "User1");
+	CHECK_EQUAL((*it)->Role.Value, 100);
+	return EXIT_SUCCESS;
+}
+
+TEST(JsonArrayTestsGroup, JsonArray_Parse_Error_Test) {
+	UsersList usersList;
+	CHECK_FALSE(usersList.TryParse("[{\"name\":\"User1\",\"role\":100},{\"name\":\"User2\",\"role\":0},{\"name\":\"User3\","
+								   "\"role\":255}"));
+	CHECK_FALSE(usersList.TryParse("{\"name\":\"User1\",\"role\":100},{\"name\":\"User2\",\"role\":0},{\"name\":\"User3\","
+								   "\"role\":255}]"));
+	CHECK_FALSE(usersList.TryParse("[\"name\":\"User1\",\"role\":100},{\"name\":\"User2\",\"role\":0},{\"name\":\"User3\","
+								   "\"role\":255}]"));
+	CHECK_FALSE(usersList.TryParse("[{\"name\":\"User1\",\"role\":100},{\"name\":\"User2\",\"role\":0},{\"name\":\"User3\","
+								   "\"role\":255]"));
+	CHECK_FALSE(usersList.TryParse("[{\"name\":\"User1\",\"role\":100},{\"name\":\"User2\",\"role\":0},{\"name\"\"User3\","
+								   "\"role\":255}]"));
+	CHECK_FALSE(usersList.TryParse("[{\"name\":\"User1\",\"role\":100}{\"name\":\"User2\",\"role\":0},{\"name\":\"User3\","
+								   "\"role\":255}]"));
+
+	CHECK_FALSE(usersList.TryParse(NULL, 1));
+
+	CHECK_EQUAL(usersList.Items.size(), 0);
 	return EXIT_SUCCESS;
 }
 
 int main(const int argc, const char *argv[]) {
 	TEST_RUN(JsonArrayTestsGroup, JsonArray_Parse_Test);
+	TEST_RUN(JsonArrayTestsGroup, JsonArray_Parse_Error_Test);
 
 	printf("JsonArrayTestsGroup success");
 	return EXIT_SUCCESS;

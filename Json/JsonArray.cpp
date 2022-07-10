@@ -5,65 +5,21 @@
 #include "JsonObject.h"
 #include "JsonArray.h"
 
-JsonArray::JsonArray(bool destroyItems) : destroyItems(destroyItems) {
-}
-
-JsonArray::~JsonArray() {
-	if (destroyItems) {
-		for (auto item : Items) {
-			delete item;
-		}
-	}
-	Items.clear();
-}
-
-bool JsonArray::Add(JsonObject *item) {
-	if (item == NULL) {
-		return false;
-	}
-	if (!Validate()) {
-		return false;
-	}
-	Items.push_back(item);
-	return true;
-}
-
-void JsonArray::Remove(JsonObject *item) {
-	if (item == NULL) {
-		return;
-	}
-	auto iter = Find(item);
-	if (iter != Items.end()) {
-		Items.erase(iter);
-	}
-}
-
-std::vector<JsonObject *>::iterator JsonArray::Find(JsonObject *item) {
-	for (std::vector<JsonObject *>::iterator iter = Items.begin(); iter != Items.end(); iter++) {
-		if ((*iter)->Equals(item)) {
-			return iter;
-		}
-	}
-	return Items.end();
-}
-
-bool JsonArray::TryParse(RapidJsonValues value) {
+bool JsonBaseArray::TryParse(RapidJsonValues value) {
 	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
 	if (!jsonValue->IsArray()) {
 		return false;
 	}
 
 	for (const auto &item : jsonValue->GetArray()) {
-		auto newItem = CreateItem();
-		if (!ParseItem((RapidJsonVal)&item, newItem)) {
-			delete newItem;
+		if (!ParseItem((RapidJsonVal)&item)) {
 			return false;
 		}
 	}
 	return true;
 }
 
-bool JsonArray::TryParseByObject(RapidJsonValues value, const char *objectName) {
+bool JsonBaseArray::TryParseByObject(RapidJsonValues value, const char *objectName) {
 	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
 
 	rapidjson::Value::ConstMemberIterator itr = jsonValue->FindMember(objectName);
@@ -73,7 +29,7 @@ bool JsonArray::TryParseByObject(RapidJsonValues value, const char *objectName) 
 	return TryParse((RapidJsonValues) & (itr->value));
 }
 
-RapidJsonDocument JsonArray::BeginTryParse(const char *jsonStr, int length) {
+RapidJsonDocument JsonBaseArray::BeginTryParse(const char *jsonStr, int length) {
 	if (jsonStr == NULL || length == 0) {
 		return NULL;
 	}
@@ -89,52 +45,32 @@ RapidJsonDocument JsonArray::BeginTryParse(const char *jsonStr, int length) {
 		return NULL;
 	}
 
-	if (!TryParse(doc)) {
+	if (!this->TryParse(doc)) {
 		delete doc;
 		return NULL;
 	}
 	return (RapidJsonDocument)doc;
 }
 
-void JsonArray::EndTryParse(RapidJsonDocument doc) {
+void JsonBaseArray::EndTryParse(RapidJsonDocument doc) {
 	rapidjson::Document *jsonDoc = (rapidjson::Document *)doc;
 	delete jsonDoc;
 }
 
-bool JsonArray::TryParse(const char *jsonStr, int length) {
-	auto doc = BeginTryParse(jsonStr, length);
-	if (doc == NULL) {
-		return false;
-	}
-	EndTryParse(doc);
-	return true;
-}
-
-bool JsonArray::ParseItem(RapidJsonVal value, JsonObject *newItem) {
-	if (!newItem->TryParse(value) || !newItem->Validate()) {
-		for (const auto &item : Items) {
-			delete item;
-		}
-		Items.clear();
-		return false;
-	}
-	return Add(newItem);
-}
-
-void JsonArray::WriteTo(RapidJsonDocument doc) {
+void JsonBaseArray::WriteToCore(RapidJsonDocument doc, std::vector<JsonBaseField *> *items) {
 	rapidjson::Document *jsonDoc = (rapidjson::Document *)doc;
 	rapidjson::Document::AllocatorType &allocator = jsonDoc->GetAllocator();
 	jsonDoc->SetArray();
-	for (const auto &item : Items) {
+	for (const auto &item : *items) {
 		rapidjson::Document aChildDoc(&allocator);
 		item->WriteTo(&aChildDoc);
 		jsonDoc->PushBack(aChildDoc, allocator);
 	}
 }
 
-int JsonArray::WriteTo(char *outBuffer, int outBufferSize) {
+int JsonBaseArray::WriteTo(char *outBuffer, int outBufferSize) {
 	rapidjson::Document doc;
-	WriteTo(&doc);
+	this->WriteTo(&doc);
 	rapidjson::StringBuffer buffer;
 	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 	doc.Accept(writer);
@@ -149,9 +85,9 @@ int JsonArray::WriteTo(char *outBuffer, int outBufferSize) {
 	return size;
 }
 
-int JsonArray::WriteTo(void *parent, TOnReady onReady) {
+int JsonBaseArray::WriteToAsync(void *parent, TOnReady onReady) {
 	rapidjson::Document doc;
-	WriteTo(&doc);
+	this->WriteTo(&doc);
 	rapidjson::StringBuffer buffer;
 	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 	doc.Accept(writer);
@@ -162,53 +98,11 @@ int JsonArray::WriteTo(void *parent, TOnReady onReady) {
 	return size;
 }
 
-void JsonArray::CloneFrom(JsonArray *other) {
-	if (other == NULL) {
-		return;
-	}
-
-	for (const auto &item : Items) {
-		delete item;
-	}
-	Items.clear();
-
-	for (const auto &item : other->Items) {
-		auto newItem = CreateItem();
-		newItem->CloneFrom(item);
-		if (!Add(newItem)) {
-			delete newItem;
-			return;
-		}
-	}
-}
-
-int JsonArray::GetSize() {
+int JsonBaseArray::GetSize() {
 	rapidjson::Document doc;
-	WriteTo(&doc);
+	this->WriteTo(&doc);
 	rapidjson::StringBuffer buffer;
 	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 	doc.Accept(writer);
 	return buffer.GetSize();
-}
-
-bool JsonArray::Equals(JsonArray *other) {
-	if (other == NULL) {
-		return false;
-	}
-	if (Items.size() != other->Items.size()) {
-		return false;
-	}
-
-	for (size_t i = 0; i < Items.size(); i++) {
-		if (!Items[i]->Equals(other->Items[i])) {
-			return false;
-		}
-	}
-	return true;
-}
-
-void JsonArray::Reset() {
-	for (const auto &item : Items) {
-		item->Reset();
-	}
 }
