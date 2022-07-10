@@ -28,9 +28,6 @@ static int maxCount = 10;
 
 class UsersList : public JsonArray<UserDto> {
   public:
-	UsersList(bool destroyItems = true) : JsonArray<UserDto>(destroyItems) {
-	}
-
 	bool Validate(UserDto *item) override {
 		return Items.size() < maxCount && item->Validate();
 	}

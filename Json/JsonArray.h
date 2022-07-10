@@ -29,16 +29,8 @@ class JsonBaseArray {
 template <class TItem>
 class JsonArray : public JsonBaseArray {
   public:
-	JsonArray(bool destroyItems = true) : destroyItems{destroyItems} {
-	}
-
 	virtual ~JsonArray() {
-		if (destroyItems) {
-			for (auto item : Items) {
-				delete item;
-			}
-		}
-		Items.clear();
+		Reset();
 	}
 
 	std::vector<TItem *> Items;
@@ -90,10 +82,7 @@ class JsonArray : public JsonBaseArray {
 			return;
 		}
 
-		for (const auto &item : Items) {
-			delete item;
-		}
-		Items.clear();
+		Reset();
 
 		for (const auto &item : other->Items) {
 			auto newItem = new TItem();
@@ -144,5 +133,4 @@ class JsonArray : public JsonBaseArray {
 	virtual bool Validate(TItem *item) = 0;
 
   private:
-	bool destroyItems;
 };
