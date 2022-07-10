@@ -5,7 +5,6 @@
 
 class JsonObject : public JsonFieldsContainer {
   public:
-
 	virtual bool TryParse(RapidJsonValues value);
 	bool TryParseByObject(RapidJsonValues value, const char *objectName);
 	virtual bool TryParse(const char *jsonStr, int length = -1);
@@ -23,11 +22,12 @@ class JsonObject : public JsonFieldsContainer {
 
 	int GetSize();
 	virtual bool Equals(JsonObject *other);
-	
+
 	virtual bool Validate() {
 		return true;
 	}
 	void Reset();
+
   protected:
   private:
 	JsonBaseField *SeachFieldByName(const char *name);
