@@ -3,6 +3,8 @@
 #include "JsonField.h"
 #include "JsonFieldsContainer.h"
 
+class JsonObject;
+
 class JsonBaseArray {
   public:
 	virtual bool TryParse(RapidJsonValues value);
@@ -21,7 +23,7 @@ class JsonBaseArray {
 
   protected:
 	virtual bool ParseItem(RapidJsonVal value) = 0;
-	void WriteToCore(RapidJsonDocument doc, std::vector<JsonBaseField *> *items);
+	void WriteToCore(RapidJsonDocument doc, std::vector<JsonObject *> *items);
 };
 
 template <class TItem>
@@ -126,7 +128,7 @@ class JsonArray : public JsonBaseArray {
 	}
 
 	virtual void WriteToDoc(RapidJsonDocument doc) override {
-		WriteToCore(doc, (std::vector<JsonBaseField *> *)&Items);
+		WriteToCore(doc, (std::vector<JsonObject *> *)&Items);
 	}
 
   protected:

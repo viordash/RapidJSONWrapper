@@ -57,11 +57,11 @@ void JsonBaseArray::EndTryParse(RapidJsonDocument doc) {
 	delete jsonDoc;
 }
 
-void JsonBaseArray::WriteToCore(RapidJsonDocument doc, std::vector<JsonBaseField *> *items) {
+void JsonBaseArray::WriteToCore(RapidJsonDocument doc, std::vector<JsonObject *> *items) {
 	rapidjson::Document *jsonDoc = (rapidjson::Document *)doc;
 	rapidjson::Document::AllocatorType &allocator = jsonDoc->GetAllocator();
 	jsonDoc->SetArray();
-	for (const auto &item : *items) {
+	for (const auto item : *items) {
 		rapidjson::Document aChildDoc(&allocator);
 		item->WriteToDoc(&aChildDoc);
 		jsonDoc->PushBack(aChildDoc, allocator);
