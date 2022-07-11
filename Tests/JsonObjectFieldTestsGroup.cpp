@@ -76,9 +76,9 @@ TEST(JsonObjectFieldGroup, JsonObjectField_TryParse_Test) {
 			  ",\"user\":{\"name\":\"Joe Doe\",\"role\":1,\"car\":{\"color\": \"Red\",\"fabric\": \"Lada\"}}}");
 	CHECK(testable.TryParse(&doc));
 
-	STRCMP_EQUAL(testable.Cast<UserCarDto>()->Name.Value, "Joe Doe");
-	STRCMP_EQUAL(testable.Cast<UserCarDto>()->Car.Cast<CarDto>()->Color.Value, "Red");
-	CHECK_EQUAL(testable.Cast<UserCarDto>()->Role.Value, TUserRole::uViewer);
+	STRCMP_EQUAL(userCarDto.Name.Value, "Joe Doe");
+	STRCMP_EQUAL(userCarDto.carDto.Color.Value, "Red");
+	CHECK_EQUAL(userCarDto.Role.Value, TUserRole::uViewer);
 	return EXIT_SUCCESS;
 }
 
@@ -90,13 +90,13 @@ TEST(JsonObjectFieldGroup, JsonObjectField_TryParse_With_Null_Or_Empty_Object_Te
 	rapidjson::Document doc;
 	doc.Parse("{\"parent1\":\"user1\",\"user\":null}");
 	CHECK(testable.TryParse(&doc));
-	STRCMP_EQUAL(testable.Cast<UserDto>()->Name.Value, "");
-	CHECK_EQUAL(testable.Cast<UserDto>()->Role.Value, 0);
+	STRCMP_EQUAL(userDto.Name.Value, "");
+	CHECK_EQUAL(userDto.Role.Value, 0);
 
 	doc.Parse("{\"parent1\":\"user1\",\"user\":{}}");
 	CHECK(testable.TryParse(&doc));
-	STRCMP_EQUAL(testable.Cast<UserDto>()->Name.Value, "");
-	CHECK_EQUAL(testable.Cast<UserDto>()->Role.Value, 0);
+	STRCMP_EQUAL(userDto.Name.Value, "");
+	CHECK_EQUAL(userDto.Role.Value, 0);
 	return EXIT_SUCCESS;
 }
 
@@ -114,7 +114,7 @@ TEST(JsonObjectFieldGroup, JsonObjectField_TryParse_Field_Optional_Test) {
 	doc.Parse("{\"parent1\":\"user1\""
 			  ",\"otherField\":{\"name\":\"Joe Doe\",\"role\":1}}");
 	CHECK_TRUE(testableWithOptional->TryParse(&doc));
-	STRCMP_EQUAL(testableWithOptional->Cast<UserDto>()->Name.Value, "");
+	STRCMP_EQUAL(user.Name.Value, "");
 	delete testableWithOptional;
 	return EXIT_SUCCESS;
 }
@@ -177,8 +177,8 @@ TEST(JsonObjectFieldGroup, JsonObjectField_CloneFrom_Test) {
 	JsonField<JsonObject *> testable1(&container, "user", &user1);
 	JsonField<JsonObject *> testable2(&container, "user", &user2);
 	testable1.CloneFrom(&testable2);
-	STRCMP_EQUAL(testable1.Cast<UserDto>()->Name.Value, "user2");
-	CHECK_EQUAL(testable1.Cast<UserDto>()->Role.Value, TUserRole::uAdmin);
+	STRCMP_EQUAL(user1.Name.Value, "user2");
+	CHECK_EQUAL(user1.Role.Value, TUserRole::uAdmin);
 
 	return EXIT_SUCCESS;
 }

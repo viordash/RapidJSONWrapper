@@ -26,11 +26,6 @@ class JsonField<JsonObject *, optional> : public JsonOptionalField<optional> {
 			   && object->Equals(((JsonField *)other)->object);
 	}
 
-	template <typename TObj>
-	TObj *Cast() const {
-		return (TObj *)object;
-	}
-
   protected:
 	JsonObject *object;
 
