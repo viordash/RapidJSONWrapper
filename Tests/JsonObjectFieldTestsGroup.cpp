@@ -163,7 +163,7 @@ TEST(JsonObjectFieldGroup, JsonObjectField_Equals_Test) {
 	CHECK_TRUE(testable1.Equals(&testable2));
 	CHECK_TRUE(testable2.Equals(&testable1));
 
-	JsonField<JsonObject *> testable3(&container, "testStringWrong", &user2);
+	JsonField<JsonObject *> testable3(&container, "testFieldWrong", &user2);
 	CHECK_FALSE(testable3.Equals(&testable2));
 	CHECK_FALSE(testable2.Equals(&testable3));
 	return EXIT_SUCCESS;

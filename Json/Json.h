@@ -5,3 +5,4 @@
 #include "JsonObject.h"
 #include "JsonArray.h"
 #include "JsonObjectField.h"
+#include "JsonArrayField.h"

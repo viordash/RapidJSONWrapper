@@ -20,6 +20,9 @@ class JsonBaseArray {
 	int WriteToAsync(void *parent, TOnReady onReady);
 
 	int GetSize();
+	virtual void CloneFrom(JsonBaseArray *other) = 0;
+	virtual bool Equals(JsonBaseArray *other) = 0;
+	virtual void Reset() = 0;
 
   protected:
 	virtual bool TryParseItem(RapidJsonValues value) = 0;
@@ -77,14 +80,14 @@ class JsonArray : public JsonBaseArray {
 		return true;
 	}
 
-	virtual void CloneFrom(JsonArray *other) {
+	virtual void CloneFrom(JsonBaseArray *other) override {
 		if (other == NULL) {
 			return;
 		}
 
 		Reset();
 
-		for (const auto &item : other->Items) {
+		for (const auto &item : ((JsonArray *)other)->Items) {
 			auto newItem = new TItem();
 			newItem->CloneFrom(item);
 			if (!Add(newItem)) {
@@ -94,23 +97,23 @@ class JsonArray : public JsonBaseArray {
 		}
 	}
 
-	virtual bool Equals(JsonArray *other) {
+	virtual bool Equals(JsonBaseArray *other) override {
 		if (other == NULL) {
 			return false;
 		}
-		if (Items.size() != other->Items.size()) {
+		if (Items.size() != ((JsonArray *)other)->Items.size()) {
 			return false;
 		}
 
 		for (size_t i = 0; i < Items.size(); i++) {
-			if (!Items[i]->Equals(other->Items[i])) {
+			if (!Items[i]->Equals(((JsonArray *)other)->Items[i])) {
 				return false;
 			}
 		}
 		return true;
 	}
 
-	void Reset() {
+	virtual void Reset() override {
 		for (const auto &item : Items) {
 			delete item;
 		}
