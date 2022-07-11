@@ -59,6 +59,32 @@ class GoodsDto : public JsonObject {
 	}
 };
 
+class UsersList : public JsonArray<UserDto> {
+  public:
+	bool Validate(UserDto *item) override {
+		return item->Validate();
+	}
+};
+
+class UsersGroupDto : public JsonObject {
+  public:
+	JsonField<char *> Group;
+	JsonField<uint32_t, true> Role;
+	JsonField<JsonBaseArray *> Users;
+	UsersList usersList;
+
+	UsersGroupDto(const char *group, uint32_t role)
+		: Group(this, "group", group), //
+		  Role(this, "role", role),	   //
+		  Users(this, "users", &usersList){};
+
+	UsersGroupDto()
+		: Group(this, "group"), //
+		  Role(this, "role"),	//
+		  Users(this, "users", &usersList) {
+	}
+};
+
 TEST(JsonObjectTestsGroup, JsonObject_Parse_Test) {
 	GoodsDto goods;
 	CHECK_TRUE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}"));
@@ -80,6 +106,19 @@ TEST(JsonObjectTestsGroup, JsonObject_Parse_Test) {
 							  "{\"Id\":1,\"Created\":1657052047,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045,"
 							  "\"StoreName\":\"Store #1\"}               \t  \r\n"));
 	CHECK_EQUAL(goods.Created.Value, 1657052047);
+	return EXIT_SUCCESS;
+}
+
+TEST(JsonObjectTestsGroup, JsonObject_With_JsonArrayField_TryParse_Test) {
+	JsonFieldsContainer container;
+	UsersGroupDto usersGroup;
+
+	CHECK(usersGroup.TryParse("{\"group\":\"SuperGroup\",\"role\":123,\"users\":[{\"name\":\"user 1\",\"role\":42},{\"name\":\"user "
+							  "2\",\"role\":10},{\"name\":\"user 3\",\"role\":100}]}"));
+	CHECK_EQUAL(usersGroup.usersList.Items.size(), 3);
+	CHECK_EQUAL(usersGroup.usersList.Items[0]->Role.Value, 42);
+	STRCMP_EQUAL(usersGroup.usersList.Items[2]->Name.Value, "user 3");
+
 	return EXIT_SUCCESS;
 }
 
@@ -244,6 +283,30 @@ TEST(JsonObjectTestsGroup, JsonObject_WriteTo_Async_Test) {
 	return EXIT_SUCCESS;
 }
 
+TEST(JsonObjectTestsGroup, JsonObject_With_JsonArrayField_WriteTo_Test) {
+	JsonFieldsContainer container;
+
+	UsersGroupDto usersGroup("SuperGroup", 123);
+	usersGroup.usersList.Add(new UserDto("user 1", (TUserRole)0));
+	usersGroup.usersList.Add(new UserDto("user 2", (TUserRole)10));
+	usersGroup.usersList.Add(new UserDto("user 3", (TUserRole)100));
+	usersGroup.usersList.Add(new UserDto("user 4", (TUserRole)1000));
+
+	rapidjson::Document doc;
+	doc.SetObject();
+
+	usersGroup.WriteToDoc(&doc);
+
+	rapidjson::StringBuffer buffer;
+	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+	doc.Accept(writer);
+
+	const char *jsonStr = buffer.GetString();
+	STRCMP_EQUAL(jsonStr, "{\"group\":\"SuperGroup\",\"role\":123,\"users\":[{\"name\":\"user 1\",\"role\":0},{\"name\":\"user "
+						  "2\",\"role\":10},{\"name\":\"user 3\",\"role\":100},{\"name\":\"user 4\",\"role\":1000}]}");
+	return EXIT_SUCCESS;
+}
+
 TEST(JsonObjectTestsGroup, JsonObject_Equals_Test) {
 	GoodsDto goods1(2, 1657052789, "group", "name", 58.25, 48.2, false, "storeName");
 	GoodsDto goods2(2, 1657052789, "group", "name", 58.25, 48.2, false, "storeName");
@@ -306,6 +369,7 @@ TEST(JsonObjectTestsGroup, JsonObject_CloneFrom_Test) {
 
 int main(const int argc, const char *argv[]) {
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_Parse_Test);
+	TEST_RUN(JsonObjectTestsGroup, JsonObject_With_JsonArrayField_TryParse_Test);
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_Parse_With_Optionaly_Fields_Test);
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_Parse_Error_Test);
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_Parse_With_Reordered_Fields_Test);
@@ -315,6 +379,7 @@ int main(const int argc, const char *argv[]) {
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_WriteTo_Test);
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_WriteTo_With_Limited_Buffer_Test);
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_WriteTo_Async_Test);
+	TEST_RUN(JsonObjectTestsGroup, JsonObject_With_JsonArrayField_WriteTo_Test);
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_Equals_Test);
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_GetSize_Test);
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_Reset_Test);
