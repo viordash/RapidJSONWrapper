@@ -8,7 +8,6 @@ class JsonObject;
 class JsonBaseArray {
   public:
 	virtual bool TryParse(RapidJsonValues value);
-	bool TryParseByObject(RapidJsonValues value, const char *objectName);
 
 	RapidJsonDocument BeginTryParse(const char *jsonStr, int length = -1);
 	void EndTryParse(RapidJsonDocument doc);

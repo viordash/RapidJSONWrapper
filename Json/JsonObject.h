@@ -6,7 +6,6 @@
 class JsonObject : public JsonFieldsContainer {
   public:
 	virtual bool TryParse(RapidJsonValues value);
-	bool TryParseByObject(RapidJsonValues value, const char *objectName);
 	virtual bool TryParse(const char *jsonStr, int length = -1);
 
 	RapidJsonDocument BeginTryParse(const char *jsonStr, int length = -1);

@@ -20,16 +20,6 @@ bool JsonObject::TryParse(RapidJsonValues value) {
 	return true;
 }
 
-bool JsonObject::TryParseByObject(RapidJsonValues value, const char *objectName) {
-	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
-
-	rapidjson::Value::ConstMemberIterator itr = jsonValue->FindMember(objectName);
-	if (itr == jsonValue->MemberEnd()) {
-		return false;
-	}
-	return TryParse((RapidJsonValues)&itr->value);
-}
-
 RapidJsonDocument JsonObject::BeginTryParse(const char *jsonStr, int length) {
 	if (jsonStr == NULL || length == 0) {
 		return NULL;
