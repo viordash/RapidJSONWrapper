@@ -16,7 +16,7 @@ class JsonObject : public JsonFieldsContainer {
 	int WriteToString(char *outBuffer, int outBufferSize);
 
 	typedef void (*TOnReady)(void *parent, const char *json, int size);
-	int WriteToAsync(void *parent, TOnReady onReady);
+	int DirectWriteTo(void *parent, TOnReady onReady);
 
 	virtual void CloneFrom(JsonObject *other);
 

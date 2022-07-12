@@ -17,7 +17,7 @@ class JsonBaseArray {
 	int WriteToString(char *outBuffer, int outBufferSize);
 
 	typedef void (*TOnReady)(void *parent, const char *json, int size);
-	int WriteToAsync(void *parent, TOnReady onReady);
+	int DirectWriteTo(void *parent, TOnReady onReady);
 
 	int GetSize();
 	virtual void CloneFrom(JsonBaseArray *other) = 0;

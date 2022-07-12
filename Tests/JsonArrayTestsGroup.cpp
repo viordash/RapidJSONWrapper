@@ -111,26 +111,26 @@ TEST(JsonArrayTestsGroup, JsonArray_WriteTo_With_Limited_Buffer_Test) {
 }
 
 static void *TestParent = NULL;
-static char *TestAsyncBuffer = NULL;
+static char *DirectWriteTestBuffer = NULL;
 static void OnReady(void *parent, const char *json, int size) {
 	TestParent = parent;
-	TestAsyncBuffer = new char[size + 1];
-	memcpy(TestAsyncBuffer, json, size);
-	TestAsyncBuffer[size] = 0;
+	DirectWriteTestBuffer = new char[size + 1];
+	memcpy(DirectWriteTestBuffer, json, size);
+	DirectWriteTestBuffer[size] = 0;
 }
 
-TEST(JsonArrayTestsGroup, JsonArray_WriteTo_Async_Test) {
+TEST(JsonArrayTestsGroup, JsonArray_Direct_Write_From_Json_Memory_Test) {
 	UsersList usersList;
 	usersList.Add(new UserDto("user 1", 0));
 	usersList.Add(new UserDto("user 2", 10));
 	usersList.Add(new UserDto("user 3", 100));
 	usersList.Add(new UserDto("user 4", 1000));
 
-	usersList.WriteToAsync((void *)987654321, OnReady);
+	usersList.DirectWriteTo((void *)987654321, OnReady);
 	CHECK_EQUAL(TestParent, (void *)987654321);
-	STRCMP_EQUAL(TestAsyncBuffer,
+	STRCMP_EQUAL(DirectWriteTestBuffer,
 				 "[{\"name\":\"user 1\",\"role\":0},{\"name\":\"user 2\",\"role\":10},{\"name\":\"user 3\",\"role\":100},{\"name\":\"user 4\",\"role\":1000}]");
-	delete[] TestAsyncBuffer;
+	delete[] DirectWriteTestBuffer;
 	return EXIT_SUCCESS;
 }
 
@@ -218,7 +218,7 @@ int main(const int argc, const char *argv[]) {
 	TEST_RUN(JsonArrayTestsGroup, JsonArray_Parse_With_Begin_End_Stages_Test);
 	TEST_RUN(JsonArrayTestsGroup, JsonArray_WriteTo_Test);
 	TEST_RUN(JsonArrayTestsGroup, JsonArray_WriteTo_With_Limited_Buffer_Test);
-	TEST_RUN(JsonArrayTestsGroup, JsonArray_WriteTo_Async_Test);
+	TEST_RUN(JsonArrayTestsGroup, JsonArray_Direct_Write_From_Json_Memory_Test);
 	TEST_RUN(JsonArrayTestsGroup, JsonArray_Equals_Test);
 	TEST_RUN(JsonArrayTestsGroup, JsonArray_GetSize_Test);
 	TEST_RUN(JsonArrayTestsGroup, JsonArray_Reset_Test);

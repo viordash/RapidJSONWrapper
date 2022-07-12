@@ -85,7 +85,7 @@ int JsonBaseArray::WriteToString(char *outBuffer, int outBufferSize) {
 	return size;
 }
 
-int JsonBaseArray::WriteToAsync(void *parent, TOnReady onReady) {
+int JsonBaseArray::DirectWriteTo(void *parent, TOnReady onReady) {
 	rapidjson::Document doc;
 	this->WriteToDoc(&doc);
 	rapidjson::StringBuffer buffer;

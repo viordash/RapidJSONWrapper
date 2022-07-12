@@ -273,22 +273,22 @@ TEST(JsonObjectTestsGroup, JsonObject_WriteTo_With_Limited_Buffer_Test) {
 }
 
 static void *TestParent = NULL;
-static char *TestAsyncBuffer = NULL;
+static char *DirectWriteTestBuffer = NULL;
 static void OnReady(void *parent, const char *json, int size) {
 	TestParent = parent;
-	TestAsyncBuffer = new char[size + 1];
-	memcpy(TestAsyncBuffer, json, size);
-	TestAsyncBuffer[size] = 0;
+	DirectWriteTestBuffer = new char[size + 1];
+	memcpy(DirectWriteTestBuffer, json, size);
+	DirectWriteTestBuffer[size] = 0;
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_WriteTo_Async_Test) {
 	GoodsDto goods(2, 1657052789, "group", "name", 58.25, 48.2);
-	goods.WriteToAsync((void *)987654321, OnReady);
+	goods.DirectWriteTo((void *)987654321, OnReady);
 
 	CHECK_EQUAL(TestParent, (void *)987654321);
-	STRCMP_EQUAL(TestAsyncBuffer, "{\"Id\":2,\"Created\":1657052789,\"Group\":\"group\",\"Name\":\"name\",\"Price\":58.25,\"Quantity\":48.2,\"Deleted\":false,"
+	STRCMP_EQUAL(DirectWriteTestBuffer, "{\"Id\":2,\"Created\":1657052789,\"Group\":\"group\",\"Name\":\"name\",\"Price\":58.25,\"Quantity\":48.2,\"Deleted\":false,"
 								  "\"StoreName\":\"\"}");
-	delete[] TestAsyncBuffer;
+	delete[] DirectWriteTestBuffer;
 	return EXIT_SUCCESS;
 }
 

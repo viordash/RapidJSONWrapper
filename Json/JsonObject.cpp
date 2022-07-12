@@ -93,7 +93,7 @@ int JsonObject::WriteToString(char *outBuffer, int outBufferSize) {
 	return size;
 }
 
-int JsonObject::WriteToAsync(void *parent, TOnReady onReady) {
+int JsonObject::DirectWriteTo(void *parent, TOnReady onReady) {
 	rapidjson::Document doc;
 	WriteToDoc(&doc);
 	rapidjson::StringBuffer buffer;
