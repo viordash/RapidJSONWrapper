@@ -2,7 +2,7 @@
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
 #include "rapidjson/stringbuffer.h"
-#include "JsonArray.h"
+#include "JsonObjectsArray.h"
 #include "JsonArrayField.h"
 
 #define TryParseInternal_T(value)                                                                                                                              \

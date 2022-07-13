@@ -24,7 +24,7 @@ class UserDto : public JsonObject {
 	}
 };
 
-static int maxCount = 10;
+static size_t maxCount = 10;
 
 class UsersList : public JsonArray<UserDto> {
   public:

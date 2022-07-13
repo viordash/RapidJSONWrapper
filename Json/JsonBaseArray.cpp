@@ -3,7 +3,7 @@
 #include "rapidjson/writer.h"
 #include "rapidjson/stringbuffer.h"
 #include "JsonObject.h"
-#include "JsonArray.h"
+#include "JsonBaseArray.h"
 
 bool JsonBaseArray::TryParse(RapidJsonValues value) {
 	rapidjson::Value *jsonValue = (rapidjson::Value *)value;
