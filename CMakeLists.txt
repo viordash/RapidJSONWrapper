@@ -3,7 +3,9 @@ project(RapidJSONWrapper VERSION 0.1.0)
 set(CMAKE_CXX_STANDARD 17)
 
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti")
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti")
+endif()
 
 include(CTest)
 include_directories(rapidjson/include Json)
@@ -17,6 +19,7 @@ set(SOURCE_FILES
     Json/JsonObjectsArray.cpp
     Json/JsonObjectField.cpp
     Json/JsonArrayField.cpp
+    Json/JsonObjectV2.cpp
 )
 
 add_executable(RapidJSONWrapper     
