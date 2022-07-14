@@ -5,23 +5,23 @@
 typedef rapidjson::Document TJsonDocument;
 typedef rapidjson::Value TJsonValue;
 
-template <class T, bool optional = false>
+template <class T, bool optional = false> //
 class JsonObjectV2 {
 	class ValueWrapper {
 	  public:
 		ValueWrapper(JsonObjectV2 *owner, const T value) {
 			this->owner = owner;
-			owner->SetValue(value);
+			owner->InitValue(value);
 		}
+
+		~ValueWrapper() { owner->DeleteValue(); }
 
 		T operator=(const T right) {
 			owner->SetValue(right);
 			return owner->value;
 		}
 
-		operator T() const {
-			return owner->value;
-		}
+		operator T() const { return owner->value; }
 
 	  private:
 		JsonObjectV2 *owner;
@@ -31,16 +31,12 @@ class JsonObjectV2 {
 	const char *Name;
 	ValueWrapper Value;
 
-	JsonObjectV2(const char *name, const T value) : Name(name), Value(this, value) {
-	}
+	JsonObjectV2(const char *name, const T value) : Name(name), Value(this, value) {}
 
-	JsonObjectV2(const char *name) : JsonObjectV2(name, T()) {
-	}
+	JsonObjectV2(const char *name) : JsonObjectV2(name, T()) {}
 
 	TJsonDocument *BeginTryParse(const char *jsonStr, int length = -1) {
-		if (jsonStr == NULL || length == 0) {
-			return NULL;
-		}
+		if (jsonStr == NULL || length == 0) { return NULL; }
 
 		auto doc = new rapidjson::Document();
 		if (length < 0) {
@@ -55,15 +51,11 @@ class JsonObjectV2 {
 		return doc;
 	}
 
-	void EndTryParse(TJsonDocument *doc) {
-		delete doc;
-	}
+	void EndTryParse(TJsonDocument *doc) { delete doc; }
 
 	bool TryParse(const char *jsonStr, int length = -1) {
 		auto doc = BeginTryParse(jsonStr, length);
-		if (doc == NULL) {
-			return false;
-		}
+		if (doc == NULL) { return false; }
 		EndTryParse(doc);
 		return true;
 	}
@@ -76,9 +68,7 @@ class JsonObjectV2 {
 		}
 
 		rapidjson::Value &jsonVal = member->value;
-		if (TryParseCore(&jsonVal)) {
-			return true;
-		}
+		if (TryParseCore(&jsonVal)) { return true; }
 		if (jsonVal.IsNull()) {
 			this->Reset();
 			return true;
@@ -97,9 +87,7 @@ class JsonObjectV2 {
 
 		const char *jsonStr = buffer.GetString();
 		int size = buffer.GetSize();
-		if (size > outBufferSize - 1) {
-			size = outBufferSize - 1;
-		}
+		if (size > outBufferSize - 1) { size = outBufferSize - 1; }
 		memcpy(outBuffer, jsonStr, size);
 		outBuffer[size] = 0;
 		return size;
@@ -119,18 +107,16 @@ class JsonObjectV2 {
 		return size;
 	}
 
-	void Reset() {
-		Value = T();
-	}
+	void Reset() { Value = T(); }
 
   protected:
   private:
 	T value;
 
-	bool SetValue(T value) {
-		this->value = value;
-		return true;
-	}
+	void InitValue(const T value);
+	bool SetValue(const T value);
+
+	void DeleteValue();
 
 	bool TryParseCore(TJsonValue *value);
 };
