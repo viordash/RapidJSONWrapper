@@ -5,22 +5,34 @@
 
 int main(const int argc, const char *argv[]) {
 	fprintf(stdout, "json to class object\n");
+	{
+		JsonValue<int, false> intObj("test", 100);
 
-	JsonObjectV2<int, false> intObj("test", 100);
+		auto res = intObj.TryParse("{\"test\":19}");
+		printf("intObj.TryParse res:%d, val:%d\n", res, (int)intObj.Value);
 
-	auto res = intObj.TryParse("{\"test\":19}");
-	fprintf(stdout, "intObj.TryParse res:%d\n", res);
+		rapidjson::Document doc;
+		doc.SetObject();
+		intObj.WriteToDoc(&doc);
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		const char *jsonStr = buffer.GetString();
+	}
 
-	rapidjson::Document doc;
-	doc.SetObject();
-	intObj.WriteToDoc(&doc);
-	rapidjson::StringBuffer buffer;
-	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-	doc.Accept(writer);
-	const char *jsonStr = buffer.GetString();
+	{
+		JsonValue<char *, false> strObj("testStr", "hello json");
+		auto res = strObj.TryParse("{\"testStr\":\"0123456 abcdef\"}");
+		printf("strObj.TryParse res:%d, val:%s\n", res, (char *)strObj.Value);
 
-
-
+		rapidjson::Document doc;
+		doc.SetObject();
+		strObj.WriteToDoc(&doc);
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		const char *jsonStr = buffer.GetString();
+	}
 
 	// JsonStringField<(const char *)"testName", false, 256> testable1("test");
 

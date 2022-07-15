@@ -6,10 +6,10 @@ typedef rapidjson::Document TJsonDocument;
 typedef rapidjson::Value TJsonValue;
 
 template <class T, bool optional = false> //
-class JsonObjectV2 {
+class JsonValue {
 	class ValueWrapper {
 	  public:
-		ValueWrapper(JsonObjectV2 *owner, const T value) {
+		ValueWrapper(JsonValue *owner, const T value) {
 			this->owner = owner;
 			owner->InitValue(value);
 		}
@@ -24,16 +24,16 @@ class JsonObjectV2 {
 		operator T() const { return owner->value; }
 
 	  private:
-		JsonObjectV2 *owner;
+		JsonValue *owner;
 	};
 
   public:
 	const char *Name;
 	ValueWrapper Value;
 
-	JsonObjectV2(const char *name, const T value) : Name(name), Value(this, value) {}
+	JsonValue(const char *name, const T value) : Name(name), Value(this, value) {}
 
-	JsonObjectV2(const char *name) : JsonObjectV2(name, T()) {}
+	JsonValue(const char *name) : JsonValue(name, T()) {}
 
 	TJsonDocument *BeginTryParse(const char *jsonStr, int length = -1) {
 		if (jsonStr == NULL || length == 0) { return NULL; }

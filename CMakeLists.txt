@@ -23,7 +23,7 @@ set(SOURCE_FILES
     # Json/JsonObjectsArray.cpp
     # Json/JsonObjectField.cpp
     # Json/JsonArrayField.cpp
-    Json/JsonObjectV2.cpp
+    Json/JsonValue.cpp
 )
 
 add_executable(RapidJSONWrapper     
