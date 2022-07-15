@@ -5,8 +5,10 @@
 
 int main(const int argc, const char *argv[]) {
 	fprintf(stdout, "json to class object\n");
+
 	{
-		JsonValue<int, false> intObj("test", 100);
+		JsonFieldsContainer container;
+		JsonValue<int, false> intObj(&container, "test", 100);
 
 		auto res = intObj.TryParse("{\"test\":19}");
 		printf("intObj.TryParse res:%d, val:%d\n", res, (int)intObj.Value);
@@ -21,7 +23,8 @@ int main(const int argc, const char *argv[]) {
 	}
 
 	{
-		JsonValue<char *, false> strObj("testStr", "hello json");
+		JsonFieldsContainer container;
+		JsonValue<char *, false> strObj(&container, "testStr", "hello json");
 		auto res = strObj.TryParse("{\"testStr\":\"0123456 abcdef\"}");
 		printf("strObj.TryParse res:%d, val:%s\n", res, (char *)strObj.Value);
 

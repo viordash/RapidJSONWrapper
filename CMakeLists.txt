@@ -18,7 +18,7 @@ set(SOURCE_FILES
     # Json/JsonBaseField.cpp
     # Json/JsonField.cpp
     # Json/JsonStringField.cpp
-    # Json/JsonObject.cpp
+    Json/JsonObject.cpp
     # Json/JsonBaseArray.cpp
     # Json/JsonObjectsArray.cpp
     # Json/JsonObjectField.cpp
@@ -43,9 +43,9 @@ add_executable(RapidJSONWrapper
 #     ${SOURCE_FILES}
 #     Tests/JsonObjectFieldTestsGroup.cpp)
 
-# add_executable(JsonObjectTestsGroup    
-#     ${SOURCE_FILES}
-#     Tests/JsonObjectTestsGroup.cpp)
+add_executable(JsonObjectTestsGroup    
+    ${SOURCE_FILES}
+    Tests/JsonObjectTestsGroup.cpp)
 
 # add_executable(JsonArrayTestsGroup    
 #     ${SOURCE_FILES}
@@ -66,6 +66,6 @@ include(CPack)
 # add_test(JsonStringFieldTestsGroup JsonStringFieldTestsGroup)
 # add_test(JsonNumericFieldTestsGroup JsonNumericFieldTestsGroup)
 # add_test(JsonObjectFieldTestsGroup JsonObjectFieldTestsGroup)
-# add_test(JsonObjectTestsGroup JsonObjectTestsGroup)
+add_test(JsonObjectTestsGroup JsonObjectTestsGroup)
 # add_test(JsonArrayTestsGroup JsonArrayTestsGroup)
 # add_test(JsonArrayFieldTestsGroup JsonArrayFieldTestsGroup)

@@ -1,12 +1,24 @@
 #pragma once
 
 #include "LibJson.h"
+#include "JsonFieldsContainer.h"
 
-typedef rapidjson::Document TJsonDocument;
-typedef rapidjson::Value TJsonValue;
+class JsonValueBase {
+  public:
+	JsonValueBase(JsonValueBase &&) = delete;
+	JsonValueBase(const JsonValueBase &) = delete;
+
+	JsonValueBase(JsonFieldsContainer *container) { container->Add(this); }
+	virtual ~JsonValueBase(){};
+
+	virtual bool TryParse(TJsonDocument *doc) = 0;
+	virtual void WriteToDoc(TJsonDocument *doc) = 0;
+
+  protected:
+};
 
 template <class T, bool optional = false> //
-class JsonValue {
+class JsonValue : JsonValueBase {
 	class ValueWrapper {
 	  public:
 		ValueWrapper(JsonValue *owner, const T value) {
@@ -31,9 +43,9 @@ class JsonValue {
 	const char *Name;
 	ValueWrapper Value;
 
-	JsonValue(const char *name, const T value) : Name(name), Value(this, value) {}
+	JsonValue(JsonFieldsContainer *container, const char *name, T value) : JsonValueBase(container), Name(name), Value(this, value) {}
 
-	JsonValue(const char *name) : JsonValue(name, T()) {}
+	JsonValue(JsonFieldsContainer *container, const char *name) : JsonValue(container, name, T()) {}
 
 	TJsonDocument *BeginTryParse(const char *jsonStr, int length = -1) {
 		if (jsonStr == NULL || length == 0) { return NULL; }
@@ -60,7 +72,7 @@ class JsonValue {
 		return true;
 	}
 
-	bool TryParse(TJsonDocument *doc) {
+	bool TryParse(TJsonDocument *doc) override final {
 		rapidjson::Value::MemberIterator member = doc->FindMember(Name);
 		if (member == doc->MemberEnd()) {
 			this->Reset();
@@ -76,7 +88,7 @@ class JsonValue {
 		return false;
 	}
 
-	void WriteToDoc(TJsonDocument *doc);
+	void WriteToDoc(TJsonDocument *doc) override final;
 
 	int WriteToString(char *outBuffer, int outBufferSize) {
 		rapidjson::Document doc;
@@ -113,8 +125,8 @@ class JsonValue {
   private:
 	T value;
 
-	void InitValue(const T value);
-	bool SetValue(const T value);
+	void InitValue(T value);
+	bool SetValue(T value);
 
 	void DeleteValue();
 

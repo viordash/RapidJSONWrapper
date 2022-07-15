@@ -29,6 +29,12 @@ template <> bool JsonValue<uint32_t, false>::TryParseCore(TJsonValue *value) { r
 template <> bool JsonValue<uint64_t, true>::TryParseCore(TJsonValue *value) { return value->IsUint64() && SetValue(value->GetUint64()); }
 template <> bool JsonValue<uint64_t, false>::TryParseCore(TJsonValue *value) { return value->IsUint64() && SetValue(value->GetUint64()); }
 
+template <> bool JsonValue<float, true>::TryParseCore(TJsonValue *value) { return value->IsFloat() && SetValue(value->GetFloat()); }
+template <> bool JsonValue<float, false>::TryParseCore(TJsonValue *value) { return value->IsFloat() && SetValue(value->GetFloat()); }
+
+template <> bool JsonValue<double, true>::TryParseCore(TJsonValue *value) { return value->IsDouble() && SetValue(value->GetDouble()); }
+template <> bool JsonValue<double, false>::TryParseCore(TJsonValue *value) { return value->IsDouble() && SetValue(value->GetDouble()); }
+
 template <> bool JsonValue<char *, true>::TryParseCore(TJsonValue *value) { return value->IsString() && SetValue((char *)value->GetString()); }
 template <> bool JsonValue<char *, false>::TryParseCore(TJsonValue *value) { return value->IsString() && SetValue((char *)value->GetString()); }
 /*
@@ -61,6 +67,12 @@ template <> void JsonValue<uint32_t, false>::WriteToDoc(TJsonDocument *doc) { do
 
 template <> void JsonValue<uint64_t, true>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (uint64_t)Value, doc->GetAllocator()); }
 template <> void JsonValue<uint64_t, false>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (uint64_t)Value, doc->GetAllocator()); }
+
+template <> void JsonValue<float, true>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (float)Value, doc->GetAllocator()); }
+template <> void JsonValue<float, false>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (float)Value, doc->GetAllocator()); }
+
+template <> void JsonValue<double, true>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (double)Value, doc->GetAllocator()); }
+template <> void JsonValue<double, false>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (double)Value, doc->GetAllocator()); }
 
 template <> void JsonValue<char *, true>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), rapidjson::StringRef((char *)Value), doc->GetAllocator()); }
 template <> void JsonValue<char *, false>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), rapidjson::StringRef((char *)Value), doc->GetAllocator()); }
@@ -95,17 +107,33 @@ template <> void JsonValue<uint32_t, false>::InitValue(uint32_t value) { this->v
 template <> void JsonValue<uint64_t, true>::InitValue(uint64_t value) { this->value = value; }
 template <> void JsonValue<uint64_t, false>::InitValue(uint64_t value) { this->value = value; }
 
+template <> void JsonValue<float, true>::InitValue(float value) { this->value = value; }
+template <> void JsonValue<float, false>::InitValue(float value) { this->value = value; }
+
+template <> void JsonValue<double, true>::InitValue(double value) { this->value = value; }
+template <> void JsonValue<double, false>::InitValue(double value) { this->value = value; }
+
 template <> void JsonValue<char *, true>::InitValue(char *value) {
-	auto len = strlen(value);
-	this->value = new char[len + 1];
-	if (value != NULL) { memcpy(this->value, value, len); }
-	this->value[len] = 0;
+	if (value != NULL) {
+		auto len = strlen(value);
+		this->value = new char[len + 1];
+		memcpy(this->value, value, len);
+		this->value[len] = 0;
+	} else {
+		this->value = new char[1];
+		this->value[0] = 0;
+	}
 }
 template <> void JsonValue<char *, false>::InitValue(char *value) {
-	auto len = strlen(value);
-	this->value = new char[len + 1];
-	if (value != NULL) { memcpy(this->value, value, len); }
-	this->value[len] = 0;
+	if (value != NULL) {
+		auto len = strlen(value);
+		this->value = new char[len + 1];
+		memcpy(this->value, value, len);
+		this->value[len] = 0;
+	} else {
+		this->value = new char[1];
+		this->value[0] = 0;
+	}
 }
 /*
 
@@ -192,20 +220,32 @@ template <> bool JsonValue<uint64_t, false>::SetValue(uint64_t value) {
 	return true;
 }
 
+template <> bool JsonValue<float, true>::SetValue(float value) {
+	this->value = value;
+	return true;
+}
+template <> bool JsonValue<float, false>::SetValue(float value) {
+	this->value = value;
+	return true;
+}
+
+template <> bool JsonValue<double, true>::SetValue(double value) {
+	this->value = value;
+	return true;
+}
+template <> bool JsonValue<double, false>::SetValue(double value) {
+	this->value = value;
+	return true;
+}
+
 template <> bool JsonValue<char *, true>::SetValue(char *value) {
 	DeleteValue();
-	auto len = strlen(value);
-	this->value = new char[len + 1];
-	if (value != NULL) { memcpy(this->value, value, len); }
-	this->value[len] = 0;
+	InitValue(value);
 	return true;
 }
 template <> bool JsonValue<char *, false>::SetValue(char *value) {
 	DeleteValue();
-	auto len = strlen(value);
-	this->value = new char[len + 1];
-	if (value != NULL) { memcpy(this->value, value, len); }
-	this->value[len] = 0;
+	InitValue(value);
 	return true;
 }
 /*
@@ -238,6 +278,12 @@ template <> void JsonValue<uint32_t, false>::DeleteValue() {}
 
 template <> void JsonValue<uint64_t, true>::DeleteValue() {}
 template <> void JsonValue<uint64_t, false>::DeleteValue() {}
+
+template <> void JsonValue<float, true>::DeleteValue() {}
+template <> void JsonValue<float, false>::DeleteValue() {}
+
+template <> void JsonValue<double, true>::DeleteValue() {}
+template <> void JsonValue<double, false>::DeleteValue() {}
 
 template <> void JsonValue<char *, true>::DeleteValue() { delete[] this->value; }
 template <> void JsonValue<char *, false>::DeleteValue() { delete[] this->value; }
