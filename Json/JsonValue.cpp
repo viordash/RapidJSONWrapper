@@ -1,6 +1,7 @@
 
 
 #include "JsonValue.h"
+#include "JsonObject.h"
 
 template <> bool JsonValue<bool, true>::TryParseCore(TJsonValue *value) { return value->IsBool() && SetValue(value->GetBool()); }
 template <> bool JsonValue<bool, false>::TryParseCore(TJsonValue *value) { return value->IsBool() && SetValue(value->GetBool()); }
@@ -37,45 +38,63 @@ template <> bool JsonValue<double, false>::TryParseCore(TJsonValue *value) { ret
 
 template <> bool JsonValue<char *, true>::TryParseCore(TJsonValue *value) { return value->IsString() && SetValue((char *)value->GetString()); }
 template <> bool JsonValue<char *, false>::TryParseCore(TJsonValue *value) { return value->IsString() && SetValue((char *)value->GetString()); }
+
+template <> bool JsonValue<JsonObject *, true>::TryParseCore(TJsonValue *value) { return value->IsObject() && (value->ObjectEmpty() || this->value->TryParse((TJsonDocument *)value)); }
+template <> bool JsonValue<JsonObject *, false>::TryParseCore(TJsonValue *value) { return value->IsObject() && (value->ObjectEmpty() || this->value->TryParse((TJsonDocument *)value)); }
 /*
 
 
 */
-template <> void JsonValue<bool, true>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (bool)Value, doc->GetAllocator()); }
-template <> void JsonValue<bool, false>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (bool)Value, doc->GetAllocator()); }
+template <> void JsonValue<bool, true>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (bool)value, doc->GetAllocator()); }
+template <> void JsonValue<bool, false>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (bool)value, doc->GetAllocator()); }
 
-template <> void JsonValue<int8_t, true>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (int8_t)Value, doc->GetAllocator()); }
-template <> void JsonValue<int8_t, false>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (int8_t)Value, doc->GetAllocator()); }
+template <> void JsonValue<int8_t, true>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (int8_t)value, doc->GetAllocator()); }
+template <> void JsonValue<int8_t, false>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (int8_t)value, doc->GetAllocator()); }
 
-template <> void JsonValue<int16_t, true>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (int16_t)Value, doc->GetAllocator()); }
-template <> void JsonValue<int16_t, false>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (int16_t)Value, doc->GetAllocator()); }
+template <> void JsonValue<int16_t, true>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (int16_t)value, doc->GetAllocator()); }
+template <> void JsonValue<int16_t, false>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (int16_t)value, doc->GetAllocator()); }
 
-template <> void JsonValue<int32_t, true>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (int32_t)Value, doc->GetAllocator()); }
-template <> void JsonValue<int32_t, false>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (int32_t)Value, doc->GetAllocator()); }
+template <> void JsonValue<int32_t, true>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (int32_t)value, doc->GetAllocator()); }
+template <> void JsonValue<int32_t, false>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (int32_t)value, doc->GetAllocator()); }
 
-template <> void JsonValue<int64_t, true>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (int64_t)Value, doc->GetAllocator()); }
-template <> void JsonValue<int64_t, false>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (int64_t)Value, doc->GetAllocator()); }
+template <> void JsonValue<int64_t, true>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (int64_t)value, doc->GetAllocator()); }
+template <> void JsonValue<int64_t, false>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (int64_t)value, doc->GetAllocator()); }
 
-template <> void JsonValue<uint8_t, true>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (uint8_t)Value, doc->GetAllocator()); }
-template <> void JsonValue<uint8_t, false>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (uint8_t)Value, doc->GetAllocator()); }
+template <> void JsonValue<uint8_t, true>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (uint8_t)value, doc->GetAllocator()); }
+template <> void JsonValue<uint8_t, false>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (uint8_t)value, doc->GetAllocator()); }
 
-template <> void JsonValue<uint16_t, true>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (uint16_t)Value, doc->GetAllocator()); }
-template <> void JsonValue<uint16_t, false>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (uint16_t)Value, doc->GetAllocator()); }
+template <> void JsonValue<uint16_t, true>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (uint16_t)value, doc->GetAllocator()); }
+template <> void JsonValue<uint16_t, false>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (uint16_t)value, doc->GetAllocator()); }
 
-template <> void JsonValue<uint32_t, true>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (uint32_t)Value, doc->GetAllocator()); }
-template <> void JsonValue<uint32_t, false>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (uint32_t)Value, doc->GetAllocator()); }
+template <> void JsonValue<uint32_t, true>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (uint32_t)value, doc->GetAllocator()); }
+template <> void JsonValue<uint32_t, false>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (uint32_t)value, doc->GetAllocator()); }
 
-template <> void JsonValue<uint64_t, true>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (uint64_t)Value, doc->GetAllocator()); }
-template <> void JsonValue<uint64_t, false>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (uint64_t)Value, doc->GetAllocator()); }
+template <> void JsonValue<uint64_t, true>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (uint64_t)value, doc->GetAllocator()); }
+template <> void JsonValue<uint64_t, false>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (uint64_t)value, doc->GetAllocator()); }
 
-template <> void JsonValue<float, true>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (float)Value, doc->GetAllocator()); }
-template <> void JsonValue<float, false>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (float)Value, doc->GetAllocator()); }
+template <> void JsonValue<float, true>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (float)value, doc->GetAllocator()); }
+template <> void JsonValue<float, false>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (float)value, doc->GetAllocator()); }
 
-template <> void JsonValue<double, true>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (double)Value, doc->GetAllocator()); }
-template <> void JsonValue<double, false>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (double)Value, doc->GetAllocator()); }
+template <> void JsonValue<double, true>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (double)value, doc->GetAllocator()); }
+template <> void JsonValue<double, false>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (double)value, doc->GetAllocator()); }
 
-template <> void JsonValue<char *, true>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), rapidjson::StringRef((char *)Value), doc->GetAllocator()); }
-template <> void JsonValue<char *, false>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), rapidjson::StringRef((char *)Value), doc->GetAllocator()); }
+template <> void JsonValue<char *, true>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), rapidjson::StringRef((char *)value), doc->GetAllocator()); }
+template <> void JsonValue<char *, false>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), rapidjson::StringRef((char *)value), doc->GetAllocator()); }
+
+template <> void JsonValue<JsonObject *, true>::WriteToDoc(TJsonDocument *doc) {
+	auto &allocator = doc->GetAllocator();
+	rapidjson::Document jObject(&allocator);
+	jObject.SetObject();
+	value->WriteToDoc(&jObject);
+	doc->AddMember(rapidjson::StringRef(Name), jObject, allocator);
+}
+template <> void JsonValue<JsonObject *, false>::WriteToDoc(TJsonDocument *doc) {
+	auto &allocator = doc->GetAllocator();
+	rapidjson::Document jObject(&allocator);
+	jObject.SetObject();
+	value->WriteToDoc(&jObject);
+	doc->AddMember(rapidjson::StringRef(Name), jObject, allocator);
+}
 /*
 
 
@@ -135,6 +154,9 @@ template <> void JsonValue<char *, false>::InitValue(char *value) {
 		this->value[0] = 0;
 	}
 }
+
+template <> void JsonValue<JsonObject *, true>::InitValue(JsonObject *value) { this->value = value; }
+template <> void JsonValue<JsonObject *, false>::InitValue(JsonObject *value) { this->value = value; }
 /*
 
 
@@ -248,6 +270,15 @@ template <> bool JsonValue<char *, false>::SetValue(char *value) {
 	InitValue(value);
 	return true;
 }
+
+template <> bool JsonValue<JsonObject *, true>::SetValue(JsonObject *value) {
+	this->value = value;
+	return true;
+}
+template <> bool JsonValue<JsonObject *, false>::SetValue(JsonObject *value) {
+	this->value = value;
+	return true;
+}
 /*
 
 
@@ -287,3 +318,6 @@ template <> void JsonValue<double, false>::DeleteValue() {}
 
 template <> void JsonValue<char *, true>::DeleteValue() { delete[] this->value; }
 template <> void JsonValue<char *, false>::DeleteValue() { delete[] this->value; }
+
+template <> void JsonValue<JsonObject *, true>::DeleteValue() {}
+template <> void JsonValue<JsonObject *, false>::DeleteValue() {}
