@@ -3,7 +3,7 @@
 #include "LibJson.h"
 #include "JsonFieldsContainer.h"
 
-typedef typename uint8_t TBoolArray;
+typedef char TBoolArray;
 
 class JsonObject;
 

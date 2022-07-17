@@ -81,8 +81,8 @@ class Uint8List : public JsonArray<uint8_t> {
 TEST(JsonArrayTestsGroup, JsonObjectArray_Parse_Test) {
 	UsersList list;
 
-	CHECK(list.TryParse("[{\"name\":\"User1\",\"role\":100},{\"name\":\"User2\",\"role\":0},{\"name\":\"User3\","
-						"\"role\":255}]"));
+	CHECK_TRUE(list.TryParse("[{\"name\":\"User1\",\"role\":100},{\"name\":\"User2\",\"role\":0},{\"name\":\"User3\","
+							 "\"role\":255}]"));
 	CHECK_EQUAL(list.Items.size(), 3);
 
 	STRCMP_EQUAL(list.Items[0]->Name.Value, "User1");
@@ -180,7 +180,7 @@ TEST(JsonArrayTestsGroup, JsonObjectArray_Direct_Write_From_Json_Memory_Test) {
 TEST(JsonArrayTestsGroup, JsonStringArray_Parse_Test) {
 	StringsList list;
 
-	CHECK(list.TryParse("[\"User1\",\"User2\",\"User3\"]"));
+	CHECK_TRUE(list.TryParse("[\"User1\",\"User2\",\"User3\"]"));
 	CHECK_EQUAL(list.Items.size(), 3);
 
 	STRCMP_EQUAL((char *)list.Items[0], "User1");
@@ -188,20 +188,50 @@ TEST(JsonArrayTestsGroup, JsonStringArray_Parse_Test) {
 	return EXIT_SUCCESS;
 }
 
+TEST(JsonArrayTestsGroup, JsonStringArray_WriteTo_Test) {
+	char buffer[2048];
+	StringsList list;
+	list.Add("user 1");
+	list.Add("user 2");
+	list.Add("user 3");
+	list.Add("user 4");
+
+	CHECK_EQUAL(list.WriteToString(buffer, sizeof(buffer)), 37);
+	STRCMP_EQUAL(buffer, "[\"user 1\",\"user 2\",\"user 3\",\"user 4\"]");
+	return EXIT_SUCCESS;
+}
+
 TEST(JsonArrayTestsGroup, JsonBoolArray_Parse_Test) {
 	BoolList list;
 
-	CHECK(list.TryParse("[true,false,true,false]"));
+	CHECK_TRUE(list.TryParse("[true,false,true,false]"));
 	CHECK_EQUAL(list.Items.size(), 4);
 
 	CHECK_EQUAL(list.Items[0], true);
 	CHECK_EQUAL(list.Items[3], false);
+
+	CHECK_FALSE(list.TryParse("[false,1,true,0]"));
+
+	return EXIT_SUCCESS;
+}
+
+TEST(JsonArrayTestsGroup, JsonBoolArray_WriteTo_Test) {
+	char buffer[2048];
+	BoolList list;
+	list.Add(true);
+	list.Add(false);
+	list.Add(false);
+	list.Add(true);
+	list.Add(true);
+
+	CHECK_EQUAL(list.WriteToString(buffer, sizeof(buffer)), 28);
+	STRCMP_EQUAL(buffer, "[true,false,false,true,true]");
 	return EXIT_SUCCESS;
 }
 
 TEST(JsonArrayTestsGroup, JsonInt64Array_Parse_Test) {
 	Int64List list;
-	CHECK(list.TryParse("[0,1,-5188146770730811392,5188146770730811392]"));
+	CHECK_TRUE(list.TryParse("[0,1,-5188146770730811392,5188146770730811392]"));
 	CHECK_EQUAL(list.Items.size(), 4);
 	CHECK_EQUAL(list.Items[0], 0);
 	CHECK_EQUAL(list.Items[1], 1);
@@ -210,9 +240,21 @@ TEST(JsonArrayTestsGroup, JsonInt64Array_Parse_Test) {
 	return EXIT_SUCCESS;
 }
 
+TEST(JsonArrayTestsGroup, JsonInt64Array_WriteTo_Test) {
+	char buffer[2048];
+	Int64List list;
+	list.Add(-5188146770730811392LL);
+	list.Add(5188146770730811392LL);
+	list.Add(0);
+
+	CHECK_EQUAL(list.WriteToString(buffer, sizeof(buffer)), 44);
+	STRCMP_EQUAL(buffer, "[-5188146770730811392,5188146770730811392,0]");
+	return EXIT_SUCCESS;
+}
+
 TEST(JsonArrayTestsGroup, JsonUint64Array_Parse_Test) {
 	Uint64List list;
-	CHECK(list.TryParse("[1,0,10188146770730811392]"));
+	CHECK_TRUE(list.TryParse("[1,0,10188146770730811392]"));
 	CHECK_EQUAL(list.Items.size(), 3);
 	CHECK_EQUAL(list.Items[0], 1);
 	CHECK_EQUAL(list.Items[1], 0);
@@ -220,9 +262,21 @@ TEST(JsonArrayTestsGroup, JsonUint64Array_Parse_Test) {
 	return EXIT_SUCCESS;
 }
 
+TEST(JsonArrayTestsGroup, JsonUint64Array_WriteTo_Test) {
+	char buffer[2048];
+	Uint64List list;
+	list.Add(0);
+	list.Add(10188146770730811392);
+	list.Add(1);
+
+	CHECK_EQUAL(list.WriteToString(buffer, sizeof(buffer)), 26);
+	STRCMP_EQUAL(buffer, "[0,10188146770730811392,1]");
+	return EXIT_SUCCESS;
+}
+
 TEST(JsonArrayTestsGroup, JsonInt32Array_Parse_Test) {
 	Int32List list;
-	CHECK(list.TryParse("[0,-2147483647,2147483647]"));
+	CHECK_TRUE(list.TryParse("[0,-2147483647,2147483647]"));
 	CHECK_EQUAL(list.Items.size(), 3);
 	CHECK_EQUAL(list.Items[0], 0);
 	CHECK_EQUAL(list.Items[1], -2147483647);
@@ -230,18 +284,42 @@ TEST(JsonArrayTestsGroup, JsonInt32Array_Parse_Test) {
 	return EXIT_SUCCESS;
 }
 
+TEST(JsonArrayTestsGroup, JsonInt32Array_WriteTo_Test) {
+	char buffer[2048];
+	Int32List list;
+	list.Add(-2147483647);
+	list.Add(2147483647);
+	list.Add(0);
+
+	CHECK_EQUAL(list.WriteToString(buffer, sizeof(buffer)), 26);
+	STRCMP_EQUAL(buffer, "[-2147483647,2147483647,0]");
+	return EXIT_SUCCESS;
+}
+
 TEST(JsonArrayTestsGroup, JsonUint32Array_Parse_Test) {
 	Uint32List list;
-	CHECK(list.TryParse("[0,4294967295]"));
+	CHECK_TRUE(list.TryParse("[0,4294967295]"));
 	CHECK_EQUAL(list.Items.size(), 2);
 	CHECK_EQUAL(list.Items[0], 0);
 	CHECK_EQUAL(list.Items[1], 4294967295);
 	return EXIT_SUCCESS;
 }
 
+TEST(JsonArrayTestsGroup, JsonUint32Array_WriteTo_Test) {
+	char buffer[2048];
+	Uint32List list;
+	list.Add(0);
+	list.Add(4294967295);
+	list.Add(1);
+
+	CHECK_EQUAL(list.WriteToString(buffer, sizeof(buffer)), 16);
+	STRCMP_EQUAL(buffer, "[0,4294967295,1]");
+	return EXIT_SUCCESS;
+}
+
 TEST(JsonArrayTestsGroup, JsonInt16Array_Parse_Test) {
 	Int16List list;
-	CHECK(list.TryParse("[0,-32768,32767,-2147483647,2147483647]"));
+	CHECK_TRUE(list.TryParse("[0,-32768,32767,-2147483647,2147483647]"));
 	CHECK_EQUAL(list.Items.size(), 5);
 	CHECK_EQUAL(list.Items[0], 0);
 	CHECK_EQUAL(list.Items[1], -32768);
@@ -251,9 +329,23 @@ TEST(JsonArrayTestsGroup, JsonInt16Array_Parse_Test) {
 	return EXIT_SUCCESS;
 }
 
+TEST(JsonArrayTestsGroup, JsonInt16Array_WriteTo_Test) {
+	char buffer[2048];
+	Int16List list;
+	list.Add(-32768);
+	list.Add(32767);
+	list.Add(0);
+	list.Add(-2147483647);
+	list.Add(2147483647);
+
+	CHECK_EQUAL(list.WriteToString(buffer, sizeof(buffer)), 21);
+	STRCMP_EQUAL(buffer, "[-32768,32767,0,1,-1]");
+	return EXIT_SUCCESS;
+}
+
 TEST(JsonArrayTestsGroup, JsonUint16Array_Parse_Test) {
 	Uint16List list;
-	CHECK(list.TryParse("[0,65535,2147483647]"));
+	CHECK_TRUE(list.TryParse("[0,65535,2147483647]"));
 	CHECK_EQUAL(list.Items.size(), 3);
 	CHECK_EQUAL(list.Items[0], 0);
 	CHECK_EQUAL(list.Items[1], 65535);
@@ -261,9 +353,22 @@ TEST(JsonArrayTestsGroup, JsonUint16Array_Parse_Test) {
 	return EXIT_SUCCESS;
 }
 
+TEST(JsonArrayTestsGroup, JsonUint16Array_WriteTo_Test) {
+	char buffer[2048];
+	Uint16List list;
+	list.Add(0);
+	list.Add(65535);
+	list.Add(1);
+	list.Add(2147483647);
+
+	CHECK_EQUAL(list.WriteToString(buffer, sizeof(buffer)), 17);
+	STRCMP_EQUAL(buffer, "[0,65535,1,65535]");
+	return EXIT_SUCCESS;
+}
+
 TEST(JsonArrayTestsGroup, JsonInt8Array_Parse_Test) {
 	Int8List list;
-	CHECK(list.TryParse("[0,-128,127,-2147483647,2147483647]"));
+	CHECK_TRUE(list.TryParse("[0,-128,127,-2147483647,2147483647]"));
 	CHECK_EQUAL(list.Items.size(), 5);
 	CHECK_EQUAL(list.Items[0], 0);
 	CHECK_EQUAL(list.Items[1], -128);
@@ -273,14 +378,44 @@ TEST(JsonArrayTestsGroup, JsonInt8Array_Parse_Test) {
 	return EXIT_SUCCESS;
 }
 
+TEST(JsonArrayTestsGroup, JsonInt8Array_WriteTo_Test) {
+	char buffer[2048];
+	Int8List list;
+	list.Add(-128);
+	list.Add(127);
+	list.Add(-32768);
+	list.Add(32767);
+	list.Add(0);
+	list.Add(-2147483647);
+	list.Add(2147483647);
+
+	CHECK_EQUAL(list.WriteToString(buffer, sizeof(buffer)), 22);
+	STRCMP_EQUAL(buffer, "[-128,127,0,-1,0,1,-1]");
+	return EXIT_SUCCESS;
+}
+
 TEST(JsonArrayTestsGroup, JsonUint8Array_Parse_Test) {
 	Uint8List list;
-	CHECK(list.TryParse("[0,255,65535,2147483647]"));
+	CHECK_TRUE(list.TryParse("[0,254,65535,2147483647]"));
 	CHECK_EQUAL(list.Items.size(), 4);
 	CHECK_EQUAL(list.Items[0], 0);
-	CHECK_EQUAL(list.Items[1], 255);
+	CHECK_EQUAL(list.Items[1], 254);
 	CHECK_EQUAL(list.Items[2], 255);
 	CHECK_EQUAL(list.Items[3], 255);
+	return EXIT_SUCCESS;
+}
+
+TEST(JsonArrayTestsGroup, JsonUint8Array_WriteTo_Test) {
+	char buffer[2048];
+	Uint8List list;
+	list.Add(0);
+	list.Add(254);
+	list.Add(65535);
+	list.Add(1);
+	list.Add(2147483647);
+
+	CHECK_EQUAL(list.WriteToString(buffer, sizeof(buffer)), 17);
+	STRCMP_EQUAL(buffer, "[0,254,255,1,255]");
 	return EXIT_SUCCESS;
 }
 
@@ -292,15 +427,25 @@ int main(const int argc, const char *argv[]) {
 	TEST_RUN(JsonArrayTestsGroup, JsonObjectArray_WriteTo_With_Limited_Buffer_Test);
 	TEST_RUN(JsonArrayTestsGroup, JsonObjectArray_Direct_Write_From_Json_Memory_Test);
 	TEST_RUN(JsonArrayTestsGroup, JsonStringArray_Parse_Test);
+	TEST_RUN(JsonArrayTestsGroup, JsonStringArray_WriteTo_Test);
 	TEST_RUN(JsonArrayTestsGroup, JsonBoolArray_Parse_Test);
+	TEST_RUN(JsonArrayTestsGroup, JsonBoolArray_WriteTo_Test);
 	TEST_RUN(JsonArrayTestsGroup, JsonInt64Array_Parse_Test);
+	TEST_RUN(JsonArrayTestsGroup, JsonInt64Array_WriteTo_Test);
 	TEST_RUN(JsonArrayTestsGroup, JsonUint64Array_Parse_Test);
+	TEST_RUN(JsonArrayTestsGroup, JsonUint64Array_WriteTo_Test);
 	TEST_RUN(JsonArrayTestsGroup, JsonInt32Array_Parse_Test);
+	TEST_RUN(JsonArrayTestsGroup, JsonInt32Array_WriteTo_Test);
 	TEST_RUN(JsonArrayTestsGroup, JsonUint32Array_Parse_Test);
+	TEST_RUN(JsonArrayTestsGroup, JsonUint32Array_WriteTo_Test);
 	TEST_RUN(JsonArrayTestsGroup, JsonInt16Array_Parse_Test);
+	TEST_RUN(JsonArrayTestsGroup, JsonInt16Array_WriteTo_Test);
 	TEST_RUN(JsonArrayTestsGroup, JsonUint16Array_Parse_Test);
+	TEST_RUN(JsonArrayTestsGroup, JsonUint16Array_WriteTo_Test);
 	TEST_RUN(JsonArrayTestsGroup, JsonInt8Array_Parse_Test);
+	TEST_RUN(JsonArrayTestsGroup, JsonInt8Array_WriteTo_Test);
 	TEST_RUN(JsonArrayTestsGroup, JsonUint8Array_Parse_Test);
+	TEST_RUN(JsonArrayTestsGroup, JsonUint8Array_WriteTo_Test);
 
 	printf("JsonArrayTestsGroup success");
 	return EXIT_SUCCESS;
