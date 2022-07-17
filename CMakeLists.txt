@@ -48,9 +48,9 @@ add_executable(JsonObjectTestsGroup
     ${SOURCE_FILES}
     Tests/JsonObjectTestsGroup.cpp)
 
-# add_executable(JsonArrayTestsGroup    
-#     ${SOURCE_FILES}
-#     Tests/JsonArrayTestsGroup.cpp)
+add_executable(JsonArrayTestsGroup    
+    ${SOURCE_FILES}
+    Tests/JsonArrayTestsGroup.cpp)
 
 # add_executable(JsonArrayFieldTestsGroup    
 #     ${SOURCE_FILES}
@@ -68,5 +68,5 @@ include(CPack)
 # add_test(JsonNumericFieldTestsGroup JsonNumericFieldTestsGroup)
 # add_test(JsonObjectFieldTestsGroup JsonObjectFieldTestsGroup)
 add_test(JsonObjectTestsGroup JsonObjectTestsGroup)
-# add_test(JsonArrayTestsGroup JsonArrayTestsGroup)
+add_test(JsonArrayTestsGroup JsonArrayTestsGroup)
 # add_test(JsonArrayFieldTestsGroup JsonArrayFieldTestsGroup)

@@ -28,6 +28,13 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 		return true;
 	}
 
+	bool TryParse(const char *jsonStr, int length = -1)  {
+		auto doc = BeginTryParse(jsonStr, length);
+		if (doc == NULL) { return false; }
+		EndTryParse(doc);
+		return true;
+	}
+
 	TJsonDocument *BeginTryParse(const char *jsonStr, int length = -1) {
 		if (jsonStr == NULL || length == 0) { return NULL; }
 
