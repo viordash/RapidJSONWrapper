@@ -57,31 +57,31 @@ class GoodsDto : public JsonObject {
 		  StoreName(this, "StoreName") {}
 };
 
-// class GoodsList : public JsonArray<GoodsDto> {
-//  public:
-//	bool Validate(GoodsDto *item) override { return item->Validate(); }
-//};
+class GoodsList : public JsonArray<GoodsDto> {
+  public:
+	bool Validate(GoodsDto *item) { return item->Validate(); }
+};
 
 class OrderDto : public JsonObject {
   public:
 	JsonValue<char *> Supplier;
 	JsonValue<uint32_t, true> DateTime;
-	// JsonValue<JsonBaseArray *> Goods;
+	JsonValue<JsonArrayBase *> Goods;
 	JsonValue<JsonObject *> User;
-	// GoodsList goodsList;
+	GoodsList goodsList;
 	UserDto userDto;
 
 	OrderDto(char *supplier, uint32_t dateTime, char *userName, TUserRole userRole)
 		: Supplier(this, "supplier", supplier), //
 		  DateTime(this, "dateTime", dateTime), //
-		  // Goods(this, "goods", &goodsList),		//
-		  userDto(userName, userRole), //
+		  Goods(this, "goods", &goodsList),		//
+		  userDto(userName, userRole),			//
 		  User(this, "user", &userDto){};
 
 	OrderDto()
-		: Supplier(this, "supplier"), //
-		  DateTime(this, "dateTime"), //
-		  // Goods(this, "goods", &goodsList), //
+		: Supplier(this, "supplier"),		//
+		  DateTime(this, "dateTime"),		//
+		  Goods(this, "goods", &goodsList), //
 		  User(this, "user", &userDto) {}
 };
 
@@ -117,9 +117,9 @@ TEST(JsonObjectTestsGroup, Complex_JsonObject_TryParse_Test) {
 						 "25,\"Quantity\":48.2,\"Deleted\":false,\"StoreName\":\"\"},{\"Id\":3,\"Created\":1657054789,\"Group\":\"Keyboards\",\"Name\":\"K3-100\",\"Price\":"
 						 "258.25,\"Quantity\":548.2,\"Deleted\":false,\"StoreName\":\"\"},{\"Id\":4,\"Created\":1657055789,\"Group\":\"Keyboards\",\"Name\":\"K4-100\","
 						 "\"Price\":358.25,\"Quantity\":648.2,\"Deleted\":false,\"StoreName\":\"\"}],\"user\":{\"name\":\"Joe Doe\",\"role\":1}}"));
-	// CHECK_EQUAL(order.goodsList.Items.size(), 3);
-	// CHECK_EQUAL(order.goodsList.Items[0]->Created.Value, 1657052789);
-	// STRCMP_EQUAL(order.goodsList.Items[2]->Name.Value, "K4-100");
+	CHECK_EQUAL(order.goodsList.Items.size(), 3);
+	CHECK_EQUAL(order.goodsList.Items[0]->Created.Value, 1657052789);
+	STRCMP_EQUAL(order.goodsList.Items[2]->Name.Value, "K4-100");
 	STRCMP_EQUAL(order.userDto.Name.Value, "Joe Doe");
 
 	return EXIT_SUCCESS;
@@ -286,10 +286,10 @@ TEST(JsonObjectTestsGroup, Complex_JsonObject_WriteTo_Test) {
 	JsonFieldsContainer container;
 
 	OrderDto orderDto("Dell", 1657058000, "Joe Doe", TUserRole::uViewer);
-	//orderDto.goodsList.Add(new GoodsDto(1, 1657052789, "Keyboards", "K1-100", 58.25, 48.2));
-	//orderDto.goodsList.Add(new GoodsDto(2, 1657053789, "Keyboards", "K2-100", 158.25, 448.2));
-	//orderDto.goodsList.Add(new GoodsDto(3, 1657054789, "Keyboards", "K3-100", 258.25, 548.2));
-	//orderDto.goodsList.Add(new GoodsDto(4, 1657055789, "Keyboards", "K4-100", 358.25, 648.2));
+	orderDto.goodsList.Add(new GoodsDto(1, 1657052789, "Keyboards", "K1-100", 58.25, 48.2));
+	orderDto.goodsList.Add(new GoodsDto(2, 1657053789, "Keyboards", "K2-100", 158.25, 448.2));
+	orderDto.goodsList.Add(new GoodsDto(3, 1657054789, "Keyboards", "K3-100", 258.25, 548.2));
+	orderDto.goodsList.Add(new GoodsDto(4, 1657055789, "Keyboards", "K4-100", 358.25, 648.2));
 
 	rapidjson::Document doc;
 	doc.SetObject();
