@@ -15,15 +15,8 @@ include(CTest)
 include_directories(rapidjson/include Json)
 
 set(SOURCE_FILES     
-    # Json/JsonBaseField.cpp
-    # Json/JsonField.cpp
-    # Json/JsonStringField.cpp
     Json/JsonObject.cpp
     Json/JsonArray.cpp
-    # Json/JsonBaseArray.cpp
-    # Json/JsonObjectsArray.cpp
-    # Json/JsonObjectField.cpp
-    # Json/JsonArrayField.cpp
     Json/JsonValue.cpp
 )
 
