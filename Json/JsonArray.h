@@ -3,6 +3,8 @@
 #include "LibJson.h"
 #include "JsonFieldsContainer.h"
 
+typedef typename uint8_t TBoolArray;
+
 class JsonObject;
 
 class JsonArrayBase {
@@ -28,7 +30,7 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 			return TryParseJsonObject(doc);
 		} else if (std::is_same<TItem, char *>::value) {
 			return TryParseString(doc);
-		} else if (std::is_same<TItem, bool>::value) {
+		} else if (std::is_same<TItem, TBoolArray>::value) {
 			return TryParseBool(doc);
 		} else if (std::is_same<TItem, int64_t>::value) {
 			return TryParseInt64(doc);
@@ -75,7 +77,7 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 			WriteJsonObjectToDoc(doc);
 		} else if (std::is_same<TItem, char *>::value) {
 			WriteJsonStringToDoc(doc);
-		} else if (std::is_same<TItem, bool>::value) {
+		} else if (std::is_same<TItem, TBoolArray>::value) {
 			WriteJsonBoolToDoc(doc);
 		} else if (std::is_same<TItem, int64_t>::value) {
 			WriteJsonInt64ToDoc(doc);

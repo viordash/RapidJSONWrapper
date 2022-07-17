@@ -37,10 +37,10 @@ class StringsList : public JsonArray<char *> {
 	bool Validate(char *item) override { return Items.size() < maxCount && item != NULL; }
 };
 
-// class BoolList : public JsonArray<bool> {
-//  public:
-//	bool Validate(bool item) override { return Items.size() < maxCount; }
-//};
+class BoolList : public JsonArray<TBoolArray> {
+  public:
+	bool Validate(TBoolArray item) override { return Items.size() < maxCount; }
+};
 
 class Int64List : public JsonArray<int64_t> {
   public:
@@ -189,13 +189,13 @@ TEST(JsonArrayTestsGroup, JsonStringArray_Parse_Test) {
 }
 
 TEST(JsonArrayTestsGroup, JsonBoolArray_Parse_Test) {
-	// BoolList list;
+	BoolList list;
 
-	// CHECK(list.TryParse("[true,false,true,false]"));
-	// CHECK_EQUAL(list.Items.size(), 4);
+	CHECK(list.TryParse("[true,false,true,false]"));
+	CHECK_EQUAL(list.Items.size(), 4);
 
-	// CHECK_EQUAL(list.Items[0], true);
-	// CHECK_EQUAL(list.Items[3], false);
+	CHECK_EQUAL(list.Items[0], true);
+	CHECK_EQUAL(list.Items[3], false);
 	return EXIT_SUCCESS;
 }
 
