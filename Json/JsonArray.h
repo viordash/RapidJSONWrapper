@@ -24,7 +24,9 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 	TItem operator[](int index) { return Items[index]; }
 
 	virtual bool TryParse(TJsonDocument *doc) {
-		if (!doc->IsArray()) { return false; }
+		if (!doc->IsArray()) {
+			return false;
+		}
 
 		if (std::is_base_of<JsonObject, TNewObjectItem>::value) {
 			return TryParseJsonObject(doc);
@@ -47,13 +49,17 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 
 	bool TryParse(const char *jsonStr, int length = -1) {
 		auto doc = BeginTryParse(jsonStr, length);
-		if (doc == NULL) { return false; }
+		if (doc == NULL) {
+			return false;
+		}
 		EndTryParse(doc);
 		return true;
 	}
 
 	TJsonDocument *BeginTryParse(const char *jsonStr, int length = -1) {
-		if (jsonStr == NULL || length == 0) { return NULL; }
+		if (jsonStr == NULL || length == 0) {
+			return NULL;
+		}
 
 		rapidjson::Document *doc = new rapidjson::Document();
 		if (length < 0) {
@@ -99,7 +105,9 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 
 		const char *jsonStr = buffer.GetString();
 		int size = buffer.GetSize();
-		if (size > outBufferSize - 1) { size = outBufferSize - 1; }
+		if (size > outBufferSize - 1) {
+			size = outBufferSize - 1;
+		}
 		strncpy(outBuffer, jsonStr, size);
 		outBuffer[size] = 0;
 		return size;
@@ -120,7 +128,9 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 	}
 
 	virtual bool Add(TItem item) {
-		if (!Validate(item)) { return false; }
+		if (!Validate(item)) {
+			return false;
+		}
 
 		if (std::is_same<TItem, char *>::value) {
 			auto len = strlen((char *)item);
@@ -140,7 +150,9 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 
   private:
 	bool TryParseJsonObject(TJsonDocument *doc) {
-		for (const auto &jItem : doc->GetArray()) {
+		auto jArray = doc->GetArray();
+		Items.reserve(jArray.Size());
+		for (const auto &jItem : jArray) {
 			auto newItem = new TNewObjectItem();
 			if (!((JsonObject *)newItem)->TryParse((TJsonDocument *)&jItem) || !Add((TItem)newItem)) {
 				delete newItem;
@@ -151,43 +163,67 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 	}
 
 	bool TryParseString(TJsonDocument *doc) {
-		for (const auto &jItem : doc->GetArray()) {
-			if (!jItem.IsString() || !Add((TItem)jItem.GetString())) { return false; }
+		auto jArray = doc->GetArray();
+		Items.reserve(jArray.Size());
+		for (const auto &jItem : jArray) {
+			if (!jItem.IsString() || !Add((TItem)jItem.GetString())) {
+				return false;
+			}
 		}
 		return true;
 	}
 
 	bool TryParseInt(TJsonDocument *doc) {
-		for (const auto &jItem : doc->GetArray()) {
-			if (!jItem.IsInt() || !Add((TItem)jItem.GetInt())) { return false; }
+		auto jArray = doc->GetArray();
+		Items.reserve(jArray.Size());
+		for (const auto &jItem : jArray) {
+			if (!jItem.IsInt() || !Add((TItem)jItem.GetInt())) {
+				return false;
+			}
 		}
 		return true;
 	}
 
 	bool TryParseUint(TJsonDocument *doc) {
-		for (const auto &jItem : doc->GetArray()) {
-			if (!jItem.IsUint() || !Add((TItem)jItem.GetUint())) { return false; }
+		auto jArray = doc->GetArray();
+		Items.reserve(jArray.Size());
+		for (const auto &jItem : jArray) {
+			if (!jItem.IsUint() || !Add((TItem)jItem.GetUint())) {
+				return false;
+			}
 		}
 		return true;
 	}
 
 	bool TryParseInt64(TJsonDocument *doc) {
-		for (const auto &jItem : doc->GetArray()) {
-			if (!jItem.IsInt64() || !Add((TItem)jItem.GetInt64())) { return false; }
+		auto jArray = doc->GetArray();
+		Items.reserve(jArray.Size());
+		for (const auto &jItem : jArray) {
+			if (!jItem.IsInt64() || !Add((TItem)jItem.GetInt64())) {
+				return false;
+			}
 		}
 		return true;
 	}
 
 	bool TryParseUint64(TJsonDocument *doc) {
-		for (const auto &jItem : doc->GetArray()) {
-			if (!jItem.IsUint64() || !Add((TItem)jItem.GetUint64())) { return false; }
+		auto jArray = doc->GetArray();
+		Items.reserve(jArray.Size());
+		for (const auto &jItem : jArray) {
+			if (!jItem.IsUint64() || !Add((TItem)jItem.GetUint64())) {
+				return false;
+			}
 		}
 		return true;
 	}
 
 	bool TryParseBool(TJsonDocument *doc) {
-		for (const auto &jItem : doc->GetArray()) {
-			if (!jItem.IsBool() || !Add((TItem)jItem.GetBool())) { return false; }
+		auto jArray = doc->GetArray();
+		Items.reserve(jArray.Size());
+		for (const auto &jItem : jArray) {
+			if (!jItem.IsBool() || !Add((TItem)jItem.GetBool())) {
+				return false;
+			}
 		}
 		return true;
 	}
