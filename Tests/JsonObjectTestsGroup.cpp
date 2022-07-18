@@ -57,7 +57,7 @@ class GoodsDto : public JsonObject {
 		  StoreName(this, "StoreName") {}
 };
 
-class GoodsList : public JsonArray<GoodsDto> {
+class GoodsList : public JsonArray<GoodsDto *> {
   public:
 	bool Validate(GoodsDto *item) { return item->Validate(); }
 };
