@@ -27,7 +27,7 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 		if (!doc->IsArray()) { return false; }
 		auto jArray = doc->GetArray();
 		Items.reserve(jArray.Size());
-		if (TryParseCore(&jArray)) { return true; }
+		if (TryParseInternal(&jArray)) { return true; }
 		Items.shrink_to_fit();
 		return false;
 	}
@@ -59,22 +59,7 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 
 	virtual void WriteToDoc(TJsonDocument *doc) {
 		doc->SetArray();
-
-		if (std::is_base_of<JsonObject, TNewObjectItem>::value) {
-			WriteJsonObjectToDoc(doc);
-		} else if (std::is_same<TItem, char *>::value) {
-			WriteJsonStringToDoc(doc);
-		} else if (std::is_same<TItem, TBoolArray>::value) {
-			WriteJsonBoolToDoc(doc);
-		} else if (std::is_same<TItem, int64_t>::value) {
-			WriteJsonInt64ToDoc(doc);
-		} else if (std::is_same<TItem, uint64_t>::value) {
-			WriteJsonUint64ToDoc(doc);
-		} else if (std::is_signed<TItem>::value) {
-			WriteJsonIntToDoc(doc);
-		} else if (std::is_unsigned<TItem>::value) {
-			WriteJsonUintToDoc(doc);
-		}
+		WriteToDocInternal(doc);
 	}
 
 	int WriteToString(char *outBuffer, int outBufferSize) {
@@ -108,17 +93,7 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 
 	virtual bool Add(TItem item) {
 		if (!Validate(item)) { return false; }
-
-		if (std::is_same<TItem, char *>::value) {
-			auto len = strlen((char *)item);
-			auto newItem = new char[len + 1];
-			memcpy(newItem, (char *)item, len);
-			newItem[len] = 0;
-			Items.push_back((TItem)newItem);
-		} else {
-			Items.push_back(item);
-		}
-
+		AddInternal(item);
 		return true;
 	}
 
@@ -126,7 +101,7 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 	virtual bool Validate(TItem item) = 0;
 
   private:
-	bool TryParseCore(TJsonArray *jArray) {
+	bool TryParseInternal(TJsonArray *jArray) {
 		if (std::is_base_of<JsonObject, TNewObjectItem>::value) {
 			for (const auto &jItem : *jArray) {
 				auto newItem = new TNewObjectItem();
@@ -139,122 +114,189 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 		}
 	}
 
-	void WriteJsonObjectToDoc(TJsonDocument *doc) {
+	void WriteToDocInternal(TJsonDocument *doc) {
 		rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
-		for (const auto &item : Items) {
-			rapidjson::Document childDoc(&allocator);
-			JsonObject *jObject = (JsonObject *)item;
-			jObject->WriteToDoc(&childDoc);
-			doc->PushBack(childDoc, allocator);
+		if (std::is_base_of<JsonObject, TNewObjectItem>::value) {
+			for (const auto &item : Items) {
+				rapidjson::Document childDoc(&allocator);
+				JsonObject *jObject = (JsonObject *)item;
+				jObject->WriteToDoc(&childDoc);
+				doc->PushBack(childDoc, allocator);
+			}
 		}
 	}
-	void WriteJsonStringToDoc(TJsonDocument *doc) {
-		rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
-		for (const auto &item : Items) {
-			rapidjson::Value temp;
-			temp.SetString(rapidjson::StringRef((char *)item));
-			doc->PushBack(temp, allocator);
-		}
-	}
-	void WriteJsonIntToDoc(TJsonDocument *doc) {
-		rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
-		for (const auto &item : Items) {
-			rapidjson::Value temp;
-			temp.SetInt((signed int)item);
-			doc->PushBack(temp, allocator);
-		}
-	}
-	void WriteJsonUintToDoc(TJsonDocument *doc) {
-		rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
-		for (const auto &item : Items) {
-			rapidjson::Value temp;
-			temp.SetUint((unsigned int)item);
-			doc->PushBack(temp, allocator);
-		}
-	}
-	void WriteJsonInt64ToDoc(TJsonDocument *doc) {
-		rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
-		for (const auto &item : Items) {
-			rapidjson::Value temp;
-			temp.SetInt64((int64_t)item);
-			doc->PushBack(temp, allocator);
-		}
-	}
-	void WriteJsonUint64ToDoc(TJsonDocument *doc) {
-		rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
-		for (const auto &item : Items) {
-			rapidjson::Value temp;
-			temp.SetUint64((uint64_t)item);
-			doc->PushBack(temp, allocator);
-		}
-	}
-	void WriteJsonBoolToDoc(TJsonDocument *doc) {
-		rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
-		for (const auto &item : Items) {
-			rapidjson::Value temp;
-			temp.SetBool(item);
-			doc->PushBack(temp, allocator);
-		}
-	}
+
+	void AddInternal(TItem item) { Items.push_back(item); }
 };
 
-template <> bool JsonArray<char *>::TryParseCore(TJsonArray *jArray) {
+template <> bool JsonArray<char *>::TryParseInternal(TJsonArray *jArray) {
 	for (const auto &jItem : *jArray) {
 		if (!jItem.IsString() || !Add((char *)jItem.GetString())) { return false; }
 	}
 	return true;
 }
-template <> bool JsonArray<TBoolArray>::TryParseCore(TJsonArray *jArray) {
+template <> bool JsonArray<TBoolArray>::TryParseInternal(TJsonArray *jArray) {
 	for (const auto &jItem : *jArray) {
 		if (!jItem.IsBool() || !Add((TBoolArray)jItem.GetBool())) { return false; }
 	}
 	return true;
 }
-template <> bool JsonArray<int64_t>::TryParseCore(TJsonArray *jArray) {
+template <> bool JsonArray<int64_t>::TryParseInternal(TJsonArray *jArray) {
 	for (const auto &jItem : *jArray) {
 		if (!jItem.IsInt64() || !Add((int64_t)jItem.GetInt64())) { return false; }
 	}
 	return true;
 }
-template <> bool JsonArray<uint64_t>::TryParseCore(TJsonArray *jArray) {
+template <> bool JsonArray<uint64_t>::TryParseInternal(TJsonArray *jArray) {
 	for (const auto &jItem : *jArray) {
 		if (!jItem.IsUint64() || !Add((uint64_t)jItem.GetUint64())) { return false; }
 	}
 	return true;
 }
-template <> bool JsonArray<int32_t>::TryParseCore(TJsonArray *jArray) {
+template <> bool JsonArray<int32_t>::TryParseInternal(TJsonArray *jArray) {
 	for (const auto &jItem : *jArray) {
 		if (!jItem.IsInt() || !Add((int32_t)jItem.GetInt())) { return false; }
 	}
 	return true;
 }
-template <> bool JsonArray<uint32_t>::TryParseCore(TJsonArray *jArray) {
+template <> bool JsonArray<uint32_t>::TryParseInternal(TJsonArray *jArray) {
 	for (const auto &jItem : *jArray) {
 		if (!jItem.IsUint() || !Add((uint32_t)jItem.GetUint())) { return false; }
 	}
 	return true;
 }
-template <> bool JsonArray<int16_t>::TryParseCore(TJsonArray *jArray) {
+template <> bool JsonArray<int16_t>::TryParseInternal(TJsonArray *jArray) {
 	for (const auto &jItem : *jArray) {
 		if (!jItem.IsInt() || !Add((int16_t)jItem.GetInt())) { return false; }
 	}
 	return true;
 }
-template <> bool JsonArray<uint16_t>::TryParseCore(TJsonArray *jArray) {
+template <> bool JsonArray<uint16_t>::TryParseInternal(TJsonArray *jArray) {
 	for (const auto &jItem : *jArray) {
 		if (!jItem.IsUint() || !Add((uint16_t)jItem.GetUint())) { return false; }
 	}
 	return true;
 }
-template <> bool JsonArray<int8_t>::TryParseCore(TJsonArray *jArray) {
+template <> bool JsonArray<int8_t>::TryParseInternal(TJsonArray *jArray) {
 	for (const auto &jItem : *jArray) {
 		if (!jItem.IsInt() || !Add((int8_t)jItem.GetInt())) { return false; }
 	}
 	return true;
 }
-template <> bool JsonArray<uint8_t>::TryParseCore(TJsonArray *jArray) {
+template <> bool JsonArray<uint8_t>::TryParseInternal(TJsonArray *jArray) {
 	for (const auto &jItem : *jArray) {
 		if (!jItem.IsUint() || !Add((uint8_t)jItem.GetUint())) { return false; }
 	}
 	return true;
+}
+template <> bool JsonArray<double>::TryParseInternal(TJsonArray *jArray) {
+	for (const auto &jItem : *jArray) {
+		if (!jItem.IsUint() || !Add((double)jItem.GetFloat())) { return false; }
+	}
+	return true;
+}
+template <> bool JsonArray<float>::TryParseInternal(TJsonArray *jArray) {
+	for (const auto &jItem : *jArray) {
+		if (!jItem.IsUint() || !Add((float)jItem.GetFloat())) { return false; }
+	}
+	return true;
+}
+/*
+
+
+*/
+template <> void JsonArray<char *>::WriteToDocInternal(TJsonDocument *doc) {
+	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
+	for (const auto &item : Items) {
+		rapidjson::Value temp(rapidjson::StringRef((char *)item));
+		doc->PushBack(temp, allocator);
+	}
+}
+template <> void JsonArray<TBoolArray>::WriteToDocInternal(TJsonDocument *doc) {
+	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
+	for (const auto &item : Items) {
+		rapidjson::Value temp((bool)item);
+		doc->PushBack(temp, allocator);
+	}
+}
+template <> void JsonArray<int64_t>::WriteToDocInternal(TJsonDocument *doc) {
+	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
+	for (const auto &item : Items) {
+		rapidjson::Value temp(item);
+		doc->PushBack(temp, allocator);
+	}
+}
+template <> void JsonArray<uint64_t>::WriteToDocInternal(TJsonDocument *doc) {
+	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
+	for (const auto &item : Items) {
+		rapidjson::Value temp(item);
+		doc->PushBack(temp, allocator);
+	}
+}
+template <> void JsonArray<int32_t>::WriteToDocInternal(TJsonDocument *doc) {
+	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
+	for (const auto &item : Items) {
+		rapidjson::Value temp(item);
+		doc->PushBack(temp, allocator);
+	}
+}
+template <> void JsonArray<uint32_t>::WriteToDocInternal(TJsonDocument *doc) {
+	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
+	for (const auto &item : Items) {
+		rapidjson::Value temp(item);
+		doc->PushBack(temp, allocator);
+	}
+}
+template <> void JsonArray<int16_t>::WriteToDocInternal(TJsonDocument *doc) {
+	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
+	for (const auto &item : Items) {
+		rapidjson::Value temp(item);
+		doc->PushBack(temp, allocator);
+	}
+}
+template <> void JsonArray<uint16_t>::WriteToDocInternal(TJsonDocument *doc) {
+	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
+	for (const auto &item : Items) {
+		rapidjson::Value temp(item);
+		doc->PushBack(temp, allocator);
+	}
+}
+template <> void JsonArray<int8_t>::WriteToDocInternal(TJsonDocument *doc) {
+	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
+	for (const auto &item : Items) {
+		rapidjson::Value temp(item);
+		doc->PushBack(temp, allocator);
+	}
+}
+template <> void JsonArray<uint8_t>::WriteToDocInternal(TJsonDocument *doc) {
+	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
+	for (const auto &item : Items) {
+		rapidjson::Value temp(item);
+		doc->PushBack(temp, allocator);
+	}
+}
+template <> void JsonArray<double>::WriteToDocInternal(TJsonDocument *doc) {
+	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
+	for (const auto &item : Items) {
+		rapidjson::Value temp(item);
+		doc->PushBack(temp, allocator);
+	}
+}
+template <> void JsonArray<float>::WriteToDocInternal(TJsonDocument *doc) {
+	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
+	for (const auto &item : Items) {
+		rapidjson::Value temp(item);
+		doc->PushBack(temp, allocator);
+	}
+}
+/*
+
+
+*/
+template <> void JsonArray<char *>::AddInternal(char *item) {
+	auto len = strlen((char *)item);
+	auto newItem = new char[len + 1];
+	memcpy(newItem, (char *)item, len);
+	newItem[len] = 0;
+	Items.push_back(newItem);
 }
