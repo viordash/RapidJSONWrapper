@@ -25,24 +25,11 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 
 	virtual bool TryParse(TJsonDocument *doc) {
 		if (!doc->IsArray()) { return false; }
-
-		if (std::is_base_of<JsonObject, TNewObjectItem>::value) {
-			return TryParseJsonObject(doc);
-		} else if (std::is_same<TItem, char *>::value) {
-			return TryParseString(doc);
-		} else if (std::is_same<TItem, TBoolArray>::value) {
-			return TryParseBool(doc);
-		} else if (std::is_same<TItem, int64_t>::value) {
-			return TryParseInt64(doc);
-		} else if (std::is_same<TItem, uint64_t>::value) {
-			return TryParseUint64(doc);
-		} else if (std::is_signed<TItem>::value) {
-			return TryParseInt(doc);
-		} else if (std::is_unsigned<TItem>::value) {
-			return TryParseUint(doc);
-		} else {
-			return false;
-		}
+		auto jArray = doc->GetArray();
+		Items.reserve(jArray.Size());
+		if (TryParseCore(&jArray)) { return true; }
+		Items.shrink_to_fit();
+		return false;
 	}
 
 	bool TryParse(const char *jsonStr, int length = -1) {
@@ -139,71 +126,17 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 	virtual bool Validate(TItem item) = 0;
 
   private:
-	bool TryParseJsonObject(TJsonDocument *doc) {
-		auto jArray = doc->GetArray();
-		Items.reserve(jArray.Size());
-		for (const auto &jItem : jArray) {
-			auto newItem = new TNewObjectItem();
-			if (!((JsonObject *)newItem)->TryParse((TJsonDocument *)&jItem) || !Add((TItem)newItem)) {
-				delete newItem;
-				return false;
+	bool TryParseCore(TJsonArray *jArray) {
+		if (std::is_base_of<JsonObject, TNewObjectItem>::value) {
+			for (const auto &jItem : *jArray) {
+				auto newItem = new TNewObjectItem();
+				if (!((JsonObject *)newItem)->TryParse((TJsonDocument *)&jItem) || !Add((TItem)newItem)) {
+					delete newItem;
+					return false;
+				}
 			}
+			return true;
 		}
-		return true;
-	}
-
-	bool TryParseString(TJsonDocument *doc) {
-		auto jArray = doc->GetArray();
-		Items.reserve(jArray.Size());
-		for (const auto &jItem : jArray) {
-			if (!jItem.IsString() || !Add((TItem)jItem.GetString())) { return false; }
-		}
-		return true;
-	}
-
-	bool TryParseInt(TJsonDocument *doc) {
-		auto jArray = doc->GetArray();
-		Items.reserve(jArray.Size());
-		for (const auto &jItem : jArray) {
-			if (!jItem.IsInt() || !Add((TItem)jItem.GetInt())) { return false; }
-		}
-		return true;
-	}
-
-	bool TryParseUint(TJsonDocument *doc) {
-		auto jArray = doc->GetArray();
-		Items.reserve(jArray.Size());
-		for (const auto &jItem : jArray) {
-			if (!jItem.IsUint() || !Add((TItem)jItem.GetUint())) { return false; }
-		}
-		return true;
-	}
-
-	bool TryParseInt64(TJsonDocument *doc) {
-		auto jArray = doc->GetArray();
-		Items.reserve(jArray.Size());
-		for (const auto &jItem : jArray) {
-			if (!jItem.IsInt64() || !Add((TItem)jItem.GetInt64())) { return false; }
-		}
-		return true;
-	}
-
-	bool TryParseUint64(TJsonDocument *doc) {
-		auto jArray = doc->GetArray();
-		Items.reserve(jArray.Size());
-		for (const auto &jItem : jArray) {
-			if (!jItem.IsUint64() || !Add((TItem)jItem.GetUint64())) { return false; }
-		}
-		return true;
-	}
-
-	bool TryParseBool(TJsonDocument *doc) {
-		auto jArray = doc->GetArray();
-		Items.reserve(jArray.Size());
-		for (const auto &jItem : jArray) {
-			if (!jItem.IsBool() || !Add((TItem)jItem.GetBool())) { return false; }
-		}
-		return true;
 	}
 
 	void WriteJsonObjectToDoc(TJsonDocument *doc) {
@@ -264,3 +197,64 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 		}
 	}
 };
+
+template <> bool JsonArray<char *>::TryParseCore(TJsonArray *jArray) {
+	for (const auto &jItem : *jArray) {
+		if (!jItem.IsString() || !Add((char *)jItem.GetString())) { return false; }
+	}
+	return true;
+}
+template <> bool JsonArray<TBoolArray>::TryParseCore(TJsonArray *jArray) {
+	for (const auto &jItem : *jArray) {
+		if (!jItem.IsBool() || !Add((TBoolArray)jItem.GetBool())) { return false; }
+	}
+	return true;
+}
+template <> bool JsonArray<int64_t>::TryParseCore(TJsonArray *jArray) {
+	for (const auto &jItem : *jArray) {
+		if (!jItem.IsInt64() || !Add((int64_t)jItem.GetInt64())) { return false; }
+	}
+	return true;
+}
+template <> bool JsonArray<uint64_t>::TryParseCore(TJsonArray *jArray) {
+	for (const auto &jItem : *jArray) {
+		if (!jItem.IsUint64() || !Add((uint64_t)jItem.GetUint64())) { return false; }
+	}
+	return true;
+}
+template <> bool JsonArray<int32_t>::TryParseCore(TJsonArray *jArray) {
+	for (const auto &jItem : *jArray) {
+		if (!jItem.IsInt() || !Add((int32_t)jItem.GetInt())) { return false; }
+	}
+	return true;
+}
+template <> bool JsonArray<uint32_t>::TryParseCore(TJsonArray *jArray) {
+	for (const auto &jItem : *jArray) {
+		if (!jItem.IsUint() || !Add((uint32_t)jItem.GetUint())) { return false; }
+	}
+	return true;
+}
+template <> bool JsonArray<int16_t>::TryParseCore(TJsonArray *jArray) {
+	for (const auto &jItem : *jArray) {
+		if (!jItem.IsInt() || !Add((int16_t)jItem.GetInt())) { return false; }
+	}
+	return true;
+}
+template <> bool JsonArray<uint16_t>::TryParseCore(TJsonArray *jArray) {
+	for (const auto &jItem : *jArray) {
+		if (!jItem.IsUint() || !Add((uint16_t)jItem.GetUint())) { return false; }
+	}
+	return true;
+}
+template <> bool JsonArray<int8_t>::TryParseCore(TJsonArray *jArray) {
+	for (const auto &jItem : *jArray) {
+		if (!jItem.IsInt() || !Add((int8_t)jItem.GetInt())) { return false; }
+	}
+	return true;
+}
+template <> bool JsonArray<uint8_t>::TryParseCore(TJsonArray *jArray) {
+	for (const auto &jItem : *jArray) {
+		if (!jItem.IsUint() || !Add((uint8_t)jItem.GetUint())) { return false; }
+	}
+	return true;
+}
