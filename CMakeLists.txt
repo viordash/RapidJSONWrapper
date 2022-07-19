@@ -15,8 +15,7 @@ include(CTest)
 include_directories(rapidjson/include Json)
 
 set(SOURCE_FILES     
-    Json/JsonObject.cpp
-    Json/JsonValue.cpp
+
 )
 
 add_executable(RapidJSONWrapper     

@@ -3,10 +3,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "rapidjson/document.h"
-#include "rapidjson/writer.h"
-#include "rapidjson/stringbuffer.h"
+
 #include "Json.h"
+
 #include "TestsCommon.h"
 
 class UserDto : public JsonObject {
@@ -139,7 +138,8 @@ TEST(JsonArrayTestsGroup, JsonObjectArray_Parse_With_Begin_End_Stages_Test) {
 TEST(JsonArrayTestsGroup, JsonObjectArray_Parse_With_Begin_End_Stages_And_Specified_Length_Test) {
 	UsersList list;
 	auto doc = list.BeginTryParse("[{\"name\":\"User1\",\"role\":100},{\"name\":\"User2\",\"role\":0},{\"name\":\"User3\","
-								  "\"role\":255}]  some data 0123456                     ", 83);
+								  "\"role\":255}]  some data 0123456                     ",
+								  83);
 
 	CHECK(doc != NULL);
 	CHECK_EQUAL(list.Items.size(), 3);
