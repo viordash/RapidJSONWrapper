@@ -89,30 +89,10 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 	virtual bool Validate(TItem item) = 0;
 
   private:
-	bool TryParseInternal(TJsonArray *jArray) {
-		if (std::is_base_of<JsonObject, TNewObjectItem>::value) {
-			for (const auto &jItem : *jArray) {
-				auto newItem = new TNewObjectItem();
-				if (!((JsonObject *)newItem)->TryParse((TJsonDocument *)&jItem) || !Add((TItem)newItem)) {
-					delete newItem;
-					return false;
-				}
-			}
-			return true;
-		}
-	}
+	bool TryParseInternal(TJsonArray *jArray);
 
-	void WriteToDocInternal(TJsonDocument *doc) {
-		rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
-		if (std::is_base_of<JsonObject, TNewObjectItem>::value) {
-			for (const auto &item : Items) {
-				rapidjson::Document childDoc(&allocator);
-				JsonObject *jObject = (JsonObject *)item;
-				jObject->WriteToDoc(&childDoc);
-				doc->PushBack(childDoc, allocator);
-			}
-		}
-	}
+	void WriteToDocInternal(TJsonDocument *doc);
 
-	void AddInternal(TItem item) { Items.push_back(item); }
+	void AddInternal(TItem item);
 };
+

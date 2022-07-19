@@ -78,6 +78,20 @@ template <class TItem> bool JsonArray<TItem>::Add(TItem item) {
 
 
 */
+
+template <class TItem> bool JsonArray<TItem>::TryParseInternal(TJsonArray *jArray) {
+	if (std::is_base_of<JsonObject, TNewObjectItem>::value) {
+		for (const auto &jItem : *jArray) {
+			auto newItem = new TNewObjectItem();
+			if (!((JsonObject *)newItem)->TryParse((TJsonDocument *)&jItem) || !Add((TItem)newItem)) {
+				delete newItem;
+				return false;
+			}
+		}
+		return true;
+	}
+}
+
 template <> bool JsonArray<char *>::TryParseInternal(TJsonArray *jArray) {
 	for (const auto &jItem : *jArray) {
 		if (!jItem.IsString() || !Add((char *)jItem.GetString())) { return false; }
@@ -154,6 +168,17 @@ template <> bool JsonArray<float>::TryParseInternal(TJsonArray *jArray) {
 
 
 */
+template <class TItem> void JsonArray<TItem>::WriteToDocInternal(TJsonDocument *doc) {
+	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
+	if (std::is_base_of<JsonObject, TNewObjectItem>::value) {
+		for (const auto &item : Items) {
+			rapidjson::Document childDoc(&allocator);
+			JsonObject *jObject = (JsonObject *)item;
+			jObject->WriteToDoc(&childDoc);
+			doc->PushBack(childDoc, allocator);
+		}
+	}
+}
 template <> void JsonArray<char *>::WriteToDocInternal(TJsonDocument *doc) {
 	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
 	for (const auto &item : Items) {
@@ -242,6 +267,7 @@ template <> void JsonArray<float>::WriteToDocInternal(TJsonDocument *doc) {
 
 
 */
+template <class TItem> void JsonArray<TItem>::AddInternal(TItem item) { Items.push_back(item); }
 template <> void JsonArray<char *>::AddInternal(char *item) {
 	auto len = strlen((char *)item);
 	auto newItem = new char[len + 1];
