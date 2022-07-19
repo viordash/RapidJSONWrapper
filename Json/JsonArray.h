@@ -74,6 +74,18 @@ template <class TItem> bool JsonArray<TItem>::Add(TItem item) {
 	AddInternal(item);
 	return true;
 }
+template <class TItem> void JsonArray<TItem>::Remove(TItem item) {
+	if (item == NULL) { return; }
+	auto iter = Find(item);
+	if (iter != Items.end()) { Items.erase(iter); }
+}
+
+template <class TItem> typename std::vector<TItem>::iterator JsonArray<TItem>::Find(TItem item) {
+	for (auto iter = Items.begin(); iter != Items.end(); iter++) {
+		if (*iter == item) { return iter; }
+	}
+	return Items.end();
+}
 /*
 
 

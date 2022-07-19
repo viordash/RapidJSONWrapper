@@ -127,6 +127,8 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 	int DirectWriteTo(void *parent, TOnReady onReady);
 
 	virtual bool Add(TItem item);
+	virtual void Remove(TItem item);
+	typename std::vector<TItem>::iterator Find(TItem item);
 
   protected:
 	virtual bool Validate(TItem item) = 0;
