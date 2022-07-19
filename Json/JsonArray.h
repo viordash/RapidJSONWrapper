@@ -1,9 +1,8 @@
 #pragma once
 
+#include "Json.h"
 #include "LibJson.h"
 #include "JsonFieldsContainer.h"
-
-typedef char TBoolArray;
 
 class JsonObject;
 
@@ -12,8 +11,6 @@ class JsonArrayBase {
 	virtual bool TryParse(TJsonDocument *doc) = 0;
 
 	virtual void WriteToDoc(TJsonDocument *doc) = 0;
-
-  protected:
 };
 
 template <class TItem> class JsonArray : public JsonArrayBase {
@@ -23,79 +20,22 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 	std::vector<TItem> Items;
 	TItem operator[](int index) { return Items[index]; }
 
-	virtual bool TryParse(TJsonDocument *doc) {
-		if (!doc->IsArray()) { return false; }
-		auto jArray = doc->GetArray();
-		Items.reserve(jArray.Size());
-		if (TryParseInternal(&jArray)) { return true; }
-		Items.shrink_to_fit();
-		return false;
-	}
+	virtual bool TryParse(TJsonDocument *doc);
 
-	bool TryParse(const char *jsonStr, int length = -1) {
-		auto doc = BeginTryParse(jsonStr, length);
-		if (doc == NULL) { return false; }
-		EndTryParse(doc);
-		return true;
-	}
+	bool TryParse(const char *jsonStr, int length = -1);
 
-	TJsonDocument *BeginTryParse(const char *jsonStr, int length = -1) {
-		if (jsonStr == NULL || length == 0) { return NULL; }
+	TJsonDocument *BeginTryParse(const char *jsonStr, int length = -1);
 
-		rapidjson::Document *doc = new rapidjson::Document();
-		if (length < 0) {
-			doc->Parse(jsonStr);
-		} else {
-			doc->Parse(jsonStr, length);
-		}
-		if (doc->HasParseError() || !this->TryParse(doc)) {
-			delete doc;
-			return NULL;
-		}
-		return doc;
-	}
+	void EndTryParse(TJsonDocument *doc);
 
-	void EndTryParse(TJsonDocument *doc) { delete doc; }
+	virtual void WriteToDoc(TJsonDocument *doc);
 
-	virtual void WriteToDoc(TJsonDocument *doc) {
-		doc->SetArray();
-		WriteToDocInternal(doc);
-	}
-
-	int WriteToString(char *outBuffer, int outBufferSize) {
-		rapidjson::Document doc;
-		this->WriteToDoc(&doc);
-		rapidjson::StringBuffer buffer;
-		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-		doc.Accept(writer);
-
-		const char *jsonStr = buffer.GetString();
-		int size = buffer.GetSize();
-		if (size > outBufferSize - 1) { size = outBufferSize - 1; }
-		strncpy(outBuffer, jsonStr, size);
-		outBuffer[size] = 0;
-		return size;
-	}
+	int WriteToString(char *outBuffer, int outBufferSize);
 
 	typedef void (*TOnReady)(void *parent, const char *json, int size);
-	int DirectWriteTo(void *parent, TOnReady onReady) {
-		rapidjson::Document doc;
-		this->WriteToDoc(&doc);
-		rapidjson::StringBuffer buffer;
-		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-		doc.Accept(writer);
+	int DirectWriteTo(void *parent, TOnReady onReady);
 
-		const char *json = buffer.GetString();
-		int size = buffer.GetSize();
-		onReady(parent, json, size);
-		return size;
-	}
-
-	virtual bool Add(TItem item) {
-		if (!Validate(item)) { return false; }
-		AddInternal(item);
-		return true;
-	}
+	virtual bool Add(TItem item);
 
   protected:
 	virtual bool Validate(TItem item) = 0;
@@ -129,6 +69,82 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 	void AddInternal(TItem item) { Items.push_back(item); }
 };
 
+template <class TItem> bool JsonArray<TItem>::TryParse(TJsonDocument *doc) {
+	if (!doc->IsArray()) { return false; }
+	auto jArray = doc->GetArray();
+	Items.reserve(jArray.Size());
+	if (TryParseInternal(&jArray)) { return true; }
+	Items.shrink_to_fit();
+	return false;
+}
+
+template <class TItem> bool JsonArray<TItem>::TryParse(const char *jsonStr, int length) {
+	auto doc = BeginTryParse(jsonStr, length);
+	if (doc == NULL) { return false; }
+	EndTryParse(doc);
+	return true;
+}
+
+template <class TItem> TJsonDocument *JsonArray<TItem>::BeginTryParse(const char *jsonStr, int length) {
+	if (jsonStr == NULL || length == 0) { return NULL; }
+
+	rapidjson::Document *doc = new rapidjson::Document();
+	if (length < 0) {
+		doc->Parse(jsonStr);
+	} else {
+		doc->Parse(jsonStr, length);
+	}
+	if (doc->HasParseError() || !this->TryParse(doc)) {
+		delete doc;
+		return NULL;
+	}
+	return doc;
+}
+
+template <class TItem> void JsonArray<TItem>::EndTryParse(TJsonDocument *doc) { delete doc; }
+
+template <class TItem> void JsonArray<TItem>::WriteToDoc(TJsonDocument *doc) {
+	doc->SetArray();
+	WriteToDocInternal(doc);
+}
+
+template <class TItem> int JsonArray<TItem>::WriteToString(char *outBuffer, int outBufferSize) {
+	rapidjson::Document doc;
+	this->WriteToDoc(&doc);
+	rapidjson::StringBuffer buffer;
+	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+	doc.Accept(writer);
+
+	const char *jsonStr = buffer.GetString();
+	int size = buffer.GetSize();
+	if (size > outBufferSize - 1) { size = outBufferSize - 1; }
+	strncpy(outBuffer, jsonStr, size);
+	outBuffer[size] = 0;
+	return size;
+}
+
+template <class TItem> int JsonArray<TItem>::DirectWriteTo(void *parent, TOnReady onReady) {
+	rapidjson::Document doc;
+	this->WriteToDoc(&doc);
+	rapidjson::StringBuffer buffer;
+	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+	doc.Accept(writer);
+
+	const char *json = buffer.GetString();
+	int size = buffer.GetSize();
+	onReady(parent, json, size);
+	return size;
+}
+
+template <class TItem> bool JsonArray<TItem>::Add(TItem item) {
+	if (!Validate(item)) { return false; }
+	AddInternal(item);
+	return true;
+}
+/*
+
+
+*/
 template <> bool JsonArray<char *>::TryParseInternal(TJsonArray *jArray) {
 	for (const auto &jItem : *jArray) {
 		if (!jItem.IsString() || !Add((char *)jItem.GetString())) { return false; }
@@ -191,13 +207,13 @@ template <> bool JsonArray<uint8_t>::TryParseInternal(TJsonArray *jArray) {
 }
 template <> bool JsonArray<double>::TryParseInternal(TJsonArray *jArray) {
 	for (const auto &jItem : *jArray) {
-		if (!jItem.IsUint() || !Add((double)jItem.GetFloat())) { return false; }
+		if (!jItem.IsDouble() || !Add((double)jItem.GetDouble())) { return false; }
 	}
 	return true;
 }
 template <> bool JsonArray<float>::TryParseInternal(TJsonArray *jArray) {
 	for (const auto &jItem : *jArray) {
-		if (!jItem.IsUint() || !Add((float)jItem.GetFloat())) { return false; }
+		if (!jItem.IsFloat() || !Add((float)jItem.GetFloat())) { return false; }
 	}
 	return true;
 }

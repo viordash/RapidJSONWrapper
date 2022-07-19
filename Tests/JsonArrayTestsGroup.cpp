@@ -78,6 +78,15 @@ class Uint8List : public JsonArray<uint8_t> {
 	bool Validate(uint8_t item) override { return Items.size() < maxCount; }
 };
 
+class DoubleList : public JsonArray<double> {
+  public:
+	bool Validate(double item) override { return Items.size() < maxCount; }
+};
+class FloatList : public JsonArray<float> {
+  public:
+	bool Validate(float item) override { return Items.size() < maxCount; }
+};
+
 TEST(JsonArrayTestsGroup, JsonObjectArray_Parse_Test) {
 	UsersList list;
 
@@ -123,6 +132,20 @@ TEST(JsonArrayTestsGroup, JsonObjectArray_Parse_With_Begin_End_Stages_Test) {
 
 	STRCMP_EQUAL(list.Items[0]->Name.Value, "User1");
 	CHECK_EQUAL(list.Items[0]->Role.Value, 100);
+	list.EndTryParse(doc);
+	return EXIT_SUCCESS;
+}
+
+TEST(JsonArrayTestsGroup, JsonObjectArray_Parse_With_Begin_End_Stages_And_Specified_Length_Test) {
+	UsersList list;
+	auto doc = list.BeginTryParse("[{\"name\":\"User1\",\"role\":100},{\"name\":\"User2\",\"role\":0},{\"name\":\"User3\","
+								  "\"role\":255}]  some data 0123456                     ", 83);
+
+	CHECK(doc != NULL);
+	CHECK_EQUAL(list.Items.size(), 3);
+
+	STRCMP_EQUAL(list.Items[2]->Name.Value, "User3");
+	CHECK_EQUAL(list.Items[2]->Role.Value, 255);
 	list.EndTryParse(doc);
 	return EXIT_SUCCESS;
 }
@@ -419,10 +442,61 @@ TEST(JsonArrayTestsGroup, JsonUint8Array_WriteTo_Test) {
 	return EXIT_SUCCESS;
 }
 
+TEST(JsonArrayTestsGroup, JsonDoubleArray_Parse_Test) {
+	DoubleList list;
+	CHECK_TRUE(list.TryParse("[0.00001,254.123,-65535.523,2147483647.1]"));
+	CHECK_EQUAL(list.Items.size(), 4);
+	CHECK_EQUAL(list.Items[0], 0.00001);
+	CHECK_EQUAL(list.Items[1], 254.123);
+	CHECK_EQUAL(list.Items[2], -65535.523);
+	CHECK_EQUAL(list.Items[3], 2147483647.1);
+	return EXIT_SUCCESS;
+}
+
+TEST(JsonArrayTestsGroup, JsonDoubleArray_WriteTo_Test) {
+	char buffer[2048];
+	DoubleList list;
+	list.Add(-0.05);
+	list.Add(1.254);
+	list.Add(65535.15);
+	list.Add(0.1);
+	list.Add(2147.483647);
+
+	CHECK_EQUAL(list.WriteToString(buffer, sizeof(buffer)), 38);
+	STRCMP_EQUAL(buffer, "[-0.05,1.254,65535.15,0.1,2147.483647]");
+	return EXIT_SUCCESS;
+}
+
+TEST(JsonArrayTestsGroup, JsonFloatArray_Parse_Test) {
+	FloatList list;
+	CHECK_TRUE(list.TryParse("[0.1,254.1,-65535.5,214748.1]"));
+	CHECK_EQUAL(list.Items.size(), 4);
+	CHECK_EQUAL(list.Items[0], 0.1f);
+	CHECK_EQUAL(list.Items[1], 254.1f);
+	CHECK_EQUAL(list.Items[2], -65535.5f);
+	CHECK_EQUAL(list.Items[3], 214748.1f);
+	return EXIT_SUCCESS;
+}
+
+TEST(JsonArrayTestsGroup, JsonFloatArray_WriteTo_Test) {
+	char buffer[2048];
+	FloatList list;
+	list.Add(-1.5f);
+	list.Add(1.25f);
+	list.Add(1000.25f);
+	list.Add(-100.75f);
+	list.Add(214789.5625f);
+
+	CHECK_EQUAL(list.WriteToString(buffer, sizeof(buffer)), 39);
+	STRCMP_EQUAL(buffer, "[-1.5,1.25,1000.25,-100.75,214789.5625]");
+	return EXIT_SUCCESS;
+}
+
 int main(const int argc, const char *argv[]) {
 	TEST_RUN(JsonArrayTestsGroup, JsonObjectArray_Parse_Test);
 	TEST_RUN(JsonArrayTestsGroup, JsonObjectArray_Parse_Error_Test);
 	TEST_RUN(JsonArrayTestsGroup, JsonObjectArray_Parse_With_Begin_End_Stages_Test);
+	TEST_RUN(JsonArrayTestsGroup, JsonObjectArray_Parse_With_Begin_End_Stages_And_Specified_Length_Test);
 	TEST_RUN(JsonArrayTestsGroup, JsonObjectArray_WriteTo_Test);
 	TEST_RUN(JsonArrayTestsGroup, JsonObjectArray_WriteTo_With_Limited_Buffer_Test);
 	TEST_RUN(JsonArrayTestsGroup, JsonObjectArray_Direct_Write_From_Json_Memory_Test);
@@ -446,6 +520,10 @@ int main(const int argc, const char *argv[]) {
 	TEST_RUN(JsonArrayTestsGroup, JsonInt8Array_WriteTo_Test);
 	TEST_RUN(JsonArrayTestsGroup, JsonUint8Array_Parse_Test);
 	TEST_RUN(JsonArrayTestsGroup, JsonUint8Array_WriteTo_Test);
+	TEST_RUN(JsonArrayTestsGroup, JsonDoubleArray_Parse_Test);
+	TEST_RUN(JsonArrayTestsGroup, JsonDoubleArray_WriteTo_Test);
+	TEST_RUN(JsonArrayTestsGroup, JsonFloatArray_Parse_Test);
+	TEST_RUN(JsonArrayTestsGroup, JsonFloatArray_WriteTo_Test);
 
 	printf("JsonArrayTestsGroup success");
 	return EXIT_SUCCESS;
