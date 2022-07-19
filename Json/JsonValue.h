@@ -2,122 +2,77 @@
 
 #include "LibJson.h"
 
-template <class T, bool optional = false> //
-class JsonValue : JsonValueBase {
-	class ValueWrapper {
-	  public:
-		ValueWrapper(JsonValue *owner, const T value) {
-			this->owner = owner;
-			owner->InitValue(value);
-		}
 
-		~ValueWrapper() { owner->DeleteValue(); }
+template <class T, bool optional> TJsonDocument *JsonValue<T, optional>::BeginTryParse(const char *jsonStr, int length) {
+	if (jsonStr == NULL || length == 0) { return NULL; }
 
-		T operator=(const T right) {
-			owner->SetValue(right);
-			return owner->value;
-		}
+	auto doc = new rapidjson::Document();
+	if (length < 0) {
+		doc->Parse(jsonStr);
+	} else {
+		doc->Parse(jsonStr, length);
+	}
+	if (doc->HasParseError() || !TryParse(doc)) {
+		delete doc;
+		return NULL;
+	}
+	return doc;
+}
 
-		operator T() const { return owner->value; }
+template <class T, bool optional> void JsonValue<T, optional>::EndTryParse(TJsonDocument *doc) { delete doc; }
 
-	  private:
-		JsonValue *owner;
-	};
-
-  public:
-	const char *Name;
-	ValueWrapper Value;
-
-	JsonValue(JsonFieldsContainer *container, const char *name, T value) : JsonValueBase(container), Name(name), Value(this, value) {}
-
-	JsonValue(JsonFieldsContainer *container, const char *name) : JsonValue(container, name, T()) {}
-
-	TJsonDocument *BeginTryParse(const char *jsonStr, int length = -1) {
-		if (jsonStr == NULL || length == 0) { return NULL; }
-
-		auto doc = new rapidjson::Document();
-		if (length < 0) {
-			doc->Parse(jsonStr);
-		} else {
-			doc->Parse(jsonStr, length);
-		}
-		if (doc->HasParseError() || !TryParse(doc)) {
-			delete doc;
-			return NULL;
-		}
-		return doc;
+template <class T, bool optional> bool JsonValue<T, optional>::TryParse(const char *jsonStr, int length) {
+	auto doc = BeginTryParse(jsonStr, length);
+	if (doc == NULL) { return false; }
+	EndTryParse(doc);
+	return true;
+}
+template <class T, bool optional> bool JsonValue<T, optional>::TryParse(TJsonDocument *doc) {
+	rapidjson::Value::MemberIterator member = doc->FindMember(Name);
+	if (member == doc->MemberEnd()) {
+		this->Reset();
+		return optional;
 	}
 
-	void EndTryParse(TJsonDocument *doc) { delete doc; }
-
-	bool TryParse(const char *jsonStr, int length = -1) {
-		auto doc = BeginTryParse(jsonStr, length);
-		if (doc == NULL) { return false; }
-		EndTryParse(doc);
+	rapidjson::Value &jsonVal = member->value;
+	if (TryParseCore(&jsonVal)) { return true; }
+	if (jsonVal.IsNull()) {
+		this->Reset();
 		return true;
 	}
+	return false;
+}
+template <class T, bool optional> int JsonValue<T, optional>::WriteToString(char *outBuffer, int outBufferSize) {
+	rapidjson::Document doc;
+	WriteToDoc(&doc);
+	rapidjson::StringBuffer buffer;
+	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+	doc.Accept(writer);
 
-	bool TryParse(TJsonDocument *doc) override final {
-		rapidjson::Value::MemberIterator member = doc->FindMember(Name);
-		if (member == doc->MemberEnd()) {
-			this->Reset();
-			return optional;
-		}
+	const char *jsonStr = buffer.GetString();
+	int size = buffer.GetSize();
+	if (size > outBufferSize - 1) { size = outBufferSize - 1; }
+	memcpy(outBuffer, jsonStr, size);
+	outBuffer[size] = 0;
+	return size;
+}
+template <class T, bool optional> int JsonValue<T, optional>::DirectWriteTo(void *parent, TOnCompleted onCompleted) {
+	rapidjson::Document doc;
+	WriteToDoc(&doc);
+	rapidjson::StringBuffer buffer;
+	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+	doc.Accept(writer);
 
-		rapidjson::Value &jsonVal = member->value;
-		if (TryParseCore(&jsonVal)) { return true; }
-		if (jsonVal.IsNull()) {
-			this->Reset();
-			return true;
-		}
-		return false;
-	}
+	const char *json = buffer.GetString();
+	int size = buffer.GetSize();
+	onCompleted(parent, json, size);
+	return size;
+}
+template <class T, bool optional> void JsonValue<T, optional>::Reset() { Value = T(); }
+/*
 
-	void WriteToDoc(TJsonDocument *doc) override final;
 
-	int WriteToString(char *outBuffer, int outBufferSize) {
-		rapidjson::Document doc;
-		WriteToDoc(&doc);
-		rapidjson::StringBuffer buffer;
-		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-		doc.Accept(writer);
-
-		const char *jsonStr = buffer.GetString();
-		int size = buffer.GetSize();
-		if (size > outBufferSize - 1) { size = outBufferSize - 1; }
-		memcpy(outBuffer, jsonStr, size);
-		outBuffer[size] = 0;
-		return size;
-	}
-
-	typedef void (*TOnCompleted)(void *parent, const char *json, int size);
-	int DirectWriteTo(void *parent, TOnCompleted onCompleted) {
-		rapidjson::Document doc;
-		WriteToDoc(&doc);
-		rapidjson::StringBuffer buffer;
-		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-		doc.Accept(writer);
-
-		const char *json = buffer.GetString();
-		int size = buffer.GetSize();
-		onCompleted(parent, json, size);
-		return size;
-	}
-
-	void Reset() { Value = T(); }
-
-  protected:
-  private:
-	T value;
-
-	void InitValue(T value);
-	bool SetValue(T value);
-
-	void DeleteValue();
-
-	bool TryParseCore(TJsonValue *value);
-};
-
+*/
 template <> bool JsonValue<bool, true>::TryParseCore(TJsonValue *value) { return value->IsBool() && SetValue(value->GetBool()); }
 template <> bool JsonValue<bool, false>::TryParseCore(TJsonValue *value) { return value->IsBool() && SetValue(value->GetBool()); }
 

@@ -41,17 +41,65 @@ class JsonValueBase {
   protected:
 };
 
+template <class T, bool optional = false> //
+class JsonValue : JsonValueBase {
+	class ValueWrapper {
+	  public:
+		ValueWrapper(JsonValue *owner, const T value) {
+			this->owner = owner;
+			owner->InitValue(value);
+		}
+
+		~ValueWrapper() { owner->DeleteValue(); }
+
+		T operator=(const T right) {
+			owner->SetValue(right);
+			return owner->value;
+		}
+
+		operator T() const { return owner->value; }
+
+	  private:
+		JsonValue *owner;
+	};
+
+  public:
+	const char *Name;
+	ValueWrapper Value;
+
+	JsonValue(JsonFieldsContainer *container, const char *name, T value) : JsonValueBase(container), Name(name), Value(this, value) {}
+	JsonValue(JsonFieldsContainer *container, const char *name) : JsonValue(container, name, T()) {}
+
+	TJsonDocument *BeginTryParse(const char *jsonStr, int length = -1);
+	void EndTryParse(TJsonDocument *doc);
+	bool TryParse(const char *jsonStr, int length = -1);
+	bool TryParse(TJsonDocument *doc) override final;
+
+	void WriteToDoc(TJsonDocument *doc) override final;
+	int WriteToString(char *outBuffer, int outBufferSize);
+	typedef void (*TOnCompleted)(void *parent, const char *json, int size);
+	int DirectWriteTo(void *parent, TOnCompleted onCompleted);
+
+	void Reset();
+
+  protected:
+  private:
+	T value;
+	void InitValue(T value);
+	bool SetValue(T value);
+	void DeleteValue();
+	bool TryParseCore(TJsonValue *value);
+};
+
 class JsonObject : public JsonFieldsContainer {
   public:
 	virtual bool TryParse(TJsonDocument *doc);
 	virtual bool TryParse(const char *jsonStr, int length = -1);
-
 	TJsonDocument *BeginTryParse(const char *jsonStr, int length = -1);
 	void EndTryParse(TJsonDocument *doc);
 
 	void WriteToDoc(TJsonDocument *doc);
 	int WriteToString(char *outBuffer, int outBufferSize);
-
 	typedef void (*TOnReady)(void *parent, const char *json, int size);
 	int DirectWriteTo(void *parent, TOnReady onReady);
 
@@ -69,17 +117,12 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 	TItem operator[](int index) { return Items[index]; }
 
 	virtual bool TryParse(TJsonDocument *doc);
-
 	bool TryParse(const char *jsonStr, int length = -1);
-
 	TJsonDocument *BeginTryParse(const char *jsonStr, int length = -1);
-
 	void EndTryParse(TJsonDocument *doc);
 
 	virtual void WriteToDoc(TJsonDocument *doc);
-
 	int WriteToString(char *outBuffer, int outBufferSize);
-
 	typedef void (*TOnReady)(void *parent, const char *json, int size);
 	int DirectWriteTo(void *parent, TOnReady onReady);
 
@@ -90,9 +133,6 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 
   private:
 	bool TryParseInternal(TJsonArray *jArray);
-
 	void WriteToDocInternal(TJsonDocument *doc);
-
 	void AddInternal(TItem item);
 };
-
