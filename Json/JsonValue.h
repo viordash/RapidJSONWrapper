@@ -2,7 +2,6 @@
 
 #include "LibJson.h"
 
-
 template <class T, bool optional> TJsonDocument *JsonValue<T, optional>::BeginTryParse(const char *jsonStr, int length) {
 	if (jsonStr == NULL || length == 0) { return NULL; }
 
@@ -69,6 +68,18 @@ template <class T, bool optional> int JsonValue<T, optional>::DirectWriteTo(void
 	return size;
 }
 template <class T, bool optional> void JsonValue<T, optional>::Reset() { Value = T(); }
+
+template <class T, bool optional> bool operator==(const JsonValue<T, optional> &v1, const JsonValue<T, optional> &v2) {
+	if (strcmp(v1.Name, v2.Name) != 0) { return false; }
+	return v1.Value == v2.Value;
+}
+
+template <class T, bool optional> bool operator!=(const JsonValue<T, optional> &v1, const JsonValue<T, optional> &v2) { return !(v1 == v2); }
+
+template <bool optional> bool operator==(const JsonValue<char *, optional> &v1, const JsonValue<char *, optional> &v2) {
+	if (strcmp(v1.Name, v2.Name) != 0) { return false; }
+	return strcmp(v1.Value, v2.Value) == 0;
+}
 /*
 
 
@@ -422,3 +433,6 @@ template <> void JsonValue<JsonObject *, false>::DeleteValue() {}
 
 template <> void JsonValue<JsonArrayBase *, true>::DeleteValue() {}
 template <> void JsonValue<JsonArrayBase *, false>::DeleteValue() {}
+/*
+
+*/

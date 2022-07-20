@@ -6,6 +6,21 @@
 #include "Json.h"
 #include "TestsCommon.h"
 
+TEST(JsonNumericValueGroup, JsonField_Equals_By_Name_Test) {
+	JsonFieldsContainer container;
+	JsonValue<unsigned int> testable1(&container, "test", 100);
+	JsonValue<unsigned int> testable01(&container, "test", 100);
+
+	CHECK_TRUE(testable1 == testable01);
+	testable01.Value = testable01.Value + 1;
+	CHECK_FALSE(testable1 == testable01);
+	testable1.Value = testable1.Value + 1;
+	CHECK_TRUE(testable1 == testable01);
+	testable1.Name = "other";
+	CHECK_FALSE(testable1 == testable01);
+	return EXIT_SUCCESS;
+}
+
 TEST(JsonNumericValueGroup, JsonUIntField_SetValue_Test) {
 	JsonFieldsContainer container;
 	JsonValue<unsigned int> testable1(&container, "test");
@@ -25,6 +40,7 @@ TEST(JsonNumericValueGroup, JsonUIntField_SetValue_Test) {
 
 	return EXIT_SUCCESS;
 }
+
 TEST(JsonNumericValueGroup, JsonUIntField_TryParse_Test) {
 	JsonFieldsContainer container;
 	JsonValue<unsigned int> testable1(&container, "test");
@@ -98,6 +114,83 @@ TEST(JsonNumericValueGroup, JsonUIntField_WriteTo_Test) {
 		doc.Accept(writer);
 		STRCMP_EQUAL(buffer.GetString(), "{\"test\":22}");
 	}
+	return EXIT_SUCCESS;
+}
+
+TEST(JsonNumericValueGroup, JsonUIntField_Equals_Test) {
+	JsonFieldsContainer container;
+	JsonValue<unsigned int> testable1(&container, "test", 100);
+	JsonValue<unsigned int> testable01(&container, "test", 100);
+
+	JsonValue<uint32_t> testable2(&container, "test", 101);
+	JsonValue<uint32_t> testable02(&container, "test", 101);
+
+	JsonValue<uint16_t> testable3(&container, "test", 102);
+	JsonValue<uint16_t> testable03(&container, "test", 102);
+
+	JsonValue<uint8_t> testable4(&container, "test", 103);
+	JsonValue<uint8_t> testable04(&container, "test", 103);
+
+	CHECK_TRUE(testable1 == testable01);
+	CHECK_FALSE(testable1 != testable01);
+	testable01.Value = testable01.Value + 1;
+	CHECK_TRUE(testable1 != testable01);
+	CHECK_FALSE(testable1 == testable01);
+
+	CHECK_TRUE(testable2 == testable02);
+	CHECK_FALSE(testable2 != testable02);
+	testable02.Value = testable02.Value + 1;
+	CHECK_TRUE(testable2 != testable02);
+	CHECK_FALSE(testable2 == testable02);
+
+	CHECK_TRUE(testable3 == testable03);
+	CHECK_FALSE(testable3 != testable03);
+	testable03.Value = testable03.Value + 1;
+	CHECK_TRUE(testable3 != testable03);
+	CHECK_FALSE(testable3 == testable03);
+
+	CHECK_TRUE(testable4 == testable04);
+	CHECK_FALSE(testable4 != testable04);
+	testable04.Value = testable04.Value + 1;
+	CHECK_TRUE(testable4 != testable04);
+	CHECK_FALSE(testable4 == testable04);
+
+	JsonValue<unsigned int, true> optional1(&container, "test", 100);
+	JsonValue<unsigned int, true> optional01(&container, "test", 100);
+
+	JsonValue<uint32_t, true> optional2(&container, "test", 101);
+	JsonValue<uint32_t, true> optional02(&container, "test", 101);
+
+	JsonValue<uint16_t, true> optional3(&container, "test", 102);
+	JsonValue<uint16_t, true> optional03(&container, "test", 102);
+
+	JsonValue<uint8_t, true> optional4(&container, "test", 103);
+	JsonValue<uint8_t, true> optional04(&container, "test", 103);
+
+	CHECK_TRUE(optional1 == optional01);
+	CHECK_FALSE(optional1 != optional01);
+	optional01.Value = optional01.Value + 1;
+	CHECK_TRUE(optional1 != optional01);
+	CHECK_FALSE(optional1 == optional01);
+
+	CHECK_TRUE(optional2 == optional02);
+	CHECK_FALSE(optional2 != optional02);
+	optional02.Value = optional02.Value + 1;
+	CHECK_TRUE(optional2 != optional02);
+	CHECK_FALSE(optional2 == optional02);
+
+	CHECK_TRUE(optional3 == optional03);
+	CHECK_FALSE(optional3 != optional03);
+	optional03.Value = optional03.Value + 1;
+	CHECK_TRUE(optional3 != optional03);
+	CHECK_FALSE(optional3 == optional03);
+
+	CHECK_TRUE(optional4 == optional04);
+	CHECK_FALSE(optional4 != optional04);
+	optional04.Value = optional04.Value + 1;
+	CHECK_TRUE(optional4 != optional04);
+	CHECK_FALSE(optional4 == optional04);
+
 	return EXIT_SUCCESS;
 }
 
@@ -194,6 +287,83 @@ TEST(JsonNumericValueGroup, JsonIntField_WriteTo_Test) {
 	return EXIT_SUCCESS;
 }
 
+TEST(JsonNumericValueGroup, JsonIntField_Equals_Test) {
+	JsonFieldsContainer container;
+	JsonValue<int> testable1(&container, "test", 100);
+	JsonValue<int> testable01(&container, "test", 100);
+
+	JsonValue<int32_t> testable2(&container, "test", 101);
+	JsonValue<int32_t> testable02(&container, "test", 101);
+
+	JsonValue<int16_t> testable3(&container, "test", 102);
+	JsonValue<int16_t> testable03(&container, "test", 102);
+
+	JsonValue<int8_t> testable4(&container, "test", 103);
+	JsonValue<int8_t> testable04(&container, "test", 103);
+
+	CHECK_TRUE(testable1 == testable01);
+	CHECK_FALSE(testable1 != testable01);
+	testable01.Value = testable01.Value + 1;
+	CHECK_TRUE(testable1 != testable01);
+	CHECK_FALSE(testable1 == testable01);
+
+	CHECK_TRUE(testable2 == testable02);
+	CHECK_FALSE(testable2 != testable02);
+	testable02.Value = testable02.Value + 1;
+	CHECK_TRUE(testable2 != testable02);
+	CHECK_FALSE(testable2 == testable02);
+
+	CHECK_TRUE(testable3 == testable03);
+	CHECK_FALSE(testable3 != testable03);
+	testable03.Value = testable03.Value + 1;
+	CHECK_TRUE(testable3 != testable03);
+	CHECK_FALSE(testable3 == testable03);
+
+	CHECK_TRUE(testable4 == testable04);
+	CHECK_FALSE(testable4 != testable04);
+	testable04.Value = testable04.Value + 1;
+	CHECK_TRUE(testable4 != testable04);
+	CHECK_FALSE(testable4 == testable04);
+
+	JsonValue<int, true> optional1(&container, "test", 100);
+	JsonValue<int, true> optional01(&container, "test", 100);
+
+	JsonValue<int32_t, true> optional2(&container, "test", 101);
+	JsonValue<int32_t, true> optional02(&container, "test", 101);
+
+	JsonValue<int16_t, true> optional3(&container, "test", 102);
+	JsonValue<int16_t, true> optional03(&container, "test", 102);
+
+	JsonValue<int8_t, true> optional4(&container, "test", 103);
+	JsonValue<int8_t, true> optional04(&container, "test", 103);
+
+	CHECK_TRUE(optional1 == optional01);
+	CHECK_FALSE(optional1 != optional01);
+	optional01.Value = optional01.Value + 1;
+	CHECK_TRUE(optional1 != optional01);
+	CHECK_FALSE(optional1 == optional01);
+
+	CHECK_TRUE(optional2 == optional02);
+	CHECK_FALSE(optional2 != optional02);
+	optional02.Value = optional02.Value + 1;
+	CHECK_TRUE(optional2 != optional02);
+	CHECK_FALSE(optional2 == optional02);
+
+	CHECK_TRUE(optional3 == optional03);
+	CHECK_FALSE(optional3 != optional03);
+	optional03.Value = optional03.Value + 1;
+	CHECK_TRUE(optional3 != optional03);
+	CHECK_FALSE(optional3 == optional03);
+
+	CHECK_TRUE(optional4 == optional04);
+	CHECK_FALSE(optional4 != optional04);
+	optional04.Value = optional04.Value + 1;
+	CHECK_TRUE(optional4 != optional04);
+	CHECK_FALSE(optional4 == optional04);
+
+	return EXIT_SUCCESS;
+}
+
 /*
 
 
@@ -245,6 +415,29 @@ TEST(JsonNumericValueGroup, JsonBoolField_WriteTo_Test) {
 	return EXIT_SUCCESS;
 }
 
+TEST(JsonNumericValueGroup, JsonBoolField_Equals_Test) {
+	JsonFieldsContainer container;
+	JsonValue<bool> testable1(&container, "test", true);
+	JsonValue<bool> testable01(&container, "test", true);
+
+	CHECK_TRUE(testable1 == testable01);
+	CHECK_FALSE(testable1 != testable01);
+	testable01.Value = !testable01.Value;
+	CHECK_TRUE(testable1 != testable01);
+	CHECK_FALSE(testable1 == testable01);
+
+	JsonValue<bool, true> optional1(&container, "test", true);
+	JsonValue<bool, true> optional01(&container, "test", true);
+
+	CHECK_TRUE(optional1 == optional01);
+	CHECK_FALSE(optional1 != optional01);
+	optional01.Value = !optional01.Value;
+	CHECK_TRUE(optional1 != optional01);
+	CHECK_FALSE(optional1 == optional01);
+
+	return EXIT_SUCCESS;
+}
+
 TEST(JsonNumericValueGroup, TryParse_Field_Optional_Test) {
 	JsonFieldsContainer container;
 	rapidjson::Document doc;
@@ -264,17 +457,22 @@ TEST(JsonNumericValueGroup, TryParse_Field_Optional_Test) {
 }
 
 int main(const int argc, const char *argv[]) {
+	TEST_RUN(JsonNumericValueGroup, JsonField_Equals_By_Name_Test);
+
 	TEST_RUN(JsonNumericValueGroup, JsonUIntField_SetValue_Test);
 	TEST_RUN(JsonNumericValueGroup, JsonUIntField_TryParse_Test);
 	TEST_RUN(JsonNumericValueGroup, JsonUIntField_WriteTo_Test);
+	TEST_RUN(JsonNumericValueGroup, JsonUIntField_Equals_Test);
 
 	TEST_RUN(JsonNumericValueGroup, JsonIntField_SetValue_Test);
 	TEST_RUN(JsonNumericValueGroup, JsonIntField_TryParse_Test);
 	TEST_RUN(JsonNumericValueGroup, JsonIntField_WriteTo_Test);
+	TEST_RUN(JsonNumericValueGroup, JsonIntField_Equals_Test);
 
 	TEST_RUN(JsonNumericValueGroup, JsonBoolField_SetValue_Test);
 	TEST_RUN(JsonNumericValueGroup, JsonBoolField_TryParse_Test);
 	TEST_RUN(JsonNumericValueGroup, JsonBoolField_WriteTo_Test);
+	TEST_RUN(JsonNumericValueGroup, JsonBoolField_Equals_Test);
 
 	TEST_RUN(JsonNumericValueGroup, TryParse_Field_Optional_Test);
 

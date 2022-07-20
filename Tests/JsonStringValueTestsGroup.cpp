@@ -78,12 +78,36 @@ TEST(JsonStringValueGroup, JsonStringValue_SetValue_Test) {
 	return EXIT_SUCCESS;
 }
 
+TEST(JsonStringValueGroup, JsonStringValue_Equals_Test) {
+	JsonFieldsContainer container;
+	JsonValue<char *> testable1(&container, "test", "testString");
+	JsonValue<char *> testable01(&container, "test", "testString");
+
+	CHECK_TRUE(testable1 == testable01);
+	CHECK_FALSE(testable1 != testable01);
+	testable01.Value = "otherValue";
+	CHECK_TRUE(testable1 != testable01);
+	CHECK_FALSE(testable1 == testable01);
+
+	JsonValue<char *, true> optional1(&container, "test", "testString");
+	JsonValue<char *, true> optional01(&container, "test", "testString");
+
+	CHECK_TRUE(optional1 == optional01);
+	CHECK_FALSE(optional1 != optional01);
+	optional01.Value = "otherValue";
+	CHECK_TRUE(optional1 != optional01);
+	CHECK_FALSE(optional1 == optional01);
+
+	return EXIT_SUCCESS;
+}
+
 int main(const int argc, const char *argv[]) {
 	TEST_RUN(JsonStringValueGroup, JsonField_VeryLong_Name_Test);
 	TEST_RUN(JsonStringValueGroup, JsonStringValue_TryParse_Test);
 	TEST_RUN(JsonStringValueGroup, JsonStringValue_WriteTo_Test);
 	TEST_RUN(JsonStringValueGroup, JsonStringValue_TryParse_Field_Optional_Test);
 	TEST_RUN(JsonStringValueGroup, JsonStringValue_SetValue_Test);
+	TEST_RUN(JsonStringValueGroup, JsonStringValue_Equals_Test);
 
 	printf("JsonStringValueGroup success");
 	return EXIT_SUCCESS;
