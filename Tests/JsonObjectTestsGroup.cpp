@@ -306,6 +306,23 @@ TEST(JsonObjectTestsGroup, Complex_JsonObject_WriteTo_Test) {
 	return EXIT_SUCCESS;
 }
 
+TEST(JsonObjectTestsGroup, JsonObject_Equals_Test) {
+	JsonFieldsContainer container;
+
+	OrderDto orderDto1("Dell", 1657058000, "Joe Doe", TUserRole::uViewer);
+	orderDto1.goodsList.Add(new GoodsDto(1, 1657052789, "Keyboards", "K1-100", 58.25, 48.2));
+	orderDto1.goodsList.Add(new GoodsDto(2, 1657053789, "Keyboards", "K2-100", 158.25, 448.2));
+
+	OrderDto orderDto2("Dell", 1657058000, "Joe Doe", TUserRole::uViewer);
+	orderDto2.goodsList.Add(new GoodsDto(1, 1657052789, "Keyboards", "K1-100", 58.25, 48.2));
+	orderDto2.goodsList.Add(new GoodsDto(2, 1657053789, "Keyboards", "K2-100", 158.25, 448.2));
+
+	CHECK_TRUE(orderDto1 == orderDto2);
+	CHECK_FALSE(orderDto1 != orderDto2);
+
+	return EXIT_SUCCESS;
+}
+
 int main(const int argc, const char *argv[]) {
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_Parse_Test);
 	TEST_RUN(JsonObjectTestsGroup, Complex_JsonObject_TryParse_Test);
@@ -319,6 +336,7 @@ int main(const int argc, const char *argv[]) {
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_WriteTo_With_Limited_Buffer_Test);
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_WriteTo_Async_Test);
 	TEST_RUN(JsonObjectTestsGroup, Complex_JsonObject_WriteTo_Test);
+	TEST_RUN(JsonObjectTestsGroup, JsonObject_Equals_Test);
 
 	printf("JsonObjectTestsGroup success");
 	return EXIT_SUCCESS;

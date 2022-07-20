@@ -14,8 +14,8 @@ typedef char TBoolArray;
 class JsonArrayBase {
   public:
 	virtual bool TryParse(TJsonDocument *doc) = 0;
-
 	virtual void WriteToDoc(TJsonDocument *doc) = 0;
+	virtual bool Equals(JsonArrayBase *other) = 0;
 };
 
 class JsonValueBase;
@@ -23,7 +23,6 @@ class JsonValueBase;
 class JsonFieldsContainer {
   public:
 	std::vector<JsonValueBase *> Fields;
-
 	void Add(JsonValueBase *field) { Fields.push_back(field); }
 };
 
@@ -37,6 +36,7 @@ class JsonValueBase {
 
 	virtual bool TryParse(TJsonDocument *doc) = 0;
 	virtual void WriteToDoc(TJsonDocument *doc) = 0;
+	virtual bool Equals(JsonValueBase *other) = 0;
 
   protected:
 };
@@ -81,6 +81,7 @@ class JsonValue : JsonValueBase {
 	int DirectWriteTo(void *parent, TOnCompleted onCompleted);
 
 	void Reset();
+	bool Equals(JsonValueBase *other) override final;
 
   protected:
   private:
@@ -129,6 +130,8 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 	virtual bool Add(TItem item);
 	virtual void Remove(TItem item);
 	typename std::vector<TItem>::iterator Find(TItem item);
+
+	bool Equals(JsonArrayBase *other) override final;
 
   protected:
 	virtual bool Validate(TItem item) = 0;

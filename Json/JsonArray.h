@@ -287,3 +287,19 @@ template <> void JsonArray<char *>::AddInternal(char *item) {
 	newItem[len] = 0;
 	Items.push_back(newItem);
 }
+
+template <class TItem> bool operator!=(const JsonArray<TItem> &v1, const JsonArray<TItem> &v2) {
+	if (v1.Items.size() != v1.Items.size()) { return true; }
+
+	for (size_t i = 0; i < v1.Items.size(); i++) {
+		if (v1.Items[i] != v2.Items[i]) { return true; }
+	}
+	return false;
+}
+
+template <class TItem> bool operator==(const JsonArray<TItem> &v1, const JsonArray<TItem> &v2) { return !(v1 != v2); }
+
+template <class TItem> bool JsonArray<TItem>::Equals(JsonArrayBase *other) {
+	//
+	return *this == *((JsonArray<TItem> *)other);
+}

@@ -69,17 +69,29 @@ template <class T, bool optional> int JsonValue<T, optional>::DirectWriteTo(void
 }
 template <class T, bool optional> void JsonValue<T, optional>::Reset() { Value = T(); }
 
-template <class T, bool optional> bool operator==(const JsonValue<T, optional> &v1, const JsonValue<T, optional> &v2) {
-	if (strcmp(v1.Name, v2.Name) != 0) { return false; }
-	return v1.Value == v2.Value;
+template <class T, bool optional> bool operator!=(const JsonValue<T, optional> &v1, const JsonValue<T, optional> &v2) {
+	if (strcmp(v1.Name, v2.Name) != 0) { return true; }
+	return v1.Value != v2.Value;
+}
+template <class T, bool optional> bool operator==(const JsonValue<T, optional> &v1, const JsonValue<T, optional> &v2) { return !(v1 != v2); }
+
+template <bool optional> bool operator!=(const JsonValue<char *, optional> &v1, const JsonValue<char *, optional> &v2) {
+	if (strcmp(v1.Name, v2.Name) != 0) { return true; }
+	return strcmp(v1.Value, v2.Value) != 0;
+}
+template <bool optional> bool operator!=(const JsonValue<JsonObject *, optional> &v1, const JsonValue<JsonObject *, optional> &v2) {
+	if (strcmp(v1.Name, v2.Name) != 0) { return true; }
+	return *((JsonObject *)v1.Value) != *((JsonObject *)v2.Value);
+}
+template <bool optional> bool operator!=(const JsonValue<JsonArrayBase *, optional> &v1, const JsonValue<JsonArrayBase *, optional> &v2) {
+	if (strcmp(v1.Name, v2.Name) != 0) { return true; }
+	return !((JsonArrayBase *)v1.Value)->Equals((JsonArrayBase *)v2.Value);
 }
 
-template <class T, bool optional> bool operator!=(const JsonValue<T, optional> &v1, const JsonValue<T, optional> &v2) { return !(v1 == v2); }
+template <class T, bool optional> bool JsonValue<T, optional>::Equals(JsonValueBase *other) { return !(*this != *((JsonValue<T, optional> *)other)); }
 
-template <bool optional> bool operator==(const JsonValue<char *, optional> &v1, const JsonValue<char *, optional> &v2) {
-	if (strcmp(v1.Name, v2.Name) != 0) { return false; }
-	return strcmp(v1.Value, v2.Value) == 0;
-}
+bool operator!=(const JsonValueBase &v1, const JsonValueBase &v2) { return !((JsonValueBase *)&v1)->Equals((JsonValueBase *)&v2); }
+bool operator==(const JsonValueBase &v1, const JsonValueBase &v2) { return !(v1 != v2); }
 /*
 
 
