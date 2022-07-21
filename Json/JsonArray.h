@@ -79,8 +79,85 @@ template <class TItem> void JsonArray<TItem>::Remove(TItem item) {
 	auto iter = Find(item);
 	if (iter != Items.end()) { Items.erase(iter); }
 }
+/*
 
+
+*/
 template <class TItem> typename std::vector<TItem>::iterator JsonArray<TItem>::Find(TItem item) {
+	if (std::is_base_of<JsonObject, TNewObjectItem>::value) {
+		for (auto iter = Items.begin(); iter != Items.end(); iter++) {
+			if (*((JsonObject *)*iter) == *((JsonObject *)item)) { return iter; }
+		}
+	}
+	return Items.end();
+}
+template <> std::vector<char *>::iterator JsonArray<char *>::Find(char *item) {
+	for (auto iter = Items.begin(); iter != Items.end(); iter++) {
+		if (strcmp(*iter, item) == 0) { return iter; }
+	}
+	return Items.end();
+}
+template <> std::vector<TBoolArray>::iterator JsonArray<TBoolArray>::Find(TBoolArray item) {
+	for (auto iter = Items.begin(); iter != Items.end(); iter++) {
+		if (*iter == item) { return iter; }
+	}
+	return Items.end();
+}
+template <> std::vector<int64_t>::iterator JsonArray<int64_t>::Find(int64_t item) {
+	for (auto iter = Items.begin(); iter != Items.end(); iter++) {
+		if (*iter == item) { return iter; }
+	}
+	return Items.end();
+}
+template <> std::vector<uint64_t>::iterator JsonArray<uint64_t>::Find(uint64_t item) {
+	for (auto iter = Items.begin(); iter != Items.end(); iter++) {
+		if (*iter == item) { return iter; }
+	}
+	return Items.end();
+}
+template <> std::vector<int32_t>::iterator JsonArray<int32_t>::Find(int32_t item) {
+	for (auto iter = Items.begin(); iter != Items.end(); iter++) {
+		if (*iter == item) { return iter; }
+	}
+	return Items.end();
+}
+template <> std::vector<uint32_t>::iterator JsonArray<uint32_t>::Find(uint32_t item) {
+	for (auto iter = Items.begin(); iter != Items.end(); iter++) {
+		if (*iter == item) { return iter; }
+	}
+	return Items.end();
+}
+template <> std::vector<int16_t>::iterator JsonArray<int16_t>::Find(int16_t item) {
+	for (auto iter = Items.begin(); iter != Items.end(); iter++) {
+		if (*iter == item) { return iter; }
+	}
+	return Items.end();
+}
+template <> std::vector<uint16_t>::iterator JsonArray<uint16_t>::Find(uint16_t item) {
+	for (auto iter = Items.begin(); iter != Items.end(); iter++) {
+		if (*iter == item) { return iter; }
+	}
+	return Items.end();
+}
+template <> std::vector<int8_t>::iterator JsonArray<int8_t>::Find(int8_t item) {
+	for (auto iter = Items.begin(); iter != Items.end(); iter++) {
+		if (*iter == item) { return iter; }
+	}
+	return Items.end();
+}
+template <> std::vector<uint8_t>::iterator JsonArray<uint8_t>::Find(uint8_t item) {
+	for (auto iter = Items.begin(); iter != Items.end(); iter++) {
+		if (*iter == item) { return iter; }
+	}
+	return Items.end();
+}
+template <> std::vector<double>::iterator JsonArray<double>::Find(double item) {
+	for (auto iter = Items.begin(); iter != Items.end(); iter++) {
+		if (*iter == item) { return iter; }
+	}
+	return Items.end();
+}
+template <> std::vector<float>::iterator JsonArray<float>::Find(float item) {
 	for (auto iter = Items.begin(); iter != Items.end(); iter++) {
 		if (*iter == item) { return iter; }
 	}
