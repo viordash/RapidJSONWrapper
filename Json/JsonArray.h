@@ -75,7 +75,6 @@ template <class TItem> bool JsonArray<TItem>::Add(TItem item) {
 	return true;
 }
 template <class TItem> void JsonArray<TItem>::Remove(TItem item) {
-	if (item == NULL) { return; }
 	auto iter = Find(item);
 	if (iter != Items.end()) { Items.erase(iter); }
 }
@@ -85,15 +84,19 @@ template <class TItem> void JsonArray<TItem>::Remove(TItem item) {
 */
 template <class TItem> typename std::vector<TItem>::iterator JsonArray<TItem>::Find(TItem item) {
 	if (std::is_base_of<JsonObject, TNewObjectItem>::value) {
-		for (auto iter = Items.begin(); iter != Items.end(); iter++) {
-			if (*((JsonObject *)*iter) == *((JsonObject *)item)) { return iter; }
+		if (item != NULL) {
+			for (auto iter = Items.begin(); iter != Items.end(); iter++) {
+				if (*((JsonObject *)*iter) == *((JsonObject *)item)) { return iter; }
+			}
 		}
 	}
 	return Items.end();
 }
 template <> std::vector<char *>::iterator JsonArray<char *>::Find(char *item) {
-	for (auto iter = Items.begin(); iter != Items.end(); iter++) {
-		if (strcmp(*iter, item) == 0) { return iter; }
+	if (item != NULL) {
+		for (auto iter = Items.begin(); iter != Items.end(); iter++) {
+			if (strcmp(*iter, item) == 0) { return iter; }
+		}
 	}
 	return Items.end();
 }
