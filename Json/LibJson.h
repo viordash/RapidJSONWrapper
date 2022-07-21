@@ -117,12 +117,12 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 	std::vector<TItem> Items;
 	TItem operator[](int index) { return Items[index]; }
 
-	virtual bool TryParse(TJsonDocument *doc);
+	bool TryParse(TJsonDocument *doc) override final;
 	bool TryParse(const char *jsonStr, int length = -1);
 	TJsonDocument *BeginTryParse(const char *jsonStr, int length = -1);
 	void EndTryParse(TJsonDocument *doc);
 
-	virtual void WriteToDoc(TJsonDocument *doc);
+	void WriteToDoc(TJsonDocument *doc) override final;
 	int WriteToString(char *outBuffer, int outBufferSize);
 	typedef void (*TOnReady)(void *parent, const char *json, int size);
 	int DirectWriteTo(void *parent, TOnReady onReady);
