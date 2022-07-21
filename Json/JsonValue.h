@@ -447,4 +447,46 @@ template <> void JsonValue<JsonArrayBase *, true>::DeleteValue() {}
 template <> void JsonValue<JsonArrayBase *, false>::DeleteValue() {}
 /*
 
+
 */
+template <> void JsonValue<bool, true>::CloneTo(JsonValueBase *other) { ((JsonValue<bool, true> *)other)->value = this->value; }
+template <> void JsonValue<bool, false>::CloneTo(JsonValueBase *other) { ((JsonValue<bool, false> *)other)->value = this->value; }
+
+template <> void JsonValue<int8_t, true>::CloneTo(JsonValueBase *other) { ((JsonValue<int8_t, true> *)other)->value = this->value; }
+template <> void JsonValue<int8_t, false>::CloneTo(JsonValueBase *other) { ((JsonValue<int8_t, false> *)other)->value = this->value; }
+
+template <> void JsonValue<int16_t, true>::CloneTo(JsonValueBase *other) { ((JsonValue<int16_t, true> *)other)->value = this->value; }
+template <> void JsonValue<int16_t, false>::CloneTo(JsonValueBase *other) { ((JsonValue<int16_t, false> *)other)->value = this->value; }
+
+template <> void JsonValue<int32_t, true>::CloneTo(JsonValueBase *other) { ((JsonValue<int32_t, true> *)other)->value = this->value; }
+template <> void JsonValue<int32_t, false>::CloneTo(JsonValueBase *other) { ((JsonValue<int32_t, false> *)other)->value = this->value; }
+
+template <> void JsonValue<int64_t, true>::CloneTo(JsonValueBase *other) { ((JsonValue<int64_t, true> *)other)->value = this->value; }
+template <> void JsonValue<int64_t, false>::CloneTo(JsonValueBase *other) { ((JsonValue<int64_t, false> *)other)->value = this->value; }
+
+template <> void JsonValue<uint8_t, true>::CloneTo(JsonValueBase *other) { ((JsonValue<uint8_t, true> *)other)->value = this->value; }
+template <> void JsonValue<uint8_t, false>::CloneTo(JsonValueBase *other) { ((JsonValue<uint8_t, false> *)other)->value = this->value; }
+
+template <> void JsonValue<uint16_t, true>::CloneTo(JsonValueBase *other) { ((JsonValue<uint16_t, true> *)other)->value = this->value; }
+template <> void JsonValue<uint16_t, false>::CloneTo(JsonValueBase *other) { ((JsonValue<uint16_t, false> *)other)->value = this->value; }
+
+template <> void JsonValue<uint32_t, true>::CloneTo(JsonValueBase *other) { ((JsonValue<uint32_t, true> *)other)->value = this->value; }
+template <> void JsonValue<uint32_t, false>::CloneTo(JsonValueBase *other) { ((JsonValue<uint32_t, false> *)other)->value = this->value; }
+
+template <> void JsonValue<uint64_t, true>::CloneTo(JsonValueBase *other) { ((JsonValue<uint64_t, true> *)other)->value = this->value; }
+template <> void JsonValue<uint64_t, false>::CloneTo(JsonValueBase *other) { ((JsonValue<uint64_t, false> *)other)->value = this->value; }
+
+template <> void JsonValue<float, true>::CloneTo(JsonValueBase *other) { ((JsonValue<float, true> *)other)->value = this->value; }
+template <> void JsonValue<float, false>::CloneTo(JsonValueBase *other) { ((JsonValue<float, false> *)other)->value = this->value; }
+
+template <> void JsonValue<double, true>::CloneTo(JsonValueBase *other) { ((JsonValue<double, true> *)other)->value = this->value; }
+template <> void JsonValue<double, false>::CloneTo(JsonValueBase *other) { ((JsonValue<double, false> *)other)->value = this->value; }
+
+template <> void JsonValue<char *, true>::CloneTo(JsonValueBase *other) { ((JsonValue<char *, true> *)other)->SetValue(this->value); }
+template <> void JsonValue<char *, false>::CloneTo(JsonValueBase *other) { ((JsonValue<char *, false> *)other)->SetValue(this->value); }
+
+// template <> void JsonValue<bool, true>::CloneTo(JsonValueBase *other) { ((JsonValue<bool, true> *)other)->value; }
+// template <> void JsonValue<bool, false>::CloneTo(JsonValueBase *other) { ((JsonValue<bool, false> *)other)->value; }
+//
+// template <> void JsonValue<bool, true>::CloneTo(JsonValueBase *other) { ((JsonValue<bool, true> *)other)->value; }
+// template <> void JsonValue<bool, false>::CloneTo(JsonValueBase *other) { ((JsonValue<bool, false> *)other)->value; }

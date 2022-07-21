@@ -194,6 +194,30 @@ TEST(JsonNumericValueGroup, JsonUIntField_Equals_Test) {
 	return EXIT_SUCCESS;
 }
 
+TEST(JsonNumericValueGroup, JsonUIntField_CloneTo_Test) {
+	JsonFieldsContainer container;
+	JsonValue<unsigned int> testable1(&container, "test", 100);
+	JsonValue<uint32_t> testable2(&container, "test", 101);
+	JsonValue<uint16_t> testable3(&container, "test", 102);
+	JsonValue<uint8_t> testable4(&container, "test", 103);
+
+	JsonValue<unsigned int> clone1(&container, "test");
+	JsonValue<uint32_t> clone2(&container, "test");
+	JsonValue<uint16_t> clone3(&container, "test");
+	JsonValue<uint8_t> clone4(&container, "test");
+
+	testable1.CloneTo((JsonValueBase *)&clone1);
+	testable2.CloneTo((JsonValueBase *)&clone2);
+	testable3.CloneTo((JsonValueBase *)&clone3);
+	testable4.CloneTo((JsonValueBase *)&clone4);
+
+	CHECK_EQUAL(clone1.Value, 100);
+	CHECK_EQUAL(clone2.Value, 101);
+	CHECK_EQUAL(clone3.Value, 102);
+	CHECK_EQUAL(clone4.Value, 103);
+	return EXIT_SUCCESS;
+}
+
 TEST(JsonNumericValueGroup, JsonIntField_SetValue_Test) {
 	JsonFieldsContainer container;
 	JsonValue<int> testable1(&container, "test");
@@ -364,6 +388,30 @@ TEST(JsonNumericValueGroup, JsonIntField_Equals_Test) {
 	return EXIT_SUCCESS;
 }
 
+TEST(JsonNumericValueGroup, JsonIntField_CloneTo_Test) {
+	JsonFieldsContainer container;
+	JsonValue<int> testable1(&container, "test", 100);
+	JsonValue<int32_t> testable2(&container, "test", 101);
+	JsonValue<int16_t> testable3(&container, "test", 102);
+	JsonValue<int8_t> testable4(&container, "test", 103);
+
+	JsonValue<int> clone1(&container, "test");
+	JsonValue<int32_t> clone2(&container, "test");
+	JsonValue<int16_t> clone3(&container, "test");
+	JsonValue<int8_t> clone4(&container, "test");
+
+	testable1.CloneTo((JsonValueBase *)&clone1);
+	testable2.CloneTo((JsonValueBase *)&clone2);
+	testable3.CloneTo((JsonValueBase *)&clone3);
+	testable4.CloneTo((JsonValueBase *)&clone4);
+
+	CHECK_EQUAL(clone1.Value, 100);
+	CHECK_EQUAL(clone2.Value, 101);
+	CHECK_EQUAL(clone3.Value, 102);
+	CHECK_EQUAL(clone4.Value, 103);
+	return EXIT_SUCCESS;
+}
+
 /*
 
 
@@ -438,6 +486,17 @@ TEST(JsonNumericValueGroup, JsonBoolField_Equals_Test) {
 	return EXIT_SUCCESS;
 }
 
+TEST(JsonNumericValueGroup, JsonBoolField_CloneTo_Test) {
+	JsonFieldsContainer container;
+	JsonValue<bool> testable1(&container, "test", true);
+	JsonValue<bool> clone1(&container, "test");
+
+	testable1.CloneTo((JsonValueBase *)&clone1);
+
+	CHECK_EQUAL(clone1.Value, true);
+	return EXIT_SUCCESS;
+}
+
 TEST(JsonNumericValueGroup, TryParse_Field_Optional_Test) {
 	JsonFieldsContainer container;
 	rapidjson::Document doc;
@@ -463,16 +522,19 @@ int main(const int argc, const char *argv[]) {
 	TEST_RUN(JsonNumericValueGroup, JsonUIntField_TryParse_Test);
 	TEST_RUN(JsonNumericValueGroup, JsonUIntField_WriteTo_Test);
 	TEST_RUN(JsonNumericValueGroup, JsonUIntField_Equals_Test);
+	TEST_RUN(JsonNumericValueGroup, JsonUIntField_CloneTo_Test);
 
 	TEST_RUN(JsonNumericValueGroup, JsonIntField_SetValue_Test);
 	TEST_RUN(JsonNumericValueGroup, JsonIntField_TryParse_Test);
 	TEST_RUN(JsonNumericValueGroup, JsonIntField_WriteTo_Test);
 	TEST_RUN(JsonNumericValueGroup, JsonIntField_Equals_Test);
+	TEST_RUN(JsonNumericValueGroup, JsonIntField_CloneTo_Test);
 
 	TEST_RUN(JsonNumericValueGroup, JsonBoolField_SetValue_Test);
 	TEST_RUN(JsonNumericValueGroup, JsonBoolField_TryParse_Test);
 	TEST_RUN(JsonNumericValueGroup, JsonBoolField_WriteTo_Test);
 	TEST_RUN(JsonNumericValueGroup, JsonBoolField_Equals_Test);
+	TEST_RUN(JsonNumericValueGroup, JsonBoolField_CloneTo_Test);
 
 	TEST_RUN(JsonNumericValueGroup, TryParse_Field_Optional_Test);
 

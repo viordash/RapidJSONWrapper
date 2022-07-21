@@ -101,6 +101,18 @@ TEST(JsonStringValueGroup, JsonStringValue_Equals_Test) {
 	return EXIT_SUCCESS;
 }
 
+TEST(JsonStringValueGroup, JsonStringValue_CloneTo_Test) {
+	JsonFieldsContainer container;
+	JsonValue<char *> testable1(&container, "test", "0123456789");
+
+	JsonValue<char *> clone1(&container, "test");
+
+	testable1.CloneTo((JsonValueBase *)&clone1);
+	testable1.Value = "check the full data buffer is cloned";
+	STRCMP_EQUAL(clone1.Value, "0123456789");
+	return EXIT_SUCCESS;
+}
+
 int main(const int argc, const char *argv[]) {
 	TEST_RUN(JsonStringValueGroup, JsonField_VeryLong_Name_Test);
 	TEST_RUN(JsonStringValueGroup, JsonStringValue_TryParse_Test);
@@ -108,6 +120,7 @@ int main(const int argc, const char *argv[]) {
 	TEST_RUN(JsonStringValueGroup, JsonStringValue_TryParse_Field_Optional_Test);
 	TEST_RUN(JsonStringValueGroup, JsonStringValue_SetValue_Test);
 	TEST_RUN(JsonStringValueGroup, JsonStringValue_Equals_Test);
+	TEST_RUN(JsonStringValueGroup, JsonStringValue_CloneTo_Test);
 
 	printf("JsonStringValueGroup success");
 	return EXIT_SUCCESS;

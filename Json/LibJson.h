@@ -37,6 +37,7 @@ class JsonValueBase {
 	virtual bool TryParse(TJsonDocument *doc) = 0;
 	virtual void WriteToDoc(TJsonDocument *doc) = 0;
 	virtual bool Equals(JsonValueBase *other) = 0;
+	virtual void CloneTo(JsonValueBase *other) = 0;
 
   protected:
 };
@@ -82,6 +83,7 @@ class JsonValue : JsonValueBase {
 
 	void Reset();
 	bool Equals(JsonValueBase *other) override final;
+	void CloneTo(JsonValueBase *other) override final;
 
   protected:
   private:
