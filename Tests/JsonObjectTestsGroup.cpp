@@ -319,6 +319,9 @@ TEST(JsonObjectTestsGroup, JsonObject_Equals_Test) {
 
 	CHECK_TRUE(orderDto1 == orderDto2);
 	CHECK_FALSE(orderDto1 != orderDto2);
+	orderDto1.DateTime.Value = orderDto1.DateTime.Value + 1;
+	CHECK_TRUE(orderDto1 != orderDto2);
+	CHECK_FALSE(orderDto1 == orderDto2);
 
 	return EXIT_SUCCESS;
 }
