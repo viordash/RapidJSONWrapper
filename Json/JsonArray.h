@@ -289,8 +289,96 @@ template <> void JsonArray<char *>::AddInternal(char *item) {
 }
 
 template <class TItem> bool operator!=(const JsonArray<TItem> &v1, const JsonArray<TItem> &v2) {
+	typedef typename std::remove_pointer<TItem>::type TNewObjectItem;
 	if (v1.Items.size() != v1.Items.size()) { return true; }
 
+	if (std::is_base_of<JsonObject, TNewObjectItem>::value) {
+		for (size_t i = 0; i < v1.Items.size(); i++) {
+			if (*((JsonObject *)v1.Items[i]) != *((JsonObject *)v2.Items[i])) { return true; }
+		}
+	}
+	return false;
+}
+template <> bool operator!=(const JsonArray<char *> &v1, const JsonArray<char *> &v2) {
+	if (v1.Items.size() != v1.Items.size()) { return true; }
+
+	for (size_t i = 0; i < v1.Items.size(); i++) {
+		if (strcmp(v1.Items[i], v2.Items[i]) != 0) { return true; }
+	}
+	return false;
+}
+template <> bool operator!=(const JsonArray<TBoolArray> &v1, const JsonArray<TBoolArray> &v2) {
+	if (v1.Items.size() != v1.Items.size()) { return true; }
+	for (size_t i = 0; i < v1.Items.size(); i++) {
+		if (v1.Items[i] != v2.Items[i]) { return true; }
+	}
+	return false;
+}
+template <> bool operator!=(const JsonArray<int64_t> &v1, const JsonArray<int64_t> &v2) {
+	if (v1.Items.size() != v1.Items.size()) { return true; }
+	for (size_t i = 0; i < v1.Items.size(); i++) {
+		if (v1.Items[i] != v2.Items[i]) { return true; }
+	}
+	return false;
+}
+template <> bool operator!=(const JsonArray<uint64_t> &v1, const JsonArray<uint64_t> &v2) {
+	if (v1.Items.size() != v1.Items.size()) { return true; }
+	for (size_t i = 0; i < v1.Items.size(); i++) {
+		if (v1.Items[i] != v2.Items[i]) { return true; }
+	}
+	return false;
+}
+template <> bool operator!=(const JsonArray<int32_t> &v1, const JsonArray<int32_t> &v2) {
+	if (v1.Items.size() != v1.Items.size()) { return true; }
+	for (size_t i = 0; i < v1.Items.size(); i++) {
+		if (v1.Items[i] != v2.Items[i]) { return true; }
+	}
+	return false;
+}
+template <> bool operator!=(const JsonArray<uint32_t> &v1, const JsonArray<uint32_t> &v2) {
+	if (v1.Items.size() != v1.Items.size()) { return true; }
+	for (size_t i = 0; i < v1.Items.size(); i++) {
+		if (v1.Items[i] != v2.Items[i]) { return true; }
+	}
+	return false;
+}
+template <> bool operator!=(const JsonArray<int16_t> &v1, const JsonArray<int16_t> &v2) {
+	if (v1.Items.size() != v1.Items.size()) { return true; }
+	for (size_t i = 0; i < v1.Items.size(); i++) {
+		if (v1.Items[i] != v2.Items[i]) { return true; }
+	}
+	return false;
+}
+template <> bool operator!=(const JsonArray<uint16_t> &v1, const JsonArray<uint16_t> &v2) {
+	if (v1.Items.size() != v1.Items.size()) { return true; }
+	for (size_t i = 0; i < v1.Items.size(); i++) {
+		if (v1.Items[i] != v2.Items[i]) { return true; }
+	}
+	return false;
+}
+template <> bool operator!=(const JsonArray<int8_t> &v1, const JsonArray<int8_t> &v2) {
+	if (v1.Items.size() != v1.Items.size()) { return true; }
+	for (size_t i = 0; i < v1.Items.size(); i++) {
+		if (v1.Items[i] != v2.Items[i]) { return true; }
+	}
+	return false;
+}
+template <> bool operator!=(const JsonArray<uint8_t> &v1, const JsonArray<uint8_t> &v2) {
+	if (v1.Items.size() != v1.Items.size()) { return true; }
+	for (size_t i = 0; i < v1.Items.size(); i++) {
+		if (v1.Items[i] != v2.Items[i]) { return true; }
+	}
+	return false;
+}
+template <> bool operator!=(const JsonArray<double> &v1, const JsonArray<double> &v2) {
+	if (v1.Items.size() != v1.Items.size()) { return true; }
+	for (size_t i = 0; i < v1.Items.size(); i++) {
+		if (v1.Items[i] != v2.Items[i]) { return true; }
+	}
+	return false;
+}
+template <> bool operator!=(const JsonArray<float> &v1, const JsonArray<float> &v2) {
+	if (v1.Items.size() != v1.Items.size()) { return true; }
 	for (size_t i = 0; i < v1.Items.size(); i++) {
 		if (v1.Items[i] != v2.Items[i]) { return true; }
 	}
@@ -299,7 +387,4 @@ template <class TItem> bool operator!=(const JsonArray<TItem> &v1, const JsonArr
 
 template <class TItem> bool operator==(const JsonArray<TItem> &v1, const JsonArray<TItem> &v2) { return !(v1 != v2); }
 
-template <class TItem> bool JsonArray<TItem>::Equals(JsonArrayBase *other) {
-	//
-	return *this == *((JsonArray<TItem> *)other);
-}
+template <class TItem> bool JsonArray<TItem>::Equals(JsonArrayBase *other) { return *this == *((JsonArray<TItem> *)other); }

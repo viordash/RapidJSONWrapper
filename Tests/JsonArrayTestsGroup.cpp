@@ -200,27 +200,27 @@ TEST(JsonArrayTestsGroup, JsonObjectArray_Direct_Write_From_Json_Memory_Test) {
 	return EXIT_SUCCESS;
 }
 
-// TEST(JsonArrayTestsGroup, JsonObjectArray_Equals_Test) {
-//	UsersList list1;
-//	list1.Add(new UserDto("user 1", 0));
-//	list1.Add(new UserDto("user 2", 10));
-//	list1.Add(new UserDto("user 3", 100));
-//	list1.Add(new UserDto("user 4", 999));
-//
-//	UsersList list2;
-//	list2.Add(new UserDto("user 1", 0));
-//	list2.Add(new UserDto("user 2", 10));
-//	list2.Add(new UserDto("user 3", 100));
-//	list2.Add(new UserDto("user 4", 999));
-//
-//	CHECK_TRUE(list1 == list2);
-//	CHECK_FALSE(list1 != list2);
-//	list1.Items[2]->Name.Value = "User3";
-//	CHECK_TRUE(list1 != list2);
-//	CHECK_FALSE(list1 == list2);
-//
-//	return EXIT_SUCCESS;
-//}
+TEST(JsonArrayTestsGroup, JsonObjectArray_Equals_Test) {
+	UsersList list1;
+	list1.Add(new UserDto("user 1", 0));
+	list1.Add(new UserDto("user 2", 10));
+	list1.Add(new UserDto("user 3", 100));
+	list1.Add(new UserDto("user 4", 999));
+
+	UsersList list2;
+	list2.Add(new UserDto("user 1", 0));
+	list2.Add(new UserDto("user 2", 10));
+	list2.Add(new UserDto("user 3", 100));
+	list2.Add(new UserDto("user 4", 999));
+
+	CHECK_TRUE(list1 == list2);
+	CHECK_FALSE(list1 != list2);
+	list1.Items[2]->Name.Value = "User3";
+	CHECK_TRUE(list1 != list2);
+	CHECK_FALSE(list1 == list2);
+
+	return EXIT_SUCCESS;
+}
 
 TEST(JsonArrayTestsGroup, JsonStringArray_Parse_Test) {
 	StringsList list;
@@ -766,10 +766,10 @@ int main(const int argc, const char *argv[]) {
 	TEST_RUN(JsonArrayTestsGroup, JsonObjectArray_WriteTo_Test);
 	TEST_RUN(JsonArrayTestsGroup, JsonObjectArray_WriteTo_With_Limited_Buffer_Test);
 	TEST_RUN(JsonArrayTestsGroup, JsonObjectArray_Direct_Write_From_Json_Memory_Test);
-	// TEST_RUN(JsonArrayTestsGroup, JsonObjectArray_Equals_Test);
+	TEST_RUN(JsonArrayTestsGroup, JsonObjectArray_Equals_Test);
 	TEST_RUN(JsonArrayTestsGroup, JsonStringArray_Parse_Test);
 	TEST_RUN(JsonArrayTestsGroup, JsonStringArray_WriteTo_Test);
-	// TEST_RUN(JsonArrayTestsGroup, JsonStringArray_Equals_Test);
+	TEST_RUN(JsonArrayTestsGroup, JsonStringArray_Equals_Test);
 	TEST_RUN(JsonArrayTestsGroup, JsonBoolArray_Parse_Test);
 	TEST_RUN(JsonArrayTestsGroup, JsonBoolArray_WriteTo_Test);
 	TEST_RUN(JsonArrayTestsGroup, JsonBoolArray_Equals_Test);
