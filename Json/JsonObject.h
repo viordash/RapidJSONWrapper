@@ -2,6 +2,14 @@
 
 #include "LibJson.h"
 
+JsonValueBase *JsonFieldsContainer::GetField(const char *name) {
+	for (std::vector<JsonValueBase *>::iterator item = Fields.begin(); item != Fields.end(); item++) {
+		auto field = *item;
+		if (strcmp(field->Name, name) == 0) { return field; }
+	}
+	return NULL;
+}
+
 bool JsonObject::TryParse(TJsonDocument *doc) {
 	if (!doc->IsObject()) { return false; }
 
@@ -80,3 +88,10 @@ bool operator!=(const JsonObject &v1, const JsonObject &v2) {
 }
 
 bool operator==(const JsonObject &v1, const JsonObject &v2) { return !(v1 != v2); }
+
+void JsonObject::CloneTo(JsonObject *other) {
+	for (const auto &field : Fields) {
+		auto otherField = other->GetField(field->Name);
+		if (otherField != NULL) { field->CloneTo(otherField); }
+	}
+}

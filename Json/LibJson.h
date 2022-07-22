@@ -16,6 +16,7 @@ class JsonArrayBase {
 	virtual bool TryParse(TJsonDocument *doc) = 0;
 	virtual void WriteToDoc(TJsonDocument *doc) = 0;
 	virtual bool Equals(JsonArrayBase *other) = 0;
+	virtual void CloneTo(JsonArrayBase *other) = 0;
 };
 
 class JsonValueBase;
@@ -24,14 +25,16 @@ class JsonFieldsContainer {
   public:
 	std::vector<JsonValueBase *> Fields;
 	void Add(JsonValueBase *field) { Fields.push_back(field); }
+	JsonValueBase *GetField(const char *name);
 };
 
 class JsonValueBase {
   public:
+	const char *Name;
 	JsonValueBase(JsonValueBase &&) = delete;
 	JsonValueBase(const JsonValueBase &) = delete;
 
-	JsonValueBase(JsonFieldsContainer *container) { container->Add(this); }
+	JsonValueBase(JsonFieldsContainer *container, const char *name) : Name(name) { container->Add(this); }
 	virtual ~JsonValueBase(){};
 
 	virtual bool TryParse(TJsonDocument *doc) = 0;
@@ -43,7 +46,7 @@ class JsonValueBase {
 };
 
 template <class T, bool optional = false> //
-class JsonValue : JsonValueBase {
+class JsonValue : public JsonValueBase {
 	class ValueWrapper {
 	  public:
 		ValueWrapper(JsonValue *owner, const T value) {
@@ -65,10 +68,9 @@ class JsonValue : JsonValueBase {
 	};
 
   public:
-	const char *Name;
 	ValueWrapper Value;
 
-	JsonValue(JsonFieldsContainer *container, const char *name, T value) : JsonValueBase(container), Name(name), Value(this, value) {}
+	JsonValue(JsonFieldsContainer *container, const char *name, T value) : JsonValueBase(container, name), Value(this, value) {}
 	JsonValue(JsonFieldsContainer *container, const char *name) : JsonValue(container, name, T()) {}
 
 	TJsonDocument *BeginTryParse(const char *jsonStr, int length = -1);
@@ -107,6 +109,7 @@ class JsonObject : public JsonFieldsContainer {
 	int DirectWriteTo(void *parent, TOnReady onReady);
 
 	virtual bool Validate() { return true; }
+	void CloneTo(JsonObject *other);
 
   protected:
   private:
@@ -134,6 +137,7 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 	typename std::vector<TItem>::iterator Find(TItem item);
 
 	bool Equals(JsonArrayBase *other) override final;
+	void CloneTo(JsonArrayBase *other) override final;
 
   protected:
 	virtual bool Validate(TItem item) = 0;

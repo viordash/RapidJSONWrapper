@@ -183,7 +183,6 @@ template <class TItem> bool JsonArray<TItem>::TryParseInternal(TJsonArray *jArra
 		return true;
 	}
 }
-
 template <> bool JsonArray<char *>::TryParseInternal(TJsonArray *jArray) {
 	for (const auto &jItem : *jArray) {
 		if (!jItem.IsString() || !Add((char *)jItem.GetString())) { return false; }
@@ -468,3 +467,81 @@ template <> bool operator!=(const JsonArray<float> &v1, const JsonArray<float> &
 template <class TItem> bool operator==(const JsonArray<TItem> &v1, const JsonArray<TItem> &v2) { return !(v1 != v2); }
 
 template <class TItem> bool JsonArray<TItem>::Equals(JsonArrayBase *other) { return *this == *((JsonArray<TItem> *)other); }
+/*
+
+
+*/
+template <class TItem> void JsonArray<TItem>::CloneTo(JsonArrayBase *other) {
+	if (std::is_base_of<JsonObject, TNewObjectItem>::value) {
+		auto otherArray = ((JsonArray<TItem> *)other);
+		for (const auto &item : otherArray->Items) { delete item; }
+		otherArray->Items.clear();
+
+		for (const auto &item : Items) {
+			auto newItem = new TNewObjectItem();
+			item->CloneTo(newItem);
+			otherArray->AddInternal((TItem)newItem);
+		}
+	}
+}
+template <> void JsonArray<char *>::CloneTo(JsonArrayBase *other) {
+	auto otherArray = ((JsonArray<char *> *)other);
+	for (const auto &item : otherArray->Items) { delete item; }
+	otherArray->Items.clear();
+	for (const auto &item : Items) { otherArray->AddInternal((char *)item); }
+}
+template <> void JsonArray<TBoolArray>::CloneTo(JsonArrayBase *other) {
+	auto otherArray = ((JsonArray<TBoolArray> *)other);
+	otherArray->Items.clear();
+	for (const auto &item : Items) { otherArray->AddInternal((TBoolArray)item); }
+}
+template <> void JsonArray<int64_t>::CloneTo(JsonArrayBase *other) {
+	auto otherArray = ((JsonArray<int64_t> *)other);
+	otherArray->Items.clear();
+	for (const auto &item : Items) { otherArray->AddInternal((int64_t)item); }
+}
+template <> void JsonArray<uint64_t>::CloneTo(JsonArrayBase *other) {
+	auto otherArray = ((JsonArray<uint64_t> *)other);
+	otherArray->Items.clear();
+	for (const auto &item : Items) { otherArray->AddInternal((uint64_t)item); }
+}
+template <> void JsonArray<int32_t>::CloneTo(JsonArrayBase *other) {
+	auto otherArray = ((JsonArray<int32_t> *)other);
+	otherArray->Items.clear();
+	for (const auto &item : Items) { otherArray->AddInternal((int32_t)item); }
+}
+template <> void JsonArray<uint32_t>::CloneTo(JsonArrayBase *other) {
+	auto otherArray = ((JsonArray<uint32_t> *)other);
+	otherArray->Items.clear();
+	for (const auto &item : Items) { otherArray->AddInternal((uint32_t)item); }
+}
+template <> void JsonArray<int16_t>::CloneTo(JsonArrayBase *other) {
+	auto otherArray = ((JsonArray<int16_t> *)other);
+	otherArray->Items.clear();
+	for (const auto &item : Items) { otherArray->AddInternal((int16_t)item); }
+}
+template <> void JsonArray<uint16_t>::CloneTo(JsonArrayBase *other) {
+	auto otherArray = ((JsonArray<uint16_t> *)other);
+	otherArray->Items.clear();
+	for (const auto &item : Items) { otherArray->AddInternal((uint16_t)item); }
+}
+template <> void JsonArray<int8_t>::CloneTo(JsonArrayBase *other) {
+	auto otherArray = ((JsonArray<int8_t> *)other);
+	otherArray->Items.clear();
+	for (const auto &item : Items) { otherArray->AddInternal((int8_t)item); }
+}
+template <> void JsonArray<uint8_t>::CloneTo(JsonArrayBase *other) {
+	auto otherArray = ((JsonArray<uint8_t> *)other);
+	otherArray->Items.clear();
+	for (const auto &item : Items) { otherArray->AddInternal((uint8_t)item); }
+}
+template <> void JsonArray<double>::CloneTo(JsonArrayBase *other) {
+	auto otherArray = ((JsonArray<double> *)other);
+	otherArray->Items.clear();
+	for (const auto &item : Items) { otherArray->AddInternal((double)item); }
+}
+template <> void JsonArray<float>::CloneTo(JsonArrayBase *other) {
+	auto otherArray = ((JsonArray<float> *)other);
+	otherArray->Items.clear();
+	for (const auto &item : Items) { otherArray->AddInternal((float)item); }
+}

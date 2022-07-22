@@ -485,8 +485,30 @@ template <> void JsonValue<double, false>::CloneTo(JsonValueBase *other) { ((Jso
 template <> void JsonValue<char *, true>::CloneTo(JsonValueBase *other) { ((JsonValue<char *, true> *)other)->SetValue(this->value); }
 template <> void JsonValue<char *, false>::CloneTo(JsonValueBase *other) { ((JsonValue<char *, false> *)other)->SetValue(this->value); }
 
-// template <> void JsonValue<bool, true>::CloneTo(JsonValueBase *other) { ((JsonValue<bool, true> *)other)->value; }
-// template <> void JsonValue<bool, false>::CloneTo(JsonValueBase *other) { ((JsonValue<bool, false> *)other)->value; }
-//
-// template <> void JsonValue<bool, true>::CloneTo(JsonValueBase *other) { ((JsonValue<bool, true> *)other)->value; }
-// template <> void JsonValue<bool, false>::CloneTo(JsonValueBase *other) { ((JsonValue<bool, false> *)other)->value; }
+template <> void JsonValue<JsonObject *, true>::CloneTo(JsonValueBase *other) {
+	auto thisObject = ((JsonObject *)Value);
+	auto otherObject = ((JsonObject *)((JsonValue<JsonObject *, true> *)other)->Value);
+	thisObject->CloneTo(otherObject);
+}
+template <> void JsonValue<JsonObject *, false>::CloneTo(JsonValueBase *other) {
+	auto thisObject = ((JsonObject *)Value);
+	auto otherObject = ((JsonObject *)((JsonValue<JsonObject *, false> *)other)->Value);
+	thisObject->CloneTo(otherObject);
+}
+
+template <> void JsonValue<JsonArrayBase *, true>::CloneTo(JsonValueBase *other) {
+	auto thisArray = ((JsonArrayBase *)Value);
+	auto otherArray = ((JsonArrayBase *)((JsonValue<JsonArrayBase *, false> *)other)->Value);
+	// for (const auto &item : Items) { delete item; }
+	// Items.clear();
+
+	// for (const auto &item : otherJsonArray->Items) {
+	//	auto newItem = CreateItem();
+	//	newItem->CloneFrom(item);
+	//	if (!Add(newItem)) {
+	//		delete newItem;
+	//		return;
+	//	}
+	//}
+}
+template <> void JsonValue<JsonArrayBase *, false>::CloneTo(JsonValueBase *other) { ((JsonValue<JsonArrayBase *, false> *)other)->value; }
