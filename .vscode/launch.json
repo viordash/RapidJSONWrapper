@@ -133,10 +133,10 @@
             "console": "integratedTerminal"
         },  
         {
-            "name": "(Windows) JsonStringFieldTestsGroup",
+            "name": "(Windows) JsonStringValueTestsGroup",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Debug/JsonStringFieldTestsGroup.exe",
+            "program": "${workspaceFolder}/build/Debug/JsonStringValueTestsGroup.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",

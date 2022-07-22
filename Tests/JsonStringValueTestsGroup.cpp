@@ -4,7 +4,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include "Json.h"
-#include "TestsCommon.h"
+// #include "TestsCommon.h"
+
+#include "CppUTest/CommandLineTestRunner.h"
+
+TEST_GROUP(JsonStringValueGroup){void setup(){} void teardown(){}};
 
 TEST(JsonStringValueGroup, JsonField_VeryLong_Name_Test) {
 	JsonFieldsContainer container;
@@ -14,7 +18,6 @@ TEST(JsonStringValueGroup, JsonField_VeryLong_Name_Test) {
 
 	CHECK_EQUAL(strlen(testable.Name), 355);
 	STRCMP_CONTAINS("testString0 testString1 testString2 testString3 testString4 ", testable.Name);
-	return EXIT_SUCCESS;
 }
 
 TEST(JsonStringValueGroup, JsonStringValue_TryParse_Test) {
@@ -29,7 +32,6 @@ TEST(JsonStringValueGroup, JsonStringValue_TryParse_Test) {
 	doc.Parse("{\"testString\":null}");
 	CHECK(testable.TryParse(&doc));
 	STRCMP_EQUAL(testable.Value, "");
-	return EXIT_SUCCESS;
 }
 
 TEST(JsonStringValueGroup, JsonStringValue_WriteTo_Test) {
@@ -48,7 +50,6 @@ TEST(JsonStringValueGroup, JsonStringValue_WriteTo_Test) {
 	const char *jsonStr = buffer.GetString();
 
 	STRCMP_EQUAL(jsonStr, "{\"testString\":\"1234567\"}");
-	return EXIT_SUCCESS;
 }
 
 TEST(JsonStringValueGroup, JsonStringValue_TryParse_Field_Optional_Test) {
@@ -64,7 +65,6 @@ TEST(JsonStringValueGroup, JsonStringValue_TryParse_Field_Optional_Test) {
 	CHECK_TRUE(testableWithOptional->TryParse(&doc));
 	STRCMP_EQUAL(testableWithOptional->Value, "");
 	delete testableWithOptional;
-	return EXIT_SUCCESS;
 }
 
 TEST(JsonStringValueGroup, JsonStringValue_SetValue_Test) {
@@ -74,8 +74,6 @@ TEST(JsonStringValueGroup, JsonStringValue_SetValue_Test) {
 
 	testable.Value = "0123456789";
 	STRCMP_EQUAL(testable.Value, "0123456789");
-
-	return EXIT_SUCCESS;
 }
 
 TEST(JsonStringValueGroup, JsonStringValue_Equals_Test) {
@@ -97,8 +95,6 @@ TEST(JsonStringValueGroup, JsonStringValue_Equals_Test) {
 	optional01.Value = "otherValue";
 	CHECK_TRUE(optional1 != optional01);
 	CHECK_FALSE(optional1 == optional01);
-
-	return EXIT_SUCCESS;
 }
 
 TEST(JsonStringValueGroup, JsonStringValue_CloneTo_Test) {
@@ -110,18 +106,22 @@ TEST(JsonStringValueGroup, JsonStringValue_CloneTo_Test) {
 	testable1.CloneTo((JsonValueBase *)&clone1);
 	testable1.Value = "check the full data buffer is cloned";
 	STRCMP_EQUAL(clone1.Value, "0123456789");
-	return EXIT_SUCCESS;
 }
 
-int main(const int argc, const char *argv[]) {
-	TEST_RUN(JsonStringValueGroup, JsonField_VeryLong_Name_Test);
-	TEST_RUN(JsonStringValueGroup, JsonStringValue_TryParse_Test);
-	TEST_RUN(JsonStringValueGroup, JsonStringValue_WriteTo_Test);
-	TEST_RUN(JsonStringValueGroup, JsonStringValue_TryParse_Field_Optional_Test);
-	TEST_RUN(JsonStringValueGroup, JsonStringValue_SetValue_Test);
-	TEST_RUN(JsonStringValueGroup, JsonStringValue_Equals_Test);
-	TEST_RUN(JsonStringValueGroup, JsonStringValue_CloneTo_Test);
-
-	printf("JsonStringValueGroup success");
-	return EXIT_SUCCESS;
+int main(int ac, char **av) {
+	//
+	return RUN_ALL_TESTS(ac, av);
 }
+
+// int main(const int argc, const char *argv[]) {
+// 	TEST_RUN(JsonStringValueGroup, JsonField_VeryLong_Name_Test);
+// 	TEST_RUN(JsonStringValueGroup, JsonStringValue_TryParse_Test);
+// 	TEST_RUN(JsonStringValueGroup, JsonStringValue_WriteTo_Test);
+// 	TEST_RUN(JsonStringValueGroup, JsonStringValue_TryParse_Field_Optional_Test);
+// 	TEST_RUN(JsonStringValueGroup, JsonStringValue_SetValue_Test);
+// 	TEST_RUN(JsonStringValueGroup, JsonStringValue_Equals_Test);
+// 	TEST_RUN(JsonStringValueGroup, JsonStringValue_CloneTo_Test);
+
+// 	printf("JsonStringValueGroup success");
+// 	return EXIT_SUCCESS;
+// }

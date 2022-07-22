@@ -7,45 +7,82 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti")
 endif()
 
+# set(TIMERR_NOERROR "1")
+
 if(WIN32)
   add_definitions("/wd4251")
 endif(WIN32)
 
 include(CTest)
-include_directories(rapidjson/include Json)
+include_directories(rapidjson/include cpputest/include cpputest/src cpputest/CppUTest Json)
 
-set(SOURCE_FILES     
+set(CPPUTEST_SOURCE_FILES     
+	cpputest/src/CppUTest/CommandLineArguments.cpp
+	cpputest/src/CppUTest/CommandLineTestRunner.cpp
+	cpputest/src/CppUTest/JUnitTestOutput.cpp
+	cpputest/src/CppUTest/MemoryLeakDetector.cpp
+	cpputest/src/CppUTest/MemoryLeakWarningPlugin.cpp
+	cpputest/src/CppUTest/SimpleMutex.cpp
+	cpputest/src/CppUTest/SimpleString.cpp
+	cpputest/src/CppUTest/SimpleStringInternalCache.cpp
+	cpputest/src/CppUTest/TeamCityTestOutput.cpp
+	cpputest/src/CppUTest/TestFailure.cpp
+	cpputest/src/CppUTest/TestFilter.cpp
+	cpputest/src/CppUTest/TestHarness_c.cpp
+	cpputest/src/CppUTest/TestMemoryAllocator.cpp
+	cpputest/src/CppUTest/TestOutput.cpp
+	cpputest/src/CppUTest/TestPlugin.cpp
+	cpputest/src/CppUTest/TestRegistry.cpp
+	cpputest/src/CppUTest/TestResult.cpp
+	cpputest/src/CppUTest/TestTestingFixture.cpp
+	cpputest/src/CppUTest/Utest.cpp
+
+	cpputest/src/CppUTestExt/CodeMemoryReportFormatter.cpp
+	cpputest/src/CppUTestExt/GTest.cpp
+	cpputest/src/CppUTestExt/IEEE754ExceptionsPlugin.cpp
+	cpputest/src/CppUTestExt/MemoryReportAllocator.cpp
+	cpputest/src/CppUTestExt/MemoryReporterPlugin.cpp
+	cpputest/src/CppUTestExt/MemoryReportFormatter.cpp
+	cpputest/src/CppUTestExt/MockActualCall.cpp
+	cpputest/src/CppUTestExt/MockExpectedCall.cpp
+	cpputest/src/CppUTestExt/MockExpectedCallsList.cpp
+	cpputest/src/CppUTestExt/MockFailure.cpp
+	cpputest/src/CppUTestExt/MockNamedValue.cpp
+	cpputest/src/CppUTestExt/MockSupport_c.cpp
+	cpputest/src/CppUTestExt/MockSupport.cpp
+	cpputest/src/CppUTestExt/MockSupportPlugin.cpp
+	cpputest/src/CppUTestExt/OrderedTest.cpp
 
 )
 
+if(WIN32)
+set(CPPUTEST_SOURCE_FILES ${CPPUTEST_SOURCE_FILES} cpputest/src/Platforms/VisualCpp/UtestPlatform.cpp)
+endif(WIN32)
+
+
+
 add_executable(RapidJSONWrapper     
-    ${SOURCE_FILES}
     main.cpp 
     )
 
 add_executable(JsonStringValueTestsGroup    
-    ${SOURCE_FILES}
+	${CPPUTEST_SOURCE_FILES}
     Tests/JsonStringValueTestsGroup.cpp)
+if(WIN32)
+	target_link_libraries(JsonStringValueTestsGroup Winmm.lib)
+endif(WIN32)
 
-add_executable(JsonNumericValueTestsGroup    
-    ${SOURCE_FILES}
-    Tests/JsonNumericValueTestsGroup.cpp)
+# add_executable(JsonNumericValueTestsGroup    
+# 	${CPPUTEST_SOURCE_FILES}
+#     Tests/JsonNumericValueTestsGroup.cpp)
 
-# add_executable(JsonObjectFieldTestsGroup    
-#     ${SOURCE_FILES}
-#     Tests/JsonObjectFieldTestsGroup.cpp)
+# add_executable(JsonObjectTestsGroup    
+# 	${CPPUTEST_SOURCE_FILES}
+#     Tests/JsonObjectTestsGroup.cpp)
 
-add_executable(JsonObjectTestsGroup    
-    ${SOURCE_FILES}
-    Tests/JsonObjectTestsGroup.cpp)
-
-add_executable(JsonArrayTestsGroup    
-    ${SOURCE_FILES}
-    Tests/JsonArrayTestsGroup.cpp)
-
-# add_executable(JsonArrayFieldTestsGroup    
-#     ${SOURCE_FILES}
-#     Tests/JsonArrayFieldTestsGroup.cpp)
+# add_executable(JsonArrayTestsGroup    
+# 	${CPPUTEST_SOURCE_FILES}
+#     Tests/JsonArrayTestsGroup.cpp)
     
 
 
@@ -56,8 +93,6 @@ include(CPack)
 # enable_testing()
 
 add_test(JsonStringValueTestsGroup JsonStringValueTestsGroup)
-add_test(JsonNumericValueTestsGroup JsonNumericValueTestsGroup)
-# add_test(JsonObjectFieldTestsGroup JsonObjectFieldTestsGroup)
-add_test(JsonObjectTestsGroup JsonObjectTestsGroup)
-add_test(JsonArrayTestsGroup JsonArrayTestsGroup)
-# add_test(JsonArrayFieldTestsGroup JsonArrayFieldTestsGroup)
+# add_test(JsonNumericValueTestsGroup JsonNumericValueTestsGroup)
+# add_test(JsonObjectTestsGroup JsonObjectTestsGroup)
+# add_test(JsonArrayTestsGroup JsonArrayTestsGroup)
