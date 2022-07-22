@@ -4,9 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include "Json.h"
-// #include "TestsCommon.h"
-
 #include "CppUTest/CommandLineTestRunner.h"
+
+int main(int ac, char **av) { return RUN_ALL_TESTS(ac, av); }
 
 TEST_GROUP(JsonStringValueGroup){void setup(){} void teardown(){}};
 
@@ -107,21 +107,3 @@ TEST(JsonStringValueGroup, JsonStringValue_CloneTo_Test) {
 	testable1.Value = "check the full data buffer is cloned";
 	STRCMP_EQUAL(clone1.Value, "0123456789");
 }
-
-int main(int ac, char **av) {
-	//
-	return RUN_ALL_TESTS(ac, av);
-}
-
-// int main(const int argc, const char *argv[]) {
-// 	TEST_RUN(JsonStringValueGroup, JsonField_VeryLong_Name_Test);
-// 	TEST_RUN(JsonStringValueGroup, JsonStringValue_TryParse_Test);
-// 	TEST_RUN(JsonStringValueGroup, JsonStringValue_WriteTo_Test);
-// 	TEST_RUN(JsonStringValueGroup, JsonStringValue_TryParse_Field_Optional_Test);
-// 	TEST_RUN(JsonStringValueGroup, JsonStringValue_SetValue_Test);
-// 	TEST_RUN(JsonStringValueGroup, JsonStringValue_Equals_Test);
-// 	TEST_RUN(JsonStringValueGroup, JsonStringValue_CloneTo_Test);
-
-// 	printf("JsonStringValueGroup success");
-// 	return EXIT_SUCCESS;
-// }

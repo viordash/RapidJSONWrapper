@@ -4,7 +4,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include "Json.h"
-#include "TestsCommon.h"
+#include "CppUTest/CommandLineTestRunner.h"
+
+int main(int ac, char **av) { return RUN_ALL_TESTS(ac, av); }
+
+TEST_GROUP(JsonObjectTestsGroup){void setup(){} void teardown(){}};
 
 typedef enum { uAdmin, uViewer } TUserRole;
 
@@ -103,7 +107,6 @@ TEST(JsonObjectTestsGroup, JsonObject_Parse_Test) {
 							  "{\"Id\":1,\"Created\":1657052047,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045,"
 							  "\"StoreName\":\"Store #1\"}               \t  \r\n"));
 	CHECK_EQUAL(goods.Created.Value, 1657052047);
-	return EXIT_SUCCESS;
 }
 
 TEST(JsonObjectTestsGroup, Complex_JsonObject_TryParse_Test) {
@@ -118,8 +121,6 @@ TEST(JsonObjectTestsGroup, Complex_JsonObject_TryParse_Test) {
 	CHECK_EQUAL(order.goodsList.Items[0]->Created.Value, 1657052789);
 	STRCMP_EQUAL(order.goodsList.Items[2]->Name.Value, "K4-100");
 	STRCMP_EQUAL(order.userDto.Name.Value, "Joe Doe");
-
-	return EXIT_SUCCESS;
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_Parse_With_Optionaly_Fields_Test) {
@@ -142,8 +143,6 @@ TEST(JsonObjectTestsGroup, JsonObject_Parse_With_Optionaly_Fields_Test) {
 							  "\"Deleted\":true,\"StoreName\":\"Store #2\"}"));
 	CHECK_EQUAL(goods.Deleted.Value, true);
 	STRCMP_EQUAL(goods.StoreName.Value, "Store #2");
-
-	return EXIT_SUCCESS;
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_Parse_Error_Test) {
@@ -168,7 +167,6 @@ TEST(JsonObjectTestsGroup, JsonObject_Parse_Error_Test) {
 	CHECK_EQUAL(goods.Quantity.Value, 0.0);
 	CHECK_EQUAL(goods.Deleted.Value, false);
 	STRCMP_EQUAL(goods.StoreName.Value, "");
-	return EXIT_SUCCESS;
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_Parse_With_Reordered_Fields_Test) {
@@ -190,7 +188,6 @@ TEST(JsonObjectTestsGroup, JsonObject_Parse_With_Reordered_Fields_Test) {
 	CHECK_EQUAL(goods.Quantity.Value, 165.052045);
 	CHECK_EQUAL(goods.Deleted.Value, true);
 	STRCMP_EQUAL(goods.StoreName.Value, "Store #1");
-	return EXIT_SUCCESS;
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_Parse_And_Length_Defined_Test) {
@@ -199,8 +196,6 @@ TEST(JsonObjectTestsGroup, JsonObject_Parse_And_Length_Defined_Test) {
 	CHECK_TRUE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}", 2000));
 	CHECK_FALSE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}", 102));
 	CHECK_FALSE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}", 0));
-
-	return EXIT_SUCCESS;
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_Parse_With_Nullable_Values_Test) {
@@ -226,7 +221,6 @@ TEST(JsonObjectTestsGroup, JsonObject_Parse_With_Nullable_Values_Test) {
 	CHECK_EQUAL(goods.Quantity.Value, 0.0);
 	CHECK_EQUAL(goods.Deleted.Value, false);
 	STRCMP_EQUAL(goods.StoreName.Value, "");
-	return EXIT_SUCCESS;
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_Parse_With_Begin_End_Stages_Test) {
@@ -237,7 +231,6 @@ TEST(JsonObjectTestsGroup, JsonObject_Parse_With_Begin_End_Stages_Test) {
 	CHECK_EQUAL(goods.Created.Value, 1657052048);
 	STRCMP_EQUAL(goods.Group.Value, "Vegetables");
 	goods.EndTryParse(doc);
-	return EXIT_SUCCESS;
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_WriteTo_Test) {
@@ -247,7 +240,6 @@ TEST(JsonObjectTestsGroup, JsonObject_WriteTo_Test) {
 
 	STRCMP_EQUAL(buffer, "{\"Id\":2,\"Created\":1657052789,\"Group\":\"group\",\"Name\":\"name\",\"Price\":58.25,\"Quantity\":48.2,\"Deleted\":false,"
 						 "\"StoreName\":\"storeName\"}");
-	return EXIT_SUCCESS;
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_WriteTo_With_Limited_Buffer_Test) {
@@ -256,7 +248,6 @@ TEST(JsonObjectTestsGroup, JsonObject_WriteTo_With_Limited_Buffer_Test) {
 	CHECK_EQUAL(goods.WriteToString(buffer, sizeof(buffer)), 31);
 
 	STRCMP_EQUAL(buffer, "{\"Id\":2,\"Created\":1657052789,\"G");
-	return EXIT_SUCCESS;
 }
 
 static void *TestParent = NULL;
@@ -276,7 +267,6 @@ TEST(JsonObjectTestsGroup, JsonObject_WriteTo_Async_Test) {
 	STRCMP_EQUAL(DirectWriteTestBuffer, "{\"Id\":2,\"Created\":1657052789,\"Group\":\"group\",\"Name\":\"name\",\"Price\":58.25,\"Quantity\":48.2,\"Deleted\":false,"
 										"\"StoreName\":\"\"}");
 	delete[] DirectWriteTestBuffer;
-	return EXIT_SUCCESS;
 }
 
 TEST(JsonObjectTestsGroup, Complex_JsonObject_WriteTo_Test) {
@@ -303,7 +293,6 @@ TEST(JsonObjectTestsGroup, Complex_JsonObject_WriteTo_Test) {
 						  "25,\"Quantity\":448.2,\"Deleted\":false,\"StoreName\":\"\"},{\"Id\":3,\"Created\":1657054789,\"Group\":\"Keyboards\",\"Name\":\"K3-100\",\"Price\":"
 						  "258.25,\"Quantity\":548.2,\"Deleted\":false,\"StoreName\":\"\"},{\"Id\":4,\"Created\":1657055789,\"Group\":\"Keyboards\",\"Name\":\"K4-100\","
 						  "\"Price\":358.25,\"Quantity\":648.2,\"Deleted\":false,\"StoreName\":\"\"}],\"user\":{\"name\":\"Joe Doe\",\"role\":1}}");
-	return EXIT_SUCCESS;
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_Equals_Test) {
@@ -322,8 +311,6 @@ TEST(JsonObjectTestsGroup, JsonObject_Equals_Test) {
 	orderDto1.DateTime.Value = orderDto1.DateTime.Value + 1;
 	CHECK_TRUE(orderDto1 != orderDto2);
 	CHECK_FALSE(orderDto1 == orderDto2);
-
-	return EXIT_SUCCESS;
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_Clone_Test) {
@@ -344,25 +331,4 @@ TEST(JsonObjectTestsGroup, JsonObject_Clone_Test) {
 	CHECK_EQUAL(orderDto2.goodsList.Items[0]->Created.Value, 1657052789);
 	STRCMP_EQUAL(orderDto2.goodsList.Items[1]->Name.Value, "K2-100");
 	STRCMP_EQUAL(orderDto2.userDto.Name.Value, "Joe Doe");
-	return EXIT_SUCCESS;
-}
-
-int main(const int argc, const char *argv[]) {
-	TEST_RUN(JsonObjectTestsGroup, JsonObject_Parse_Test);
-	TEST_RUN(JsonObjectTestsGroup, Complex_JsonObject_TryParse_Test);
-	TEST_RUN(JsonObjectTestsGroup, JsonObject_Parse_With_Optionaly_Fields_Test);
-	TEST_RUN(JsonObjectTestsGroup, JsonObject_Parse_Error_Test);
-	TEST_RUN(JsonObjectTestsGroup, JsonObject_Parse_With_Reordered_Fields_Test);
-	TEST_RUN(JsonObjectTestsGroup, JsonObject_Parse_And_Length_Defined_Test);
-	TEST_RUN(JsonObjectTestsGroup, JsonObject_Parse_With_Nullable_Values_Test);
-	TEST_RUN(JsonObjectTestsGroup, JsonObject_Parse_With_Begin_End_Stages_Test);
-	TEST_RUN(JsonObjectTestsGroup, JsonObject_WriteTo_Test);
-	TEST_RUN(JsonObjectTestsGroup, JsonObject_WriteTo_With_Limited_Buffer_Test);
-	TEST_RUN(JsonObjectTestsGroup, JsonObject_WriteTo_Async_Test);
-	TEST_RUN(JsonObjectTestsGroup, Complex_JsonObject_WriteTo_Test);
-	TEST_RUN(JsonObjectTestsGroup, JsonObject_Equals_Test);
-	TEST_RUN(JsonObjectTestsGroup, JsonObject_Clone_Test);
-
-	printf("JsonObjectTestsGroup success");
-	return EXIT_SUCCESS;
 }

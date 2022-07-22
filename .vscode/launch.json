@@ -122,10 +122,10 @@
             "console": "integratedTerminal"
         },  
         {
-            "name": "(Windows) JsonNumericFieldTestsGroup",
+            "name": "(Windows) JsonNumericValueTestsGroup",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Debug/JsonNumericFieldTestsGroup.exe",
+            "program": "${workspaceFolder}/build/Debug/JsonNumericValueTestsGroup.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
@@ -143,17 +143,6 @@
             "environment": [],
             "console": "integratedTerminal"
         },  
-        {
-            "name": "(Windows) JsonObjectFieldTestsGroup",
-            "type": "cppvsdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/build/Debug/JsonObjectFieldTestsGroup.exe",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${fileDirname}",
-            "environment": [],
-            "console": "integratedTerminal"
-        }, 
         {
             "name": "(Windows) JsonArrayTestsGroup",
             "type": "cppvsdbg",

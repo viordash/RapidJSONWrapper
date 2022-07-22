@@ -4,7 +4,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include "Json.h"
-#include "TestsCommon.h"
+#include "CppUTest/CommandLineTestRunner.h"
+
+int main(int ac, char **av) { return RUN_ALL_TESTS(ac, av); }
+
+TEST_GROUP(JsonNumericValueGroup){void setup(){} void teardown(){}};
 
 TEST(JsonNumericValueGroup, JsonField_Equals_By_Name_Test) {
 	JsonFieldsContainer container;
@@ -18,7 +22,6 @@ TEST(JsonNumericValueGroup, JsonField_Equals_By_Name_Test) {
 	CHECK_TRUE(testable1 == testable01);
 	testable1.Name = "other";
 	CHECK_FALSE(testable1 == testable01);
-	return EXIT_SUCCESS;
 }
 
 TEST(JsonNumericValueGroup, JsonUIntField_SetValue_Test) {
@@ -37,8 +40,6 @@ TEST(JsonNumericValueGroup, JsonUIntField_SetValue_Test) {
 	CHECK_EQUAL(testable2.Value, 4294967295);
 	CHECK_EQUAL(testable3.Value, 65535);
 	CHECK_EQUAL(testable4.Value, 255);
-
-	return EXIT_SUCCESS;
 }
 
 TEST(JsonNumericValueGroup, JsonUIntField_TryParse_Test) {
@@ -68,7 +69,6 @@ TEST(JsonNumericValueGroup, JsonUIntField_TryParse_Test) {
 	CHECK_EQUAL(testable2.Value, 0);
 	CHECK_EQUAL(testable3.Value, 0);
 	CHECK_EQUAL(testable4.Value, 0);
-	return EXIT_SUCCESS;
 }
 
 TEST(JsonNumericValueGroup, JsonUIntField_WriteTo_Test) {
@@ -114,7 +114,6 @@ TEST(JsonNumericValueGroup, JsonUIntField_WriteTo_Test) {
 		doc.Accept(writer);
 		STRCMP_EQUAL(buffer.GetString(), "{\"test\":22}");
 	}
-	return EXIT_SUCCESS;
 }
 
 TEST(JsonNumericValueGroup, JsonUIntField_Equals_Test) {
@@ -190,8 +189,6 @@ TEST(JsonNumericValueGroup, JsonUIntField_Equals_Test) {
 	optional04.Value = optional04.Value + 1;
 	CHECK_TRUE(optional4 != optional04);
 	CHECK_FALSE(optional4 == optional04);
-
-	return EXIT_SUCCESS;
 }
 
 TEST(JsonNumericValueGroup, JsonUIntField_CloneTo_Test) {
@@ -215,7 +212,6 @@ TEST(JsonNumericValueGroup, JsonUIntField_CloneTo_Test) {
 	CHECK_EQUAL(clone2.Value, 101);
 	CHECK_EQUAL(clone3.Value, 102);
 	CHECK_EQUAL(clone4.Value, 103);
-	return EXIT_SUCCESS;
 }
 
 TEST(JsonNumericValueGroup, JsonIntField_SetValue_Test) {
@@ -233,7 +229,6 @@ TEST(JsonNumericValueGroup, JsonIntField_SetValue_Test) {
 	CHECK_EQUAL(testable2.Value, -1);
 	CHECK_EQUAL(testable3.Value, -1);
 	CHECK_EQUAL(testable4.Value, -1);
-	return EXIT_SUCCESS;
 }
 TEST(JsonNumericValueGroup, JsonIntField_TryParse_Test) {
 	JsonFieldsContainer container;
@@ -262,7 +257,6 @@ TEST(JsonNumericValueGroup, JsonIntField_TryParse_Test) {
 	CHECK_EQUAL(testable2.Value, 0);
 	CHECK_EQUAL(testable3.Value, 0);
 	CHECK_EQUAL(testable4.Value, 0);
-	return EXIT_SUCCESS;
 }
 
 TEST(JsonNumericValueGroup, JsonIntField_WriteTo_Test) {
@@ -308,7 +302,6 @@ TEST(JsonNumericValueGroup, JsonIntField_WriteTo_Test) {
 		doc.Accept(writer);
 		STRCMP_EQUAL(buffer.GetString(), "{\"test\":22}");
 	}
-	return EXIT_SUCCESS;
 }
 
 TEST(JsonNumericValueGroup, JsonIntField_Equals_Test) {
@@ -384,8 +377,6 @@ TEST(JsonNumericValueGroup, JsonIntField_Equals_Test) {
 	optional04.Value = optional04.Value + 1;
 	CHECK_TRUE(optional4 != optional04);
 	CHECK_FALSE(optional4 == optional04);
-
-	return EXIT_SUCCESS;
 }
 
 TEST(JsonNumericValueGroup, JsonIntField_CloneTo_Test) {
@@ -409,7 +400,6 @@ TEST(JsonNumericValueGroup, JsonIntField_CloneTo_Test) {
 	CHECK_EQUAL(clone2.Value, 101);
 	CHECK_EQUAL(clone3.Value, 102);
 	CHECK_EQUAL(clone4.Value, 103);
-	return EXIT_SUCCESS;
 }
 
 /*
@@ -431,7 +421,6 @@ TEST(JsonNumericValueGroup, JsonBoolField_SetValue_Test) {
 	CHECK_EQUAL(testable1.Value, false);
 	testable1.Value = true;
 	CHECK_EQUAL(testable1.Value, true);
-	return EXIT_SUCCESS;
 }
 TEST(JsonNumericValueGroup, JsonBoolField_TryParse_Test) {
 	JsonFieldsContainer container;
@@ -445,7 +434,6 @@ TEST(JsonNumericValueGroup, JsonBoolField_TryParse_Test) {
 	doc.Parse("{\"test\":null}");
 	CHECK(testable1.TryParse(&doc));
 	CHECK_EQUAL(testable1.Value, false);
-	return EXIT_SUCCESS;
 }
 
 TEST(JsonNumericValueGroup, JsonBoolField_WriteTo_Test) {
@@ -459,8 +447,6 @@ TEST(JsonNumericValueGroup, JsonBoolField_WriteTo_Test) {
 	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 	doc.Accept(writer);
 	STRCMP_EQUAL(buffer.GetString(), "{\"test\":true}");
-
-	return EXIT_SUCCESS;
 }
 
 TEST(JsonNumericValueGroup, JsonBoolField_Equals_Test) {
@@ -482,8 +468,6 @@ TEST(JsonNumericValueGroup, JsonBoolField_Equals_Test) {
 	optional01.Value = !optional01.Value;
 	CHECK_TRUE(optional1 != optional01);
 	CHECK_FALSE(optional1 == optional01);
-
-	return EXIT_SUCCESS;
 }
 
 TEST(JsonNumericValueGroup, JsonBoolField_CloneTo_Test) {
@@ -494,7 +478,6 @@ TEST(JsonNumericValueGroup, JsonBoolField_CloneTo_Test) {
 	testable1.CloneTo((JsonValueBase *)&clone1);
 
 	CHECK_EQUAL(clone1.Value, true);
-	return EXIT_SUCCESS;
 }
 
 TEST(JsonNumericValueGroup, TryParse_Field_Optional_Test) {
@@ -511,33 +494,4 @@ TEST(JsonNumericValueGroup, TryParse_Field_Optional_Test) {
 	CHECK_TRUE(testableWithOptional->TryParse(&doc));
 	CHECK_EQUAL(testableWithOptional->Value, 0);
 	delete testableWithOptional;
-
-	return EXIT_SUCCESS;
-}
-
-int main(const int argc, const char *argv[]) {
-	TEST_RUN(JsonNumericValueGroup, JsonField_Equals_By_Name_Test);
-
-	TEST_RUN(JsonNumericValueGroup, JsonUIntField_SetValue_Test);
-	TEST_RUN(JsonNumericValueGroup, JsonUIntField_TryParse_Test);
-	TEST_RUN(JsonNumericValueGroup, JsonUIntField_WriteTo_Test);
-	TEST_RUN(JsonNumericValueGroup, JsonUIntField_Equals_Test);
-	TEST_RUN(JsonNumericValueGroup, JsonUIntField_CloneTo_Test);
-
-	TEST_RUN(JsonNumericValueGroup, JsonIntField_SetValue_Test);
-	TEST_RUN(JsonNumericValueGroup, JsonIntField_TryParse_Test);
-	TEST_RUN(JsonNumericValueGroup, JsonIntField_WriteTo_Test);
-	TEST_RUN(JsonNumericValueGroup, JsonIntField_Equals_Test);
-	TEST_RUN(JsonNumericValueGroup, JsonIntField_CloneTo_Test);
-
-	TEST_RUN(JsonNumericValueGroup, JsonBoolField_SetValue_Test);
-	TEST_RUN(JsonNumericValueGroup, JsonBoolField_TryParse_Test);
-	TEST_RUN(JsonNumericValueGroup, JsonBoolField_WriteTo_Test);
-	TEST_RUN(JsonNumericValueGroup, JsonBoolField_Equals_Test);
-	TEST_RUN(JsonNumericValueGroup, JsonBoolField_CloneTo_Test);
-
-	TEST_RUN(JsonNumericValueGroup, TryParse_Field_Optional_Test);
-
-	printf("JsonNumericValueGroup success");
-	return EXIT_SUCCESS;
 }

@@ -52,14 +52,11 @@ set(CPPUTEST_SOURCE_FILES
 	cpputest/src/CppUTestExt/MockSupport.cpp
 	cpputest/src/CppUTestExt/MockSupportPlugin.cpp
 	cpputest/src/CppUTestExt/OrderedTest.cpp
-
 )
 
 if(WIN32)
 set(CPPUTEST_SOURCE_FILES ${CPPUTEST_SOURCE_FILES} cpputest/src/Platforms/VisualCpp/UtestPlatform.cpp)
 endif(WIN32)
-
-
 
 add_executable(RapidJSONWrapper     
     main.cpp 
@@ -72,17 +69,26 @@ if(WIN32)
 	target_link_libraries(JsonStringValueTestsGroup Winmm.lib)
 endif(WIN32)
 
-# add_executable(JsonNumericValueTestsGroup    
-# 	${CPPUTEST_SOURCE_FILES}
-#     Tests/JsonNumericValueTestsGroup.cpp)
+add_executable(JsonNumericValueTestsGroup    
+	${CPPUTEST_SOURCE_FILES}
+    Tests/JsonNumericValueTestsGroup.cpp)
+if(WIN32)
+	target_link_libraries(JsonNumericValueTestsGroup Winmm.lib)
+endif(WIN32)
 
-# add_executable(JsonObjectTestsGroup    
-# 	${CPPUTEST_SOURCE_FILES}
-#     Tests/JsonObjectTestsGroup.cpp)
+add_executable(JsonObjectTestsGroup    
+	${CPPUTEST_SOURCE_FILES}
+    Tests/JsonObjectTestsGroup.cpp)
+if(WIN32)
+	target_link_libraries(JsonObjectTestsGroup Winmm.lib)
+endif(WIN32)
 
-# add_executable(JsonArrayTestsGroup    
-# 	${CPPUTEST_SOURCE_FILES}
-#     Tests/JsonArrayTestsGroup.cpp)
+add_executable(JsonArrayTestsGroup    
+	${CPPUTEST_SOURCE_FILES}
+    Tests/JsonArrayTestsGroup.cpp)
+if(WIN32)
+	target_link_libraries(JsonArrayTestsGroup Winmm.lib)
+endif(WIN32)
     
 
 
@@ -93,6 +99,6 @@ include(CPack)
 # enable_testing()
 
 add_test(JsonStringValueTestsGroup JsonStringValueTestsGroup)
-# add_test(JsonNumericValueTestsGroup JsonNumericValueTestsGroup)
-# add_test(JsonObjectTestsGroup JsonObjectTestsGroup)
-# add_test(JsonArrayTestsGroup JsonArrayTestsGroup)
+add_test(JsonNumericValueTestsGroup JsonNumericValueTestsGroup)
+add_test(JsonObjectTestsGroup JsonObjectTestsGroup)
+add_test(JsonArrayTestsGroup JsonArrayTestsGroup)
