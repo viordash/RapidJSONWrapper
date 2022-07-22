@@ -498,17 +498,11 @@ template <> void JsonValue<JsonObject *, false>::CloneTo(JsonValueBase *other) {
 
 template <> void JsonValue<JsonArrayBase *, true>::CloneTo(JsonValueBase *other) {
 	auto thisArray = ((JsonArrayBase *)Value);
-	auto otherArray = ((JsonArrayBase *)((JsonValue<JsonArrayBase *, false> *)other)->Value);
-	// for (const auto &item : Items) { delete item; }
-	// Items.clear();
-
-	// for (const auto &item : otherJsonArray->Items) {
-	//	auto newItem = CreateItem();
-	//	newItem->CloneFrom(item);
-	//	if (!Add(newItem)) {
-	//		delete newItem;
-	//		return;
-	//	}
-	//}
+	auto otherArray = ((JsonArrayBase *)((JsonValue<JsonArrayBase *, true> *)other)->Value);
+	thisArray->CloneTo(otherArray);
 }
-template <> void JsonValue<JsonArrayBase *, false>::CloneTo(JsonValueBase *other) { ((JsonValue<JsonArrayBase *, false> *)other)->value; }
+template <> void JsonValue<JsonArrayBase *, false>::CloneTo(JsonValueBase *other) {
+	auto thisArray = ((JsonArrayBase *)Value);
+	auto otherArray = ((JsonArrayBase *)((JsonValue<JsonArrayBase *, false> *)other)->Value);
+	thisArray->CloneTo(otherArray);
+}

@@ -326,6 +326,27 @@ TEST(JsonObjectTestsGroup, JsonObject_Equals_Test) {
 	return EXIT_SUCCESS;
 }
 
+TEST(JsonObjectTestsGroup, JsonObject_Clone_Test) {
+	JsonFieldsContainer container;
+
+	auto orderDto1 = new OrderDto("Dell", 1657058000, "Joe Doe", TUserRole::uViewer);
+	orderDto1->goodsList.Add(new GoodsDto(1, 1657052789, "Keyboards", "K1-100", 58.25, 48.2));
+	orderDto1->goodsList.Add(new GoodsDto(2, 1657053789, "Keyboards", "K2-100", 158.25, 448.2));
+
+	OrderDto orderDto2;
+
+	orderDto1->CloneTo(&orderDto2);
+	delete orderDto1;
+
+	STRCMP_EQUAL(orderDto2.Supplier.Value, "Dell");
+	CHECK_EQUAL(orderDto2.DateTime.Value, 1657058000);
+	CHECK_EQUAL(orderDto2.goodsList.Items.size(), 2);
+	CHECK_EQUAL(orderDto2.goodsList.Items[0]->Created.Value, 1657052789);
+	STRCMP_EQUAL(orderDto2.goodsList.Items[1]->Name.Value, "K2-100");
+	STRCMP_EQUAL(orderDto2.userDto.Name.Value, "Joe Doe");
+	return EXIT_SUCCESS;
+}
+
 int main(const int argc, const char *argv[]) {
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_Parse_Test);
 	TEST_RUN(JsonObjectTestsGroup, Complex_JsonObject_TryParse_Test);
@@ -340,6 +361,7 @@ int main(const int argc, const char *argv[]) {
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_WriteTo_Async_Test);
 	TEST_RUN(JsonObjectTestsGroup, Complex_JsonObject_WriteTo_Test);
 	TEST_RUN(JsonObjectTestsGroup, JsonObject_Equals_Test);
+	TEST_RUN(JsonObjectTestsGroup, JsonObject_Clone_Test);
 
 	printf("JsonObjectTestsGroup success");
 	return EXIT_SUCCESS;
