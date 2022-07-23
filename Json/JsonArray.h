@@ -2,6 +2,10 @@
 
 #include "LibJson.h"
 
+template <class TItem> JsonArray<TItem>::~JsonArray() {
+	for (const auto &item : Items) { DeleteItem(item); }
+}
+
 template <class TItem> bool JsonArray<TItem>::TryParse(TJsonDocument *doc) {
 	if (!doc->IsArray()) { return false; }
 	auto jArray = doc->GetArray();
@@ -76,7 +80,10 @@ template <class TItem> bool JsonArray<TItem>::Add(TItem item) {
 }
 template <class TItem> void JsonArray<TItem>::Remove(TItem item) {
 	auto iter = Find(item);
-	if (iter != Items.end()) { Items.erase(iter); }
+	if (iter != Items.end()) {
+		DeleteItem(*iter);
+		Items.erase(iter);
+	}
 }
 /*
 
@@ -474,7 +481,7 @@ template <class TItem> bool JsonArray<TItem>::Equals(JsonArrayBase *other) { ret
 template <class TItem> void JsonArray<TItem>::CloneTo(JsonArrayBase *other) {
 	if (std::is_base_of<JsonObject, TNewObjectItem>::value) {
 		auto otherArray = ((JsonArray<TItem> *)other);
-		for (const auto &item : otherArray->Items) { delete item; }
+		for (const auto &item : otherArray->Items) { delete (JsonObject *)item; }
 		otherArray->Items.clear();
 
 		for (const auto &item : Items) {
@@ -486,7 +493,7 @@ template <class TItem> void JsonArray<TItem>::CloneTo(JsonArrayBase *other) {
 }
 template <> void JsonArray<char *>::CloneTo(JsonArrayBase *other) {
 	auto otherArray = ((JsonArray<char *> *)other);
-	for (const auto &item : otherArray->Items) { delete item; }
+	for (const auto &item : otherArray->Items) { delete[] item; }
 	otherArray->Items.clear();
 	for (const auto &item : Items) { otherArray->AddInternal((char *)item); }
 }
@@ -545,3 +552,22 @@ template <> void JsonArray<float>::CloneTo(JsonArrayBase *other) {
 	otherArray->Items.clear();
 	for (const auto &item : Items) { otherArray->AddInternal((float)item); }
 }
+/*
+
+
+*/
+template <class TItem> void JsonArray<TItem>::DeleteItem(TItem item) {
+	if (std::is_base_of<JsonObject, TNewObjectItem>::value) { delete (JsonObject *)item; }
+}
+template <> void JsonArray<char *>::DeleteItem(char *item) { delete[] item; }
+template <> void JsonArray<TBoolArray>::DeleteItem(TBoolArray item) {}
+template <> void JsonArray<int64_t>::DeleteItem(int64_t item) {}
+template <> void JsonArray<uint64_t>::DeleteItem(uint64_t item) {}
+template <> void JsonArray<int32_t>::DeleteItem(int32_t item) {}
+template <> void JsonArray<uint32_t>::DeleteItem(uint32_t item) {}
+template <> void JsonArray<int16_t>::DeleteItem(int16_t item) {}
+template <> void JsonArray<uint16_t>::DeleteItem(uint16_t item) {}
+template <> void JsonArray<int8_t>::DeleteItem(int8_t item) {}
+template <> void JsonArray<uint8_t>::DeleteItem(uint8_t item) {}
+template <> void JsonArray<double>::DeleteItem(double item) {}
+template <> void JsonArray<float>::DeleteItem(float item) {}

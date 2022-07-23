@@ -119,6 +119,8 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 	typedef typename std::remove_pointer<TItem>::type TNewObjectItem;
 
   public:
+	virtual ~JsonArray();
+
 	std::vector<TItem> Items;
 	TItem operator[](int index) { return Items[index]; }
 
@@ -146,4 +148,5 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 	bool TryParseInternal(TJsonArray *jArray);
 	void WriteToDocInternal(TJsonDocument *doc);
 	void AddInternal(TItem item);
+	void DeleteItem(TItem item);
 };
