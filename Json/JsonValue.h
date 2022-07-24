@@ -75,54 +75,54 @@ template <class T, bool optional> bool operator==(const JsonValue<T, optional> &
 
 
 */
-template <> bool JsonValue<bool, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<bool, true> *)other)->value; }
-template <> bool JsonValue<bool, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<bool, false> *)other)->value; }
+template <> bool JsonValue<bool, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<bool, true> *)other)->Value; }
+template <> bool JsonValue<bool, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<bool, false> *)other)->Value; }
 
-template <> bool JsonValue<int8_t, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<int8_t, true> *)other)->value; }
-template <> bool JsonValue<int8_t, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<int8_t, false> *)other)->value; }
+template <> bool JsonValue<int8_t, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<int8_t, true> *)other)->Value; }
+template <> bool JsonValue<int8_t, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<int8_t, false> *)other)->Value; }
 
-template <> bool JsonValue<int16_t, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<int16_t, true> *)other)->value; }
-template <> bool JsonValue<int16_t, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<int16_t, false> *)other)->value; }
+template <> bool JsonValue<int16_t, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<int16_t, true> *)other)->Value; }
+template <> bool JsonValue<int16_t, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<int16_t, false> *)other)->Value; }
 
-template <> bool JsonValue<int32_t, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<int32_t, true> *)other)->value; }
-template <> bool JsonValue<int32_t, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<int32_t, false> *)other)->value; }
+template <> bool JsonValue<int32_t, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<int32_t, true> *)other)->Value; }
+template <> bool JsonValue<int32_t, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<int32_t, false> *)other)->Value; }
 
-template <> bool JsonValue<int64_t, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<int64_t, true> *)other)->value; }
-template <> bool JsonValue<int64_t, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<int64_t, false> *)other)->value; }
+template <> bool JsonValue<int64_t, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<int64_t, true> *)other)->Value; }
+template <> bool JsonValue<int64_t, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<int64_t, false> *)other)->Value; }
 
-template <> bool JsonValue<uint8_t, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<uint8_t, true> *)other)->value; }
-template <> bool JsonValue<uint8_t, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<uint8_t, false> *)other)->value; }
+template <> bool JsonValue<uint8_t, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<uint8_t, true> *)other)->Value; }
+template <> bool JsonValue<uint8_t, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<uint8_t, false> *)other)->Value; }
 
-template <> bool JsonValue<uint16_t, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<uint16_t, true> *)other)->value; }
-template <> bool JsonValue<uint16_t, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<uint16_t, false> *)other)->value; }
+template <> bool JsonValue<uint16_t, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<uint16_t, true> *)other)->Value; }
+template <> bool JsonValue<uint16_t, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<uint16_t, false> *)other)->Value; }
 
-template <> bool JsonValue<uint32_t, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<uint32_t, true> *)other)->value; }
-template <> bool JsonValue<uint32_t, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<uint32_t, false> *)other)->value; }
+template <> bool JsonValue<uint32_t, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<uint32_t, true> *)other)->Value; }
+template <> bool JsonValue<uint32_t, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<uint32_t, false> *)other)->Value; }
 
-template <> bool JsonValue<uint64_t, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<uint64_t, true> *)other)->value; }
-template <> bool JsonValue<uint64_t, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<uint64_t, false> *)other)->value; }
+template <> bool JsonValue<uint64_t, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<uint64_t, true> *)other)->Value; }
+template <> bool JsonValue<uint64_t, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<uint64_t, false> *)other)->Value; }
 
-template <> bool JsonValue<float, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<float, true> *)other)->value; }
-template <> bool JsonValue<float, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<float, false> *)other)->value; }
+template <> bool JsonValue<float, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<float, true> *)other)->Value; }
+template <> bool JsonValue<float, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<float, false> *)other)->Value; }
 
-template <> bool JsonValue<double, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<double, true> *)other)->value; }
-template <> bool JsonValue<double, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<double, false> *)other)->value; }
+template <> bool JsonValue<double, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<double, true> *)other)->Value; }
+template <> bool JsonValue<double, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<double, false> *)other)->Value; }
 
-template <> bool JsonValue<char *, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && strcmp(value, ((JsonValue<char *, false> *)other)->GetValue()) == 0; }
-template <> bool JsonValue<char *, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && strcmp(value, ((JsonValue<char *, false> *)other)->GetValue()) == 0; }
+template <> bool JsonValue<char *, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && strcmp(value, ((JsonValue<char *, false> *)other)->Value) == 0; }
+template <> bool JsonValue<char *, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && strcmp(value, ((JsonValue<char *, false> *)other)->Value) == 0; }
 
 template <> bool JsonValue<JsonObject *, true>::Equals(JsonValueBase *other) {
-	return strcmp(Name, other->Name) == 0 && (JsonObject *)value->Equals((JsonObject *)(((JsonValue<JsonObject *, false> *)other)->GetValue()));
+	return strcmp(Name, other->Name) == 0 && (JsonObject *)value->Equals((JsonObject *)((JsonValue<JsonObject *, false> *)other)->Value);
 }
 template <> bool JsonValue<JsonObject *, false>::Equals(JsonValueBase *other) {
-	return strcmp(Name, other->Name) == 0 && (JsonObject *)value->Equals((JsonObject *)(((JsonValue<JsonObject *, false> *)other)->GetValue()));
+	return strcmp(Name, other->Name) == 0 && (JsonObject *)value->Equals((JsonObject *)(((JsonValue<JsonObject *, false> *)other)->Value));
 }
 
 template <> bool JsonValue<JsonArrayBase *, true>::Equals(JsonValueBase *other) {
-	return strcmp(Name, other->Name) == 0 && (JsonObject *)value->Equals((JsonArrayBase *)(((JsonValue<JsonArrayBase *, false> *)other)->GetValue()));
+	return strcmp(Name, other->Name) == 0 && (JsonObject *)value->Equals((JsonArrayBase *)(((JsonValue<JsonArrayBase *, false> *)other)->Value));
 }
 template <> bool JsonValue<JsonArrayBase *, false>::Equals(JsonValueBase *other) {
-	return strcmp(Name, other->Name) == 0 && (JsonObject *)value->Equals((JsonArrayBase *)(((JsonValue<JsonArrayBase *, false> *)other)->GetValue()));
+	return strcmp(Name, other->Name) == 0 && (JsonObject *)value->Equals((JsonArrayBase *)(((JsonValue<JsonArrayBase *, false> *)other)->Value));
 }
 /*
 

@@ -16,9 +16,9 @@ TEST(JsonNumericValueGroup, JsonField_Equals_By_Name_Test) {
 	JsonValue<unsigned int> testable01(&container, "test", 100);
 
 	CHECK_TRUE(testable1 == testable01);
-	testable01.SetValue(testable01.GetValue() + 1);
+	testable01.Value = testable01.Value + 1;
 	CHECK_FALSE(testable1 == testable01);
-	testable1.SetValue(testable1.GetValue() + 1);
+	testable1.Value = testable1.Value + 1;
 	CHECK_TRUE(testable1 == testable01);
 	testable1.Name = "other";
 	CHECK_FALSE(testable1 == testable01);
@@ -30,16 +30,16 @@ TEST(JsonNumericValueGroup, JsonUIntField_SetValue_Test) {
 	JsonValue<uint32_t> testable2(&container, "test");
 	JsonValue<uint16_t> testable3(&container, "test");
 	JsonValue<uint8_t> testable4(&container, "test");
-	testable1.SetValue(0xFFFFFFFF);
-	testable2.SetValue(0xFFFFFFFF);
-	testable3.SetValue(0xFFFFFFFF);
-	testable4.SetValue(0xFFFFFFFF);
+	testable1.Value = 0xFFFFFFFF;
+	testable2.Value = 0xFFFFFFFF;
+	testable3.Value = 0xFFFFFFFF;
+	testable4.Value = 0xFFFFFFFF;
 
-	CHECK_EQUAL(testable1.GetValue(), 4294967295);
-	CHECK_EQUAL(testable1.GetValue(), 4294967295);
-	CHECK_EQUAL(testable2.GetValue(), 4294967295);
-	CHECK_EQUAL(testable3.GetValue(), 65535);
-	CHECK_EQUAL(testable4.GetValue(), 255);
+	CHECK_EQUAL(testable1.Value, 4294967295);
+	CHECK_EQUAL(testable1.Value, 4294967295);
+	CHECK_EQUAL(testable2.Value, 4294967295);
+	CHECK_EQUAL(testable3.Value, 65535);
+	CHECK_EQUAL(testable4.Value, 255);
 }
 
 TEST(JsonNumericValueGroup, JsonUIntField_TryParse_Test) {
@@ -55,20 +55,20 @@ TEST(JsonNumericValueGroup, JsonUIntField_TryParse_Test) {
 	CHECK(testable2.TryParse(&doc));
 	CHECK(testable3.TryParse(&doc));
 	CHECK(testable4.TryParse(&doc));
-	CHECK_EQUAL(testable1.GetValue(), 153000);
-	CHECK_EQUAL(testable2.GetValue(), 153000);
-	CHECK_EQUAL(testable3.GetValue(), 21928);
-	CHECK_EQUAL(testable4.GetValue(), 168);
+	CHECK_EQUAL(testable1.Value, 153000);
+	CHECK_EQUAL(testable2.Value, 153000);
+	CHECK_EQUAL(testable3.Value, 21928);
+	CHECK_EQUAL(testable4.Value, 168);
 
 	doc.Parse("{\"test\":null}");
 	CHECK(testable1.TryParse(&doc));
 	CHECK(testable2.TryParse(&doc));
 	CHECK(testable3.TryParse(&doc));
 	CHECK(testable4.TryParse(&doc));
-	CHECK_EQUAL(testable1.GetValue(), 0);
-	CHECK_EQUAL(testable2.GetValue(), 0);
-	CHECK_EQUAL(testable3.GetValue(), 0);
-	CHECK_EQUAL(testable4.GetValue(), 0);
+	CHECK_EQUAL(testable1.Value, 0);
+	CHECK_EQUAL(testable2.Value, 0);
+	CHECK_EQUAL(testable3.Value, 0);
+	CHECK_EQUAL(testable4.Value, 0);
 }
 
 TEST(JsonNumericValueGroup, JsonUIntField_WriteTo_Test) {
@@ -132,25 +132,25 @@ TEST(JsonNumericValueGroup, JsonUIntField_Equals_Test) {
 
 	CHECK_TRUE(testable1 == testable01);
 	CHECK_FALSE(testable1 != testable01);
-	testable01.SetValue(testable01.GetValue() + 1);
+	testable01.Value = testable01.Value + 1;
 	CHECK_TRUE(testable1 != testable01);
 	CHECK_FALSE(testable1 == testable01);
 
 	CHECK_TRUE(testable2 == testable02);
 	CHECK_FALSE(testable2 != testable02);
-	testable02.SetValue(testable02.GetValue() + 1);
+	testable02.Value = testable02.Value + 1;
 	CHECK_TRUE(testable2 != testable02);
 	CHECK_FALSE(testable2 == testable02);
 
 	CHECK_TRUE(testable3 == testable03);
 	CHECK_FALSE(testable3 != testable03);
-	testable03.SetValue(testable03.GetValue() + 1);
+	testable03.Value = testable03.Value + 1;
 	CHECK_TRUE(testable3 != testable03);
 	CHECK_FALSE(testable3 == testable03);
 
 	CHECK_TRUE(testable4 == testable04);
 	CHECK_FALSE(testable4 != testable04);
-	testable04.SetValue(testable04.GetValue() + 1);
+	testable04.Value = testable04.Value + 1;
 	CHECK_TRUE(testable4 != testable04);
 	CHECK_FALSE(testable4 == testable04);
 
@@ -168,25 +168,25 @@ TEST(JsonNumericValueGroup, JsonUIntField_Equals_Test) {
 
 	CHECK_TRUE(optional1 == optional01);
 	CHECK_FALSE(optional1 != optional01);
-	optional01.SetValue(optional01.GetValue() + 1);
+	optional01.Value = optional01.Value + 1;
 	CHECK_TRUE(optional1 != optional01);
 	CHECK_FALSE(optional1 == optional01);
 
 	CHECK_TRUE(optional2 == optional02);
 	CHECK_FALSE(optional2 != optional02);
-	optional02.SetValue(optional02.GetValue() + 1);
+	optional02.Value = optional02.Value + 1;
 	CHECK_TRUE(optional2 != optional02);
 	CHECK_FALSE(optional2 == optional02);
 
 	CHECK_TRUE(optional3 == optional03);
 	CHECK_FALSE(optional3 != optional03);
-	optional03.SetValue(optional03.GetValue() + 1);
+	optional03.Value = optional03.Value + 1;
 	CHECK_TRUE(optional3 != optional03);
 	CHECK_FALSE(optional3 == optional03);
 
 	CHECK_TRUE(optional4 == optional04);
 	CHECK_FALSE(optional4 != optional04);
-	optional04.SetValue(optional04.GetValue() + 1);
+	optional04.Value = optional04.Value + 1;
 	CHECK_TRUE(optional4 != optional04);
 	CHECK_FALSE(optional4 == optional04);
 }
@@ -208,10 +208,10 @@ TEST(JsonNumericValueGroup, JsonUIntField_CloneTo_Test) {
 	testable3.CloneTo((JsonValueBase *)&clone3);
 	testable4.CloneTo((JsonValueBase *)&clone4);
 
-	CHECK_EQUAL(clone1.GetValue(), 100);
-	CHECK_EQUAL(clone2.GetValue(), 101);
-	CHECK_EQUAL(clone3.GetValue(), 102);
-	CHECK_EQUAL(clone4.GetValue(), 103);
+	CHECK_EQUAL(clone1.Value, 100);
+	CHECK_EQUAL(clone2.Value, 101);
+	CHECK_EQUAL(clone3.Value, 102);
+	CHECK_EQUAL(clone4.Value, 103);
 }
 
 TEST(JsonNumericValueGroup, JsonIntField_SetValue_Test) {
@@ -220,15 +220,15 @@ TEST(JsonNumericValueGroup, JsonIntField_SetValue_Test) {
 	JsonValue<int32_t> testable2(&container, "test");
 	JsonValue<int16_t> testable3(&container, "test");
 	JsonValue<int8_t> testable4(&container, "test");
-	testable1.SetValue(0xFFFFFFFF);
-	testable2.SetValue(0xFFFFFFFF);
-	testable3.SetValue(0xFFFFFFFF);
-	testable4.SetValue(0xFFFFFFFF);
+	testable1.Value = 0xFFFFFFFF;
+	testable2.Value = 0xFFFFFFFF;
+	testable3.Value = 0xFFFFFFFF;
+	testable4.Value = 0xFFFFFFFF;
 
-	CHECK_EQUAL(testable1.GetValue(), -1);
-	CHECK_EQUAL(testable2.GetValue(), -1);
-	CHECK_EQUAL(testable3.GetValue(), -1);
-	CHECK_EQUAL(testable4.GetValue(), -1);
+	CHECK_EQUAL(testable1.Value, -1);
+	CHECK_EQUAL(testable2.Value, -1);
+	CHECK_EQUAL(testable3.Value, -1);
+	CHECK_EQUAL(testable4.Value, -1);
 }
 TEST(JsonNumericValueGroup, JsonIntField_TryParse_Test) {
 	JsonFieldsContainer container;
@@ -243,20 +243,20 @@ TEST(JsonNumericValueGroup, JsonIntField_TryParse_Test) {
 	CHECK(testable2.TryParse(&doc));
 	CHECK(testable3.TryParse(&doc));
 	CHECK(testable4.TryParse(&doc));
-	CHECK_EQUAL(testable1.GetValue(), 153000);
-	CHECK_EQUAL(testable2.GetValue(), 153000);
-	CHECK_EQUAL(testable3.GetValue(), 21928);
-	CHECK_EQUAL(testable4.GetValue(), -88);
+	CHECK_EQUAL(testable1.Value, 153000);
+	CHECK_EQUAL(testable2.Value, 153000);
+	CHECK_EQUAL(testable3.Value, 21928);
+	CHECK_EQUAL(testable4.Value, -88);
 
 	doc.Parse("{\"test\":null}");
 	CHECK(testable1.TryParse(&doc));
 	CHECK(testable2.TryParse(&doc));
 	CHECK(testable3.TryParse(&doc));
 	CHECK(testable4.TryParse(&doc));
-	CHECK_EQUAL(testable1.GetValue(), 0);
-	CHECK_EQUAL(testable2.GetValue(), 0);
-	CHECK_EQUAL(testable3.GetValue(), 0);
-	CHECK_EQUAL(testable4.GetValue(), 0);
+	CHECK_EQUAL(testable1.Value, 0);
+	CHECK_EQUAL(testable2.Value, 0);
+	CHECK_EQUAL(testable3.Value, 0);
+	CHECK_EQUAL(testable4.Value, 0);
 }
 
 TEST(JsonNumericValueGroup, JsonIntField_WriteTo_Test) {
@@ -320,25 +320,25 @@ TEST(JsonNumericValueGroup, JsonIntField_Equals_Test) {
 
 	CHECK_TRUE(testable1 == testable01);
 	CHECK_FALSE(testable1 != testable01);
-	testable01.SetValue(testable01.GetValue() + 1);
+	testable01.Value = testable01.Value + 1;
 	CHECK_TRUE(testable1 != testable01);
 	CHECK_FALSE(testable1 == testable01);
 
 	CHECK_TRUE(testable2 == testable02);
 	CHECK_FALSE(testable2 != testable02);
-	testable02.SetValue(testable02.GetValue() + 1);
+	testable02.Value = testable02.Value + 1;
 	CHECK_TRUE(testable2 != testable02);
 	CHECK_FALSE(testable2 == testable02);
 
 	CHECK_TRUE(testable3 == testable03);
 	CHECK_FALSE(testable3 != testable03);
-	testable03.SetValue(testable03.GetValue() + 1);
+	testable03.Value = testable03.Value + 1;
 	CHECK_TRUE(testable3 != testable03);
 	CHECK_FALSE(testable3 == testable03);
 
 	CHECK_TRUE(testable4 == testable04);
 	CHECK_FALSE(testable4 != testable04);
-	testable04.SetValue(testable04.GetValue() + 1);
+	testable04.Value = testable04.Value + 1;
 	CHECK_TRUE(testable4 != testable04);
 	CHECK_FALSE(testable4 == testable04);
 
@@ -356,25 +356,25 @@ TEST(JsonNumericValueGroup, JsonIntField_Equals_Test) {
 
 	CHECK_TRUE(optional1 == optional01);
 	CHECK_FALSE(optional1 != optional01);
-	optional01.SetValue(optional01.GetValue() + 1);
+	optional01.Value = optional01.Value + 1;
 	CHECK_TRUE(optional1 != optional01);
 	CHECK_FALSE(optional1 == optional01);
 
 	CHECK_TRUE(optional2 == optional02);
 	CHECK_FALSE(optional2 != optional02);
-	optional02.SetValue(optional02.GetValue() + 1);
+	optional02.Value = optional02.Value + 1;
 	CHECK_TRUE(optional2 != optional02);
 	CHECK_FALSE(optional2 == optional02);
 
 	CHECK_TRUE(optional3 == optional03);
 	CHECK_FALSE(optional3 != optional03);
-	optional03.SetValue(optional03.GetValue() + 1);
+	optional03.Value = optional03.Value + 1;
 	CHECK_TRUE(optional3 != optional03);
 	CHECK_FALSE(optional3 == optional03);
 
 	CHECK_TRUE(optional4 == optional04);
 	CHECK_FALSE(optional4 != optional04);
-	optional04.SetValue(optional04.GetValue() + 1);
+	optional04.Value = optional04.Value + 1;
 	CHECK_TRUE(optional4 != optional04);
 	CHECK_FALSE(optional4 == optional04);
 }
@@ -396,10 +396,10 @@ TEST(JsonNumericValueGroup, JsonIntField_CloneTo_Test) {
 	testable3.CloneTo((JsonValueBase *)&clone3);
 	testable4.CloneTo((JsonValueBase *)&clone4);
 
-	CHECK_EQUAL(clone1.GetValue(), 100);
-	CHECK_EQUAL(clone2.GetValue(), 101);
-	CHECK_EQUAL(clone3.GetValue(), 102);
-	CHECK_EQUAL(clone4.GetValue(), 103);
+	CHECK_EQUAL(clone1.Value, 100);
+	CHECK_EQUAL(clone2.Value, 101);
+	CHECK_EQUAL(clone3.Value, 102);
+	CHECK_EQUAL(clone4.Value, 103);
 }
 
 /*
@@ -411,16 +411,16 @@ TEST(JsonNumericValueGroup, JsonIntField_CloneTo_Test) {
 TEST(JsonNumericValueGroup, JsonBoolField_SetValue_Test) {
 	JsonFieldsContainer container;
 	JsonValue<bool> testable1(&container, "test");
-	testable1.SetValue(0xFFFFFFFF);
-	CHECK_EQUAL(testable1.GetValue(), true);
-	testable1.SetValue(0);
-	CHECK_EQUAL(testable1.GetValue(), false);
-	testable1.SetValue(1);
-	CHECK_EQUAL(testable1.GetValue(), true);
-	testable1.SetValue(false);
-	CHECK_EQUAL(testable1.GetValue(), false);
-	testable1.SetValue(true);
-	CHECK_EQUAL(testable1.GetValue(), true);
+	testable1.Value = 0xFFFFFFFF;
+	CHECK_EQUAL(testable1.Value, true);
+	testable1.Value = 0;
+	CHECK_EQUAL(testable1.Value, false);
+	testable1.Value = 1;
+	CHECK_EQUAL(testable1.Value, true);
+	testable1.Value = false;
+	CHECK_EQUAL(testable1.Value, false);
+	testable1.Value = true;
+	CHECK_EQUAL(testable1.Value, true);
 }
 TEST(JsonNumericValueGroup, JsonBoolField_TryParse_Test) {
 	JsonFieldsContainer container;
@@ -429,11 +429,11 @@ TEST(JsonNumericValueGroup, JsonBoolField_TryParse_Test) {
 	rapidjson::Document doc;
 	doc.Parse("{\"test\":true}");
 	CHECK(testable1.TryParse(&doc));
-	CHECK_EQUAL(testable1.GetValue(), true);
+	CHECK_EQUAL(testable1.Value, true);
 
 	doc.Parse("{\"test\":null}");
 	CHECK(testable1.TryParse(&doc));
-	CHECK_EQUAL(testable1.GetValue(), false);
+	CHECK_EQUAL(testable1.Value, false);
 }
 
 TEST(JsonNumericValueGroup, JsonBoolField_WriteTo_Test) {
@@ -456,7 +456,7 @@ TEST(JsonNumericValueGroup, JsonBoolField_Equals_Test) {
 
 	CHECK_TRUE(testable1 == testable01);
 	CHECK_FALSE(testable1 != testable01);
-	testable01.SetValue(!testable01.GetValue());
+	testable01.Value = !testable01.Value;
 	CHECK_TRUE(testable1 != testable01);
 	CHECK_FALSE(testable1 == testable01);
 
@@ -465,7 +465,7 @@ TEST(JsonNumericValueGroup, JsonBoolField_Equals_Test) {
 
 	CHECK_TRUE(optional1 == optional01);
 	CHECK_FALSE(optional1 != optional01);
-	optional01.SetValue(!optional01.GetValue());
+	optional01.Value = !optional01.Value;
 	CHECK_TRUE(optional1 != optional01);
 	CHECK_FALSE(optional1 == optional01);
 }
@@ -477,7 +477,7 @@ TEST(JsonNumericValueGroup, JsonBoolField_CloneTo_Test) {
 
 	testable1.CloneTo((JsonValueBase *)&clone1);
 
-	CHECK_EQUAL(clone1.GetValue(), true);
+	CHECK_EQUAL(clone1.Value, true);
 }
 
 TEST(JsonNumericValueGroup, TryParse_Field_Optional_Test) {
@@ -489,9 +489,9 @@ TEST(JsonNumericValueGroup, TryParse_Field_Optional_Test) {
 	delete testableFieldMustExists;
 
 	auto testableWithOptional = new JsonValue<uint32_t, true>(&container, "testUInt0");
-	testableWithOptional->SetValue(123);
+	testableWithOptional->Value = 123;
 	doc.Parse("{\"otherField\":153}");
 	CHECK_TRUE(testableWithOptional->TryParse(&doc));
-	CHECK_EQUAL(testableWithOptional->GetValue(), 0);
+	CHECK_EQUAL(testableWithOptional->Value, 0);
 	delete testableWithOptional;
 }
