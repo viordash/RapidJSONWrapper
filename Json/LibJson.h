@@ -49,28 +49,30 @@ template <class T, bool optional = false> //
 class JsonValue : public JsonValueBase {
 	class ValueWrapper {
 	  public:
-		ValueWrapper(JsonValue *owner, const T value) {
-			this->owner = owner;
-			owner->InitValue(value);
-		}
+		ValueWrapper(const T value) { InitValue(value); }
+		~ValueWrapper() { DeleteValue(); }
 
 		T operator=(const T right) {
-			owner->SetValue(right);
-			return owner->value;
+			SetValue(right);
+			return value;
 		}
+		T operator->() { return value; }
 
-		operator T() const { return owner->value; }
+		operator T() const { return value; }
 
 	  private:
-		JsonValue *owner;
+		T value;
+		void InitValue(T value);
+		bool SetValue(T value);
+		void DeleteValue();
 	};
 
   public:
 	ValueWrapper Value;
 
-	JsonValue(JsonFieldsContainer *container, const char *name, T value) : JsonValueBase(container, name), Value(this, value) {}
+	JsonValue(JsonFieldsContainer *container, const char *name, T value) : JsonValueBase(container, name), Value(value) {}
 	JsonValue(JsonFieldsContainer *container, const char *name) : JsonValue(container, name, T()) {}
-	virtual ~JsonValue() { DeleteValue(); }
+	virtual ~JsonValue() {}
 
 	TJsonDocument *BeginTryParse(const char *jsonStr, int length = -1);
 	void EndTryParse(TJsonDocument *doc);
@@ -88,10 +90,6 @@ class JsonValue : public JsonValueBase {
 
   protected:
   private:
-	T value;
-	void InitValue(T value);
-	bool SetValue(T value);
-	void DeleteValue();
 	bool TryParseCore(TJsonValue *value);
 };
 
