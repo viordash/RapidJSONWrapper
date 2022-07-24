@@ -63,7 +63,7 @@ class JsonValue : public JsonValueBase {
 	  private:
 		T value;
 		void InitValue(T value);
-		bool SetValue(T value);
+		void SetValue(T value);
 		void DeleteValue();
 	};
 

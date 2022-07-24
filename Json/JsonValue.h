@@ -407,133 +407,53 @@ template <> void JsonValue<JsonArrayBase *, false>::ValueWrapper::InitValue(Json
 
 
 */
-template <> bool JsonValue<bool, true>::ValueWrapper::SetValue(bool value) {
-	this->value = value;
-	return true;
-}
-template <> bool JsonValue<bool, false>::ValueWrapper::SetValue(bool value) {
-	this->value = value;
-	return true;
-}
+template <> void JsonValue<bool, true>::ValueWrapper::SetValue(bool value) { this->value = value; }
+template <> void JsonValue<bool, false>::ValueWrapper::SetValue(bool value) { this->value = value; }
 
-template <> bool JsonValue<int8_t, true>::ValueWrapper::SetValue(int8_t value) {
-	this->value = value;
-	return true;
-}
-template <> bool JsonValue<int8_t, false>::ValueWrapper::SetValue(int8_t value) {
-	this->value = value;
-	return true;
-}
+template <> void JsonValue<int8_t, true>::ValueWrapper::SetValue(int8_t value) { this->value = value; }
+template <> void JsonValue<int8_t, false>::ValueWrapper::SetValue(int8_t value) { this->value = value; }
 
-template <> bool JsonValue<int16_t, true>::ValueWrapper::SetValue(int16_t value) {
-	this->value = value;
-	return true;
-}
-template <> bool JsonValue<int16_t, false>::ValueWrapper::SetValue(int16_t value) {
-	this->value = value;
-	return true;
-}
+template <> void JsonValue<int16_t, true>::ValueWrapper::SetValue(int16_t value) { this->value = value; }
+template <> void JsonValue<int16_t, false>::ValueWrapper::SetValue(int16_t value) { this->value = value; }
 
-template <> bool JsonValue<int32_t, true>::ValueWrapper::SetValue(int32_t value) {
-	this->value = value;
-	return true;
-}
-template <> bool JsonValue<int32_t, false>::ValueWrapper::SetValue(int32_t value) {
-	this->value = value;
-	return true;
-}
+template <> void JsonValue<int32_t, true>::ValueWrapper::SetValue(int32_t value) { this->value = value; }
+template <> void JsonValue<int32_t, false>::ValueWrapper::SetValue(int32_t value) { this->value = value; }
 
-template <> bool JsonValue<int64_t, true>::ValueWrapper::SetValue(int64_t value) {
-	this->value = value;
-	return true;
-}
-template <> bool JsonValue<int64_t, false>::ValueWrapper::SetValue(int64_t value) {
-	this->value = value;
-	return true;
-}
+template <> void JsonValue<int64_t, true>::ValueWrapper::SetValue(int64_t value) { this->value = value; }
+template <> void JsonValue<int64_t, false>::ValueWrapper::SetValue(int64_t value) { this->value = value; }
 
-template <> bool JsonValue<uint8_t, true>::ValueWrapper::SetValue(uint8_t value) {
-	this->value = value;
-	return true;
-}
-template <> bool JsonValue<uint8_t, false>::ValueWrapper::SetValue(uint8_t value) {
-	this->value = value;
-	return true;
-}
+template <> void JsonValue<uint8_t, true>::ValueWrapper::SetValue(uint8_t value) { this->value = value; }
+template <> void JsonValue<uint8_t, false>::ValueWrapper::SetValue(uint8_t value) { this->value = value; }
 
-template <> bool JsonValue<uint16_t, true>::ValueWrapper::SetValue(uint16_t value) {
-	this->value = value;
-	return true;
-}
-template <> bool JsonValue<uint16_t, false>::ValueWrapper::SetValue(uint16_t value) {
-	this->value = value;
-	return true;
-}
+template <> void JsonValue<uint16_t, true>::ValueWrapper::SetValue(uint16_t value) { this->value = value; }
+template <> void JsonValue<uint16_t, false>::ValueWrapper::SetValue(uint16_t value) { this->value = value; }
 
-template <> bool JsonValue<uint32_t, true>::ValueWrapper::SetValue(uint32_t value) {
-	this->value = value;
-	return true;
-}
-template <> bool JsonValue<uint32_t, false>::ValueWrapper::SetValue(uint32_t value) {
-	this->value = value;
-	return true;
-}
+template <> void JsonValue<uint32_t, true>::ValueWrapper::SetValue(uint32_t value) { this->value = value; }
+template <> void JsonValue<uint32_t, false>::ValueWrapper::SetValue(uint32_t value) { this->value = value; }
 
-template <> bool JsonValue<uint64_t, true>::ValueWrapper::SetValue(uint64_t value) {
-	this->value = value;
-	return true;
-}
-template <> bool JsonValue<uint64_t, false>::ValueWrapper::SetValue(uint64_t value) {
-	this->value = value;
-	return true;
-}
+template <> void JsonValue<uint64_t, true>::ValueWrapper::SetValue(uint64_t value) { this->value = value; }
+template <> void JsonValue<uint64_t, false>::ValueWrapper::SetValue(uint64_t value) { this->value = value; }
 
-template <> bool JsonValue<float, true>::ValueWrapper::SetValue(float value) {
-	this->value = value;
-	return true;
-}
-template <> bool JsonValue<float, false>::ValueWrapper::SetValue(float value) {
-	this->value = value;
-	return true;
-}
+template <> void JsonValue<float, true>::ValueWrapper::SetValue(float value) { this->value = value; }
+template <> void JsonValue<float, false>::ValueWrapper::SetValue(float value) { this->value = value; }
 
-template <> bool JsonValue<double, true>::ValueWrapper::SetValue(double value) {
-	this->value = value;
-	return true;
-}
-template <> bool JsonValue<double, false>::ValueWrapper::SetValue(double value) {
-	this->value = value;
-	return true;
-}
+template <> void JsonValue<double, true>::ValueWrapper::SetValue(double value) { this->value = value; }
+template <> void JsonValue<double, false>::ValueWrapper::SetValue(double value) { this->value = value; }
 
-template <> bool JsonValue<char *, true>::ValueWrapper::SetValue(char *value) {
+template <> void JsonValue<char *, true>::ValueWrapper::SetValue(char *value) {
 	DeleteValue();
 	InitValue(value);
-	return true;
 }
-template <> bool JsonValue<char *, false>::ValueWrapper::SetValue(char *value) {
+template <> void JsonValue<char *, false>::ValueWrapper::SetValue(char *value) {
 	DeleteValue();
 	InitValue(value);
-	return true;
 }
 
-template <> bool JsonValue<JsonObject *, true>::ValueWrapper::SetValue(JsonObject *value) {
-	this->value = value;
-	return true;
-}
-template <> bool JsonValue<JsonObject *, false>::ValueWrapper::SetValue(JsonObject *value) {
-	this->value = value;
-	return true;
-}
+template <> void JsonValue<JsonObject *, true>::ValueWrapper::SetValue(JsonObject *value) { this->value = value; }
+template <> void JsonValue<JsonObject *, false>::ValueWrapper::SetValue(JsonObject *value) { this->value = value; }
 
-template <> bool JsonValue<JsonArrayBase *, true>::ValueWrapper::SetValue(JsonArrayBase *value) {
-	this->value = value;
-	return true;
-}
-template <> bool JsonValue<JsonArrayBase *, false>::ValueWrapper::SetValue(JsonArrayBase *value) {
-	this->value = value;
-	return true;
-}
+template <> void JsonValue<JsonArrayBase *, true>::ValueWrapper::SetValue(JsonArrayBase *value) { this->value = value; }
+template <> void JsonValue<JsonArrayBase *, false>::ValueWrapper::SetValue(JsonArrayBase *value) { this->value = value; }
 /*
 
 
