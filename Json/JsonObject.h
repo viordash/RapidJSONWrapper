@@ -82,12 +82,12 @@ bool operator!=(const JsonObject &v1, const JsonObject &v2) { return !((JsonObje
 bool operator==(const JsonObject &v1, const JsonObject &v2) { return !(v1 != v2); }
 
 bool JsonObject::Equals(JsonObject *other) {
-	if (Fields.size() != other->Fields.size()) { return true; }
+	if (Fields.size() != other->Fields.size()) { return false; }
 
 	for (size_t i = 0; i < other->Fields.size(); i++) {
-		if (Fields[i]->Equals(other->Fields[i])) { return true; }
+		if (!Fields[i]->Equals(other->Fields[i])) { return false; }
 	}
-	return false;
+	return true;
 }
 
 void JsonObject::CloneTo(JsonObject *other) {

@@ -117,9 +117,9 @@ TEST(JsonObjectTestsGroup, Complex_JsonObject_TryParse_Test) {
 						 "25,\"Quantity\":48.2,\"Deleted\":false,\"StoreName\":\"\"},{\"Id\":3,\"Created\":1657054789,\"Group\":\"Keyboards\",\"Name\":\"K3-100\",\"Price\":"
 						 "258.25,\"Quantity\":548.2,\"Deleted\":false,\"StoreName\":\"\"},{\"Id\":4,\"Created\":1657055789,\"Group\":\"Keyboards\",\"Name\":\"K4-100\","
 						 "\"Price\":358.25,\"Quantity\":648.2,\"Deleted\":false,\"StoreName\":\"\"}],\"user\":{\"name\":\"Joe Doe\",\"role\":1}}"));
-	CHECK_EQUAL(order.goodsList.Items.size(), 3);
-	CHECK_EQUAL(order.goodsList.Items[0]->Created.GetValue(), 1657052789);
-	STRCMP_EQUAL(order.goodsList.Items[2]->Name.GetValue(), "K4-100");
+	CHECK_EQUAL(order.goodsList.Size(), 3);
+	CHECK_EQUAL(order.goodsList[0]->Created.GetValue(), 1657052789);
+	STRCMP_EQUAL(order.goodsList[2]->Name.GetValue(), "K4-100");
 	STRCMP_EQUAL(order.userDto.Name.GetValue(), "Joe Doe");
 }
 
@@ -329,8 +329,8 @@ TEST(JsonObjectTestsGroup, JsonObject_Clone_Test) {
 
 	STRCMP_EQUAL(orderDto2.Supplier.GetValue(), "Dell");
 	CHECK_EQUAL(orderDto2.DateTime.GetValue(), 1657058000);
-	CHECK_EQUAL(orderDto2.goodsList.Items.size(), 2);
-	CHECK_EQUAL(orderDto2.goodsList.Items[0]->Created.GetValue(), 1657052789);
-	STRCMP_EQUAL(orderDto2.goodsList.Items[1]->Name.GetValue(), "K2-100");
+	CHECK_EQUAL(orderDto2.goodsList.Size(), 2);
+	CHECK_EQUAL(orderDto2.goodsList[0]->Created.GetValue(), 1657052789);
+	STRCMP_EQUAL(orderDto2.goodsList[1]->Name.GetValue(), "K2-100");
 	STRCMP_EQUAL(orderDto2.userDto.Name.GetValue(), "Joe Doe");
 }

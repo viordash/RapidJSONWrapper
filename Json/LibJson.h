@@ -79,6 +79,8 @@ class JsonValue : public JsonValueBase {
 
 class JsonObject : public JsonFieldsContainer {
   public:
+	virtual ~JsonObject(){};
+
 	virtual bool TryParse(TJsonDocument *doc);
 	virtual bool TryParse(const char *jsonStr, int length = -1);
 	TJsonDocument *BeginTryParse(const char *jsonStr, int length = -1);
@@ -100,11 +102,35 @@ class JsonObject : public JsonFieldsContainer {
 template <class TItem> class JsonArray : public JsonArrayBase {
 	typedef typename std::remove_pointer<TItem>::type TNewObjectItem;
 
+	struct ItemWrapper {
+	  public:
+		ItemWrapper(JsonArray *owner, int index) {
+			this->owner = owner;
+			this->index = index;
+		}
+		virtual ~ItemWrapper(){};
+
+		TItem operator=(const TItem right) {
+			owner->Update(index, right);
+			return owner->Items[index];
+		}
+		TItem operator->() { return owner->Items[index]; }
+		operator TItem() const { return owner->Items[index]; }
+
+	  private:
+		JsonArray *owner;
+		int index;
+	};
+
   public:
 	virtual ~JsonArray();
 
-	std::vector<TItem> Items;
-	TItem operator[](int index) { return Items[index]; }
+	ItemWrapper Get(int index) { return ItemWrapper(this, index); }
+
+	ItemWrapper operator[](int index) { return ItemWrapper(this, index); }
+	size_t Size() { return Items.size(); }
+	typename std::vector<TItem>::iterator const Begin() { return Items.begin(); }
+	typename std::vector<TItem>::iterator const End() { return Items.end(); }
 
 	bool TryParse(TJsonDocument *doc) override final;
 	bool TryParse(const char *jsonStr, int length = -1);
@@ -117,6 +143,7 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 	int DirectWriteTo(void *parent, TOnReady onReady);
 
 	virtual bool Add(TItem item);
+	virtual bool Update(int index, TItem item);
 	virtual void Remove(TItem item);
 	typename std::vector<TItem>::iterator Find(TItem item);
 
@@ -124,6 +151,7 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 	void CloneTo(JsonArrayBase *other) override final;
 
   protected:
+	std::vector<TItem> Items;
 	virtual bool Validate(TItem item) = 0;
 
   private:

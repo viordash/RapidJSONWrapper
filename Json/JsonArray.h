@@ -384,7 +384,6 @@ template <class TItem> bool operator==(const JsonArray<TItem> &v1, const JsonArr
 
 */
 template <class TItem> bool JsonArray<TItem>::Equals(JsonArrayBase *other) {
-	typedef typename std::remove_pointer<TItem>::type TNewObjectItem;
 	if (Items.size() != ((JsonArray<TItem> *)other)->Items.size()) { return false; }
 	if (std::is_base_of<JsonObject, TNewObjectItem>::value) {
 		for (size_t i = 0; i < Items.size(); i++) {
@@ -560,7 +559,9 @@ template <> void JsonArray<float>::CloneTo(JsonArrayBase *other) {
 
 */
 template <class TItem> void JsonArray<TItem>::DeleteItem(TItem item) {
-	if (std::is_base_of<JsonObject, TNewObjectItem>::value) { delete (JsonObject *)item; }
+	if (std::is_base_of<JsonObject, TNewObjectItem>::value) { //
+		delete ((JsonObject *)item);
+	}
 }
 template <> void JsonArray<char *>::DeleteItem(char *item) { delete[] item; }
 template <> void JsonArray<TBoolArray>::DeleteItem(TBoolArray item) {}
@@ -574,3 +575,22 @@ template <> void JsonArray<int8_t>::DeleteItem(int8_t item) {}
 template <> void JsonArray<uint8_t>::DeleteItem(uint8_t item) {}
 template <> void JsonArray<double>::DeleteItem(double item) {}
 template <> void JsonArray<float>::DeleteItem(float item) {}
+/*
+
+
+*/
+template <class TItem> bool JsonArray<TItem>::Update(int index, TItem item) {
+	if (!Validate(item)) { return false; }
+	DeleteItem(Items[index]);
+	Items.push_back(item);
+	return true;
+}
+template <> bool JsonArray<char *>::Update(int index, char *item) {
+	if (!Validate(item)) { return false; }
+	DeleteItem(Items[index]);
+	auto len = strlen((char *)item);
+	auto newItem = new char[len + 1];
+	memcpy(newItem, (char *)item, len);
+	newItem[len] = 0;
+	Items[index] = newItem;
+}

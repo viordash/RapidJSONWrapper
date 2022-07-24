@@ -30,62 +30,62 @@ static size_t maxCount = 10;
 
 class UsersList : public JsonArray<UserDto *> {
   public:
-	bool Validate(UserDto *item) override { return Items.size() < maxCount && item->Validate(); }
+	bool Validate(UserDto *item) override { return Size() < maxCount && item->Validate(); }
 };
 
 class StringsList : public JsonArray<char *> {
   public:
-	bool Validate(char *item) override { return Items.size() < maxCount && item != NULL; }
+	bool Validate(char *item) override { return Size() < maxCount && item != NULL && strcmp(item, "notValid") != 0; }
 };
 
 class BoolList : public JsonArray<TBoolArray> {
   public:
-	bool Validate(TBoolArray item) override { return Items.size() < maxCount; }
+	bool Validate(TBoolArray item) override { return Size() < maxCount; }
 };
 
 class Int64List : public JsonArray<int64_t> {
   public:
-	bool Validate(int64_t item) override { return Items.size() < maxCount && item < 5188146770730811392LL + 1LL; }
+	bool Validate(int64_t item) override { return Size() < maxCount && item < 5188146770730811392LL + 1LL; }
 };
 class Uint64List : public JsonArray<uint64_t> {
   public:
-	bool Validate(uint64_t item) override { return Items.size() < maxCount && item < 10188146770730811392LL + 1LL; }
+	bool Validate(uint64_t item) override { return Size() < maxCount && item < 10188146770730811392LL + 1LL; }
 };
 
 class Int32List : public JsonArray<int32_t> {
   public:
-	bool Validate(int32_t item) override { return Items.size() < maxCount; }
+	bool Validate(int32_t item) override { return Size() < maxCount; }
 };
 class Uint32List : public JsonArray<uint32_t> {
   public:
-	bool Validate(uint32_t item) override { return Items.size() < maxCount; }
+	bool Validate(uint32_t item) override { return Size() < maxCount; }
 };
 
 class Int16List : public JsonArray<int16_t> {
   public:
-	bool Validate(int16_t item) override { return Items.size() < maxCount; }
+	bool Validate(int16_t item) override { return Size() < maxCount; }
 };
 class Uint16List : public JsonArray<uint16_t> {
   public:
-	bool Validate(uint16_t item) override { return Items.size() < maxCount; }
+	bool Validate(uint16_t item) override { return Size() < maxCount; }
 };
 
 class Int8List : public JsonArray<int8_t> {
   public:
-	bool Validate(int8_t item) override { return Items.size() < maxCount; }
+	bool Validate(int8_t item) override { return Size() < maxCount; }
 };
 class Uint8List : public JsonArray<uint8_t> {
   public:
-	bool Validate(uint8_t item) override { return Items.size() < maxCount; }
+	bool Validate(uint8_t item) override { return Size() < maxCount; }
 };
 
 class DoubleList : public JsonArray<double> {
   public:
-	bool Validate(double item) override { return Items.size() < maxCount; }
+	bool Validate(double item) override { return Size() < maxCount; }
 };
 class FloatList : public JsonArray<float> {
   public:
-	bool Validate(float item) override { return Items.size() < maxCount; }
+	bool Validate(float item) override { return Size() < maxCount; }
 };
 
 TEST(JsonArrayTestsGroup, JsonObjectArray_Parse_Test) {
@@ -93,10 +93,10 @@ TEST(JsonArrayTestsGroup, JsonObjectArray_Parse_Test) {
 
 	CHECK_TRUE(list.TryParse("[{\"name\":\"User1\",\"role\":100},{\"name\":\"User2\",\"role\":0},{\"name\":\"User3\","
 							 "\"role\":255}]"));
-	CHECK_EQUAL(list.Items.size(), 3);
+	CHECK_EQUAL(list.Size(), 3);
 
-	STRCMP_EQUAL(list.Items[0]->Name.GetValue(), "User1");
-	CHECK_EQUAL(list.Items[0]->Role.GetValue(), 100);
+	STRCMP_EQUAL(list[0]->Name.GetValue(), "User1");
+	CHECK_EQUAL(list[0]->Role.GetValue(), 100);
 }
 
 TEST(JsonArrayTestsGroup, JsonObjectArray_Parse_Error_Test) {
@@ -115,10 +115,10 @@ TEST(JsonArrayTestsGroup, JsonObjectArray_Parse_Error_Test) {
 							  "\"role\":255}]"));
 	CHECK_FALSE(list.TryParse("[{},{\"name\":\"User2\",\"role\":0},{\"name\":\"User3\",\"role\":255}]"));
 	CHECK_FALSE(list.TryParse(NULL, 1));
-	CHECK_EQUAL(list.Items.size(), 0);
+	CHECK_EQUAL(list.Size(), 0);
 
 	CHECK_FALSE(list.TryParse("[{\"name\":\"User2\",\"role\":0},null]"));
-	CHECK_EQUAL(list.Items.size(), 1);
+	CHECK_EQUAL(list.Size(), 1);
 }
 
 TEST(JsonArrayTestsGroup, JsonObjectArray_Parse_With_Begin_End_Stages_Test) {
@@ -127,10 +127,10 @@ TEST(JsonArrayTestsGroup, JsonObjectArray_Parse_With_Begin_End_Stages_Test) {
 								  "\"role\":255}]");
 
 	CHECK(doc != NULL);
-	CHECK_EQUAL(list.Items.size(), 3);
+	CHECK_EQUAL(list.Size(), 3);
 
-	STRCMP_EQUAL(list.Items[0]->Name.GetValue(), "User1");
-	CHECK_EQUAL(list.Items[0]->Role.GetValue(), 100);
+	STRCMP_EQUAL(list[0]->Name.GetValue(), "User1");
+	CHECK_EQUAL(list[0]->Role.GetValue(), 100);
 	list.EndTryParse(doc);
 }
 
@@ -141,20 +141,20 @@ TEST(JsonArrayTestsGroup, JsonObjectArray_Parse_With_Begin_End_Stages_And_Specif
 								  83);
 
 	CHECK(doc != NULL);
-	CHECK_EQUAL(list.Items.size(), 3);
+	CHECK_EQUAL(list.Size(), 3);
 
-	STRCMP_EQUAL(list.Items[2]->Name.GetValue(), "User3");
-	CHECK_EQUAL(list.Items[2]->Role.GetValue(), 255);
+	STRCMP_EQUAL(list[2]->Name.GetValue(), "User3");
+	CHECK_EQUAL(list[2]->Role.GetValue(), 255);
 	list.EndTryParse(doc);
 }
 
 TEST(JsonArrayTestsGroup, JsonObjectArray_WriteTo_Test) {
 	char buffer[2048];
 	UsersList list;
-	list.Add(new UserDto("user 1", 0));
-	list.Add(new UserDto("user 2", 10));
-	list.Add(new UserDto("user 3", 100));
-	list.Add(new UserDto("user 4", 1000));
+	CHECK_TRUE(list.Add(new UserDto("user 1", 0)));
+	CHECK_TRUE(list.Add(new UserDto("user 2", 10)));
+	CHECK_TRUE(list.Add(new UserDto("user 3", 100)));
+	CHECK_FALSE(list.Add(&UserDto("user 4", 1000)));
 
 	CHECK_EQUAL(list.WriteToString(buffer, sizeof(buffer)), 85);
 	STRCMP_EQUAL(buffer, "[{\"name\":\"user 1\",\"role\":0},{\"name\":\"user 2\",\"role\":10},{\"name\":\"user 3\",\"role\":100}]");
@@ -210,7 +210,7 @@ TEST(JsonArrayTestsGroup, JsonObjectArray_Equals_Test) {
 
 	CHECK_TRUE(list1 == list2);
 	CHECK_FALSE(list1 != list2);
-	list1.Items[2]->Name.SetValue("User3");
+	list1[2]->Name.SetValue("User3");
 	CHECK_TRUE(list1 != list2);
 	CHECK_FALSE(list1 == list2);
 }
@@ -228,12 +228,12 @@ TEST(JsonArrayTestsGroup, JsonObjectArray_Clone_Test) {
 
 	list1->CloneTo(&list2);
 	delete list1;
-	CHECK_EQUAL(list2.Items.size(), 4);
+	CHECK_EQUAL(list2.Size(), 4);
 
-	STRCMP_EQUAL(list2.Items[2]->Name.GetValue(), "user 3");
-	CHECK_EQUAL(list2.Items[2]->Role.GetValue(), 100);
-	STRCMP_EQUAL(list2.Items[3]->Name.GetValue(), "user 4");
-	CHECK_EQUAL(list2.Items[3]->Role.GetValue(), 999);
+	STRCMP_EQUAL(list2[2]->Name.GetValue(), "user 3");
+	CHECK_EQUAL(list2[2]->Role.GetValue(), 100);
+	STRCMP_EQUAL(list2[3]->Name.GetValue(), "user 4");
+	CHECK_EQUAL(list2[3]->Role.GetValue(), 999);
 }
 
 TEST(JsonArrayTestsGroup, JsonObjectArray_Find_Test) {
@@ -243,10 +243,10 @@ TEST(JsonArrayTestsGroup, JsonObjectArray_Find_Test) {
 	list1.Add(new UserDto("user 3", 100));
 	list1.Add(new UserDto("user 4", 999));
 
-	auto iter = list1.Find(new UserDto("user 3", 100));
-	CHECK(iter != list1.Items.end());
+	auto iter = list1.Find(&UserDto("user 3", 100));
+	CHECK(iter != list1.End());
 	STRCMP_EQUAL((*iter)->Name.GetValue(), "user 3");
-	// CHECK_EQUAL(list1.Find(new UserDto("user 3", 0)), list1.Items.end());
+	// CHECK_EQUAL(list1.Find(new UserDto("user 3", 0)), list1.End());
 }
 
 TEST(JsonArrayTestsGroup, JsonObjectArray_Remove_Test) {
@@ -256,28 +256,29 @@ TEST(JsonArrayTestsGroup, JsonObjectArray_Remove_Test) {
 	list1.Add(new UserDto("user 3", 100));
 	list1.Add(new UserDto("user 4", 999));
 
-	list1.Remove(new UserDto("user 3", 100));
-	list1.Remove(new UserDto("user 2", 10));
-	CHECK_EQUAL(list1.Items.size(), 2);
+	list1.Remove(&UserDto("user 3", 100));
+	list1.Remove(&UserDto("user 2", 10));
+	CHECK_EQUAL(list1.Size(), 2);
 }
 
 TEST(JsonArrayTestsGroup, JsonStringArray_Parse_Test) {
 	StringsList list;
 
 	CHECK_TRUE(list.TryParse("[\"User1\",\"User2\",\"User3\"]"));
-	CHECK_EQUAL(list.Items.size(), 3);
+	CHECK_EQUAL(list.Size(), 3);
 
-	STRCMP_EQUAL((char *)list.Items[0], "User1");
-	STRCMP_EQUAL((char *)list.Items[2], "User3");
+	STRCMP_EQUAL((char *)list[0], "User1");
+	STRCMP_EQUAL((char *)list[2], "User3");
 }
 
 TEST(JsonArrayTestsGroup, JsonStringArray_WriteTo_Test) {
 	char buffer[2048];
 	StringsList list;
-	list.Add("user 1");
-	list.Add("user 2");
-	list.Add("user 3");
-	list.Add("user 4");
+	CHECK_TRUE(list.Add("user 1"));
+	CHECK_TRUE(list.Add("user 2"));
+	CHECK_TRUE(list.Add("user 3"));
+	CHECK_TRUE(list.Add("user 4"));
+	CHECK_FALSE(list.Add("notValid"));
 
 	CHECK_EQUAL(list.WriteToString(buffer, sizeof(buffer)), 37);
 	STRCMP_EQUAL(buffer, "[\"user 1\",\"user 2\",\"user 3\",\"user 4\"]");
@@ -298,17 +299,17 @@ TEST(JsonArrayTestsGroup, JsonStringArray_Equals_Test) {
 
 	CHECK_TRUE(list1 == list2);
 	CHECK_FALSE(list1 != list2);
-	list1.Items[2] = "User3";
+	list1[2] = "User3";
 	CHECK_TRUE(list1 != list2);
 	CHECK_FALSE(list1 == list2);
-	list2.Items[2] = "User3";
+	list2[2] = "User3";
 	CHECK_TRUE(list1 == list2);
 	list2.Remove("user 2");
 	CHECK_TRUE(list1 != list2);
 	CHECK_FALSE(list1 == list2);
 }
 
-TEST(JsonArrayTestsGroup, JsonStringArray_Clone_Test) {
+ TEST(JsonArrayTestsGroup, JsonStringArray_Clone_Test) {
 	auto list1 = new StringsList();
 	list1->Add("user 1");
 	list1->Add("user 2");
@@ -321,24 +322,24 @@ TEST(JsonArrayTestsGroup, JsonStringArray_Clone_Test) {
 
 	list1->CloneTo(&list2);
 	delete list1;
-	CHECK_EQUAL(list2.Items.size(), 4);
-	STRCMP_EQUAL(list2.Items[2], "user 3");
-	STRCMP_EQUAL(list2.Items[3], "user 4");
+	CHECK_EQUAL(list2.Size(), 4);
+	STRCMP_EQUAL(list2[2], "user 3");
+	STRCMP_EQUAL(list2[3], "user 4");
 }
 
-TEST(JsonArrayTestsGroup, JsonStringArray_Find_Test) {
+ TEST(JsonArrayTestsGroup, JsonStringArray_Find_Test) {
 	StringsList list1;
 	list1.Add("user 1");
 	list1.Add("user 2");
 	list1.Add("user 3");
 	list1.Add("user 4");
 
-	CHECK(list1.Find("user 2") != list1.Items.end());
+	CHECK(list1.Find("user 2") != list1.End());
 	STRCMP_EQUAL(*(list1.Find("user 2")), "user 2");
-	// CHECK_EQUAL(list1.Find("error"), list1.Items.end());
+	// CHECK_EQUAL(list1.Find("error"), list1.End());
 }
 
-TEST(JsonArrayTestsGroup, JsonStringArray_Remove_Test) {
+ TEST(JsonArrayTestsGroup, JsonStringArray_Remove_Test) {
 	StringsList list1;
 	list1.Add("user 1");
 	list1.Add("user 2");
@@ -347,22 +348,22 @@ TEST(JsonArrayTestsGroup, JsonStringArray_Remove_Test) {
 
 	list1.Remove("user 3");
 	list1.Remove("user 2");
-	CHECK_EQUAL(list1.Items.size(), 2);
+	CHECK_EQUAL(list1.Size(), 2);
 }
 
-TEST(JsonArrayTestsGroup, JsonBoolArray_Parse_Test) {
+ TEST(JsonArrayTestsGroup, JsonBoolArray_Parse_Test) {
 	BoolList list;
 
 	CHECK_TRUE(list.TryParse("[true,false,true,false]"));
-	CHECK_EQUAL(list.Items.size(), 4);
+	CHECK_EQUAL(list.Size(), 4);
 
-	CHECK_EQUAL(list.Items[0], true);
-	CHECK_EQUAL(list.Items[3], false);
+	CHECK_EQUAL(list[0], true);
+	CHECK_EQUAL(list[3], false);
 
 	CHECK_FALSE(list.TryParse("[false,1,true,0]"));
 }
 
-TEST(JsonArrayTestsGroup, JsonBoolArray_WriteTo_Test) {
+ TEST(JsonArrayTestsGroup, JsonBoolArray_WriteTo_Test) {
 	char buffer[2048];
 	BoolList list;
 	list.Add(true);
@@ -375,7 +376,7 @@ TEST(JsonArrayTestsGroup, JsonBoolArray_WriteTo_Test) {
 	STRCMP_EQUAL(buffer, "[true,false,false,true,true]");
 }
 
-TEST(JsonArrayTestsGroup, JsonBoolArray_Equals_Test) {
+ TEST(JsonArrayTestsGroup, JsonBoolArray_Equals_Test) {
 	BoolList list1;
 	list1.Add(true);
 	list1.Add(false);
@@ -390,12 +391,12 @@ TEST(JsonArrayTestsGroup, JsonBoolArray_Equals_Test) {
 
 	CHECK_TRUE(list1 == list2);
 	CHECK_FALSE(list1 != list2);
-	list1.Items[2] = true;
+	list1[2] = true;
 	CHECK_TRUE(list1 != list2);
 	CHECK_FALSE(list1 == list2);
 }
 
-TEST(JsonArrayTestsGroup, JsonBoolArray_Clone_Test) {
+ TEST(JsonArrayTestsGroup, JsonBoolArray_Clone_Test) {
 	auto list1 = new BoolList();
 	list1->Add(true);
 	list1->Add(false);
@@ -408,21 +409,21 @@ TEST(JsonArrayTestsGroup, JsonBoolArray_Clone_Test) {
 
 	list1->CloneTo(&list2);
 	delete list1;
-	CHECK_EQUAL(list2.Items.size(), 4);
-	CHECK_EQUAL(list2.Items[2], false);
-	CHECK_EQUAL(list2.Items[3], true);
+	CHECK_EQUAL(list2.Size(), 4);
+	CHECK_EQUAL(list2[2], false);
+	CHECK_EQUAL(list2[3], true);
 }
 
-TEST(JsonArrayTestsGroup, JsonBoolArray_Find_Test) {
+ TEST(JsonArrayTestsGroup, JsonBoolArray_Find_Test) {
 	BoolList list1;
 	list1.Add(true);
 
-	CHECK(list1.Find(true) != list1.Items.end());
+	CHECK(list1.Find(true) != list1.End());
 	CHECK_EQUAL(*(list1.Find(true)), true);
-	// CHECK_EQUAL(list1.Find(false), list1.Items.end());
+	// CHECK_EQUAL(list1.Find(false), list1.End());
 }
 
-TEST(JsonArrayTestsGroup, JsonBoolArray_Remove_Test) {
+ TEST(JsonArrayTestsGroup, JsonBoolArray_Remove_Test) {
 	BoolList list1;
 	list1.Add(true);
 	list1.Add(true);
@@ -431,22 +432,22 @@ TEST(JsonArrayTestsGroup, JsonBoolArray_Remove_Test) {
 
 	list1.Remove(true);
 	list1.Remove(false);
-	CHECK_EQUAL(list1.Items.size(), 2);
+	CHECK_EQUAL(list1.Size(), 2);
 	list1.Remove(true);
-	CHECK_EQUAL(list1.Items.size(), 1);
+	CHECK_EQUAL(list1.Size(), 1);
 }
 
-TEST(JsonArrayTestsGroup, JsonInt64Array_Parse_Test) {
+ TEST(JsonArrayTestsGroup, JsonInt64Array_Parse_Test) {
 	Int64List list;
 	CHECK_TRUE(list.TryParse("[0,1,-5188146770730811392,5188146770730811392]"));
-	CHECK_EQUAL(list.Items.size(), 4);
-	CHECK_EQUAL(list.Items[0], 0);
-	CHECK_EQUAL(list.Items[1], 1);
-	CHECK_EQUAL(list.Items[2], -5188146770730811392LL);
-	CHECK_EQUAL(list.Items[3], 5188146770730811392LL);
+	CHECK_EQUAL(list.Size(), 4);
+	CHECK_EQUAL(list[0], 0);
+	CHECK_EQUAL(list[1], 1);
+	CHECK_EQUAL(list[2], -5188146770730811392LL);
+	CHECK_EQUAL(list[3], 5188146770730811392LL);
 }
 
-TEST(JsonArrayTestsGroup, JsonInt64Array_WriteTo_Test) {
+ TEST(JsonArrayTestsGroup, JsonInt64Array_WriteTo_Test) {
 	char buffer[2048];
 	Int64List list;
 	list.Add(-5188146770730811392LL);
@@ -457,7 +458,7 @@ TEST(JsonArrayTestsGroup, JsonInt64Array_WriteTo_Test) {
 	STRCMP_EQUAL(buffer, "[-5188146770730811392,5188146770730811392,0]");
 }
 
-TEST(JsonArrayTestsGroup, JsonInt64Array_Equals_Test) {
+ TEST(JsonArrayTestsGroup, JsonInt64Array_Equals_Test) {
 	Int64List list1;
 	list1.Add(-5188146770730811392LL);
 	list1.Add(5188146770730811392LL);
@@ -470,12 +471,12 @@ TEST(JsonArrayTestsGroup, JsonInt64Array_Equals_Test) {
 
 	CHECK_TRUE(list1 == list2);
 	CHECK_FALSE(list1 != list2);
-	list1.Items[2] = -1;
+	list1[2] = -1;
 	CHECK_TRUE(list1 != list2);
 	CHECK_FALSE(list1 == list2);
 }
 
-TEST(JsonArrayTestsGroup, JsonInt64Array_Clone_Test) {
+ TEST(JsonArrayTestsGroup, JsonInt64Array_Clone_Test) {
 	auto list1 = new Int64List();
 	list1->Add(-5188146770730811392LL);
 	list1->Add(5188146770730811392LL);
@@ -486,43 +487,43 @@ TEST(JsonArrayTestsGroup, JsonInt64Array_Clone_Test) {
 
 	list1->CloneTo(&list2);
 	delete list1;
-	CHECK_EQUAL(list2.Items.size(), 3);
-	CHECK_EQUAL(list2.Items[0], -5188146770730811392LL);
-	CHECK_EQUAL(list2.Items[1], 5188146770730811392LL);
-	CHECK_EQUAL(list2.Items[2], 0);
+	CHECK_EQUAL(list2.Size(), 3);
+	CHECK_EQUAL(list2[0], -5188146770730811392LL);
+	CHECK_EQUAL(list2[1], 5188146770730811392LL);
+	CHECK_EQUAL(list2[2], 0);
 }
 
-TEST(JsonArrayTestsGroup, JsonInt64Array_Find_Test) {
+ TEST(JsonArrayTestsGroup, JsonInt64Array_Find_Test) {
 	Int64List list1;
 	list1.Add(-5188146770730811392LL);
 	list1.Add(5188146770730811392LL);
 	list1.Add(0);
 
-	CHECK(list1.Find(5188146770730811392LL) != list1.Items.end());
+	CHECK(list1.Find(5188146770730811392LL) != list1.End());
 	CHECK_EQUAL(*(list1.Find(5188146770730811392LL)), 5188146770730811392LL);
-	// CHECK_EQUAL(list1.Find(-1), list1.Items.end());
+	// CHECK_EQUAL(list1.Find(-1), list1.End());
 }
 
-TEST(JsonArrayTestsGroup, JsonInt64Array_Remove_Test) {
+ TEST(JsonArrayTestsGroup, JsonInt64Array_Remove_Test) {
 	Int64List list1;
 	list1.Add(-5188146770730811392LL);
 	list1.Add(5188146770730811392LL);
 	list1.Add(0);
 
 	list1.Remove(0);
-	CHECK_EQUAL(list1.Items.size(), 2);
+	CHECK_EQUAL(list1.Size(), 2);
 }
 
-TEST(JsonArrayTestsGroup, JsonUint64Array_Parse_Test) {
+ TEST(JsonArrayTestsGroup, JsonUint64Array_Parse_Test) {
 	Uint64List list;
 	CHECK_TRUE(list.TryParse("[1,0,10188146770730811392]"));
-	CHECK_EQUAL(list.Items.size(), 3);
-	CHECK_EQUAL(list.Items[0], 1);
-	CHECK_EQUAL(list.Items[1], 0);
-	CHECK_EQUAL(list.Items[2], 10188146770730811392LL);
+	CHECK_EQUAL(list.Size(), 3);
+	CHECK_EQUAL(list[0], 1);
+	CHECK_EQUAL(list[1], 0);
+	CHECK_EQUAL(list[2], 10188146770730811392LL);
 }
 
-TEST(JsonArrayTestsGroup, JsonUint64Array_WriteTo_Test) {
+ TEST(JsonArrayTestsGroup, JsonUint64Array_WriteTo_Test) {
 	char buffer[2048];
 	Uint64List list;
 	list.Add(0);
@@ -533,7 +534,7 @@ TEST(JsonArrayTestsGroup, JsonUint64Array_WriteTo_Test) {
 	STRCMP_EQUAL(buffer, "[0,10188146770730811392,1]");
 }
 
-TEST(JsonArrayTestsGroup, JsonUint64Array_Equals_Test) {
+ TEST(JsonArrayTestsGroup, JsonUint64Array_Equals_Test) {
 	Uint64List list1;
 	list1.Add(0);
 	list1.Add(10188146770730811392);
@@ -546,12 +547,12 @@ TEST(JsonArrayTestsGroup, JsonUint64Array_Equals_Test) {
 
 	CHECK_TRUE(list1 == list2);
 	CHECK_FALSE(list1 != list2);
-	list1.Items[2] = 5222;
+	list1[2] = 5222;
 	CHECK_TRUE(list1 != list2);
 	CHECK_FALSE(list1 == list2);
 }
 
-TEST(JsonArrayTestsGroup, JsonUint64Array_Clone_Test) {
+ TEST(JsonArrayTestsGroup, JsonUint64Array_Clone_Test) {
 	auto list1 = new Uint64List();
 	list1->Add(0);
 	list1->Add(10188146770730811392);
@@ -562,43 +563,43 @@ TEST(JsonArrayTestsGroup, JsonUint64Array_Clone_Test) {
 
 	list1->CloneTo(&list2);
 	delete list1;
-	CHECK_EQUAL(list2.Items.size(), 3);
-	CHECK_EQUAL(list2.Items[0], 0);
-	CHECK_EQUAL(list2.Items[1], 10188146770730811392);
-	CHECK_EQUAL(list2.Items[2], 1);
+	CHECK_EQUAL(list2.Size(), 3);
+	CHECK_EQUAL(list2[0], 0);
+	CHECK_EQUAL(list2[1], 10188146770730811392);
+	CHECK_EQUAL(list2[2], 1);
 }
 
-TEST(JsonArrayTestsGroup, JsonUint64Array_Find_Test) {
+ TEST(JsonArrayTestsGroup, JsonUint64Array_Find_Test) {
 	Uint64List list1;
 	list1.Add(10188146770730811392LL);
 	list1.Add(5188146770730811392LL);
 	list1.Add(0);
 
-	CHECK(list1.Find(5188146770730811392LL) != list1.Items.end());
+	CHECK(list1.Find(5188146770730811392LL) != list1.End());
 	CHECK_EQUAL(*(list1.Find(5188146770730811392LL)), 5188146770730811392LL);
-	// CHECK_EQUAL(list1.Find(1), list1.Items.end());
+	// CHECK_EQUAL(list1.Find(1), list1.End());
 }
 
-TEST(JsonArrayTestsGroup, JsonUint64Array_Remove_Test) {
+ TEST(JsonArrayTestsGroup, JsonUint64Array_Remove_Test) {
 	Uint64List list1;
 	list1.Add(10188146770730811392LL);
 	list1.Add(5188146770730811392LL);
 	list1.Add(0);
 
 	list1.Remove(0);
-	CHECK_EQUAL(list1.Items.size(), 2);
+	CHECK_EQUAL(list1.Size(), 2);
 }
 
-TEST(JsonArrayTestsGroup, JsonInt32Array_Parse_Test) {
+ TEST(JsonArrayTestsGroup, JsonInt32Array_Parse_Test) {
 	Int32List list;
 	CHECK_TRUE(list.TryParse("[0,-2147483647,2147483647]"));
-	CHECK_EQUAL(list.Items.size(), 3);
-	CHECK_EQUAL(list.Items[0], 0);
-	CHECK_EQUAL(list.Items[1], -2147483647);
-	CHECK_EQUAL(list.Items[2], 2147483647);
+	CHECK_EQUAL(list.Size(), 3);
+	CHECK_EQUAL(list[0], 0);
+	CHECK_EQUAL(list[1], -2147483647);
+	CHECK_EQUAL(list[2], 2147483647);
 }
 
-TEST(JsonArrayTestsGroup, JsonInt32Array_WriteTo_Test) {
+ TEST(JsonArrayTestsGroup, JsonInt32Array_WriteTo_Test) {
 	char buffer[2048];
 	Int32List list;
 	list.Add(-2147483647);
@@ -609,7 +610,7 @@ TEST(JsonArrayTestsGroup, JsonInt32Array_WriteTo_Test) {
 	STRCMP_EQUAL(buffer, "[-2147483647,2147483647,0]");
 }
 
-TEST(JsonArrayTestsGroup, JsonInt32Array_Equals_Test) {
+ TEST(JsonArrayTestsGroup, JsonInt32Array_Equals_Test) {
 	Int32List list1;
 	list1.Add(-2147483647);
 	list1.Add(2147483647);
@@ -622,12 +623,12 @@ TEST(JsonArrayTestsGroup, JsonInt32Array_Equals_Test) {
 
 	CHECK_TRUE(list1 == list2);
 	CHECK_FALSE(list1 != list2);
-	list1.Items[2] = 100;
+	list1[2] = 100;
 	CHECK_TRUE(list1 != list2);
 	CHECK_FALSE(list1 == list2);
 }
 
-TEST(JsonArrayTestsGroup, JsonInt32Array_Clone_Test) {
+ TEST(JsonArrayTestsGroup, JsonInt32Array_Clone_Test) {
 	auto list1 = new Int32List();
 	list1->Add(-2147483647);
 	list1->Add(2147483647);
@@ -638,42 +639,42 @@ TEST(JsonArrayTestsGroup, JsonInt32Array_Clone_Test) {
 
 	list1->CloneTo(&list2);
 	delete list1;
-	CHECK_EQUAL(list2.Items.size(), 3);
-	CHECK_EQUAL(list2.Items[0], -2147483647);
-	CHECK_EQUAL(list2.Items[1], 2147483647);
-	CHECK_EQUAL(list2.Items[2], 0);
+	CHECK_EQUAL(list2.Size(), 3);
+	CHECK_EQUAL(list2[0], -2147483647);
+	CHECK_EQUAL(list2[1], 2147483647);
+	CHECK_EQUAL(list2[2], 0);
 }
 
-TEST(JsonArrayTestsGroup, JsonInt32Array_Find_Test) {
+ TEST(JsonArrayTestsGroup, JsonInt32Array_Find_Test) {
 	Int32List list1;
 	list1.Add(-2147483647);
 	list1.Add(2147483647);
 	list1.Add(0);
 
-	CHECK(list1.Find(-2147483647) != list1.Items.end());
+	CHECK(list1.Find(-2147483647) != list1.End());
 	CHECK_EQUAL(*(list1.Find(-2147483647)), -2147483647);
-	// CHECK_EQUAL(list1.Find(1), list1.Items.end());
+	// CHECK_EQUAL(list1.Find(1), list1.End());
 }
 
-TEST(JsonArrayTestsGroup, JsonInt32Array_Remove_Test) {
+ TEST(JsonArrayTestsGroup, JsonInt32Array_Remove_Test) {
 	Int32List list1;
 	list1.Add(-2147483647);
 	list1.Add(2147483647);
 	list1.Add(0);
 
 	list1.Remove(0);
-	CHECK_EQUAL(list1.Items.size(), 2);
+	CHECK_EQUAL(list1.Size(), 2);
 }
 
-TEST(JsonArrayTestsGroup, JsonUint32Array_Parse_Test) {
+ TEST(JsonArrayTestsGroup, JsonUint32Array_Parse_Test) {
 	Uint32List list;
 	CHECK_TRUE(list.TryParse("[0,4294967295]"));
-	CHECK_EQUAL(list.Items.size(), 2);
-	CHECK_EQUAL(list.Items[0], 0);
-	CHECK_EQUAL(list.Items[1], 4294967295);
+	CHECK_EQUAL(list.Size(), 2);
+	CHECK_EQUAL(list[0], 0);
+	CHECK_EQUAL(list[1], 4294967295);
 }
 
-TEST(JsonArrayTestsGroup, JsonUint32Array_WriteTo_Test) {
+ TEST(JsonArrayTestsGroup, JsonUint32Array_WriteTo_Test) {
 	char buffer[2048];
 	Uint32List list;
 	list.Add(0);
@@ -684,7 +685,7 @@ TEST(JsonArrayTestsGroup, JsonUint32Array_WriteTo_Test) {
 	STRCMP_EQUAL(buffer, "[0,4294967295,1]");
 }
 
-TEST(JsonArrayTestsGroup, JsonUint32Array_Equals_Test) {
+ TEST(JsonArrayTestsGroup, JsonUint32Array_Equals_Test) {
 	Uint32List list1;
 	list1.Add(147483647);
 	list1.Add(2147483647);
@@ -697,12 +698,12 @@ TEST(JsonArrayTestsGroup, JsonUint32Array_Equals_Test) {
 
 	CHECK_TRUE(list1 == list2);
 	CHECK_FALSE(list1 != list2);
-	list1.Items[2] = 42;
+	list1[2] = 42;
 	CHECK_TRUE(list1 != list2);
 	CHECK_FALSE(list1 == list2);
 }
 
-TEST(JsonArrayTestsGroup, JsonUint32Array_Clone_Test) {
+ TEST(JsonArrayTestsGroup, JsonUint32Array_Clone_Test) {
 	auto list1 = new Uint32List();
 	list1->Add(147483647);
 	list1->Add(2147483647);
@@ -713,45 +714,45 @@ TEST(JsonArrayTestsGroup, JsonUint32Array_Clone_Test) {
 
 	list1->CloneTo(&list2);
 	delete list1;
-	CHECK_EQUAL(list2.Items.size(), 3);
-	CHECK_EQUAL(list2.Items[0], 147483647);
-	CHECK_EQUAL(list2.Items[1], 2147483647);
-	CHECK_EQUAL(list2.Items[2], 0);
+	CHECK_EQUAL(list2.Size(), 3);
+	CHECK_EQUAL(list2[0], 147483647);
+	CHECK_EQUAL(list2[1], 2147483647);
+	CHECK_EQUAL(list2[2], 0);
 }
 
-TEST(JsonArrayTestsGroup, JsonUint32Array_Find_Test) {
+ TEST(JsonArrayTestsGroup, JsonUint32Array_Find_Test) {
 	Uint32List list1;
 	list1.Add(147483647);
 	list1.Add(2147483647);
 	list1.Add(5);
 
-	CHECK(list1.Find(5) != list1.Items.end());
+	CHECK(list1.Find(5) != list1.End());
 	CHECK_EQUAL(*(list1.Find(5)), 5);
-	// CHECK_EQUAL(list1.Find(1), list1.Items.end());
+	// CHECK_EQUAL(list1.Find(1), list1.End());
 }
 
-TEST(JsonArrayTestsGroup, JsonUint32Array_Remove_Test) {
+ TEST(JsonArrayTestsGroup, JsonUint32Array_Remove_Test) {
 	Uint32List list1;
 	list1.Add(147483647);
 	list1.Add(2147483647);
 	list1.Add(5);
 
 	list1.Remove(5);
-	CHECK_EQUAL(list1.Items.size(), 2);
+	CHECK_EQUAL(list1.Size(), 2);
 }
 
-TEST(JsonArrayTestsGroup, JsonInt16Array_Parse_Test) {
+ TEST(JsonArrayTestsGroup, JsonInt16Array_Parse_Test) {
 	Int16List list;
 	CHECK_TRUE(list.TryParse("[0,-32768,32767,-2147483647,2147483647]"));
-	CHECK_EQUAL(list.Items.size(), 5);
-	CHECK_EQUAL(list.Items[0], 0);
-	CHECK_EQUAL(list.Items[1], -32768);
-	CHECK_EQUAL(list.Items[2], 32767);
-	CHECK_EQUAL(list.Items[3], 1);
-	CHECK_EQUAL(list.Items[4], -1);
+	CHECK_EQUAL(list.Size(), 5);
+	CHECK_EQUAL(list[0], 0);
+	CHECK_EQUAL(list[1], -32768);
+	CHECK_EQUAL(list[2], 32767);
+	CHECK_EQUAL(list[3], 1);
+	CHECK_EQUAL(list[4], -1);
 }
 
-TEST(JsonArrayTestsGroup, JsonInt16Array_WriteTo_Test) {
+ TEST(JsonArrayTestsGroup, JsonInt16Array_WriteTo_Test) {
 	char buffer[2048];
 	Int16List list;
 	list.Add(-32768);
@@ -764,7 +765,7 @@ TEST(JsonArrayTestsGroup, JsonInt16Array_WriteTo_Test) {
 	STRCMP_EQUAL(buffer, "[-32768,32767,0,1,-1]");
 }
 
-TEST(JsonArrayTestsGroup, JsonInt16Array_Equals_Test) {
+ TEST(JsonArrayTestsGroup, JsonInt16Array_Equals_Test) {
 	Int16List list1;
 	list1.Add(-32768);
 	list1.Add(32767);
@@ -777,12 +778,12 @@ TEST(JsonArrayTestsGroup, JsonInt16Array_Equals_Test) {
 
 	CHECK_TRUE(list1 == list2);
 	CHECK_FALSE(list1 != list2);
-	list1.Items[2] = 42;
+	list1[2] = 42;
 	CHECK_TRUE(list1 != list2);
 	CHECK_FALSE(list1 == list2);
 }
 
-TEST(JsonArrayTestsGroup, JsonInt16Array_Clone_Test) {
+ TEST(JsonArrayTestsGroup, JsonInt16Array_Clone_Test) {
 	auto list1 = new Int16List();
 	list1->Add(-32768);
 	list1->Add(32767);
@@ -793,43 +794,43 @@ TEST(JsonArrayTestsGroup, JsonInt16Array_Clone_Test) {
 
 	list1->CloneTo(&list2);
 	delete list1;
-	CHECK_EQUAL(list2.Items.size(), 3);
-	CHECK_EQUAL(list2.Items[0], -32768);
-	CHECK_EQUAL(list2.Items[1], 32767);
-	CHECK_EQUAL(list2.Items[2], 0);
+	CHECK_EQUAL(list2.Size(), 3);
+	CHECK_EQUAL(list2[0], -32768);
+	CHECK_EQUAL(list2[1], 32767);
+	CHECK_EQUAL(list2[2], 0);
 }
 
-TEST(JsonArrayTestsGroup, JsonInt16Array_Find_Test) {
+ TEST(JsonArrayTestsGroup, JsonInt16Array_Find_Test) {
 	Int16List list1;
 	list1.Add(-32768);
 	list1.Add(32767);
 	list1.Add(0);
 
-	CHECK(list1.Find(32767) != list1.Items.end());
+	CHECK(list1.Find(32767) != list1.End());
 	CHECK_EQUAL(*(list1.Find(32767)), 32767);
-	// CHECK_EQUAL(list1.Find(1), list1.Items.end());
+	// CHECK_EQUAL(list1.Find(1), list1.End());
 }
 
-TEST(JsonArrayTestsGroup, JsonInt16Array_Remove_Test) {
+ TEST(JsonArrayTestsGroup, JsonInt16Array_Remove_Test) {
 	Int16List list1;
 	list1.Add(-32768);
 	list1.Add(32767);
 	list1.Add(0);
 
 	list1.Remove(0);
-	CHECK_EQUAL(list1.Items.size(), 2);
+	CHECK_EQUAL(list1.Size(), 2);
 }
 
-TEST(JsonArrayTestsGroup, JsonUint16Array_Parse_Test) {
+ TEST(JsonArrayTestsGroup, JsonUint16Array_Parse_Test) {
 	Uint16List list;
 	CHECK_TRUE(list.TryParse("[0,65535,2147483647]"));
-	CHECK_EQUAL(list.Items.size(), 3);
-	CHECK_EQUAL(list.Items[0], 0);
-	CHECK_EQUAL(list.Items[1], 65535);
-	CHECK_EQUAL(list.Items[2], 65535);
+	CHECK_EQUAL(list.Size(), 3);
+	CHECK_EQUAL(list[0], 0);
+	CHECK_EQUAL(list[1], 65535);
+	CHECK_EQUAL(list[2], 65535);
 }
 
-TEST(JsonArrayTestsGroup, JsonUint16Array_WriteTo_Test) {
+ TEST(JsonArrayTestsGroup, JsonUint16Array_WriteTo_Test) {
 	char buffer[2048];
 	Uint16List list;
 	list.Add(0);
@@ -841,7 +842,7 @@ TEST(JsonArrayTestsGroup, JsonUint16Array_WriteTo_Test) {
 	STRCMP_EQUAL(buffer, "[0,65535,1,65535]");
 }
 
-TEST(JsonArrayTestsGroup, JsonUint16Array_Equals_Test) {
+ TEST(JsonArrayTestsGroup, JsonUint16Array_Equals_Test) {
 	Uint16List list1;
 	list1.Add(0);
 	list1.Add(65535);
@@ -854,12 +855,12 @@ TEST(JsonArrayTestsGroup, JsonUint16Array_Equals_Test) {
 
 	CHECK_TRUE(list1 == list2);
 	CHECK_FALSE(list1 != list2);
-	list1.Items[2] = 42;
+	list1[2] = 42;
 	CHECK_TRUE(list1 != list2);
 	CHECK_FALSE(list1 == list2);
 }
 
-TEST(JsonArrayTestsGroup, JsonUint16Array_Clone_Test) {
+ TEST(JsonArrayTestsGroup, JsonUint16Array_Clone_Test) {
 	auto list1 = new Uint16List();
 	list1->Add(65535);
 	list1->Add(32767);
@@ -870,45 +871,45 @@ TEST(JsonArrayTestsGroup, JsonUint16Array_Clone_Test) {
 
 	list1->CloneTo(&list2);
 	delete list1;
-	CHECK_EQUAL(list2.Items.size(), 3);
-	CHECK_EQUAL(list2.Items[0], 65535);
-	CHECK_EQUAL(list2.Items[1], 32767);
-	CHECK_EQUAL(list2.Items[2], 0);
+	CHECK_EQUAL(list2.Size(), 3);
+	CHECK_EQUAL(list2[0], 65535);
+	CHECK_EQUAL(list2[1], 32767);
+	CHECK_EQUAL(list2[2], 0);
 }
 
-TEST(JsonArrayTestsGroup, JsonUint16Array_Find_Test) {
+ TEST(JsonArrayTestsGroup, JsonUint16Array_Find_Test) {
 	Uint16List list1;
 	list1.Add(0);
 	list1.Add(65535);
 	list1.Add(1);
 
-	CHECK(list1.Find(65535) != list1.Items.end());
+	CHECK(list1.Find(65535) != list1.End());
 	CHECK_EQUAL(*(list1.Find(65535)), 65535);
-	// CHECK_EQUAL(list1.Find(10), list1.Items.end());
+	// CHECK_EQUAL(list1.Find(10), list1.End());
 }
 
-TEST(JsonArrayTestsGroup, JsonUint16Array_Remove_Test) {
+ TEST(JsonArrayTestsGroup, JsonUint16Array_Remove_Test) {
 	Uint16List list1;
 	list1.Add(0);
 	list1.Add(65535);
 	list1.Add(1);
 
 	list1.Remove(0);
-	CHECK_EQUAL(list1.Items.size(), 2);
+	CHECK_EQUAL(list1.Size(), 2);
 }
 
-TEST(JsonArrayTestsGroup, JsonInt8Array_Parse_Test) {
+ TEST(JsonArrayTestsGroup, JsonInt8Array_Parse_Test) {
 	Int8List list;
 	CHECK_TRUE(list.TryParse("[0,-128,127,-2147483647,2147483647]"));
-	CHECK_EQUAL(list.Items.size(), 5);
-	CHECK_EQUAL(list.Items[0], 0);
-	CHECK_EQUAL(list.Items[1], -128);
-	CHECK_EQUAL(list.Items[2], 127);
-	CHECK_EQUAL(list.Items[3], 1);
-	CHECK_EQUAL(list.Items[4], -1);
+	CHECK_EQUAL(list.Size(), 5);
+	CHECK_EQUAL(list[0], 0);
+	CHECK_EQUAL(list[1], -128);
+	CHECK_EQUAL(list[2], 127);
+	CHECK_EQUAL(list[3], 1);
+	CHECK_EQUAL(list[4], -1);
 }
 
-TEST(JsonArrayTestsGroup, JsonInt8Array_WriteTo_Test) {
+ TEST(JsonArrayTestsGroup, JsonInt8Array_WriteTo_Test) {
 	char buffer[2048];
 	Int8List list;
 	list.Add(-128);
@@ -923,7 +924,7 @@ TEST(JsonArrayTestsGroup, JsonInt8Array_WriteTo_Test) {
 	STRCMP_EQUAL(buffer, "[-128,127,0,-1,0,1,-1]");
 }
 
-TEST(JsonArrayTestsGroup, JsonInt8Array_Equals_Test) {
+ TEST(JsonArrayTestsGroup, JsonInt8Array_Equals_Test) {
 	Int8List list1;
 	list1.Add(0);
 	list1.Add(-128);
@@ -936,12 +937,12 @@ TEST(JsonArrayTestsGroup, JsonInt8Array_Equals_Test) {
 
 	CHECK_TRUE(list1 == list2);
 	CHECK_FALSE(list1 != list2);
-	list1.Items[2] = 42;
+	list1[2] = 42;
 	CHECK_TRUE(list1 != list2);
 	CHECK_FALSE(list1 == list2);
 }
 
-TEST(JsonArrayTestsGroup, JsonInt8Array_Clone_Test) {
+ TEST(JsonArrayTestsGroup, JsonInt8Array_Clone_Test) {
 	auto list1 = new Int8List();
 	list1->Add(0);
 	list1->Add(-128);
@@ -952,44 +953,44 @@ TEST(JsonArrayTestsGroup, JsonInt8Array_Clone_Test) {
 
 	list1->CloneTo(&list2);
 	delete list1;
-	CHECK_EQUAL(list2.Items.size(), 3);
-	CHECK_EQUAL(list2.Items[0], 0);
-	CHECK_EQUAL(list2.Items[1], -128);
-	CHECK_EQUAL(list2.Items[2], 1);
+	CHECK_EQUAL(list2.Size(), 3);
+	CHECK_EQUAL(list2[0], 0);
+	CHECK_EQUAL(list2[1], -128);
+	CHECK_EQUAL(list2[2], 1);
 }
 
-TEST(JsonArrayTestsGroup, JsonInt8Array_Find_Test) {
+ TEST(JsonArrayTestsGroup, JsonInt8Array_Find_Test) {
 	Int8List list1;
 	list1.Add(0);
 	list1.Add(-128);
 	list1.Add(1);
 
-	CHECK(list1.Find(1) != list1.Items.end());
+	CHECK(list1.Find(1) != list1.End());
 	CHECK_EQUAL(*(list1.Find(1)), 1);
-	// CHECK_EQUAL(list1.Find(2), list1.Items.end());
+	// CHECK_EQUAL(list1.Find(2), list1.End());
 }
 
-TEST(JsonArrayTestsGroup, JsonInt8Array_Remove_Test) {
+ TEST(JsonArrayTestsGroup, JsonInt8Array_Remove_Test) {
 	Int8List list1;
 	list1.Add(0);
 	list1.Add(-128);
 	list1.Add(1);
 
 	list1.Remove(0);
-	CHECK_EQUAL(list1.Items.size(), 2);
+	CHECK_EQUAL(list1.Size(), 2);
 }
 
-TEST(JsonArrayTestsGroup, JsonUint8Array_Parse_Test) {
+ TEST(JsonArrayTestsGroup, JsonUint8Array_Parse_Test) {
 	Uint8List list;
 	CHECK_TRUE(list.TryParse("[0,254,65535,2147483647]"));
-	CHECK_EQUAL(list.Items.size(), 4);
-	CHECK_EQUAL(list.Items[0], 0);
-	CHECK_EQUAL(list.Items[1], 254);
-	CHECK_EQUAL(list.Items[2], 255);
-	CHECK_EQUAL(list.Items[3], 255);
+	CHECK_EQUAL(list.Size(), 4);
+	CHECK_EQUAL(list[0], 0);
+	CHECK_EQUAL(list[1], 254);
+	CHECK_EQUAL(list[2], 255);
+	CHECK_EQUAL(list[3], 255);
 }
 
-TEST(JsonArrayTestsGroup, JsonUint8Array_WriteTo_Test) {
+ TEST(JsonArrayTestsGroup, JsonUint8Array_WriteTo_Test) {
 	char buffer[2048];
 	Uint8List list;
 	list.Add(0);
@@ -1002,7 +1003,7 @@ TEST(JsonArrayTestsGroup, JsonUint8Array_WriteTo_Test) {
 	STRCMP_EQUAL(buffer, "[0,254,255,1,255]");
 }
 
-TEST(JsonArrayTestsGroup, JsonUint8Array_Equals_Test) {
+ TEST(JsonArrayTestsGroup, JsonUint8Array_Equals_Test) {
 	Uint8List list1;
 	list1.Add(0);
 	list1.Add(254);
@@ -1015,12 +1016,12 @@ TEST(JsonArrayTestsGroup, JsonUint8Array_Equals_Test) {
 
 	CHECK_TRUE(list1 == list2);
 	CHECK_FALSE(list1 != list2);
-	list1.Items[2] = 42;
+	list1[2] = 42;
 	CHECK_TRUE(list1 != list2);
 	CHECK_FALSE(list1 == list2);
 }
 
-TEST(JsonArrayTestsGroup, JsonUint8Array_Clone_Test) {
+ TEST(JsonArrayTestsGroup, JsonUint8Array_Clone_Test) {
 	auto list1 = new Uint8List();
 	list1->Add(0);
 	list1->Add(254);
@@ -1031,44 +1032,44 @@ TEST(JsonArrayTestsGroup, JsonUint8Array_Clone_Test) {
 
 	list1->CloneTo(&list2);
 	delete list1;
-	CHECK_EQUAL(list2.Items.size(), 3);
-	CHECK_EQUAL(list2.Items[0], 0);
-	CHECK_EQUAL(list2.Items[1], 254);
-	CHECK_EQUAL(list2.Items[2], 1);
+	CHECK_EQUAL(list2.Size(), 3);
+	CHECK_EQUAL(list2[0], 0);
+	CHECK_EQUAL(list2[1], 254);
+	CHECK_EQUAL(list2[2], 1);
 }
 
-TEST(JsonArrayTestsGroup, JsonUint8Array_Find_Test) {
+ TEST(JsonArrayTestsGroup, JsonUint8Array_Find_Test) {
 	Uint8List list1;
 	list1.Add(0);
 	list1.Add(254);
 	list1.Add(1);
 
-	CHECK(list1.Find(1) != list1.Items.end());
+	CHECK(list1.Find(1) != list1.End());
 	CHECK_EQUAL(*(list1.Find(1)), 1);
-	// CHECK_EQUAL(list1.Find(2), list1.Items.end());
+	// CHECK_EQUAL(list1.Find(2), list1.End());
 }
 
-TEST(JsonArrayTestsGroup, JsonUint8Array_Remove_Test) {
+ TEST(JsonArrayTestsGroup, JsonUint8Array_Remove_Test) {
 	Uint8List list1;
 	list1.Add(0);
 	list1.Add(254);
 	list1.Add(1);
 
 	list1.Remove(0);
-	CHECK_EQUAL(list1.Items.size(), 2);
+	CHECK_EQUAL(list1.Size(), 2);
 }
 
-TEST(JsonArrayTestsGroup, JsonDoubleArray_Parse_Test) {
+ TEST(JsonArrayTestsGroup, JsonDoubleArray_Parse_Test) {
 	DoubleList list;
 	CHECK_TRUE(list.TryParse("[0.00001,254.123,-65535.523,2147483647.1]"));
-	CHECK_EQUAL(list.Items.size(), 4);
-	CHECK_EQUAL(list.Items[0], 0.00001);
-	CHECK_EQUAL(list.Items[1], 254.123);
-	CHECK_EQUAL(list.Items[2], -65535.523);
-	CHECK_EQUAL(list.Items[3], 2147483647.1);
+	CHECK_EQUAL(list.Size(), 4);
+	CHECK_EQUAL(list[0], 0.00001);
+	CHECK_EQUAL(list[1], 254.123);
+	CHECK_EQUAL(list[2], -65535.523);
+	CHECK_EQUAL(list[3], 2147483647.1);
 }
 
-TEST(JsonArrayTestsGroup, JsonDoubleArray_WriteTo_Test) {
+ TEST(JsonArrayTestsGroup, JsonDoubleArray_WriteTo_Test) {
 	char buffer[2048];
 	DoubleList list;
 	list.Add(-0.05);
@@ -1081,7 +1082,7 @@ TEST(JsonArrayTestsGroup, JsonDoubleArray_WriteTo_Test) {
 	STRCMP_EQUAL(buffer, "[-0.05,1.254,65535.15,0.1,2147.483647]");
 }
 
-TEST(JsonArrayTestsGroup, JsonDoubleArray_Equals_Test) {
+ TEST(JsonArrayTestsGroup, JsonDoubleArray_Equals_Test) {
 	DoubleList list1;
 	list1.Add(-0.05);
 	list1.Add(1.254);
@@ -1094,12 +1095,12 @@ TEST(JsonArrayTestsGroup, JsonDoubleArray_Equals_Test) {
 
 	CHECK_TRUE(list1 == list2);
 	CHECK_FALSE(list1 != list2);
-	list1.Items[2] = 42;
+	list1[2] = 42;
 	CHECK_TRUE(list1 != list2);
 	CHECK_FALSE(list1 == list2);
 }
 
-TEST(JsonArrayTestsGroup, JsonDoubleArray_Clone_Test) {
+ TEST(JsonArrayTestsGroup, JsonDoubleArray_Clone_Test) {
 	auto list1 = new DoubleList();
 	list1->Add(-0.05);
 	list1->Add(1.254);
@@ -1110,44 +1111,44 @@ TEST(JsonArrayTestsGroup, JsonDoubleArray_Clone_Test) {
 
 	list1->CloneTo(&list2);
 	delete list1;
-	CHECK_EQUAL(list2.Items.size(), 3);
-	CHECK_EQUAL(list2.Items[0], -0.05);
-	CHECK_EQUAL(list2.Items[1], 1.254);
-	CHECK_EQUAL(list2.Items[2], 65535.15);
+	CHECK_EQUAL(list2.Size(), 3);
+	CHECK_EQUAL(list2[0], -0.05);
+	CHECK_EQUAL(list2[1], 1.254);
+	CHECK_EQUAL(list2[2], 65535.15);
 }
 
-TEST(JsonArrayTestsGroup, JsonDoubleArray_Find_Test) {
+ TEST(JsonArrayTestsGroup, JsonDoubleArray_Find_Test) {
 	DoubleList list1;
 	list1.Add(-0.05);
 	list1.Add(1.254);
 	list1.Add(65535.15);
 
-	CHECK(list1.Find(-0.05) != list1.Items.end());
+	CHECK(list1.Find(-0.05) != list1.End());
 	CHECK_EQUAL(*(list1.Find(-0.05)), -0.05);
-	// CHECK_EQUAL(list1.Find(2), list1.Items.end());
+	// CHECK_EQUAL(list1.Find(2), list1.End());
 }
 
-TEST(JsonArrayTestsGroup, JsonDoubleArray_Remove_Test) {
+ TEST(JsonArrayTestsGroup, JsonDoubleArray_Remove_Test) {
 	DoubleList list1;
 	list1.Add(-0.05);
 	list1.Add(1.254);
 	list1.Add(65535.15);
 
 	list1.Remove(1.254);
-	CHECK_EQUAL(list1.Items.size(), 2);
+	CHECK_EQUAL(list1.Size(), 2);
 }
 
-TEST(JsonArrayTestsGroup, JsonFloatArray_Parse_Test) {
+ TEST(JsonArrayTestsGroup, JsonFloatArray_Parse_Test) {
 	FloatList list;
 	CHECK_TRUE(list.TryParse("[0.1,254.1,-65535.5,214748.1]"));
-	CHECK_EQUAL(list.Items.size(), 4);
-	CHECK_EQUAL(list.Items[0], 0.1f);
-	CHECK_EQUAL(list.Items[1], 254.1f);
-	CHECK_EQUAL(list.Items[2], -65535.5f);
-	CHECK_EQUAL(list.Items[3], 214748.1f);
+	CHECK_EQUAL(list.Size(), 4);
+	CHECK_EQUAL(list[0], 0.1f);
+	CHECK_EQUAL(list[1], 254.1f);
+	CHECK_EQUAL(list[2], -65535.5f);
+	CHECK_EQUAL(list[3], 214748.1f);
 }
 
-TEST(JsonArrayTestsGroup, JsonFloatArray_WriteTo_Test) {
+ TEST(JsonArrayTestsGroup, JsonFloatArray_WriteTo_Test) {
 	char buffer[2048];
 	FloatList list;
 	list.Add(-1.5f);
@@ -1160,7 +1161,7 @@ TEST(JsonArrayTestsGroup, JsonFloatArray_WriteTo_Test) {
 	STRCMP_EQUAL(buffer, "[-1.5,1.25,1000.25,-100.75,214789.5625]");
 }
 
-TEST(JsonArrayTestsGroup, JsonFloatArray_Equals_Test) {
+ TEST(JsonArrayTestsGroup, JsonFloatArray_Equals_Test) {
 	FloatList list1;
 	list1.Add(-0.05);
 	list1.Add(1.254);
@@ -1173,7 +1174,7 @@ TEST(JsonArrayTestsGroup, JsonFloatArray_Equals_Test) {
 
 	CHECK_TRUE(list1 == list2);
 	CHECK_FALSE(list1 != list2);
-	list1.Items[2] = 42;
+	list1[2] = 42;
 	CHECK_TRUE(list1 != list2);
 	CHECK_FALSE(list1 == list2);
 }
@@ -1189,10 +1190,10 @@ TEST(JsonArrayTestsGroup, JsonFloatArray_Clone_Test) {
 
 	list1->CloneTo(&list2);
 	delete list1;
-	CHECK_EQUAL(list2.Items.size(), 3);
-	CHECK_EQUAL(list2.Items[0], -0.05f);
-	CHECK_EQUAL(list2.Items[1], 1.254f);
-	CHECK_EQUAL(list2.Items[2], 65535.15f);
+	CHECK_EQUAL(list2.Size(), 3);
+	CHECK_EQUAL(list2[0], -0.05f);
+	CHECK_EQUAL(list2[1], 1.254f);
+	CHECK_EQUAL(list2[2], 65535.15f);
 }
 
 TEST(JsonArrayTestsGroup, JsonFloatArray_Find_Test) {
@@ -1201,9 +1202,9 @@ TEST(JsonArrayTestsGroup, JsonFloatArray_Find_Test) {
 	list1.Add(1.254);
 	list1.Add(65535.15);
 
-	CHECK(list1.Find(-0.05) != list1.Items.end());
+	CHECK(list1.Find(-0.05) != list1.End());
 	CHECK_EQUAL(*(list1.Find(-0.05)), -0.05f);
-	// CHECK_EQUAL(list1.Find(2), list1.Items.end());
+	// CHECK_EQUAL(list1.Find(2), list1.End());
 }
 
 TEST(JsonArrayTestsGroup, JsonFloatArray_Remove_Test) {
@@ -1213,5 +1214,5 @@ TEST(JsonArrayTestsGroup, JsonFloatArray_Remove_Test) {
 	list1.Add(65535.15);
 
 	list1.Remove(1.254f);
-	CHECK_EQUAL(list1.Items.size(), 2);
+	CHECK_EQUAL(list1.Size(), 2);
 }
