@@ -27,11 +27,11 @@ TEST(JsonStringValueGroup, JsonStringValue_TryParse_Test) {
 	rapidjson::Document doc;
 	doc.Parse("{\"testString\":\"User1\"}");
 	CHECK(testable.TryParse(&doc));
-	STRCMP_EQUAL(testable.Value, "User1");
+	STRCMP_EQUAL(testable.GetValue(), "User1");
 
 	doc.Parse("{\"testString\":null}");
 	CHECK(testable.TryParse(&doc));
-	STRCMP_EQUAL(testable.Value, "");
+	STRCMP_EQUAL(testable.GetValue(), "");
 }
 
 TEST(JsonStringValueGroup, JsonStringValue_WriteTo_Test) {
@@ -63,17 +63,17 @@ TEST(JsonStringValueGroup, JsonStringValue_TryParse_Field_Optional_Test) {
 	auto testableWithOptional = new JsonValue<char *, true>(&container, "testString");
 	doc.Parse("{\"otherField\":\"User1\"}");
 	CHECK_TRUE(testableWithOptional->TryParse(&doc));
-	STRCMP_EQUAL(testableWithOptional->Value, "");
+	STRCMP_EQUAL(testableWithOptional->GetValue(), "");
 	delete testableWithOptional;
 }
 
 TEST(JsonStringValueGroup, JsonStringValue_SetValue_Test) {
 	JsonFieldsContainer container;
 	JsonValue<char *> testable(&container, "testString");
-	STRCMP_EQUAL(testable.Value, "");
+	STRCMP_EQUAL(testable.GetValue(), "");
 
-	testable.Value = "0123456789";
-	STRCMP_EQUAL(testable.Value, "0123456789");
+	testable.SetValue("0123456789");
+	STRCMP_EQUAL(testable.GetValue(), "0123456789");
 }
 
 TEST(JsonStringValueGroup, JsonStringValue_Equals_Test) {
@@ -83,7 +83,7 @@ TEST(JsonStringValueGroup, JsonStringValue_Equals_Test) {
 
 	CHECK_TRUE(testable1 == testable01);
 	CHECK_FALSE(testable1 != testable01);
-	testable01.Value = "otherValue";
+	testable01.SetValue("otherValue");
 	CHECK_TRUE(testable1 != testable01);
 	CHECK_FALSE(testable1 == testable01);
 
@@ -92,7 +92,7 @@ TEST(JsonStringValueGroup, JsonStringValue_Equals_Test) {
 
 	CHECK_TRUE(optional1 == optional01);
 	CHECK_FALSE(optional1 != optional01);
-	optional01.Value = "otherValue";
+	optional01.SetValue("otherValue");
 	CHECK_TRUE(optional1 != optional01);
 	CHECK_FALSE(optional1 == optional01);
 }
@@ -104,6 +104,6 @@ TEST(JsonStringValueGroup, JsonStringValue_CloneTo_Test) {
 	JsonValue<char *> clone1(&container, "test");
 
 	testable1.CloneTo((JsonValueBase *)&clone1);
-	testable1.Value = "check the full data buffer is cloned";
-	STRCMP_EQUAL(clone1.Value, "0123456789");
+	testable1.SetValue("check the full data buffer is cloned");
+	STRCMP_EQUAL(clone1.GetValue(), "0123456789");
 }

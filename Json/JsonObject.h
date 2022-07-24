@@ -78,16 +78,17 @@ int JsonObject::DirectWriteTo(void *parent, TOnReady onReady) {
 	return size;
 }
 
-bool operator!=(const JsonObject &v1, const JsonObject &v2) {
-	if (v1.Fields.size() != v1.Fields.size()) { return true; }
+bool operator!=(const JsonObject &v1, const JsonObject &v2) { return !((JsonObject *)&v1)->Equals((JsonObject *)&v2); }
+bool operator==(const JsonObject &v1, const JsonObject &v2) { return !(v1 != v2); }
 
-	for (size_t i = 0; i < v1.Fields.size(); i++) {
-		if (*(v1.Fields[i]) != *(v2.Fields[i])) { return true; }
+bool JsonObject::Equals(JsonObject *other) {
+	if (Fields.size() != other->Fields.size()) { return true; }
+
+	for (size_t i = 0; i < other->Fields.size(); i++) {
+		if (Fields[i]->Equals(other->Fields[i])) { return true; }
 	}
 	return false;
 }
-
-bool operator==(const JsonObject &v1, const JsonObject &v2) { return !(v1 != v2); }
 
 void JsonObject::CloneTo(JsonObject *other) {
 	for (const auto &field : Fields) {

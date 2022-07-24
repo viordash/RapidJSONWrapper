@@ -67,31 +67,63 @@ template <class T, bool optional> int JsonValue<T, optional>::DirectWriteTo(void
 	onCompleted(parent, json, size);
 	return size;
 }
-template <class T, bool optional> void JsonValue<T, optional>::Reset() { Value = T(); }
+template <class T, bool optional> void JsonValue<T, optional>::Reset() { SetValue(T()); }
 
-template <class T, bool optional> bool operator!=(const JsonValue<T, optional> &v1, const JsonValue<T, optional> &v2) {
-	if (strcmp(v1.Name, v2.Name) != 0) { return true; }
-	return v1.Value != v2.Value;
-}
+template <class T, bool optional> bool operator!=(const JsonValue<T, optional> &v1, const JsonValue<T, optional> &v2) { return !((JsonValueBase *)&v1)->Equals((JsonValueBase *)&v2); }
 template <class T, bool optional> bool operator==(const JsonValue<T, optional> &v1, const JsonValue<T, optional> &v2) { return !(v1 != v2); }
+/*
 
-template <bool optional> bool operator!=(const JsonValue<char *, optional> &v1, const JsonValue<char *, optional> &v2) {
-	if (strcmp(v1.Name, v2.Name) != 0) { return true; }
-	return strcmp(v1.Value, v2.Value) != 0;
+
+*/
+template <> bool JsonValue<bool, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<bool, true> *)other)->value; }
+template <> bool JsonValue<bool, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<bool, false> *)other)->value; }
+
+template <> bool JsonValue<int8_t, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<int8_t, true> *)other)->value; }
+template <> bool JsonValue<int8_t, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<int8_t, false> *)other)->value; }
+
+template <> bool JsonValue<int16_t, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<int16_t, true> *)other)->value; }
+template <> bool JsonValue<int16_t, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<int16_t, false> *)other)->value; }
+
+template <> bool JsonValue<int32_t, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<int32_t, true> *)other)->value; }
+template <> bool JsonValue<int32_t, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<int32_t, false> *)other)->value; }
+
+template <> bool JsonValue<int64_t, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<int64_t, true> *)other)->value; }
+template <> bool JsonValue<int64_t, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<int64_t, false> *)other)->value; }
+
+template <> bool JsonValue<uint8_t, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<uint8_t, true> *)other)->value; }
+template <> bool JsonValue<uint8_t, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<uint8_t, false> *)other)->value; }
+
+template <> bool JsonValue<uint16_t, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<uint16_t, true> *)other)->value; }
+template <> bool JsonValue<uint16_t, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<uint16_t, false> *)other)->value; }
+
+template <> bool JsonValue<uint32_t, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<uint32_t, true> *)other)->value; }
+template <> bool JsonValue<uint32_t, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<uint32_t, false> *)other)->value; }
+
+template <> bool JsonValue<uint64_t, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<uint64_t, true> *)other)->value; }
+template <> bool JsonValue<uint64_t, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<uint64_t, false> *)other)->value; }
+
+template <> bool JsonValue<float, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<float, true> *)other)->value; }
+template <> bool JsonValue<float, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<float, false> *)other)->value; }
+
+template <> bool JsonValue<double, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<double, true> *)other)->value; }
+template <> bool JsonValue<double, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && value == ((JsonValue<double, false> *)other)->value; }
+
+template <> bool JsonValue<char *, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && strcmp(value, ((JsonValue<char *, false> *)other)->GetValue()) == 0; }
+template <> bool JsonValue<char *, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && strcmp(value, ((JsonValue<char *, false> *)other)->GetValue()) == 0; }
+
+template <> bool JsonValue<JsonObject *, true>::Equals(JsonValueBase *other) {
+	return strcmp(Name, other->Name) == 0 && (JsonObject *)value->Equals((JsonObject *)(((JsonValue<JsonObject *, false> *)other)->GetValue()));
 }
-template <bool optional> bool operator!=(const JsonValue<JsonObject *, optional> &v1, const JsonValue<JsonObject *, optional> &v2) {
-	if (strcmp(v1.Name, v2.Name) != 0) { return true; }
-	return *((JsonObject *)v1.Value) != *((JsonObject *)v2.Value);
-}
-template <bool optional> bool operator!=(const JsonValue<JsonArrayBase *, optional> &v1, const JsonValue<JsonArrayBase *, optional> &v2) {
-	if (strcmp(v1.Name, v2.Name) != 0) { return true; }
-	return !((JsonArrayBase *)v1.Value)->Equals((JsonArrayBase *)v2.Value);
+template <> bool JsonValue<JsonObject *, false>::Equals(JsonValueBase *other) {
+	return strcmp(Name, other->Name) == 0 && (JsonObject *)value->Equals((JsonObject *)(((JsonValue<JsonObject *, false> *)other)->GetValue()));
 }
 
-template <class T, bool optional> bool JsonValue<T, optional>::Equals(JsonValueBase *other) { return !(*this != *((JsonValue<T, optional> *)other)); }
-
-bool operator!=(const JsonValueBase &v1, const JsonValueBase &v2) { return !((JsonValueBase *)&v1)->Equals((JsonValueBase *)&v2); }
-bool operator==(const JsonValueBase &v1, const JsonValueBase &v2) { return !(v1 != v2); }
+template <> bool JsonValue<JsonArrayBase *, true>::Equals(JsonValueBase *other) {
+	return strcmp(Name, other->Name) == 0 && (JsonObject *)value->Equals((JsonArrayBase *)(((JsonValue<JsonArrayBase *, false> *)other)->GetValue()));
+}
+template <> bool JsonValue<JsonArrayBase *, false>::Equals(JsonValueBase *other) {
+	return strcmp(Name, other->Name) == 0 && (JsonObject *)value->Equals((JsonArrayBase *)(((JsonValue<JsonArrayBase *, false> *)other)->GetValue()));
+}
 /*
 
 
@@ -486,23 +518,23 @@ template <> void JsonValue<char *, true>::CloneTo(JsonValueBase *other) { ((Json
 template <> void JsonValue<char *, false>::CloneTo(JsonValueBase *other) { ((JsonValue<char *, false> *)other)->SetValue(this->value); }
 
 template <> void JsonValue<JsonObject *, true>::CloneTo(JsonValueBase *other) {
-	auto thisObject = ((JsonObject *)Value);
-	auto otherObject = ((JsonObject *)((JsonValue<JsonObject *, true> *)other)->Value);
+	auto thisObject = ((JsonObject *)value);
+	auto otherObject = ((JsonObject *)((JsonValue<JsonObject *, true> *)other)->value);
 	thisObject->CloneTo(otherObject);
 }
 template <> void JsonValue<JsonObject *, false>::CloneTo(JsonValueBase *other) {
-	auto thisObject = ((JsonObject *)Value);
-	auto otherObject = ((JsonObject *)((JsonValue<JsonObject *, false> *)other)->Value);
+	auto thisObject = ((JsonObject *)value);
+	auto otherObject = ((JsonObject *)((JsonValue<JsonObject *, false> *)other)->value);
 	thisObject->CloneTo(otherObject);
 }
 
 template <> void JsonValue<JsonArrayBase *, true>::CloneTo(JsonValueBase *other) {
-	auto thisArray = ((JsonArrayBase *)Value);
-	auto otherArray = ((JsonArrayBase *)((JsonValue<JsonArrayBase *, true> *)other)->Value);
+	auto thisArray = ((JsonArrayBase *)value);
+	auto otherArray = ((JsonArrayBase *)((JsonValue<JsonArrayBase *, true> *)other)->value);
 	thisArray->CloneTo(otherArray);
 }
 template <> void JsonValue<JsonArrayBase *, false>::CloneTo(JsonValueBase *other) {
-	auto thisArray = ((JsonArrayBase *)Value);
-	auto otherArray = ((JsonArrayBase *)((JsonValue<JsonArrayBase *, false> *)other)->Value);
+	auto thisArray = ((JsonArrayBase *)value);
+	auto otherArray = ((JsonArrayBase *)((JsonValue<JsonArrayBase *, false> *)other)->value);
 	thisArray->CloneTo(otherArray);
 }

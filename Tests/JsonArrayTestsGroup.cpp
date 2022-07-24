@@ -23,7 +23,7 @@ class UserDto : public JsonObject {
 		: Name(this, "name"), //
 		  Role(this, "role") {}
 
-	bool Validate() override { return Role.Value < 1000; }
+	bool Validate() override { return Role.GetValue() < 1000; }
 };
 
 static size_t maxCount = 10;
@@ -95,8 +95,8 @@ TEST(JsonArrayTestsGroup, JsonObjectArray_Parse_Test) {
 							 "\"role\":255}]"));
 	CHECK_EQUAL(list.Items.size(), 3);
 
-	STRCMP_EQUAL(list.Items[0]->Name.Value, "User1");
-	CHECK_EQUAL(list.Items[0]->Role.Value, 100);
+	STRCMP_EQUAL(list.Items[0]->Name.GetValue(), "User1");
+	CHECK_EQUAL(list.Items[0]->Role.GetValue(), 100);
 }
 
 TEST(JsonArrayTestsGroup, JsonObjectArray_Parse_Error_Test) {
@@ -129,8 +129,8 @@ TEST(JsonArrayTestsGroup, JsonObjectArray_Parse_With_Begin_End_Stages_Test) {
 	CHECK(doc != NULL);
 	CHECK_EQUAL(list.Items.size(), 3);
 
-	STRCMP_EQUAL(list.Items[0]->Name.Value, "User1");
-	CHECK_EQUAL(list.Items[0]->Role.Value, 100);
+	STRCMP_EQUAL(list.Items[0]->Name.GetValue(), "User1");
+	CHECK_EQUAL(list.Items[0]->Role.GetValue(), 100);
 	list.EndTryParse(doc);
 }
 
@@ -143,8 +143,8 @@ TEST(JsonArrayTestsGroup, JsonObjectArray_Parse_With_Begin_End_Stages_And_Specif
 	CHECK(doc != NULL);
 	CHECK_EQUAL(list.Items.size(), 3);
 
-	STRCMP_EQUAL(list.Items[2]->Name.Value, "User3");
-	CHECK_EQUAL(list.Items[2]->Role.Value, 255);
+	STRCMP_EQUAL(list.Items[2]->Name.GetValue(), "User3");
+	CHECK_EQUAL(list.Items[2]->Role.GetValue(), 255);
 	list.EndTryParse(doc);
 }
 
@@ -210,7 +210,7 @@ TEST(JsonArrayTestsGroup, JsonObjectArray_Equals_Test) {
 
 	CHECK_TRUE(list1 == list2);
 	CHECK_FALSE(list1 != list2);
-	list1.Items[2]->Name.Value = "User3";
+	list1.Items[2]->Name.SetValue("User3");
 	CHECK_TRUE(list1 != list2);
 	CHECK_FALSE(list1 == list2);
 }
@@ -230,10 +230,10 @@ TEST(JsonArrayTestsGroup, JsonObjectArray_Clone_Test) {
 	delete list1;
 	CHECK_EQUAL(list2.Items.size(), 4);
 
-	STRCMP_EQUAL(list2.Items[2]->Name.Value, "user 3");
-	CHECK_EQUAL(list2.Items[2]->Role.Value, 100);
-	STRCMP_EQUAL(list2.Items[3]->Name.Value, "user 4");
-	CHECK_EQUAL(list2.Items[3]->Role.Value, 999);
+	STRCMP_EQUAL(list2.Items[2]->Name.GetValue(), "user 3");
+	CHECK_EQUAL(list2.Items[2]->Role.GetValue(), 100);
+	STRCMP_EQUAL(list2.Items[3]->Name.GetValue(), "user 4");
+	CHECK_EQUAL(list2.Items[3]->Role.GetValue(), 999);
 }
 
 TEST(JsonArrayTestsGroup, JsonObjectArray_Find_Test) {
@@ -245,7 +245,7 @@ TEST(JsonArrayTestsGroup, JsonObjectArray_Find_Test) {
 
 	auto iter = list1.Find(new UserDto("user 3", 100));
 	CHECK(iter != list1.Items.end());
-	STRCMP_EQUAL((*iter)->Name.Value, "user 3");
+	STRCMP_EQUAL((*iter)->Name.GetValue(), "user 3");
 	// CHECK_EQUAL(list1.Find(new UserDto("user 3", 0)), list1.Items.end());
 }
 

@@ -47,31 +47,10 @@ class JsonValueBase {
 
 template <class T, bool optional = false> //
 class JsonValue : public JsonValueBase {
-	class ValueWrapper {
-	  public:
-		ValueWrapper(JsonValue *owner, const T value) {
-			this->owner = owner;
-			owner->InitValue(value);
-		}
-
-		~ValueWrapper() { owner->DeleteValue(); }
-
-		T operator=(const T right) {
-			owner->SetValue(right);
-			return owner->value;
-		}
-
-		operator T() const { return owner->value; }
-
-	  private:
-		JsonValue *owner;
-	};
-
   public:
-	ValueWrapper Value;
-
-	JsonValue(JsonFieldsContainer *container, const char *name, T value) : JsonValueBase(container, name), Value(this, value) {}
+	JsonValue(JsonFieldsContainer *container, const char *name, T value) : JsonValueBase(container, name) { InitValue(value); }
 	JsonValue(JsonFieldsContainer *container, const char *name) : JsonValue(container, name, T()) {}
+	virtual ~JsonValue() { DeleteValue(); }
 
 	TJsonDocument *BeginTryParse(const char *jsonStr, int length = -1);
 	void EndTryParse(TJsonDocument *doc);
@@ -87,11 +66,13 @@ class JsonValue : public JsonValueBase {
 	bool Equals(JsonValueBase *other) override final;
 	void CloneTo(JsonValueBase *other) override final;
 
+	T GetValue() { return value; };
+	bool SetValue(T value);
+
   protected:
   private:
 	T value;
 	void InitValue(T value);
-	bool SetValue(T value);
 	void DeleteValue();
 	bool TryParseCore(TJsonValue *value);
 };
@@ -109,6 +90,7 @@ class JsonObject : public JsonFieldsContainer {
 	int DirectWriteTo(void *parent, TOnReady onReady);
 
 	virtual bool Validate() { return true; }
+	bool Equals(JsonObject *other);
 	void CloneTo(JsonObject *other);
 
   protected:
