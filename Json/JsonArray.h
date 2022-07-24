@@ -107,77 +107,27 @@ template <> std::vector<char *>::iterator JsonArray<char *>::Find(char *item) {
 	}
 	return Items.end();
 }
-template <> std::vector<TBoolArray>::iterator JsonArray<TBoolArray>::Find(TBoolArray item) {
+template <class TItem> typename std::vector<TItem>::iterator JsonArray<TItem>::GenericFind(TItem item) {
 	for (auto iter = Items.begin(); iter != Items.end(); iter++) {
 		if (*iter == item) { return iter; }
 	}
 	return Items.end();
 }
-template <> std::vector<int64_t>::iterator JsonArray<int64_t>::Find(int64_t item) {
-	for (auto iter = Items.begin(); iter != Items.end(); iter++) {
-		if (*iter == item) { return iter; }
-	}
-	return Items.end();
-}
-template <> std::vector<uint64_t>::iterator JsonArray<uint64_t>::Find(uint64_t item) {
-	for (auto iter = Items.begin(); iter != Items.end(); iter++) {
-		if (*iter == item) { return iter; }
-	}
-	return Items.end();
-}
-template <> std::vector<int32_t>::iterator JsonArray<int32_t>::Find(int32_t item) {
-	for (auto iter = Items.begin(); iter != Items.end(); iter++) {
-		if (*iter == item) { return iter; }
-	}
-	return Items.end();
-}
-template <> std::vector<uint32_t>::iterator JsonArray<uint32_t>::Find(uint32_t item) {
-	for (auto iter = Items.begin(); iter != Items.end(); iter++) {
-		if (*iter == item) { return iter; }
-	}
-	return Items.end();
-}
-template <> std::vector<int16_t>::iterator JsonArray<int16_t>::Find(int16_t item) {
-	for (auto iter = Items.begin(); iter != Items.end(); iter++) {
-		if (*iter == item) { return iter; }
-	}
-	return Items.end();
-}
-template <> std::vector<uint16_t>::iterator JsonArray<uint16_t>::Find(uint16_t item) {
-	for (auto iter = Items.begin(); iter != Items.end(); iter++) {
-		if (*iter == item) { return iter; }
-	}
-	return Items.end();
-}
-template <> std::vector<int8_t>::iterator JsonArray<int8_t>::Find(int8_t item) {
-	for (auto iter = Items.begin(); iter != Items.end(); iter++) {
-		if (*iter == item) { return iter; }
-	}
-	return Items.end();
-}
-template <> std::vector<uint8_t>::iterator JsonArray<uint8_t>::Find(uint8_t item) {
-	for (auto iter = Items.begin(); iter != Items.end(); iter++) {
-		if (*iter == item) { return iter; }
-	}
-	return Items.end();
-}
-template <> std::vector<double>::iterator JsonArray<double>::Find(double item) {
-	for (auto iter = Items.begin(); iter != Items.end(); iter++) {
-		if (*iter == item) { return iter; }
-	}
-	return Items.end();
-}
-template <> std::vector<float>::iterator JsonArray<float>::Find(float item) {
-	for (auto iter = Items.begin(); iter != Items.end(); iter++) {
-		if (*iter == item) { return iter; }
-	}
-	return Items.end();
-}
+template <> std::vector<TBoolArray>::iterator JsonArray<TBoolArray>::Find(TBoolArray item) { return GenericFind(item); }
+template <> std::vector<int64_t>::iterator JsonArray<int64_t>::Find(int64_t item) { return GenericFind(item); }
+template <> std::vector<uint64_t>::iterator JsonArray<uint64_t>::Find(uint64_t item) { return GenericFind(item); }
+template <> std::vector<int32_t>::iterator JsonArray<int32_t>::Find(int32_t item) { return GenericFind(item); }
+template <> std::vector<uint32_t>::iterator JsonArray<uint32_t>::Find(uint32_t item) { return GenericFind(item); }
+template <> std::vector<int16_t>::iterator JsonArray<int16_t>::Find(int16_t item) { return GenericFind(item); }
+template <> std::vector<uint16_t>::iterator JsonArray<uint16_t>::Find(uint16_t item) { return GenericFind(item); }
+template <> std::vector<int8_t>::iterator JsonArray<int8_t>::Find(int8_t item) { return GenericFind(item); }
+template <> std::vector<uint8_t>::iterator JsonArray<uint8_t>::Find(uint8_t item) { return GenericFind(item); }
+template <> std::vector<double>::iterator JsonArray<double>::Find(double item) { return GenericFind(item); }
+template <> std::vector<float>::iterator JsonArray<float>::Find(float item) { return GenericFind(item); }
 /*
 
 
 */
-
 template <class TItem> bool JsonArray<TItem>::TryParseInternal(TJsonArray *jArray) {
 	if (std::is_base_of<JsonObject, TNewObjectItem>::value) {
 		for (const auto &jItem : *jArray) {
@@ -291,76 +241,23 @@ template <> void JsonArray<TBoolArray>::WriteToDocInternal(TJsonDocument *doc) {
 		doc->PushBack(temp, allocator);
 	}
 }
-template <> void JsonArray<int64_t>::WriteToDocInternal(TJsonDocument *doc) {
+template <class TItem> void JsonArray<TItem>::GenericWriteToDocInternal(TJsonDocument *doc) {
 	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
 	for (const auto &item : Items) {
-		rapidjson::Value temp(item);
+		rapidjson::Value temp((TItem)item);
 		doc->PushBack(temp, allocator);
 	}
 }
-template <> void JsonArray<uint64_t>::WriteToDocInternal(TJsonDocument *doc) {
-	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
-	for (const auto &item : Items) {
-		rapidjson::Value temp(item);
-		doc->PushBack(temp, allocator);
-	}
-}
-template <> void JsonArray<int32_t>::WriteToDocInternal(TJsonDocument *doc) {
-	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
-	for (const auto &item : Items) {
-		rapidjson::Value temp(item);
-		doc->PushBack(temp, allocator);
-	}
-}
-template <> void JsonArray<uint32_t>::WriteToDocInternal(TJsonDocument *doc) {
-	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
-	for (const auto &item : Items) {
-		rapidjson::Value temp(item);
-		doc->PushBack(temp, allocator);
-	}
-}
-template <> void JsonArray<int16_t>::WriteToDocInternal(TJsonDocument *doc) {
-	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
-	for (const auto &item : Items) {
-		rapidjson::Value temp(item);
-		doc->PushBack(temp, allocator);
-	}
-}
-template <> void JsonArray<uint16_t>::WriteToDocInternal(TJsonDocument *doc) {
-	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
-	for (const auto &item : Items) {
-		rapidjson::Value temp(item);
-		doc->PushBack(temp, allocator);
-	}
-}
-template <> void JsonArray<int8_t>::WriteToDocInternal(TJsonDocument *doc) {
-	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
-	for (const auto &item : Items) {
-		rapidjson::Value temp(item);
-		doc->PushBack(temp, allocator);
-	}
-}
-template <> void JsonArray<uint8_t>::WriteToDocInternal(TJsonDocument *doc) {
-	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
-	for (const auto &item : Items) {
-		rapidjson::Value temp(item);
-		doc->PushBack(temp, allocator);
-	}
-}
-template <> void JsonArray<double>::WriteToDocInternal(TJsonDocument *doc) {
-	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
-	for (const auto &item : Items) {
-		rapidjson::Value temp(item);
-		doc->PushBack(temp, allocator);
-	}
-}
-template <> void JsonArray<float>::WriteToDocInternal(TJsonDocument *doc) {
-	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
-	for (const auto &item : Items) {
-		rapidjson::Value temp(item);
-		doc->PushBack(temp, allocator);
-	}
-}
+template <> void JsonArray<int64_t>::WriteToDocInternal(TJsonDocument *doc) { GenericWriteToDocInternal(doc); }
+template <> void JsonArray<uint64_t>::WriteToDocInternal(TJsonDocument *doc) { GenericWriteToDocInternal(doc); }
+template <> void JsonArray<int32_t>::WriteToDocInternal(TJsonDocument *doc) { GenericWriteToDocInternal(doc); }
+template <> void JsonArray<uint32_t>::WriteToDocInternal(TJsonDocument *doc) { GenericWriteToDocInternal(doc); }
+template <> void JsonArray<int16_t>::WriteToDocInternal(TJsonDocument *doc) { GenericWriteToDocInternal(doc); }
+template <> void JsonArray<uint16_t>::WriteToDocInternal(TJsonDocument *doc) { GenericWriteToDocInternal(doc); }
+template <> void JsonArray<int8_t>::WriteToDocInternal(TJsonDocument *doc) { GenericWriteToDocInternal(doc); }
+template <> void JsonArray<uint8_t>::WriteToDocInternal(TJsonDocument *doc) { GenericWriteToDocInternal(doc); }
+template <> void JsonArray<double>::WriteToDocInternal(TJsonDocument *doc) { GenericWriteToDocInternal(doc); }
+template <> void JsonArray<float>::WriteToDocInternal(TJsonDocument *doc) { GenericWriteToDocInternal(doc); }
 /*
 
 
@@ -399,83 +296,25 @@ template <> bool JsonArray<char *>::Equals(JsonArrayBase *other) {
 	}
 	return true;
 }
-template <> bool JsonArray<TBoolArray>::Equals(JsonArrayBase *other) {
-	if (Items.size() != ((JsonArray<TBoolArray> *)other)->Items.size()) { return false; }
+template <class TItem> bool JsonArray<TItem>::GenericEquals(JsonArrayBase *other) {
+	if (Items.size() != ((JsonArray<TItem> *)other)->Items.size()) { return false; }
 	for (size_t i = 0; i < Items.size(); i++) {
-		if (Items[i] != ((JsonArray<TBoolArray> *)other)->Items[i]) { return false; }
+		if (Items[i] != ((JsonArray<TItem> *)other)->Items[i]) { return false; }
 	}
 	return true;
 }
-template <> bool JsonArray<int64_t>::Equals(JsonArrayBase *other) {
-	if (Items.size() != ((JsonArray<int64_t> *)other)->Items.size()) { return false; }
-	for (size_t i = 0; i < Items.size(); i++) {
-		if (Items[i] != ((JsonArray<int64_t> *)other)->Items[i]) { return false; }
-	}
-	return true;
-}
-template <> bool JsonArray<uint64_t>::Equals(JsonArrayBase *other) {
-	if (Items.size() != ((JsonArray<uint64_t> *)other)->Items.size()) { return false; }
-	for (size_t i = 0; i < Items.size(); i++) {
-		if (Items[i] != ((JsonArray<uint64_t> *)other)->Items[i]) { return false; }
-	}
-	return true;
-}
-template <> bool JsonArray<int32_t>::Equals(JsonArrayBase *other) {
-	if (Items.size() != ((JsonArray<int32_t> *)other)->Items.size()) { return false; }
-	for (size_t i = 0; i < Items.size(); i++) {
-		if (Items[i] != ((JsonArray<int32_t> *)other)->Items[i]) { return false; }
-	}
-	return true;
-}
-template <> bool JsonArray<uint32_t>::Equals(JsonArrayBase *other) {
-	if (Items.size() != ((JsonArray<uint32_t> *)other)->Items.size()) { return false; }
-	for (size_t i = 0; i < Items.size(); i++) {
-		if (Items[i] != ((JsonArray<uint32_t> *)other)->Items[i]) { return false; }
-	}
-	return true;
-}
-template <> bool JsonArray<int16_t>::Equals(JsonArrayBase *other) {
-	if (Items.size() != ((JsonArray<int16_t> *)other)->Items.size()) { return false; }
-	for (size_t i = 0; i < Items.size(); i++) {
-		if (Items[i] != ((JsonArray<int16_t> *)other)->Items[i]) { return false; }
-	}
-	return true;
-}
-template <> bool JsonArray<uint16_t>::Equals(JsonArrayBase *other) {
-	if (Items.size() != ((JsonArray<uint16_t> *)other)->Items.size()) { return false; }
-	for (size_t i = 0; i < Items.size(); i++) {
-		if (Items[i] != ((JsonArray<uint16_t> *)other)->Items[i]) { return false; }
-	}
-	return true;
-}
-template <> bool JsonArray<int8_t>::Equals(JsonArrayBase *other) {
-	if (Items.size() != ((JsonArray<int8_t> *)other)->Items.size()) { return false; }
-	for (size_t i = 0; i < Items.size(); i++) {
-		if (Items[i] != ((JsonArray<int8_t> *)other)->Items[i]) { return false; }
-	}
-	return true;
-}
-template <> bool JsonArray<uint8_t>::Equals(JsonArrayBase *other) {
-	if (Items.size() != ((JsonArray<uint8_t> *)other)->Items.size()) { return false; }
-	for (size_t i = 0; i < Items.size(); i++) {
-		if (Items[i] != ((JsonArray<uint8_t> *)other)->Items[i]) { return false; }
-	}
-	return true;
-}
-template <> bool JsonArray<double>::Equals(JsonArrayBase *other) {
-	if (Items.size() != ((JsonArray<double> *)other)->Items.size()) { return false; }
-	for (size_t i = 0; i < Items.size(); i++) {
-		if (Items[i] != ((JsonArray<double> *)other)->Items[i]) { return false; }
-	}
-	return true;
-}
-template <> bool JsonArray<float>::Equals(JsonArrayBase *other) {
-	if (Items.size() != ((JsonArray<float> *)other)->Items.size()) { return false; }
-	for (size_t i = 0; i < Items.size(); i++) {
-		if (Items[i] != ((JsonArray<float> *)other)->Items[i]) { return false; }
-	}
-	return true;
-}
+
+template <> bool JsonArray<TBoolArray>::Equals(JsonArrayBase *other) { return GenericEquals(other); }
+template <> bool JsonArray<int64_t>::Equals(JsonArrayBase *other) { return GenericEquals(other); }
+template <> bool JsonArray<uint64_t>::Equals(JsonArrayBase *other) { return GenericEquals(other); }
+template <> bool JsonArray<int32_t>::Equals(JsonArrayBase *other) { return GenericEquals(other); }
+template <> bool JsonArray<uint32_t>::Equals(JsonArrayBase *other) { return GenericEquals(other); }
+template <> bool JsonArray<int16_t>::Equals(JsonArrayBase *other) { return GenericEquals(other); }
+template <> bool JsonArray<uint16_t>::Equals(JsonArrayBase *other) { return GenericEquals(other); }
+template <> bool JsonArray<int8_t>::Equals(JsonArrayBase *other) { return GenericEquals(other); }
+template <> bool JsonArray<uint8_t>::Equals(JsonArrayBase *other) { return GenericEquals(other); }
+template <> bool JsonArray<double>::Equals(JsonArrayBase *other) { return GenericEquals(other); }
+template <> bool JsonArray<float>::Equals(JsonArrayBase *other) { return GenericEquals(other); }
 /*
 
 
@@ -499,61 +338,24 @@ template <> void JsonArray<char *>::CloneTo(JsonArrayBase *other) {
 	otherArray->Items.clear();
 	for (const auto &item : Items) { otherArray->AddInternal((char *)item); }
 }
-template <> void JsonArray<TBoolArray>::CloneTo(JsonArrayBase *other) {
-	auto otherArray = ((JsonArray<TBoolArray> *)other);
+
+template <class TItem> void JsonArray<TItem>::GenericCloneTo(JsonArrayBase *other) {
+	auto otherArray = ((JsonArray<TItem> *)other);
 	otherArray->Items.clear();
-	for (const auto &item : Items) { otherArray->AddInternal((TBoolArray)item); }
+	for (const auto &item : Items) { otherArray->AddInternal((TItem)item); }
 }
-template <> void JsonArray<int64_t>::CloneTo(JsonArrayBase *other) {
-	auto otherArray = ((JsonArray<int64_t> *)other);
-	otherArray->Items.clear();
-	for (const auto &item : Items) { otherArray->AddInternal((int64_t)item); }
-}
-template <> void JsonArray<uint64_t>::CloneTo(JsonArrayBase *other) {
-	auto otherArray = ((JsonArray<uint64_t> *)other);
-	otherArray->Items.clear();
-	for (const auto &item : Items) { otherArray->AddInternal((uint64_t)item); }
-}
-template <> void JsonArray<int32_t>::CloneTo(JsonArrayBase *other) {
-	auto otherArray = ((JsonArray<int32_t> *)other);
-	otherArray->Items.clear();
-	for (const auto &item : Items) { otherArray->AddInternal((int32_t)item); }
-}
-template <> void JsonArray<uint32_t>::CloneTo(JsonArrayBase *other) {
-	auto otherArray = ((JsonArray<uint32_t> *)other);
-	otherArray->Items.clear();
-	for (const auto &item : Items) { otherArray->AddInternal((uint32_t)item); }
-}
-template <> void JsonArray<int16_t>::CloneTo(JsonArrayBase *other) {
-	auto otherArray = ((JsonArray<int16_t> *)other);
-	otherArray->Items.clear();
-	for (const auto &item : Items) { otherArray->AddInternal((int16_t)item); }
-}
-template <> void JsonArray<uint16_t>::CloneTo(JsonArrayBase *other) {
-	auto otherArray = ((JsonArray<uint16_t> *)other);
-	otherArray->Items.clear();
-	for (const auto &item : Items) { otherArray->AddInternal((uint16_t)item); }
-}
-template <> void JsonArray<int8_t>::CloneTo(JsonArrayBase *other) {
-	auto otherArray = ((JsonArray<int8_t> *)other);
-	otherArray->Items.clear();
-	for (const auto &item : Items) { otherArray->AddInternal((int8_t)item); }
-}
-template <> void JsonArray<uint8_t>::CloneTo(JsonArrayBase *other) {
-	auto otherArray = ((JsonArray<uint8_t> *)other);
-	otherArray->Items.clear();
-	for (const auto &item : Items) { otherArray->AddInternal((uint8_t)item); }
-}
-template <> void JsonArray<double>::CloneTo(JsonArrayBase *other) {
-	auto otherArray = ((JsonArray<double> *)other);
-	otherArray->Items.clear();
-	for (const auto &item : Items) { otherArray->AddInternal((double)item); }
-}
-template <> void JsonArray<float>::CloneTo(JsonArrayBase *other) {
-	auto otherArray = ((JsonArray<float> *)other);
-	otherArray->Items.clear();
-	for (const auto &item : Items) { otherArray->AddInternal((float)item); }
-}
+
+template <> void JsonArray<TBoolArray>::CloneTo(JsonArrayBase *other) { GenericCloneTo(other); }
+template <> void JsonArray<int64_t>::CloneTo(JsonArrayBase *other) { GenericCloneTo(other); }
+template <> void JsonArray<uint64_t>::CloneTo(JsonArrayBase *other) { GenericCloneTo(other); }
+template <> void JsonArray<int32_t>::CloneTo(JsonArrayBase *other) { GenericCloneTo(other); }
+template <> void JsonArray<uint32_t>::CloneTo(JsonArrayBase *other) { GenericCloneTo(other); }
+template <> void JsonArray<int16_t>::CloneTo(JsonArrayBase *other) { GenericCloneTo(other); }
+template <> void JsonArray<uint16_t>::CloneTo(JsonArrayBase *other) { GenericCloneTo(other); }
+template <> void JsonArray<int8_t>::CloneTo(JsonArrayBase *other) { GenericCloneTo(other); }
+template <> void JsonArray<uint8_t>::CloneTo(JsonArrayBase *other) { GenericCloneTo(other); }
+template <> void JsonArray<double>::CloneTo(JsonArrayBase *other) { GenericCloneTo(other); }
+template <> void JsonArray<float>::CloneTo(JsonArrayBase *other) { GenericCloneTo(other); }
 /*
 
 
