@@ -1,17 +1,19 @@
 cmake_minimum_required(VERSION 3.8.0)
 project(RapidJSONWrapper VERSION 0.1.0)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 14)
 
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti")
 endif()
 
-# set(TIMERR_NOERROR "1")
-
 if(WIN32)
   add_definitions("/wd4251")
 endif(WIN32)
+
+if(MSVC)
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+endif(MSVC)
 
 include(CTest)
 include_directories(rapidjson/include cpputest/include cpputest/src cpputest/CppUTest Json)
