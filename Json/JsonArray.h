@@ -593,4 +593,5 @@ template <> bool JsonArray<char *>::Update(int index, char *item) {
 	memcpy(newItem, (char *)item, len);
 	newItem[len] = 0;
 	Items[index] = newItem;
+	return true;
 }
