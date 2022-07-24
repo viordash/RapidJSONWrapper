@@ -63,7 +63,7 @@ class JsonValue : public JsonValueBase {
 	  private:
 		T value;
 		void InitValue(T value);
-		bool SetValue(T value);
+		void SetValue(T value);
 		void DeleteValue();
 	};
 
@@ -173,6 +173,10 @@ template <class TItem> class JsonArray : public JsonArrayBase {
   private:
 	bool TryParseInternal(TJsonArray *jArray);
 	void WriteToDocInternal(TJsonDocument *doc);
+	void GenericWriteToDocInternal(TJsonDocument *doc);
 	void AddInternal(TItem item);
 	void DeleteItem(TItem item);
+	typename std::vector<TItem>::iterator GenericFind(TItem item);
+	bool GenericEquals(JsonArrayBase *other);
+	void GenericCloneTo(JsonArrayBase *other);
 };
