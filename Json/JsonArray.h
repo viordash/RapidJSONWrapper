@@ -381,14 +381,14 @@ template <> void JsonArray<float>::DeleteItem(float item) {}
 
 
 */
-template <class TItem> bool JsonArray<TItem>::Update(int index, TItem item) {
-	if (!Validate(item)) { return false; }
+template <class TItem> bool JsonArray<TItem>::Update(size_t index, TItem item) {
+	if (index >= Size() || !Validate(item)) { return false; }
 	DeleteItem(Items[index]);
-	Items.push_back(item);
+	Items[index] = item;
 	return true;
 }
-template <> bool JsonArray<char *>::Update(int index, char *item) {
-	if (!Validate(item)) { return false; }
+template <> bool JsonArray<char *>::Update(size_t index, char *item) {
+	if (index >= Size() || !Validate(item)) { return false; }
 	DeleteItem(Items[index]);
 	auto len = strlen((char *)item);
 	auto newItem = new char[len + 1];

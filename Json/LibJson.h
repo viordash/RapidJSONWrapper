@@ -120,7 +120,7 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 
 	struct ItemWrapper {
 	  public:
-		ItemWrapper(JsonArray *owner, int index) {
+		ItemWrapper(JsonArray *owner, size_t index) {
 			this->owner = owner;
 			this->index = index;
 		}
@@ -135,15 +135,15 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 
 	  private:
 		JsonArray *owner;
-		int index;
+		size_t index;
 	};
 
   public:
 	virtual ~JsonArray();
 
-	ItemWrapper Get(int index) { return ItemWrapper(this, index); }
+	ItemWrapper Get(size_t index) { return ItemWrapper(this, index); }
 
-	ItemWrapper operator[](int index) { return ItemWrapper(this, index); }
+	ItemWrapper operator[](size_t index) { return ItemWrapper(this, index); }
 	size_t Size() { return Items.size(); }
 	typename std::vector<TItem>::iterator const Begin() { return Items.begin(); }
 	typename std::vector<TItem>::iterator const End() { return Items.end(); }
@@ -159,7 +159,7 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 	int DirectWriteTo(void *parent, TOnReady onReady);
 
 	virtual bool Add(TItem item);
-	virtual bool Update(int index, TItem item);
+	virtual bool Update(size_t index, TItem item);
 	virtual void Remove(TItem item);
 	typename std::vector<TItem>::iterator Find(TItem item);
 
