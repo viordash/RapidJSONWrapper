@@ -71,6 +71,13 @@ if(WIN32)
 	target_link_libraries(JsonStringValueTestsGroup Winmm.lib)
 endif(WIN32)
 
+add_executable(JsonDataValueTestsGroup    
+	${CPPUTEST_SOURCE_FILES}
+    Tests/JsonDataValueTestsGroup.cpp)
+if(WIN32)
+	target_link_libraries(JsonDataValueTestsGroup Winmm.lib)
+endif(WIN32)
+
 add_executable(JsonNumericValueTestsGroup    
 	${CPPUTEST_SOURCE_FILES}
     Tests/JsonNumericValueTestsGroup.cpp)
@@ -101,6 +108,7 @@ include(CPack)
 # enable_testing()
 
 add_test(JsonStringValueTestsGroup JsonStringValueTestsGroup)
+add_test(JsonDataValueTestsGroup JsonDataValueTestsGroup)
 add_test(JsonNumericValueTestsGroup JsonNumericValueTestsGroup)
 add_test(JsonObjectTestsGroup JsonObjectTestsGroup)
 add_test(JsonArrayTestsGroup JsonArrayTestsGroup)

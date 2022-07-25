@@ -80,6 +80,17 @@ template <class T, bool optional> bool JsonValue<T, optional>::Equals(JsonValueB
 template <> bool JsonValue<char *, true>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && strcmp(Value, ((JsonValue<char *, false> *)other)->Value) == 0; }
 template <> bool JsonValue<char *, false>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && strcmp(Value, ((JsonValue<char *, false> *)other)->Value) == 0; }
 
+template <> bool JsonValue<TRawData, true>::Equals(JsonValueBase *other) {
+	return strcmp(Name, other->Name) == 0															 //
+		&& ((TRawData)Value).Data == ((TRawData)(((JsonValue<TRawData, false> *)other)->Value)).Data //
+		&& ((TRawData)Value).Size == ((TRawData)(((JsonValue<TRawData, false> *)other)->Value)).Size;
+}
+template <> bool JsonValue<TRawData, false>::Equals(JsonValueBase *other) {
+	return strcmp(Name, other->Name) == 0															 //
+		&& ((TRawData)Value).Data == ((TRawData)(((JsonValue<TRawData, false> *)other)->Value)).Data //
+		&& ((TRawData)Value).Size == ((TRawData)(((JsonValue<TRawData, false> *)other)->Value)).Size;
+}
+
 template <> bool JsonValue<JsonObject *, true>::Equals(JsonValueBase *other) {
 	return strcmp(Name, other->Name) == 0 && (JsonObject *)Value->Equals((JsonObject *)((JsonValue<JsonObject *, false> *)other)->Value);
 }
@@ -158,6 +169,18 @@ template <> bool JsonValue<char *, false>::TryParseCore(TJsonValue *jValue) {
 	return true;
 }
 
+template <> bool JsonValue<TRawData, true>::TryParseCore(TJsonValue *jValue) {
+	if (!jValue->IsString()) { return false; }
+	TRawData rawData = {(uint8_t *)jValue->GetString(), jValue->GetStringLength()};
+	Value = rawData;
+	return true;
+}
+template <> bool JsonValue<TRawData, false>::TryParseCore(TJsonValue *jValue) {
+	if (!jValue->IsString()) { return false; }
+	Value = {(uint8_t *)jValue->GetString(), jValue->GetStringLength()};
+	return true;
+}
+
 template <> bool JsonValue<JsonObject *, true>::TryParseCore(TJsonValue *jValue) { return jValue->IsObject() && (jValue->ObjectEmpty() || Value->TryParse((TJsonDocument *)jValue)); }
 template <> bool JsonValue<JsonObject *, false>::TryParseCore(TJsonValue *jValue) { return jValue->IsObject() && (jValue->ObjectEmpty() || Value->TryParse((TJsonDocument *)jValue)); }
 
@@ -171,6 +194,27 @@ template <class T, bool optional> void JsonValue<T, optional>::WriteToDoc(TJsonD
 
 template <> void JsonValue<char *, true>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), rapidjson::StringRef((char *)Value), doc->GetAllocator()); }
 template <> void JsonValue<char *, false>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), rapidjson::StringRef((char *)Value), doc->GetAllocator()); }
+
+template <> void JsonValue<TRawData, true>::WriteToDoc(TJsonDocument *doc) {
+	rapidjson::Value json_val;
+	TRawData rawData = Value;
+	if (rawData.Data == NULL) {
+		json_val.SetNull();
+	} else {
+		json_val.SetString(rapidjson::StringRef((char *)rawData.Data), rawData.Size);
+	}
+	doc->AddMember(rapidjson::StringRef(Name), json_val, doc->GetAllocator());
+}
+template <> void JsonValue<TRawData, false>::WriteToDoc(TJsonDocument *doc) {
+	rapidjson::Value json_val;
+	TRawData rawData = Value;
+	if (rawData.Data == NULL) {
+		json_val.SetNull();
+	} else {
+		json_val.SetString(rapidjson::StringRef((char *)rawData.Data), rawData.Size);
+	}
+	doc->AddMember(rapidjson::StringRef(Name), json_val, doc->GetAllocator());
+}
 
 template <> void JsonValue<JsonObject *, true>::WriteToDoc(TJsonDocument *doc) {
 	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
@@ -292,6 +336,9 @@ template <> void JsonValue<double, false>::ValueWrapper::DeleteValue() {}
 
 template <> void JsonValue<char *, true>::ValueWrapper::DeleteValue() { delete[] this->value; }
 template <> void JsonValue<char *, false>::ValueWrapper::DeleteValue() { delete[] this->value; }
+
+template <> void JsonValue<TRawData, true>::ValueWrapper::DeleteValue() {}
+template <> void JsonValue<TRawData, false>::ValueWrapper::DeleteValue() {}
 
 template <> void JsonValue<JsonObject *, true>::ValueWrapper::DeleteValue() {}
 template <> void JsonValue<JsonObject *, false>::ValueWrapper::DeleteValue() {}
