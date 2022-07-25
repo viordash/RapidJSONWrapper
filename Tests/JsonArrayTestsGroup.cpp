@@ -246,7 +246,7 @@ TEST(JsonArrayTestsGroup, JsonObjectArray_Find_Test) {
 	auto iter = list1.Find(&UserDto("user 3", 100));
 	CHECK(iter != list1.End());
 	STRCMP_EQUAL((*iter)->Name.Value, "user 3");
-	// CHECK_EQUAL(list1.Find(new UserDto("user 3", 0)), list1.End());
+	CHECK_TRUE(list1.Find(&UserDto("user 3", 0)) == list1.End());
 }
 
 TEST(JsonArrayTestsGroup, JsonObjectArray_Remove_Test) {
@@ -336,7 +336,7 @@ TEST(JsonArrayTestsGroup, JsonStringArray_Find_Test) {
 
 	CHECK(list1.Find("user 2") != list1.End());
 	STRCMP_EQUAL(*(list1.Find("user 2")), "user 2");
-	// CHECK_EQUAL(list1.Find("error"), list1.End());
+	CHECK_TRUE(list1.Find("error") == list1.End());
 }
 
 TEST(JsonArrayTestsGroup, JsonStringArray_Remove_Test) {
@@ -420,7 +420,7 @@ TEST(JsonArrayTestsGroup, JsonBoolArray_Find_Test) {
 
 	CHECK(list1.Find(true) != list1.End());
 	CHECK_EQUAL(*(list1.Find(true)), true);
-	// CHECK_EQUAL(list1.Find(false), list1.End());
+	CHECK_TRUE(list1.Find(false) == list1.End());
 }
 
 TEST(JsonArrayTestsGroup, JsonBoolArray_Remove_Test) {
@@ -501,7 +501,7 @@ TEST(JsonArrayTestsGroup, JsonInt64Array_Find_Test) {
 
 	CHECK(list1.Find(5188146770730811392LL) != list1.End());
 	CHECK_EQUAL(*(list1.Find(5188146770730811392LL)), 5188146770730811392LL);
-	// CHECK_EQUAL(list1.Find(-1), list1.End());
+	CHECK_TRUE(list1.Find(-1) == list1.End());
 }
 
 TEST(JsonArrayTestsGroup, JsonInt64Array_Remove_Test) {
@@ -577,7 +577,7 @@ TEST(JsonArrayTestsGroup, JsonUint64Array_Find_Test) {
 
 	CHECK(list1.Find(5188146770730811392LL) != list1.End());
 	CHECK_EQUAL(*(list1.Find(5188146770730811392LL)), 5188146770730811392LL);
-	// CHECK_EQUAL(list1.Find(1), list1.End());
+	CHECK_TRUE(list1.Find(1) == list1.End());
 }
 
 TEST(JsonArrayTestsGroup, JsonUint64Array_Remove_Test) {
@@ -653,7 +653,7 @@ TEST(JsonArrayTestsGroup, JsonInt32Array_Find_Test) {
 
 	CHECK(list1.Find(-2147483647) != list1.End());
 	CHECK_EQUAL(*(list1.Find(-2147483647)), -2147483647);
-	// CHECK_EQUAL(list1.Find(1), list1.End());
+	CHECK_TRUE(list1.Find(1) == list1.End());
 }
 
 TEST(JsonArrayTestsGroup, JsonInt32Array_Remove_Test) {
@@ -728,7 +728,7 @@ TEST(JsonArrayTestsGroup, JsonUint32Array_Find_Test) {
 
 	CHECK(list1.Find(5) != list1.End());
 	CHECK_EQUAL(*(list1.Find(5)), 5);
-	// CHECK_EQUAL(list1.Find(1), list1.End());
+	CHECK_TRUE(list1.Find(1) == list1.End());
 }
 
 TEST(JsonArrayTestsGroup, JsonUint32Array_Remove_Test) {
@@ -808,7 +808,7 @@ TEST(JsonArrayTestsGroup, JsonInt16Array_Find_Test) {
 
 	CHECK(list1.Find(32767) != list1.End());
 	CHECK_EQUAL(*(list1.Find(32767)), 32767);
-	// CHECK_EQUAL(list1.Find(1), list1.End());
+	CHECK_TRUE(list1.Find(1) == list1.End());
 }
 
 TEST(JsonArrayTestsGroup, JsonInt16Array_Remove_Test) {
@@ -885,7 +885,7 @@ TEST(JsonArrayTestsGroup, JsonUint16Array_Find_Test) {
 
 	CHECK(list1.Find(65535) != list1.End());
 	CHECK_EQUAL(*(list1.Find(65535)), 65535);
-	// CHECK_EQUAL(list1.Find(10), list1.End());
+	CHECK_TRUE(list1.Find(10) == list1.End());
 }
 
 TEST(JsonArrayTestsGroup, JsonUint16Array_Remove_Test) {
@@ -967,7 +967,7 @@ TEST(JsonArrayTestsGroup, JsonInt8Array_Find_Test) {
 
 	CHECK(list1.Find(1) != list1.End());
 	CHECK_EQUAL(*(list1.Find(1)), 1);
-	// CHECK_EQUAL(list1.Find(2), list1.End());
+	CHECK_TRUE(list1.Find(2) == list1.End());
 }
 
 TEST(JsonArrayTestsGroup, JsonInt8Array_Remove_Test) {
@@ -1046,7 +1046,7 @@ TEST(JsonArrayTestsGroup, JsonUint8Array_Find_Test) {
 
 	CHECK(list1.Find(1) != list1.End());
 	CHECK_EQUAL(*(list1.Find(1)), 1);
-	// CHECK_EQUAL(list1.Find(2), list1.End());
+	CHECK_TRUE(list1.Find(2) == list1.End());
 }
 
 TEST(JsonArrayTestsGroup, JsonUint8Array_Remove_Test) {
@@ -1125,7 +1125,7 @@ TEST(JsonArrayTestsGroup, JsonDoubleArray_Find_Test) {
 
 	CHECK(list1.Find(-0.05) != list1.End());
 	CHECK_EQUAL(*(list1.Find(-0.05)), -0.05);
-	// CHECK_EQUAL(list1.Find(2), list1.End());
+	CHECK_TRUE(list1.Find(2) == list1.End());
 }
 
 TEST(JsonArrayTestsGroup, JsonDoubleArray_Remove_Test) {
@@ -1204,7 +1204,7 @@ TEST(JsonArrayTestsGroup, JsonFloatArray_Find_Test) {
 
 	CHECK(list1.Find(-0.05) != list1.End());
 	CHECK_EQUAL(*(list1.Find(-0.05)), -0.05f);
-	// CHECK_EQUAL(list1.Find(2), list1.End());
+	CHECK_TRUE(list1.Find(2) == list1.End());
 }
 
 TEST(JsonArrayTestsGroup, JsonFloatArray_Remove_Test) {
