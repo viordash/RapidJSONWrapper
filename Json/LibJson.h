@@ -10,10 +10,10 @@ typedef rapidjson::Value::Array TJsonArray;
 typedef rapidjson::Value TJsonValue;
 
 typedef char TBoolArray;
-typedef struct TRawData {
+typedef struct {
 	uint8_t *Data;
 	size_t Size;
-};
+} TRawData;
 
 class JsonArrayBase {
   public:
