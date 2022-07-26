@@ -85,6 +85,23 @@ TEST(JsonDataValueGroup, JsonDataValue_WriteToJson_Binary_Test) {
 	MEMCMP_EQUAL(data, ((TRawData)readTestable.Value).Data, ((TRawData)readTestable.Value).Size);
 }
 
+TEST(JsonDataValueGroup, JsonDataValue_WriteTo_For_Null_Test) {
+	JsonFieldsContainer container;
+	JsonValue<TRawData> testable(&container, "testString", {NULL, 0});
+
+	rapidjson::Document doc;
+	doc.SetObject();
+	testable.WriteToDoc(&doc);
+
+	rapidjson::StringBuffer buffer;
+	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+	doc.Accept(writer);
+
+	const char *jsonStr = buffer.GetString();
+
+	STRCMP_EQUAL(jsonStr, "{\"testString\":null}");
+}
+
 TEST(JsonDataValueGroup, JsonDataValue_TryParse_Field_Optional_Test) {
 	rapidjson::Document doc;
 	JsonFieldsContainer container;
@@ -103,41 +120,44 @@ TEST(JsonDataValueGroup, JsonDataValue_TryParse_Field_Optional_Test) {
 
 TEST(JsonDataValueGroup, JsonDataValue_SetValue_Test) {
 	JsonFieldsContainer container;
-	JsonValue<char *> testable(&container, "testString");
-	STRCMP_EQUAL(testable.Value, "");
+	JsonValue<TRawData> testable(&container, "testString");
+	CHECK_EQUAL(((TRawData)testable.Value).Data, NULL);
+	CHECK_EQUAL(((TRawData)testable.Value).Size, 0);
 
-	testable.Value = "0123456789";
-	STRCMP_EQUAL(testable.Value, "0123456789");
+	testable.Value = {(uint8_t *)"0123456789", sizeof("0123456789")};
+	STRCMP_EQUAL((char *)((TRawData)testable.Value).Data, "0123456789");
+	CHECK_EQUAL(((TRawData)testable.Value).Size, sizeof("0123456789"));
 }
 
 TEST(JsonDataValueGroup, JsonDataValue_Equals_Test) {
 	JsonFieldsContainer container;
-	JsonValue<char *> testable1(&container, "test", "testString");
-	JsonValue<char *> testable01(&container, "test", "testString");
+	const char *str = "testString";
+	JsonValue<TRawData> testable1(&container, "test", {(uint8_t *)str, strlen(str) + 1});
+	JsonValue<TRawData> testable01(&container, "test", {(uint8_t *)str, strlen(str) + 1});
 
 	CHECK_TRUE(testable1 == testable01);
 	CHECK_FALSE(testable1 != testable01);
-	testable01.Value = "otherValue";
+	testable01.Value = {(uint8_t *)"otherValue", sizeof("otherValue")};
 	CHECK_TRUE(testable1 != testable01);
 	CHECK_FALSE(testable1 == testable01);
 
-	JsonValue<char *, true> optional1(&container, "test", "testString");
-	JsonValue<char *, true> optional01(&container, "test", "testString");
+	JsonValue<TRawData, true> optional1(&container, "test", {(uint8_t *)str, strlen(str) + 1});
+	JsonValue<TRawData, true> optional01(&container, "test", {(uint8_t *)str, strlen(str) + 1});
 
 	CHECK_TRUE(optional1 == optional01);
 	CHECK_FALSE(optional1 != optional01);
-	optional01.Value = "otherValue";
+	optional01.Value = {(uint8_t *)"otherValue", sizeof("otherValue")};
 	CHECK_TRUE(optional1 != optional01);
 	CHECK_FALSE(optional1 == optional01);
 }
 
 TEST(JsonDataValueGroup, JsonDataValue_CloneTo_Test) {
 	JsonFieldsContainer container;
-	JsonValue<char *> testable1(&container, "test", "0123456789");
+	JsonValue<TRawData> testable1(&container, "test", {(uint8_t *)"0123456789", sizeof("0123456789")});
 
-	JsonValue<char *> clone1(&container, "test");
+	JsonValue<TRawData> clone1(&container, "test");
 
 	testable1.CloneTo((JsonValueBase *)&clone1);
-	testable1.Value = "check the full data buffer is cloned";
-	STRCMP_EQUAL(clone1.Value, "0123456789");
+	testable1.Value = {(uint8_t *)"check the full data buffer is cloned", sizeof("check the full data buffer is cloned")};
+	STRCMP_EQUAL((char *)((TRawData)clone1.Value).Data, "0123456789");
 }
