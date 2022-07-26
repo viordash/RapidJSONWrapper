@@ -86,6 +86,32 @@ class OrderDto : public JsonObject {
 		  User(this, "user", &userDto) {}
 };
 
+class OrdersList : public JsonArray<OrderDto *> {
+  public:
+	bool Validate(OrderDto *item) { return item->Validate(); }
+};
+
+class CustomerDto : public JsonObject {
+  public:
+	JsonValue<uint64_t> Id;
+	JsonValue<char *> Name;
+	JsonValue<TRawData> Blob;
+	JsonValue<JsonArrayBase *> Orders;
+	OrdersList ordersList;
+
+	CustomerDto(uint64_t id, char *name, TRawData blob)
+		: Id(this, "id", id),		//
+		  Name(this, "name", name), //
+		  Blob(this, "blob", blob), //
+		  Orders(this, "orders", &ordersList){};
+
+	CustomerDto()
+		: Id(this, "id"),	  //
+		  Name(this, "name"), //
+		  Blob(this, "blob"), //
+		  Orders(this, "orders", &ordersList){};
+};
+
 TEST(JsonObjectTestsGroup, JsonObject_Parse_Test) {
 	GoodsDto goods;
 	CHECK_TRUE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}"));
@@ -333,4 +359,44 @@ TEST(JsonObjectTestsGroup, JsonObject_Clone_Test) {
 	CHECK_EQUAL(orderDto2.goodsList[0]->Created.Value, 1657052789);
 	STRCMP_EQUAL(orderDto2.goodsList[1]->Name.Value, "K2-100");
 	STRCMP_EQUAL(orderDto2.userDto.Name.Value, "Joe Doe");
+}
+
+TEST(JsonObjectTestsGroup, JsonObject_With_Blob_Field_Test) {
+	JsonFieldsContainer container;
+
+	const int pictureSize = 1'000'0000;
+	uint8_t *picture = new uint8_t[pictureSize];
+	for (size_t i = 0; i < pictureSize; i++) { picture[i] = 'A' + (i % 58); }
+
+	auto customerDto1 = new CustomerDto(1234567890123456789LL, "Viordash", {picture, pictureSize});
+	customerDto1->ordersList.Add(new OrderDto("Dell1", 1657058001, "Joe Doe", TUserRole::uViewer));
+	customerDto1->ordersList.Add(new OrderDto("Dell2", 1657058002, "Joe Doe", TUserRole::uViewer));
+	auto orderDto1 = customerDto1->ordersList[0];
+	orderDto1->goodsList.Add(new GoodsDto(1, 1657052789, "Keyboards", "K1-100", 58.25, 48.2));
+	orderDto1->goodsList.Add(new GoodsDto(2, 1657053789, "Keyboards", "K2-100", 158.25, 448.2));
+	orderDto1->goodsList.Add(new GoodsDto(3, 1657054789, "Keyboards", "K3-100", 258.25, 548.2));
+	auto orderDto2 = customerDto1->ordersList[1];
+	orderDto2->goodsList.Add(new GoodsDto(100, 1007052789, "Mouse", "M1-100", 8.25, 18.2));
+	orderDto2->goodsList.Add(new GoodsDto(200, 2007053789, "Mouse", "M2-100", 48.25, 28.2));
+
+	auto size = customerDto1->DirectWriteTo(0, OnReady);
+	CHECK_EQUAL(size, 10173289);
+	delete customerDto1;
+	delete[] picture;
+
+	CustomerDto customerDto2;
+	auto doc = customerDto2.BeginTryParse(DirectWriteTestBuffer, size);
+	CHECK(doc != NULL);
+
+	CHECK_EQUAL(customerDto2.Id.Value, 1234567890123456789LL);
+	STRCMP_EQUAL(customerDto2.Name.Value, "Viordash");
+	CHECK_EQUAL(customerDto2.ordersList.Size(), 2);
+	CHECK_EQUAL(customerDto2.ordersList[0]->goodsList.Size(), 3);
+	CHECK_EQUAL(customerDto2.ordersList[1]->goodsList.Size(), 2);
+	CHECK_EQUAL(((TRawData)customerDto2.Blob.Value).Size, pictureSize);
+	CHECK_FALSE(((TRawData)customerDto2.Blob.Value).Data == picture);
+	for (size_t i = 0; i < pictureSize; i++) { CHECK_EQUAL(((TRawData)customerDto2.Blob.Value).Data[i], 'A' + (i % 58)); }
+	customerDto2.EndTryParse(doc);
+
+	delete[] DirectWriteTestBuffer;
 }
