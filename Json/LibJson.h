@@ -84,9 +84,9 @@ class JsonValue : public JsonValueBase {
 	bool TryParse(TJsonDocument *doc) override final;
 
 	void WriteToDoc(TJsonDocument *doc) override final;
-	int WriteToString(char *outBuffer, int outBufferSize);
+	size_t WriteToString(char *outBuffer, size_t outBufferSize);
 	typedef void (*TOnCompleted)(void *parent, const char *json, int size);
-	int DirectWriteTo(void *parent, TOnCompleted onCompleted);
+	size_t DirectWriteTo(void *parent, TOnCompleted onCompleted);
 
 	void Reset();
 	bool Equals(JsonValueBase *other) override final;
@@ -107,9 +107,9 @@ class JsonObject : public JsonFieldsContainer {
 	void EndTryParse(TJsonDocument *doc);
 
 	void WriteToDoc(TJsonDocument *doc);
-	int WriteToString(char *outBuffer, int outBufferSize);
-	typedef void (*TOnReady)(void *parent, const char *json, int size);
-	int DirectWriteTo(void *parent, TOnReady onReady);
+	size_t WriteToString(char *outBuffer, size_t outBufferSize);
+	typedef void (*TOnReady)(void *parent, const char *json, size_t size);
+	size_t DirectWriteTo(void *parent, TOnReady onReady);
 
 	virtual bool Validate() { return true; }
 	bool Equals(JsonObject *other);
@@ -145,8 +145,6 @@ template <class TItem> class JsonArray : public JsonArrayBase {
   public:
 	virtual ~JsonArray();
 
-	ItemWrapper Get(size_t index) { return ItemWrapper(this, index); }
-
 	ItemWrapper operator[](size_t index) { return ItemWrapper(this, index); }
 	size_t Size() { return Items.size(); }
 	typename std::vector<TItem>::iterator const Begin() { return Items.begin(); }
@@ -158,9 +156,9 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 	void EndTryParse(TJsonDocument *doc);
 
 	void WriteToDoc(TJsonDocument *doc) override final;
-	int WriteToString(char *outBuffer, int outBufferSize);
-	typedef void (*TOnReady)(void *parent, const char *json, int size);
-	int DirectWriteTo(void *parent, TOnReady onReady);
+	size_t WriteToString(char *outBuffer, size_t outBufferSize);
+	typedef void (*TOnReady)(void *parent, const char *json, size_t size);
+	size_t DirectWriteTo(void *parent, TOnReady onReady);
 
 	virtual bool Add(TItem item);
 	virtual bool Update(size_t index, TItem item);

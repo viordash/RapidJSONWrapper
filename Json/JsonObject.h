@@ -50,7 +50,7 @@ void JsonObject::WriteToDoc(TJsonDocument *doc) {
 	for (const auto &field : Fields) { field->WriteToDoc(doc); }
 }
 
-int JsonObject::WriteToString(char *outBuffer, int outBufferSize) {
+size_t JsonObject::WriteToString(char *outBuffer, size_t outBufferSize) {
 	rapidjson::Document doc;
 	WriteToDoc(&doc);
 	rapidjson::StringBuffer buffer;
@@ -58,14 +58,14 @@ int JsonObject::WriteToString(char *outBuffer, int outBufferSize) {
 	doc.Accept(writer);
 
 	const char *jsonStr = buffer.GetString();
-	int size = buffer.GetSize();
+	size_t size = buffer.GetSize();
 	if (size > outBufferSize - 1) { size = outBufferSize - 1; }
 	strncpy(outBuffer, jsonStr, size);
 	outBuffer[size] = 0;
 	return size;
 }
 
-int JsonObject::DirectWriteTo(void *parent, TOnReady onReady) {
+size_t JsonObject::DirectWriteTo(void *parent, TOnReady onReady) {
 	rapidjson::Document doc;
 	WriteToDoc(&doc);
 	rapidjson::StringBuffer buffer;
@@ -73,7 +73,7 @@ int JsonObject::DirectWriteTo(void *parent, TOnReady onReady) {
 	doc.Accept(writer);
 
 	const char *json = buffer.GetString();
-	int size = buffer.GetSize();
+	size_t size = buffer.GetSize();
 	onReady(parent, json, size);
 	return size;
 }

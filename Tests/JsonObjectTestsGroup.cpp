@@ -252,7 +252,7 @@ TEST(JsonObjectTestsGroup, JsonObject_WriteTo_With_Limited_Buffer_Test) {
 
 static void *TestParent = NULL;
 static char *DirectWriteTestBuffer = NULL;
-static void OnReady(void *parent, const char *json, int size) {
+static void OnReady(void *parent, const char *json, size_t size) {
 	TestParent = parent;
 	DirectWriteTestBuffer = new char[size + 1];
 	memcpy(DirectWriteTestBuffer, json, size);

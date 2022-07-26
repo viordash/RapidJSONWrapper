@@ -45,7 +45,7 @@ template <class TItem> void JsonArray<TItem>::WriteToDoc(TJsonDocument *doc) {
 	WriteToDocInternal(doc);
 }
 
-template <class TItem> int JsonArray<TItem>::WriteToString(char *outBuffer, int outBufferSize) {
+template <class TItem> size_t JsonArray<TItem>::WriteToString(char *outBuffer, size_t outBufferSize) {
 	rapidjson::Document doc;
 	this->WriteToDoc(&doc);
 	rapidjson::StringBuffer buffer;
@@ -53,14 +53,14 @@ template <class TItem> int JsonArray<TItem>::WriteToString(char *outBuffer, int 
 	doc.Accept(writer);
 
 	const char *jsonStr = buffer.GetString();
-	int size = buffer.GetSize();
+	size_t size = buffer.GetSize();
 	if (size > outBufferSize - 1) { size = outBufferSize - 1; }
 	strncpy(outBuffer, jsonStr, size);
 	outBuffer[size] = 0;
 	return size;
 }
 
-template <class TItem> int JsonArray<TItem>::DirectWriteTo(void *parent, TOnReady onReady) {
+template <class TItem> size_t JsonArray<TItem>::DirectWriteTo(void *parent, TOnReady onReady) {
 	rapidjson::Document doc;
 	this->WriteToDoc(&doc);
 	rapidjson::StringBuffer buffer;
@@ -68,7 +68,7 @@ template <class TItem> int JsonArray<TItem>::DirectWriteTo(void *parent, TOnRead
 	doc.Accept(writer);
 
 	const char *json = buffer.GetString();
-	int size = buffer.GetSize();
+	size_t size = buffer.GetSize();
 	onReady(parent, json, size);
 	return size;
 }

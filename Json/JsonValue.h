@@ -41,7 +41,7 @@ template <class T, bool optional> bool JsonValue<T, optional>::TryParse(TJsonDoc
 	}
 	return false;
 }
-template <class T, bool optional> int JsonValue<T, optional>::WriteToString(char *outBuffer, int outBufferSize) {
+template <class T, bool optional> size_t JsonValue<T, optional>::WriteToString(char *outBuffer, size_t outBufferSize) {
 	rapidjson::Document doc;
 	WriteToDoc(&doc);
 	rapidjson::StringBuffer buffer;
@@ -49,13 +49,13 @@ template <class T, bool optional> int JsonValue<T, optional>::WriteToString(char
 	doc.Accept(writer);
 
 	const char *jsonStr = buffer.GetString();
-	int size = buffer.GetSize();
+	size_t size = buffer.GetSize();
 	if (size > outBufferSize - 1) { size = outBufferSize - 1; }
 	memcpy(outBuffer, jsonStr, size);
 	outBuffer[size] = 0;
 	return size;
 }
-template <class T, bool optional> int JsonValue<T, optional>::DirectWriteTo(void *parent, TOnCompleted onCompleted) {
+template <class T, bool optional> size_t JsonValue<T, optional>::DirectWriteTo(void *parent, TOnCompleted onCompleted) {
 	rapidjson::Document doc;
 	WriteToDoc(&doc);
 	rapidjson::StringBuffer buffer;
