@@ -60,6 +60,10 @@ if(WIN32)
 set(CPPUTEST_SOURCE_FILES ${CPPUTEST_SOURCE_FILES} cpputest/src/Platforms/VisualCpp/UtestPlatform.cpp)
 endif(WIN32)
 
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+set(CPPUTEST_SOURCE_FILES ${CPPUTEST_SOURCE_FILES} cpputest/src/Platforms/Gcc/UtestPlatform.cpp)
+endif()
+
 add_executable(RapidJSONWrapper     
     main.cpp 
     )
