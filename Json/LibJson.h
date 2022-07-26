@@ -51,7 +51,8 @@ class JsonValueBase {
 
 template <class T, bool optional = false> //
 class JsonValue : public JsonValueBase {
-	class ValueWrapper {
+  public:  
+	struct ValueWrapper {
 	  public:
 		ValueWrapper(const T value) { InitValue(value); }
 		~ValueWrapper() { DeleteValue(); }
@@ -71,7 +72,6 @@ class JsonValue : public JsonValueBase {
 		void DeleteValue();
 	};
 
-  public:
 	ValueWrapper Value;
 
 	JsonValue(JsonFieldsContainer *container, const char *name, T value) : JsonValueBase(container, name), Value(value) {}
@@ -120,8 +120,8 @@ class JsonObject : public JsonFieldsContainer {
 };
 
 template <class TItem> class JsonArray : public JsonArrayBase {
+  public:
 	typedef typename std::remove_pointer<TItem>::type TNewObjectItem;
-
 	struct ItemWrapper {
 	  public:
 		ItemWrapper(JsonArray *owner, size_t index) {
@@ -142,7 +142,6 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 		size_t index;
 	};
 
-  public:
 	virtual ~JsonArray();
 
 	ItemWrapper operator[](size_t index) { return ItemWrapper(this, index); }
