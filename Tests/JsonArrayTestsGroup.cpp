@@ -154,7 +154,8 @@ TEST(JsonArrayTestsGroup, JsonObjectArray_WriteTo_Test) {
 	list.Add(new UserDto("user 1", 0));
 	list.Add(new UserDto("user 2", 10));
 	list.Add(new UserDto("user 3", 100));
-	list.Add(&UserDto("user 4", 1000));
+	UserDto user("user 4", 1000);
+	list.Add(&user);
 
 	CHECK_EQUAL(list.WriteToString(buffer, sizeof(buffer)), 85);
 	STRCMP_EQUAL(buffer, "[{\"name\":\"user 1\",\"role\":0},{\"name\":\"user 2\",\"role\":10},{\"name\":\"user 3\",\"role\":100}]");
@@ -242,11 +243,12 @@ TEST(JsonArrayTestsGroup, JsonObjectArray_Find_Test) {
 	list1.Add(new UserDto("user 2", 10));
 	list1.Add(new UserDto("user 3", 100));
 	list1.Add(new UserDto("user 4", 999));
-
-	auto iter = list1.Find(&UserDto("user 3", 100));
+	UserDto user1("user 3", 100);
+	auto iter = list1.Find(&user1);
 	CHECK(iter != list1.End());
 	STRCMP_EQUAL((*iter)->Name.Value, "user 3");
-	CHECK_TRUE(list1.Find(&UserDto("user 3", 0)) == list1.End());
+	UserDto user2("user 3", 0);
+	CHECK_TRUE(list1.Find(&user2) == list1.End());
 }
 
 TEST(JsonArrayTestsGroup, JsonObjectArray_Remove_Test) {
@@ -727,7 +729,7 @@ TEST(JsonArrayTestsGroup, JsonUint64Array_Parse_Test) {
 	CHECK_EQUAL(list.Size(), 3);
 	CHECK_EQUAL(list[0], 1);
 	CHECK_EQUAL(list[1], 0);
-	CHECK_EQUAL(list[2], 10188146770730811392LL);
+	CHECK_TRUE(list[2] == 10188146770730811392LL);
 }
 
 TEST(JsonArrayTestsGroup, JsonUint64Array_WriteTo_Test) {
@@ -772,7 +774,7 @@ TEST(JsonArrayTestsGroup, JsonUint64Array_Clone_Test) {
 	delete list1;
 	CHECK_EQUAL(list2.Size(), 3);
 	CHECK_EQUAL(list2[0], 0);
-	CHECK_EQUAL(list2[1], 10188146770730811392);
+	CHECK_TRUE(list2[1] == 10188146770730811392);
 	CHECK_EQUAL(list2[2], 1);
 }
 
