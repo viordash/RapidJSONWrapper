@@ -247,6 +247,54 @@ template <> void JsonValue<JsonArrayBase *, false>::WriteToDoc(TJsonDocument *do
 
 
 */
+template <> void JsonValue<bool, true>::ValueWrapper::DeleteValue() {}
+template <> void JsonValue<bool, false>::ValueWrapper::DeleteValue() {}
+
+template <> void JsonValue<int8_t, true>::ValueWrapper::DeleteValue() {}
+template <> void JsonValue<int8_t, false>::ValueWrapper::DeleteValue() {}
+
+template <> void JsonValue<int16_t, true>::ValueWrapper::DeleteValue() {}
+template <> void JsonValue<int16_t, false>::ValueWrapper::DeleteValue() {}
+
+template <> void JsonValue<int32_t, true>::ValueWrapper::DeleteValue() {}
+template <> void JsonValue<int32_t, false>::ValueWrapper::DeleteValue() {}
+
+template <> void JsonValue<int64_t, true>::ValueWrapper::DeleteValue() {}
+template <> void JsonValue<int64_t, false>::ValueWrapper::DeleteValue() {}
+
+template <> void JsonValue<uint8_t, true>::ValueWrapper::DeleteValue() {}
+template <> void JsonValue<uint8_t, false>::ValueWrapper::DeleteValue() {}
+
+template <> void JsonValue<uint16_t, true>::ValueWrapper::DeleteValue() {}
+template <> void JsonValue<uint16_t, false>::ValueWrapper::DeleteValue() {}
+
+template <> void JsonValue<uint32_t, true>::ValueWrapper::DeleteValue() {}
+template <> void JsonValue<uint32_t, false>::ValueWrapper::DeleteValue() {}
+
+template <> void JsonValue<uint64_t, true>::ValueWrapper::DeleteValue() {}
+template <> void JsonValue<uint64_t, false>::ValueWrapper::DeleteValue() {}
+
+template <> void JsonValue<float, true>::ValueWrapper::DeleteValue() {}
+template <> void JsonValue<float, false>::ValueWrapper::DeleteValue() {}
+
+template <> void JsonValue<double, true>::ValueWrapper::DeleteValue() {}
+template <> void JsonValue<double, false>::ValueWrapper::DeleteValue() {}
+
+template <> void JsonValue<char *, true>::ValueWrapper::DeleteValue() { delete[] this->value; }
+template <> void JsonValue<char *, false>::ValueWrapper::DeleteValue() { delete[] this->value; }
+
+template <> void JsonValue<TRawData, true>::ValueWrapper::DeleteValue() {}
+template <> void JsonValue<TRawData, false>::ValueWrapper::DeleteValue() {}
+
+template <> void JsonValue<JsonObject *, true>::ValueWrapper::DeleteValue() {}
+template <> void JsonValue<JsonObject *, false>::ValueWrapper::DeleteValue() {}
+
+template <> void JsonValue<JsonArrayBase *, true>::ValueWrapper::DeleteValue() {}
+template <> void JsonValue<JsonArrayBase *, false>::ValueWrapper::DeleteValue() {}
+/*
+
+
+*/
 template <class T, bool optional> void JsonValue<T, optional>::ValueWrapper::InitValue(T value) { this->value = value; }
 
 template <> void JsonValue<char *, true>::ValueWrapper::InitValue(char *value) {
@@ -297,54 +345,6 @@ template <> void JsonValue<JsonObject *, false>::ValueWrapper::SetValue(JsonObje
 
 template <> void JsonValue<JsonArrayBase *, true>::ValueWrapper::SetValue(JsonArrayBase *value) { this->value = value; }
 template <> void JsonValue<JsonArrayBase *, false>::ValueWrapper::SetValue(JsonArrayBase *value) { this->value = value; }
-/*
-
-
-*/
-template <> void JsonValue<bool, true>::ValueWrapper::DeleteValue() {}
-template <> void JsonValue<bool, false>::ValueWrapper::DeleteValue() {}
-
-template <> void JsonValue<int8_t, true>::ValueWrapper::DeleteValue() {}
-template <> void JsonValue<int8_t, false>::ValueWrapper::DeleteValue() {}
-
-template <> void JsonValue<int16_t, true>::ValueWrapper::DeleteValue() {}
-template <> void JsonValue<int16_t, false>::ValueWrapper::DeleteValue() {}
-
-template <> void JsonValue<int32_t, true>::ValueWrapper::DeleteValue() {}
-template <> void JsonValue<int32_t, false>::ValueWrapper::DeleteValue() {}
-
-template <> void JsonValue<int64_t, true>::ValueWrapper::DeleteValue() {}
-template <> void JsonValue<int64_t, false>::ValueWrapper::DeleteValue() {}
-
-template <> void JsonValue<uint8_t, true>::ValueWrapper::DeleteValue() {}
-template <> void JsonValue<uint8_t, false>::ValueWrapper::DeleteValue() {}
-
-template <> void JsonValue<uint16_t, true>::ValueWrapper::DeleteValue() {}
-template <> void JsonValue<uint16_t, false>::ValueWrapper::DeleteValue() {}
-
-template <> void JsonValue<uint32_t, true>::ValueWrapper::DeleteValue() {}
-template <> void JsonValue<uint32_t, false>::ValueWrapper::DeleteValue() {}
-
-template <> void JsonValue<uint64_t, true>::ValueWrapper::DeleteValue() {}
-template <> void JsonValue<uint64_t, false>::ValueWrapper::DeleteValue() {}
-
-template <> void JsonValue<float, true>::ValueWrapper::DeleteValue() {}
-template <> void JsonValue<float, false>::ValueWrapper::DeleteValue() {}
-
-template <> void JsonValue<double, true>::ValueWrapper::DeleteValue() {}
-template <> void JsonValue<double, false>::ValueWrapper::DeleteValue() {}
-
-template <> void JsonValue<char *, true>::ValueWrapper::DeleteValue() { delete[] this->value; }
-template <> void JsonValue<char *, false>::ValueWrapper::DeleteValue() { delete[] this->value; }
-
-template <> void JsonValue<TRawData, true>::ValueWrapper::DeleteValue() {}
-template <> void JsonValue<TRawData, false>::ValueWrapper::DeleteValue() {}
-
-template <> void JsonValue<JsonObject *, true>::ValueWrapper::DeleteValue() {}
-template <> void JsonValue<JsonObject *, false>::ValueWrapper::DeleteValue() {}
-
-template <> void JsonValue<JsonArrayBase *, true>::ValueWrapper::DeleteValue() {}
-template <> void JsonValue<JsonArrayBase *, false>::ValueWrapper::DeleteValue() {}
 /*
 
 
