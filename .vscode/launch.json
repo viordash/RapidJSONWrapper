@@ -24,10 +24,10 @@
             ]
         },
         {
-            "name": "(gdb) JsonStringFieldTestsGroup",
+            "name": "(gdb) JsonStringValueTestsGroup",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/JsonStringFieldTestsGroup",
+            "program": "${workspaceFolder}/build/JsonStringValueTestsGroup",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
@@ -43,10 +43,10 @@
             ]
         },
         {
-            "name": "(gdb) JsonNumericFieldTestsGroup",
+            "name": "(gdb) JsonNumericValueTestsGroup",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/JsonNumericFieldTestsGroup",
+            "program": "${workspaceFolder}/build/JsonNumericValueTestsGroup",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
@@ -81,10 +81,10 @@
             ]
         },
         {
-            "name": "(gdb) JsonObjectFieldTestsGroup",
+            "name": "(gdb) JsonArrayTestsGroup",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/JsonObjectFieldTestsGroup",
+            "program": "${workspaceFolder}/build/JsonArrayTestsGroup",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
