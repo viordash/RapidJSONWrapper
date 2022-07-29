@@ -49,7 +49,7 @@ class Int64List : public JsonArray<int64_t> {
 };
 class Uint64List : public JsonArray<uint64_t> {
   public:
-	bool Validate(uint64_t item) override { return Size() < maxCount && item < 10188146770730811392LL + 1LL; }
+	bool Validate(uint64_t item) override { return Size() < maxCount && item < 10188146770730811392ULL + 1ULL; }
 };
 
 class Int32List : public JsonArray<int32_t> {
@@ -729,14 +729,14 @@ TEST(JsonArrayTestsGroup, JsonUint64Array_Parse_Test) {
 	CHECK_EQUAL(list.Size(), 3);
 	CHECK_EQUAL(list[0], 1);
 	CHECK_EQUAL(list[1], 0);
-	CHECK_TRUE(list[2] == 10188146770730811392LL);
+	CHECK_TRUE(list[2] == 10188146770730811392ULL);
 }
 
 TEST(JsonArrayTestsGroup, JsonUint64Array_WriteTo_Test) {
 	char buffer[2048];
 	Uint64List list;
 	list.Add(0);
-	list.Add(10188146770730811392);
+	list.Add(10188146770730811392ULL);
 	list.Add(1);
 
 	CHECK_EQUAL(list.WriteToString(buffer, sizeof(buffer)), 26);
@@ -746,12 +746,12 @@ TEST(JsonArrayTestsGroup, JsonUint64Array_WriteTo_Test) {
 TEST(JsonArrayTestsGroup, JsonUint64Array_Equals_Test) {
 	Uint64List list1;
 	list1.Add(0);
-	list1.Add(10188146770730811392);
+	list1.Add(10188146770730811392ULL);
 	list1.Add(1);
 
 	Uint64List list2;
 	list2.Add(0);
-	list2.Add(10188146770730811392);
+	list2.Add(10188146770730811392ULL);
 	list2.Add(1);
 
 	CHECK_TRUE(list1 == list2);
@@ -764,7 +764,7 @@ TEST(JsonArrayTestsGroup, JsonUint64Array_Equals_Test) {
 TEST(JsonArrayTestsGroup, JsonUint64Array_Clone_Test) {
 	auto list1 = new Uint64List();
 	list1->Add(0);
-	list1->Add(10188146770730811392);
+	list1->Add(10188146770730811392ULL);
 	list1->Add(1);
 
 	Uint64List list2;
@@ -774,13 +774,13 @@ TEST(JsonArrayTestsGroup, JsonUint64Array_Clone_Test) {
 	delete list1;
 	CHECK_EQUAL(list2.Size(), 3);
 	CHECK_EQUAL(list2[0], 0);
-	CHECK_TRUE(list2[1] == 10188146770730811392);
+	CHECK_TRUE(list2[1] == 10188146770730811392ULL);
 	CHECK_EQUAL(list2[2], 1);
 }
 
 TEST(JsonArrayTestsGroup, JsonUint64Array_Find_Test) {
 	Uint64List list1;
-	list1.Add(10188146770730811392LL);
+	list1.Add(10188146770730811392ULL);
 	list1.Add(5188146770730811392LL);
 	list1.Add(0);
 
@@ -791,7 +791,7 @@ TEST(JsonArrayTestsGroup, JsonUint64Array_Find_Test) {
 
 TEST(JsonArrayTestsGroup, JsonUint64Array_Remove_Test) {
 	Uint64List list1;
-	list1.Add(10188146770730811392LL);
+	list1.Add(10188146770730811392ULL);
 	list1.Add(5188146770730811392LL);
 	list1.Add(0);
 
@@ -802,7 +802,7 @@ TEST(JsonArrayTestsGroup, JsonUint64Array_Remove_Test) {
 TEST(JsonArrayTestsGroup, JsonUint64Array_Add_Test) {
 	Uint64List list1;
 	CHECK_TRUE(list1.Add(5188146770730811392LL));
-	CHECK_TRUE(list1.Add(10188146770730811392LL));
+	CHECK_TRUE(list1.Add(10188146770730811392ULL));
 
 	CHECK_EQUAL(list1.Size(), 2);
 	CHECK_EQUAL(list1[0], 5188146770730811392LL);
@@ -811,7 +811,7 @@ TEST(JsonArrayTestsGroup, JsonUint64Array_Add_Test) {
 TEST(JsonArrayTestsGroup, JsonUint64Array_Incorrect_Add_Test) {
 	Uint64List list1;
 	CHECK_TRUE(list1.Add(5188146770730811392LL));
-	CHECK_FALSE(list1.Add(10188146770730811392LL + 1LL));
+	CHECK_FALSE(list1.Add(10188146770730811392ULL + 1LL));
 
 	CHECK_EQUAL(list1.Size(), 1);
 	CHECK_EQUAL(list1[0], 5188146770730811392LL);
@@ -820,7 +820,7 @@ TEST(JsonArrayTestsGroup, JsonUint64Array_Incorrect_Add_Test) {
 TEST(JsonArrayTestsGroup, JsonUint64Array_Update_Test) {
 	Uint64List list1;
 	list1.Add(5188146770730811392LL);
-	list1.Add(10188146770730811392LL);
+	list1.Add(10188146770730811392ULL);
 
 	CHECK_TRUE(list1.Update(0, 1));
 
@@ -831,10 +831,10 @@ TEST(JsonArrayTestsGroup, JsonUint64Array_Update_Test) {
 TEST(JsonArrayTestsGroup, JsonUint64Array_Incorrect_Update_Test) {
 	Uint64List list1;
 	list1.Add(5188146770730811392LL);
-	list1.Add(10188146770730811392LL);
+	list1.Add(10188146770730811392ULL);
 
 	CHECK_FALSE(list1.Update(100, 10));
-	CHECK_FALSE(list1.Update(0, 10188146770730811392LL + 1LL));
+	CHECK_FALSE(list1.Update(0, 10188146770730811392ULL + 1LL));
 
 	CHECK_EQUAL(list1.Size(), 2);
 	CHECK_EQUAL(list1[0], 5188146770730811392LL);
