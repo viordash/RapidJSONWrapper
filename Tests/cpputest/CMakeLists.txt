@@ -61,7 +61,7 @@ option(STD_C "Use the standard C library" ON)
 option(STD_CPP "Use the standard C++ library" ON)
 option(CPPUTEST_FLAGS "Use the CFLAGS/CXXFLAGS/LDFLAGS set by CppUTest" ON)
 option(MEMORY_LEAK_DETECTION "Enable memory leak detection" ON)
-option(EXTENSIONS "Use the CppUTest extension library" ON)
+option(EXTENSIONS "Use the CppUTest extension library" OFF)
 option(LONGLONG "Support long long" OFF)
 option(MAP_FILE "Enable the creation of a map file" OFF)
 option(COVERAGE "Enable running with coverage" OFF)
@@ -73,7 +73,7 @@ option(TESTS_DETAILED "Run each test separately instead of grouped?" OFF)
 option(TESTS_BUILD_DISCOVER "Build time test discover" ON)
 
 option(EXAMPLES "Compile and make exaples?" OFF)
-
+N
 option(VERBOSE_CONFIG "Print configuration to stdout during generation" ON)
 
 if(NOT CMAKE_BUILD_TYPE)
