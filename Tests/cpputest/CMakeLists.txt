@@ -73,7 +73,7 @@ option(TESTS_DETAILED "Run each test separately instead of grouped?" OFF)
 option(TESTS_BUILD_DISCOVER "Build time test discover" ON)
 
 option(EXAMPLES "Compile and make exaples?" OFF)
-N
+
 option(VERBOSE_CONFIG "Print configuration to stdout during generation" ON)
 
 if(NOT CMAKE_BUILD_TYPE)
