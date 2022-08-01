@@ -496,7 +496,7 @@ TEST(JsonArrayTestsGroup, JsonBoolArray_Parse_Test) {
 	CHECK_TRUE(list.TryParse("[true,false,true,false]"));
 	CHECK_EQUAL(list.Size(), 4);
 
-	CHECK_EQUAL(list[0], true);
+	CHECK_EQUAL(list[0], (TBoolArray)true);
 	CHECK_EQUAL(list[3], false);
 
 	CHECK_FALSE(list.TryParse("[false,1,true,0]"));
@@ -550,7 +550,7 @@ TEST(JsonArrayTestsGroup, JsonBoolArray_Clone_Test) {
 	delete list1;
 	CHECK_EQUAL(list2.Size(), 4);
 	CHECK_EQUAL(list2[2], false);
-	CHECK_EQUAL(list2[3], true);
+	CHECK_EQUAL(list2[3], (TBoolArray)true);
 }
 
 TEST(JsonArrayTestsGroup, JsonBoolArray_Find_Test) {
@@ -558,7 +558,7 @@ TEST(JsonArrayTestsGroup, JsonBoolArray_Find_Test) {
 	list1.Add(true);
 
 	CHECK(list1.Find(true) != list1.End());
-	CHECK_EQUAL(*(list1.Find(true)), true);
+	CHECK_EQUAL(*(list1.Find(true)), (TBoolArray)true);
 	CHECK_TRUE(list1.Find(false) == list1.End());
 }
 
@@ -582,7 +582,7 @@ TEST(JsonArrayTestsGroup, JsonBoolArray_Add_Test) {
 	CHECK_TRUE(list1.Add(false));
 
 	CHECK_EQUAL(list1.Size(), 2);
-	CHECK_EQUAL(list1[0], true);
+	CHECK_EQUAL(list1[0], (TBoolArray)true);
 }
 
 TEST(JsonArrayTestsGroup, JsonBoolArray_Update_Test) {
@@ -602,7 +602,7 @@ TEST(JsonArrayTestsGroup, JsonBoolArray_Incorrect_Update_Test) {
 
 	CHECK_FALSE(list1.Update(100, false));
 	CHECK_EQUAL(list1.Size(), 2);
-	CHECK_EQUAL(list1[0], true);
+	CHECK_EQUAL(list1[0], (TBoolArray)true);
 }
 
 TEST(JsonArrayTestsGroup, JsonInt64Array_Parse_Test) {
@@ -1433,7 +1433,7 @@ TEST(JsonArrayTestsGroup, JsonUint8Array_Clone_Test) {
 	list1->Add(1);
 
 	Uint8List list2;
-	list2.Add(1234);
+	list2.Add(123);
 
 	list1->CloneTo(&list2);
 	delete list1;
@@ -1630,14 +1630,14 @@ TEST(JsonArrayTestsGroup, JsonFloatArray_WriteTo_Test) {
 
 TEST(JsonArrayTestsGroup, JsonFloatArray_Equals_Test) {
 	FloatList list1;
-	list1.Add(-0.05);
-	list1.Add(1.254);
-	list1.Add(65535.15);
+	list1.Add(-0.05f);
+	list1.Add(1.254f);
+	list1.Add(65535.15f);
 
 	FloatList list2;
-	list2.Add(-0.05);
-	list2.Add(1.254);
-	list2.Add(65535.15);
+	list2.Add(-0.05f);
+	list2.Add(1.254f);
+	list2.Add(65535.15f);
 
 	CHECK_TRUE(list1 == list2);
 	CHECK_FALSE(list1 != list2);
@@ -1648,9 +1648,9 @@ TEST(JsonArrayTestsGroup, JsonFloatArray_Equals_Test) {
 
 TEST(JsonArrayTestsGroup, JsonFloatArray_Clone_Test) {
 	auto list1 = new FloatList();
-	list1->Add(-0.05);
-	list1->Add(1.254);
-	list1->Add(65535.15);
+	list1->Add(-0.05f);
+	list1->Add(1.254f);
+	list1->Add(65535.15f);
 
 	FloatList list2;
 	list2.Add(1234);
@@ -1665,20 +1665,20 @@ TEST(JsonArrayTestsGroup, JsonFloatArray_Clone_Test) {
 
 TEST(JsonArrayTestsGroup, JsonFloatArray_Find_Test) {
 	FloatList list1;
-	list1.Add(-0.05);
-	list1.Add(1.254);
-	list1.Add(65535.15);
+	list1.Add(-0.05f);
+	list1.Add(1.254f);
+	list1.Add(65535.15f);
 
-	CHECK(list1.Find(-0.05) != list1.End());
-	CHECK_EQUAL(*(list1.Find(-0.05)), -0.05f);
+	CHECK(list1.Find(-0.05f) != list1.End());
+	CHECK_EQUAL(*(list1.Find(-0.05f)), -0.05f);
 	CHECK_TRUE(list1.Find(2) == list1.End());
 }
 
 TEST(JsonArrayTestsGroup, JsonFloatArray_Remove_Test) {
 	FloatList list1;
-	list1.Add(-0.05);
-	list1.Add(1.254);
-	list1.Add(65535.15);
+	list1.Add(-0.05f);
+	list1.Add(1.254f);
+	list1.Add(65535.15f);
 
 	list1.Remove(1.254f);
 	CHECK_EQUAL(list1.Size(), 2);

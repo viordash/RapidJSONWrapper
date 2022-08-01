@@ -9,6 +9,8 @@ endif()
 
 if(WIN32)
   add_definitions("/wd4251")
+  add_definitions("/wd4305")
+  add_definitions("/wd4309")
 endif(WIN32)
 
 if(MSVC)
