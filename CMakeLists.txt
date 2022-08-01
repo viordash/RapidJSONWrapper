@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.8.0)
 project(RapidJSONWrapper VERSION 0.1.0)
 set(CMAKE_CXX_STANDARD 14)
 
-include_directories(rapidjson/include Json)
+include_directories(Json)
 
 add_executable(RapidJSONWrapper     
     main.cpp 
