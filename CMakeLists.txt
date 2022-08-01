@@ -4,8 +4,6 @@ set(CMAKE_CXX_STANDARD 14)
 
 include_directories(rapidjson/include Json)
 
-add_subdirectory(Tests)
-
 add_executable(RapidJSONWrapper     
     main.cpp 
     )
@@ -13,3 +11,7 @@ add_executable(RapidJSONWrapper
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
+
+
+enable_testing()
+add_subdirectory(Tests)
