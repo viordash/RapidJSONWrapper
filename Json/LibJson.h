@@ -51,7 +51,7 @@ class JsonValueBase {
 
 template <class T, bool optional = false> //
 class JsonValue : public JsonValueBase {
-  public:  
+  public:
 	struct ValueWrapper {
 	  public:
 		ValueWrapper(const T value) { InitValue(value); }
@@ -78,9 +78,9 @@ class JsonValue : public JsonValueBase {
 	JsonValue(JsonFieldsContainer *container, const char *name) : JsonValue(container, name, T()) {}
 	virtual ~JsonValue() {}
 
-	TJsonDocument *BeginTryParse(const char *jsonStr, int length = -1);
+	TJsonDocument *BeginTryParse(const char *jsonStr, size_t length = 0);
 	void EndTryParse(TJsonDocument *doc);
-	bool TryParse(const char *jsonStr, int length = -1);
+	bool TryParse(const char *jsonStr, size_t length = 0);
 	bool TryParse(TJsonDocument *doc) override final;
 
 	void WriteToDoc(TJsonDocument *doc) override final;
@@ -102,8 +102,8 @@ class JsonObject : public JsonFieldsContainer {
 	virtual ~JsonObject(){};
 
 	virtual bool TryParse(TJsonDocument *doc);
-	virtual bool TryParse(const char *jsonStr, int length = -1);
-	TJsonDocument *BeginTryParse(const char *jsonStr, int length = -1);
+	virtual bool TryParse(const char *jsonStr, size_t length = 0);
+	TJsonDocument *BeginTryParse(const char *jsonStr, size_t length = 0);
 	void EndTryParse(TJsonDocument *doc);
 
 	void WriteToDoc(TJsonDocument *doc);
@@ -150,8 +150,8 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 	typename std::vector<TItem>::iterator const End() { return Items.end(); }
 
 	bool TryParse(TJsonDocument *doc) override final;
-	bool TryParse(const char *jsonStr, int length = -1);
-	TJsonDocument *BeginTryParse(const char *jsonStr, int length = -1);
+	bool TryParse(const char *jsonStr, size_t length = 0);
+	TJsonDocument *BeginTryParse(const char *jsonStr, size_t length = 0);
 	void EndTryParse(TJsonDocument *doc);
 
 	void WriteToDoc(TJsonDocument *doc) override final;

@@ -15,18 +15,18 @@ template <class TItem> bool JsonArray<TItem>::TryParse(TJsonDocument *doc) {
 	return false;
 }
 
-template <class TItem> bool JsonArray<TItem>::TryParse(const char *jsonStr, int length) {
+template <class TItem> bool JsonArray<TItem>::TryParse(const char *jsonStr, size_t length) {
 	auto doc = BeginTryParse(jsonStr, length);
 	if (doc == NULL) { return false; }
 	EndTryParse(doc);
 	return true;
 }
 
-template <class TItem> TJsonDocument *JsonArray<TItem>::BeginTryParse(const char *jsonStr, int length) {
-	if (jsonStr == NULL || length == 0) { return NULL; }
+template <class TItem> TJsonDocument *JsonArray<TItem>::BeginTryParse(const char *jsonStr, size_t length) {
+	if (jsonStr == NULL) { return NULL; }
 
 	rapidjson::Document *doc = new rapidjson::Document();
-	if (length < 0) {
+	if (length == 0) {
 		doc->Parse(jsonStr);
 	} else {
 		doc->Parse(jsonStr, length);

@@ -2,11 +2,11 @@
 
 #include "LibJson.h"
 
-template <class T, bool optional> TJsonDocument *JsonValue<T, optional>::BeginTryParse(const char *jsonStr, int length) {
-	if (jsonStr == NULL || length == 0) { return NULL; }
+template <class T, bool optional> TJsonDocument *JsonValue<T, optional>::BeginTryParse(const char *jsonStr, size_t length) {
+	if (jsonStr == NULL) { return NULL; }
 
 	auto doc = new rapidjson::Document();
-	if (length < 0) {
+	if (length == 0) {
 		doc->Parse(jsonStr);
 	} else {
 		doc->Parse(jsonStr, length);
@@ -20,7 +20,7 @@ template <class T, bool optional> TJsonDocument *JsonValue<T, optional>::BeginTr
 
 template <class T, bool optional> void JsonValue<T, optional>::EndTryParse(TJsonDocument *doc) { delete doc; }
 
-template <class T, bool optional> bool JsonValue<T, optional>::TryParse(const char *jsonStr, int length) {
+template <class T, bool optional> bool JsonValue<T, optional>::TryParse(const char *jsonStr, size_t length) {
 	auto doc = BeginTryParse(jsonStr, length);
 	if (doc == NULL) { return false; }
 	EndTryParse(doc);
