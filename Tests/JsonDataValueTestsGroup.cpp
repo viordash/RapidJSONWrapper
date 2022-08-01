@@ -29,7 +29,7 @@ TEST(JsonDataValueGroup, JsonDataValue_TryParse_Test) {
 TEST(JsonDataValueGroup, JsonDataValue_WriteTo_Test) {
 	uint8_t data[32];
 	memset(data, '*', sizeof(data));
-	for (size_t i = 0; i < 16; i++) { data[i] = 'A' + i; }
+	for (size_t i = 0; i < 16; i++) { data[i] = 'A' + (uint8_t)i; }
 	data[sizeof(data) - 1] = 0;
 	JsonFieldsContainer container;
 	JsonValue<TRawData> testable(&container, "testString", {data, 16});
@@ -50,7 +50,7 @@ TEST(JsonDataValueGroup, JsonDataValue_WriteTo_Test) {
 
 TEST(JsonDataValueGroup, JsonDataValue_WriteToJson_Binary_Test) {
 	uint8_t data[256];
-	for (size_t i = 0; i < sizeof(data); i++) { data[i] = i; }
+	for (size_t i = 0; i < sizeof(data); i++) { data[i] = (uint8_t)i; }
 	JsonFieldsContainer container;
 	JsonValue<TRawData> testable(&container, "testString", {data, sizeof(data)});
 

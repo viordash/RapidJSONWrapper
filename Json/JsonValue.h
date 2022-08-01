@@ -201,7 +201,7 @@ template <> void JsonValue<TRawData, true>::WriteToDoc(TJsonDocument *doc) {
 	if (rawData.Data == NULL) {
 		json_val.SetNull();
 	} else {
-		json_val.SetString(rapidjson::StringRef((char *)rawData.Data), rawData.Size);
+		json_val.SetString(rapidjson::StringRef((char *)rawData.Data), (rapidjson::SizeType)rawData.Size);
 	}
 	doc->AddMember(rapidjson::StringRef(Name), json_val, doc->GetAllocator());
 }
@@ -211,7 +211,7 @@ template <> void JsonValue<TRawData, false>::WriteToDoc(TJsonDocument *doc) {
 	if (rawData.Data == NULL) {
 		json_val.SetNull();
 	} else {
-		json_val.SetString(rapidjson::StringRef((char *)rawData.Data), rawData.Size);
+		json_val.SetString(rapidjson::StringRef((char *)rawData.Data), (rapidjson::SizeType)rawData.Size);
 	}
 	doc->AddMember(rapidjson::StringRef(Name), json_val, doc->GetAllocator());
 }
