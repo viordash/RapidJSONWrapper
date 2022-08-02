@@ -95,11 +95,11 @@ class CustomerDto : public JsonObject {
   public:
 	JsonValue<uint64_t> Id;
 	JsonValue<char *> Name;
-	JsonValue<TRawData> Blob;
+	JsonValue<TJsonRawData> Blob;
 	JsonValue<JsonArrayBase *> Orders;
 	OrdersList ordersList;
 
-	CustomerDto(uint64_t id, char *name, TRawData blob)
+	CustomerDto(uint64_t id, char *name, TJsonRawData blob)
 		: Id(this, "id", id),		//
 		  Name(this, "name", name), //
 		  Blob(this, "blob", blob), //
@@ -394,9 +394,9 @@ TEST(JsonObjectTestsGroup, JsonObject_With_Blob_Field_Test) {
 	CHECK_EQUAL(customerDto2.ordersList.Size(), 2);
 	CHECK_EQUAL(customerDto2.ordersList[0]->goodsList.Size(), 3);
 	CHECK_EQUAL(customerDto2.ordersList[1]->goodsList.Size(), 2);
-	CHECK_EQUAL(((TRawData)customerDto2.Blob.Value).Size, pictureSize);
-	CHECK_FALSE(((TRawData)customerDto2.Blob.Value).Data == picture);
-	for (size_t i = 0; i < pictureSize; i++) { CHECK_EQUAL(((TRawData)customerDto2.Blob.Value).Data[i], 'A' + (i % 58)); }
+	CHECK_EQUAL(((TJsonRawData)customerDto2.Blob.Value).Size, pictureSize);
+	CHECK_FALSE(((TJsonRawData)customerDto2.Blob.Value).Data == picture);
+	for (size_t i = 0; i < pictureSize; i++) { CHECK_EQUAL(((TJsonRawData)customerDto2.Blob.Value).Data[i], 'A' + (i % 58)); }
 	customerDto2.EndTryParse(doc);
 
 	delete[] DirectWriteTestBuffer;
