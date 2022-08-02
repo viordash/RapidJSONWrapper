@@ -6,7 +6,7 @@ typedef char TBoolArray;
 typedef struct {
 	uint8_t *Data;
 	size_t Size;
-} TRawData;
+} TJsonRawData;
 
 template <class T, bool optional = false> //
 class JsonValue : public JsonValueBase {

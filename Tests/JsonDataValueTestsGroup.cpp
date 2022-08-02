@@ -12,18 +12,18 @@ TEST_GROUP(JsonDataValueGroup){void setup(){} void teardown(){}};
 
 TEST(JsonDataValueGroup, JsonDataValue_TryParse_Test) {
 	JsonFieldsContainer container;
-	JsonValue<TRawData> testable(&container, "testString");
+	JsonValue<TJsonRawData> testable(&container, "testString");
 
 	rapidjson::Document doc;
 	doc.Parse("{\"testString\":\"User1\"}");
 	CHECK(testable.TryParse(&doc));
 
-	MEMCMP_EQUAL(((TRawData)testable.Value).Data, "User1", ((TRawData)testable.Value).Size);
+	MEMCMP_EQUAL(((TJsonRawData)testable.Value).Data, "User1", ((TJsonRawData)testable.Value).Size);
 
 	doc.Parse("{\"testString\":null}");
 	CHECK(testable.TryParse(&doc));
-	CHECK_EQUAL(((TRawData)testable.Value).Data, NULL);
-	CHECK_EQUAL(((TRawData)testable.Value).Size, 0);
+	CHECK_EQUAL(((TJsonRawData)testable.Value).Data, NULL);
+	CHECK_EQUAL(((TJsonRawData)testable.Value).Size, 0);
 }
 
 TEST(JsonDataValueGroup, JsonDataValue_WriteTo_Test) {
@@ -32,7 +32,7 @@ TEST(JsonDataValueGroup, JsonDataValue_WriteTo_Test) {
 	for (size_t i = 0; i < 16; i++) { data[i] = 'A' + (uint8_t)i; }
 	data[sizeof(data) - 1] = 0;
 	JsonFieldsContainer container;
-	JsonValue<TRawData> testable(&container, "testString", {data, 16});
+	JsonValue<TJsonRawData> testable(&container, "testString", {data, 16});
 
 	rapidjson::Document doc;
 	doc.SetObject();
@@ -52,7 +52,7 @@ TEST(JsonDataValueGroup, JsonDataValue_WriteToJson_Binary_Test) {
 	uint8_t data[256];
 	for (size_t i = 0; i < sizeof(data); i++) { data[i] = (uint8_t)i; }
 	JsonFieldsContainer container;
-	JsonValue<TRawData> testable(&container, "testString", {data, sizeof(data)});
+	JsonValue<TJsonRawData> testable(&container, "testString", {data, sizeof(data)});
 
 	rapidjson::Document doc;
 	doc.SetObject();
@@ -75,19 +75,19 @@ TEST(JsonDataValueGroup, JsonDataValue_WriteToJson_Binary_Test) {
 						  "\xC2\xC3\xC4\xC5\xC6\xC7\xC8\xC9\xCA\xCB\xCC\xCD\xCE\xCF\xD0\xD1\xD2\xD3\xD4\xD5\xD6\xD7\xD8\xD9\xDA\xDB\xDC\xDD\xDE\xDF\xE0\xE1\xE2"
 						  "\xE3\xE4\xE5\xE6\xE7\xE8\xE9\xEA\xEB\xEC\xED\xEE\xEF\xF0\xF1\xF2\xF3\xF4\xF5\xF6\xF7\xF8\xF9\xFA\xFB\xFC\xFD\xFE\xFF\"}");
 
-	JsonValue<TRawData> readTestable(&container, "testString", {NULL, 0});
+	JsonValue<TJsonRawData> readTestable(&container, "testString", {NULL, 0});
 
 	rapidjson::Document readDoc;
 	doc.Parse(jsonStr);
 	CHECK(readTestable.TryParse(&doc));
-	CHECK(((TRawData)readTestable.Value).Data != NULL);
-	CHECK_EQUAL(((TRawData)readTestable.Value).Size, sizeof(data));
-	MEMCMP_EQUAL(data, ((TRawData)readTestable.Value).Data, ((TRawData)readTestable.Value).Size);
+	CHECK(((TJsonRawData)readTestable.Value).Data != NULL);
+	CHECK_EQUAL(((TJsonRawData)readTestable.Value).Size, sizeof(data));
+	MEMCMP_EQUAL(data, ((TJsonRawData)readTestable.Value).Data, ((TJsonRawData)readTestable.Value).Size);
 }
 
 TEST(JsonDataValueGroup, JsonDataValue_WriteTo_For_Null_Test) {
 	JsonFieldsContainer container;
-	JsonValue<TRawData> testable(&container, "testString", {NULL, 0});
+	JsonValue<TJsonRawData> testable(&container, "testString", {NULL, 0});
 
 	rapidjson::Document doc;
 	doc.SetObject();
@@ -105,35 +105,35 @@ TEST(JsonDataValueGroup, JsonDataValue_WriteTo_For_Null_Test) {
 TEST(JsonDataValueGroup, JsonDataValue_TryParse_Field_Optional_Test) {
 	rapidjson::Document doc;
 	JsonFieldsContainer container;
-	auto testableFieldMustExists = new JsonValue<TRawData>(&container, "testString");
+	auto testableFieldMustExists = new JsonValue<TJsonRawData>(&container, "testString");
 	doc.Parse("{\"otherField\":\"User1\"}");
 	CHECK_FALSE(testableFieldMustExists->TryParse(&doc));
 	delete testableFieldMustExists;
 
-	auto testableWithOptional = new JsonValue<TRawData, true>(&container, "testString");
+	auto testableWithOptional = new JsonValue<TJsonRawData, true>(&container, "testString");
 	doc.Parse("{\"otherField\":\"User1\"}");
 	CHECK_TRUE(testableWithOptional->TryParse(&doc));
-	CHECK_EQUAL(((TRawData)testableWithOptional->Value).Data, NULL);
-	CHECK_EQUAL(((TRawData)testableWithOptional->Value).Size, 0);
+	CHECK_EQUAL(((TJsonRawData)testableWithOptional->Value).Data, NULL);
+	CHECK_EQUAL(((TJsonRawData)testableWithOptional->Value).Size, 0);
 	delete testableWithOptional;
 }
 
 TEST(JsonDataValueGroup, JsonDataValue_SetValue_Test) {
 	JsonFieldsContainer container;
-	JsonValue<TRawData> testable(&container, "testString");
-	CHECK_EQUAL(((TRawData)testable.Value).Data, NULL);
-	CHECK_EQUAL(((TRawData)testable.Value).Size, 0);
+	JsonValue<TJsonRawData> testable(&container, "testString");
+	CHECK_EQUAL(((TJsonRawData)testable.Value).Data, NULL);
+	CHECK_EQUAL(((TJsonRawData)testable.Value).Size, 0);
 
 	testable.Value = {(uint8_t *)"0123456789", sizeof("0123456789")};
-	STRCMP_EQUAL((char *)((TRawData)testable.Value).Data, "0123456789");
-	CHECK_EQUAL(((TRawData)testable.Value).Size, sizeof("0123456789"));
+	STRCMP_EQUAL((char *)((TJsonRawData)testable.Value).Data, "0123456789");
+	CHECK_EQUAL(((TJsonRawData)testable.Value).Size, sizeof("0123456789"));
 }
 
 TEST(JsonDataValueGroup, JsonDataValue_Equals_Test) {
 	JsonFieldsContainer container;
 	const char *str = "testString";
-	JsonValue<TRawData> testable1(&container, "test", {(uint8_t *)str, strlen(str) + 1});
-	JsonValue<TRawData> testable01(&container, "test", {(uint8_t *)str, strlen(str) + 1});
+	JsonValue<TJsonRawData> testable1(&container, "test", {(uint8_t *)str, strlen(str) + 1});
+	JsonValue<TJsonRawData> testable01(&container, "test", {(uint8_t *)str, strlen(str) + 1});
 
 	CHECK_TRUE(testable1 == testable01);
 	CHECK_FALSE(testable1 != testable01);
@@ -141,8 +141,8 @@ TEST(JsonDataValueGroup, JsonDataValue_Equals_Test) {
 	CHECK_TRUE(testable1 != testable01);
 	CHECK_FALSE(testable1 == testable01);
 
-	JsonValue<TRawData, true> optional1(&container, "test", {(uint8_t *)str, strlen(str) + 1});
-	JsonValue<TRawData, true> optional01(&container, "test", {(uint8_t *)str, strlen(str) + 1});
+	JsonValue<TJsonRawData, true> optional1(&container, "test", {(uint8_t *)str, strlen(str) + 1});
+	JsonValue<TJsonRawData, true> optional01(&container, "test", {(uint8_t *)str, strlen(str) + 1});
 
 	CHECK_TRUE(optional1 == optional01);
 	CHECK_FALSE(optional1 != optional01);
@@ -153,11 +153,11 @@ TEST(JsonDataValueGroup, JsonDataValue_Equals_Test) {
 
 TEST(JsonDataValueGroup, JsonDataValue_CloneTo_Test) {
 	JsonFieldsContainer container;
-	JsonValue<TRawData> testable1(&container, "test", {(uint8_t *)"0123456789", sizeof("0123456789")});
+	JsonValue<TJsonRawData> testable1(&container, "test", {(uint8_t *)"0123456789", sizeof("0123456789")});
 
-	JsonValue<TRawData> clone1(&container, "test");
+	JsonValue<TJsonRawData> clone1(&container, "test");
 
 	testable1.CloneTo((JsonValueBase *)&clone1);
 	testable1.Value = {(uint8_t *)"check the full data buffer is cloned", sizeof("check the full data buffer is cloned")};
-	STRCMP_EQUAL((char *)((TRawData)clone1.Value).Data, "0123456789");
+	STRCMP_EQUAL((char *)((TJsonRawData)clone1.Value).Data, "0123456789");
 }
