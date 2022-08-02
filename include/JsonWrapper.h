@@ -1,10 +1,6 @@
 #pragma once
 
-#include "rapidjson/document.h"
-#include "rapidjson/writer.h"
-#include "rapidjson/stringbuffer.h"
-#include <vector>
-#include "LibJson.h"
+#include "lib/LibJson.h"
 
 typedef char TBoolArray;
 typedef struct {
@@ -145,6 +141,6 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 	void GenericCloneTo(JsonArrayBase *other);
 };
 
-#include "JsonValue_impl.h"
-#include "JsonObject_impl.h"
-#include "JsonArray_impl.h"
+#include "lib/JsonValue_impl.h"
+#include "lib/JsonObject_impl.h"
+#include "lib/JsonArray_impl.h"
