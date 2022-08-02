@@ -1,7 +1,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
-#include "Json.h"
+#include "JsonWrapper.h"
 
 int main(const int argc, const char *argv[]) {
 	fprintf(stdout, "json to class object\n");
