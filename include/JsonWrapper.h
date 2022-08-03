@@ -58,7 +58,7 @@ class JsonValue : public JsonValueBase {
 template <class T> //
 class JsonOptionalValue : public JsonValue<T> {
   public:
-	JsonOptionalValue(JsonFieldsContainer *container, const char *name, T value) : JsonValue(container, name, value), presented(false) {}
+	JsonOptionalValue(JsonFieldsContainer *container, const char *name, T value) : JsonValue<T>(container, name, value), presented(false) {}
 	JsonOptionalValue(JsonFieldsContainer *container, const char *name) : JsonOptionalValue(container, name, T()) {}
 	virtual ~JsonOptionalValue() {}
 
