@@ -11,11 +11,8 @@ if(WIN32)
   add_definitions("/wd4251")
   add_definitions("/wd4305")
   add_definitions("/wd4309")
+  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif(WIN32)
-
-if(MSVC)
-    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-endif(MSVC)
 
 add_subdirectory(cpputest)
 
