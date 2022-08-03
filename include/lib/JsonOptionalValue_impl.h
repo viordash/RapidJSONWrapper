@@ -6,8 +6,10 @@ template <class T> bool JsonOptionalValue<T>::TryParse(TJsonDocument *doc) {
 	rapidjson::Value::MemberIterator member = doc->FindMember(Name);
 	if (member == doc->MemberEnd()) {
 		this->Reset();
+		presented = false;
 		return true;
 	}
+	presented = true;
 
 	rapidjson::Value &jsonVal = member->value;
 	if (TryParseCore(&jsonVal)) { return true; }
@@ -17,3 +19,5 @@ template <class T> bool JsonOptionalValue<T>::TryParse(TJsonDocument *doc) {
 	}
 	return false;
 }
+
+template <class T> bool JsonOptionalValue<T>::Presented() { return presented; }

@@ -401,3 +401,16 @@ TEST(JsonObjectTestsGroup, JsonObject_With_Blob_Field_Test) {
 
 	delete[] DirectWriteTestBuffer;
 }
+
+TEST(JsonObjectTestsGroup, JsonObject_Optional_Values_Presented_Test) {
+	JsonFieldsContainer container;
+	OrderDto order;
+
+	CHECK_FALSE(order.DateTime.Presented());
+	
+	CHECK(order.TryParse("{\"supplier\":\"Dell\",\"dateTime\":1657058000,\"goods\":[],\"user\":{\"name\":\"Joe Doe\",\"role\":1}}"));
+	CHECK_TRUE(order.DateTime.Presented());
+
+	CHECK(order.TryParse("{\"supplier\":\"Dell\",\"goods\":[],\"user\":{\"name\":\"Joe Doe\",\"role\":1}}"));
+	CHECK_FALSE(order.DateTime.Presented());
+}
