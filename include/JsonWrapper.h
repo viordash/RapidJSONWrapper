@@ -8,7 +8,7 @@ typedef struct {
 	size_t Size;
 } TJsonRawData;
 
-template <class T, bool optional = false> //
+template <class T> //
 class JsonValue : public JsonValueBase {
   public:
 	struct ValueWrapper {
@@ -40,7 +40,7 @@ class JsonValue : public JsonValueBase {
 	TJsonDocument *BeginTryParse(const char *jsonStr, size_t length = 0);
 	void EndTryParse(TJsonDocument *doc);
 	bool TryParse(const char *jsonStr, size_t length = 0);
-	bool TryParse(TJsonDocument *doc) override final;
+	bool TryParse(TJsonDocument *doc) override;
 
 	void WriteToDoc(TJsonDocument *doc) override final;
 	size_t WriteToString(char *outBuffer, size_t outBufferSize);
@@ -52,8 +52,17 @@ class JsonValue : public JsonValueBase {
 	void CloneTo(JsonValueBase *other) override final;
 
   protected:
-  private:
 	bool TryParseCore(TJsonValue *value);
+};
+
+template <class T> //
+class JsonOptionalValue : public JsonValue<T> {
+  public:
+	JsonOptionalValue(JsonFieldsContainer *container, const char *name, T value) : JsonValue(container, name, value) {}
+	JsonOptionalValue(JsonFieldsContainer *container, const char *name) : JsonValue(container, name) {}
+	virtual ~JsonOptionalValue() {}
+
+	bool TryParse(TJsonDocument *doc) override final;
 };
 
 class JsonObject : public JsonFieldsContainer {
@@ -142,5 +151,6 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 };
 
 #include "lib/JsonValue_impl.h"
+#include "lib/JsonOptionalValue_impl.h"
 #include "lib/JsonObject_impl.h"
 #include "lib/JsonArray_impl.h"

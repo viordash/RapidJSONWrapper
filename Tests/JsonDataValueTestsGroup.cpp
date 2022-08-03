@@ -110,7 +110,7 @@ TEST(JsonDataValueGroup, JsonDataValue_TryParse_Field_Optional_Test) {
 	CHECK_FALSE(testableFieldMustExists->TryParse(&doc));
 	delete testableFieldMustExists;
 
-	auto testableWithOptional = new JsonValue<TJsonRawData, true>(&container, "testString");
+	auto testableWithOptional = new JsonOptionalValue<TJsonRawData>(&container, "testString");
 	doc.Parse("{\"otherField\":\"User1\"}");
 	CHECK_TRUE(testableWithOptional->TryParse(&doc));
 	CHECK_EQUAL(((TJsonRawData)testableWithOptional->Value).Data, NULL);
@@ -141,8 +141,8 @@ TEST(JsonDataValueGroup, JsonDataValue_Equals_Test) {
 	CHECK_TRUE(testable1 != testable01);
 	CHECK_FALSE(testable1 == testable01);
 
-	JsonValue<TJsonRawData, true> optional1(&container, "test", {(uint8_t *)str, strlen(str) + 1});
-	JsonValue<TJsonRawData, true> optional01(&container, "test", {(uint8_t *)str, strlen(str) + 1});
+	JsonOptionalValue<TJsonRawData> optional1(&container, "test", {(uint8_t *)str, strlen(str) + 1});
+	JsonOptionalValue<TJsonRawData> optional01(&container, "test", {(uint8_t *)str, strlen(str) + 1});
 
 	CHECK_TRUE(optional1 == optional01);
 	CHECK_FALSE(optional1 != optional01);

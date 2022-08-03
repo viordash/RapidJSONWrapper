@@ -154,17 +154,17 @@ TEST(JsonNumericValueGroup, JsonUIntField_Equals_Test) {
 	CHECK_TRUE(testable4 != testable04);
 	CHECK_FALSE(testable4 == testable04);
 
-	JsonValue<unsigned int, true> optional1(&container, "test", 100);
-	JsonValue<unsigned int, true> optional01(&container, "test", 100);
+	JsonOptionalValue<unsigned int> optional1(&container, "test", 100);
+	JsonOptionalValue<unsigned int> optional01(&container, "test", 100);
 
-	JsonValue<uint32_t, true> optional2(&container, "test", 101);
-	JsonValue<uint32_t, true> optional02(&container, "test", 101);
+	JsonOptionalValue<uint32_t> optional2(&container, "test", 101);
+	JsonOptionalValue<uint32_t> optional02(&container, "test", 101);
 
-	JsonValue<uint16_t, true> optional3(&container, "test", 102);
-	JsonValue<uint16_t, true> optional03(&container, "test", 102);
+	JsonOptionalValue<uint16_t> optional3(&container, "test", 102);
+	JsonOptionalValue<uint16_t> optional03(&container, "test", 102);
 
-	JsonValue<uint8_t, true> optional4(&container, "test", 103);
-	JsonValue<uint8_t, true> optional04(&container, "test", 103);
+	JsonOptionalValue<uint8_t> optional4(&container, "test", 103);
+	JsonOptionalValue<uint8_t> optional04(&container, "test", 103);
 
 	CHECK_TRUE(optional1 == optional01);
 	CHECK_FALSE(optional1 != optional01);
@@ -342,17 +342,17 @@ TEST(JsonNumericValueGroup, JsonIntField_Equals_Test) {
 	CHECK_TRUE(testable4 != testable04);
 	CHECK_FALSE(testable4 == testable04);
 
-	JsonValue<int, true> optional1(&container, "test", 100);
-	JsonValue<int, true> optional01(&container, "test", 100);
+	JsonOptionalValue<int> optional1(&container, "test", 100);
+	JsonOptionalValue<int> optional01(&container, "test", 100);
 
-	JsonValue<int32_t, true> optional2(&container, "test", 101);
-	JsonValue<int32_t, true> optional02(&container, "test", 101);
+	JsonOptionalValue<int32_t> optional2(&container, "test", 101);
+	JsonOptionalValue<int32_t> optional02(&container, "test", 101);
 
-	JsonValue<int16_t, true> optional3(&container, "test", 102);
-	JsonValue<int16_t, true> optional03(&container, "test", 102);
+	JsonOptionalValue<int16_t> optional3(&container, "test", 102);
+	JsonOptionalValue<int16_t> optional03(&container, "test", 102);
 
-	JsonValue<int8_t, true> optional4(&container, "test", 103);
-	JsonValue<int8_t, true> optional04(&container, "test", 103);
+	JsonOptionalValue<int8_t> optional4(&container, "test", 103);
+	JsonOptionalValue<int8_t> optional04(&container, "test", 103);
 
 	CHECK_TRUE(optional1 == optional01);
 	CHECK_FALSE(optional1 != optional01);
@@ -460,8 +460,8 @@ TEST(JsonNumericValueGroup, JsonBoolField_Equals_Test) {
 	CHECK_TRUE(testable1 != testable01);
 	CHECK_FALSE(testable1 == testable01);
 
-	JsonValue<bool, true> optional1(&container, "test", true);
-	JsonValue<bool, true> optional01(&container, "test", true);
+	JsonOptionalValue<bool> optional1(&container, "test", true);
+	JsonOptionalValue<bool> optional01(&container, "test", true);
 
 	CHECK_TRUE(optional1 == optional01);
 	CHECK_FALSE(optional1 != optional01);
@@ -488,7 +488,7 @@ TEST(JsonNumericValueGroup, TryParse_Field_Optional_Test) {
 	CHECK_FALSE(testableFieldMustExists->TryParse(&doc));
 	delete testableFieldMustExists;
 
-	auto testableWithOptional = new JsonValue<uint32_t, true>(&container, "testUInt0");
+	auto testableWithOptional = new JsonOptionalValue<uint32_t>(&container, "testUInt0");
 	testableWithOptional->Value = 123;
 	doc.Parse("{\"otherField\":153}");
 	CHECK_TRUE(testableWithOptional->TryParse(&doc));

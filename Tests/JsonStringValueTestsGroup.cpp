@@ -60,7 +60,7 @@ TEST(JsonStringValueGroup, JsonStringValue_TryParse_Field_Optional_Test) {
 	CHECK_FALSE(testableFieldMustExists->TryParse(&doc));
 	delete testableFieldMustExists;
 
-	auto testableWithOptional = new JsonValue<char *, true>(&container, "testString");
+	auto testableWithOptional = new JsonOptionalValue<char *>(&container, "testString");
 	doc.Parse("{\"otherField\":\"User1\"}");
 	CHECK_TRUE(testableWithOptional->TryParse(&doc));
 	STRCMP_EQUAL(testableWithOptional->Value, "");
@@ -87,8 +87,8 @@ TEST(JsonStringValueGroup, JsonStringValue_Equals_Test) {
 	CHECK_TRUE(testable1 != testable01);
 	CHECK_FALSE(testable1 == testable01);
 
-	JsonValue<char *, true> optional1(&container, "test", "testString");
-	JsonValue<char *, true> optional01(&container, "test", "testString");
+	JsonOptionalValue<char *> optional1(&container, "test", "testString");
+	JsonOptionalValue<char *> optional01(&container, "test", "testString");
 
 	CHECK_TRUE(optional1 == optional01);
 	CHECK_FALSE(optional1 != optional01);
