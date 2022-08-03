@@ -4,6 +4,10 @@ set(CMAKE_CXX_STANDARD 14)
 
 include_directories(include)
 
+if(WIN32)
+  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+endif(WIN32)
+
 add_executable(RapidJSONWrapper     
     main.cpp 
     )
