@@ -419,7 +419,7 @@ TEST(JsonObjectTestsGroup, JsonObject_Perfomance_Test) {
 	size_t size = 0;
 	int picture[] = {0x66, 0x00, 0x67, 0x67, 0x67, 0x00, 0x68, 0x68, 0x68, 0x00, 0x69, 0x69, 0x69, 0x00, 0x6A, 0x6A};
 
-	const int avgCount = 8;
+	const int avgCount = 10;
 	for (size_t a = 0; a < avgCount; a++) {
 
 		auto customerList = new CustomerList();
