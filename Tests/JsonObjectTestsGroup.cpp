@@ -227,27 +227,15 @@ TEST(JsonObjectTestsGroup, JsonObject_Parse_And_Length_Defined_Test) {
 
 TEST(JsonObjectTestsGroup, JsonObject_Parse_With_Nullable_Values_Test) {
 	GoodsDto goods;
-	CHECK_TRUE(goods.TryParse("{\"Id\":1,\"Created\":null,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}"));
-	CHECK_EQUAL(goods.Created.Value, 0);
-	CHECK_EQUAL(goods.Price.Value, 123.25);
+	CHECK_FALSE(goods.TryParse("{\"Id\":1,\"Created\":null,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}"));
+	CHECK_FALSE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":null,\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}"));
+	CHECK_FALSE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":null}"));
+	CHECK_FALSE(goods.TryParse("{\"Id\":null,\"Created\":null,\"Group\":null,\"Name\":null,\"Price\":null,\"Quantity\":null}"));
 
-	CHECK_TRUE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":null,\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}"));
-	STRCMP_EQUAL(goods.Group.Value, "");
-	CHECK_EQUAL(goods.Price.Value, 123.25);
-
-	CHECK_TRUE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":null}"));
-	CHECK_EQUAL(goods.Quantity.Value, 0);
-	CHECK_EQUAL(goods.Price.Value, 123.25);
-
-	CHECK_TRUE(goods.TryParse("{\"Id\":null,\"Created\":null,\"Group\":null,\"Name\":null,\"Price\":null,\"Quantity\":null}"));
-	CHECK_EQUAL(goods.Id.Value, 0);
-	CHECK_EQUAL(goods.Created.Value, 0);
-	STRCMP_EQUAL(goods.Group.Value, "");
-	STRCMP_EQUAL(goods.Name.Value, "");
-	CHECK_EQUAL(goods.Price.Value, 0.0);
-	CHECK_EQUAL(goods.Quantity.Value, 0.0);
-	CHECK_EQUAL(goods.Deleted.Value, false);
-	STRCMP_EQUAL(goods.StoreName.Value, "");
+	CustomerDto customerDto;
+	CHECK_TRUE(customerDto.TryParse(
+		"{\"id\":123,\"name\":\"sh\",\"blob\":null,\"orders\":[{\"supplier\":\"Dell1\",\"dateTime\":1657058001,\"goods\":[{\"Id\":1,\"Created\":1657052789,"
+		"\"Group\":\"Keyboards\",\"Name\":\"K1-100\",\"Price\":58.25,\"Quantity\":48.2,\"Deleted\":false,\"StoreName\":\"\"}],\"user\":{\"name\":\"Joe Doe\",\"role\":1}}]}"));
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_Parse_With_Begin_End_Stages_Test) {
