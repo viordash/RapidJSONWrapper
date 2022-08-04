@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <chrono>
 #include "JsonWrapper.h"
 #include "CppUTest/CommandLineTestRunner.h"
 
@@ -110,6 +111,11 @@ class CustomerDto : public JsonObject {
 		  Name(this, "name"), //
 		  Blob(this, "blob"), //
 		  Orders(this, "orders", &ordersList){};
+};
+
+class CustomerList : public JsonArray<CustomerDto *> {
+  public:
+	bool Validate(CustomerDto *item) { return item->Validate(); }
 };
 
 TEST(JsonObjectTestsGroup, JsonObject_Parse_Test) {
@@ -233,9 +239,9 @@ TEST(JsonObjectTestsGroup, JsonObject_Parse_With_Nullable_Values_Test) {
 	CHECK_FALSE(goods.TryParse("{\"Id\":null,\"Created\":null,\"Group\":null,\"Name\":null,\"Price\":null,\"Quantity\":null}"));
 
 	CustomerDto customerDto;
-	CHECK_TRUE(customerDto.TryParse(
-		"{\"id\":123,\"name\":\"sh\",\"blob\":null,\"orders\":[{\"supplier\":\"Dell1\",\"dateTime\":1657058001,\"goods\":[{\"Id\":1,\"Created\":1657052789,"
-		"\"Group\":\"Keyboards\",\"Name\":\"K1-100\",\"Price\":58.25,\"Quantity\":48.2,\"Deleted\":false,\"StoreName\":\"\"}],\"user\":{\"name\":\"Joe Doe\",\"role\":1}}]}"));
+	CHECK_TRUE(
+		customerDto.TryParse("{\"id\":123,\"name\":\"sh\",\"blob\":null,\"orders\":[{\"supplier\":\"Dell1\",\"dateTime\":1657058001,\"goods\":[{\"Id\":1,\"Created\":1657052789,"
+							 "\"Group\":\"Keyboards\",\"Name\":\"K1-100\",\"Price\":58.25,\"Quantity\":48.2,\"Deleted\":false,\"StoreName\":\"\"}],\"user\":{\"name\":\"Joe Doe\",\"role\":1}}]}"));
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_Parse_With_Begin_End_Stages_Test) {
@@ -358,15 +364,15 @@ TEST(JsonObjectTestsGroup, JsonObject_With_Blob_Field_Test) {
 	for (size_t i = 0; i < pictureSize; i++) { picture[i] = 'A' + (i % 58); }
 
 	auto customerDto1 = new CustomerDto(1234567890123456789LL, "Viordash", {picture, pictureSize});
-	customerDto1->ordersList.Add(new OrderDto("Dell1", 1657058001, "Joe Doe", TUserRole::uViewer));
-	customerDto1->ordersList.Add(new OrderDto("Dell2", 1657058002, "Joe Doe", TUserRole::uViewer));
+	CHECK(customerDto1->ordersList.Add(new OrderDto("Dell1", 1657058001, "Joe Doe", TUserRole::uViewer)));
+	CHECK(customerDto1->ordersList.Add(new OrderDto("Dell2", 1657058002, "Joe Doe", TUserRole::uViewer)));
 	auto orderDto1 = customerDto1->ordersList[0];
-	orderDto1->goodsList.Add(new GoodsDto(1, 1657052789, "Keyboards", "K1-100", 58.25, 48.2));
-	orderDto1->goodsList.Add(new GoodsDto(2, 1657053789, "Keyboards", "K2-100", 158.25, 448.2));
-	orderDto1->goodsList.Add(new GoodsDto(3, 1657054789, "Keyboards", "K3-100", 258.25, 548.2));
+	CHECK(orderDto1->goodsList.Add(new GoodsDto(1, 1657052789, "Keyboards", "K1-100", 58.25, 48.2)));
+	CHECK(orderDto1->goodsList.Add(new GoodsDto(2, 1657053789, "Keyboards", "K2-100", 158.25, 448.2)));
+	CHECK(orderDto1->goodsList.Add(new GoodsDto(3, 1657054789, "Keyboards", "K3-100", 258.25, 548.2)));
 	auto orderDto2 = customerDto1->ordersList[1];
-	orderDto2->goodsList.Add(new GoodsDto(100, 1007052789, "Mouse", "M1-100", 8.25, 18.2));
-	orderDto2->goodsList.Add(new GoodsDto(200, 2007053789, "Mouse", "M2-100", 48.25, 28.2));
+	CHECK(orderDto2->goodsList.Add(new GoodsDto(100, 1007052789, "Mouse", "M1-100", 8.25, 18.2)));
+	CHECK(orderDto2->goodsList.Add(new GoodsDto(200, 2007053789, "Mouse", "M2-100", 48.25, 28.2)));
 
 	auto size = customerDto1->DirectWriteTo(0, OnReady);
 	CHECK_EQUAL(size, 10173289);
@@ -395,10 +401,72 @@ TEST(JsonObjectTestsGroup, JsonObject_Optional_Values_Presented_Test) {
 	OrderDto order;
 
 	CHECK_FALSE(order.DateTime.Presented());
-	
+
 	CHECK(order.TryParse("{\"supplier\":\"Dell\",\"dateTime\":1657058000,\"goods\":[],\"user\":{\"name\":\"Joe Doe\",\"role\":1}}"));
 	CHECK_TRUE(order.DateTime.Presented());
 
 	CHECK(order.TryParse("{\"supplier\":\"Dell\",\"goods\":[],\"user\":{\"name\":\"Joe Doe\",\"role\":1}}"));
 	CHECK_FALSE(order.DateTime.Presented());
+}
+
+TEST(JsonObjectTestsGroup, JsonObject_Perfomance_Test) {
+	JsonFieldsContainer container;
+
+	uint64_t durationAdd = 0;
+	uint64_t durationDirectWriteTo = 0;
+	uint64_t durationTryParse = 0;
+
+	size_t size = 0;
+	int picture[] = {0x66, 0x00, 0x67, 0x67, 0x67, 0x00, 0x68, 0x68, 0x68, 0x00, 0x69, 0x69, 0x69, 0x00, 0x6A, 0x6A};
+
+	const int avgCount = 8;
+	for (size_t a = 0; a < avgCount; a++) {
+
+		auto customerList = new CustomerList();
+		const int count = 1'000;
+		{
+			auto start = std::chrono::high_resolution_clock::now();
+			for (size_t i = 0; i < count; i++) {
+				picture[0] = i;
+				customerList->Add(new CustomerDto(12345678901100LL + i, "Viordash", {(uint8_t *)picture, sizeof(picture)}));
+				auto customerDto = (*customerList)[i];
+				for (size_t k = 0; k < (count / 100) + 1; k++) {
+					customerDto->ordersList.Add(new OrderDto("Dell1", 165700 + i + k, "Joe Doe", TUserRole::uViewer));
+
+					auto orderDto = customerDto->ordersList[k];
+					for (size_t m = 0; m < (count / 1000) + 1; m++) { //
+						orderDto->goodsList.Add(new GoodsDto(1, 16570 + i + k + m, "Keyboards", "K1-100", k * 2.5, k * 0.1));
+					}
+				}
+			}
+			auto finish = std::chrono::high_resolution_clock::now();
+			durationAdd += std::chrono::duration_cast<std::chrono::microseconds>(finish - start).count();
+		}
+
+		{
+			auto start = std::chrono::high_resolution_clock::now();
+			size = customerList->DirectWriteTo(0, OnReady);
+			CHECK(size > 0);
+			auto finish = std::chrono::high_resolution_clock::now();
+			durationDirectWriteTo += std::chrono::duration_cast<std::chrono::microseconds>(finish - start).count();
+		}
+		delete customerList;
+
+		customerList = new CustomerList();
+		{
+			auto start = std::chrono::high_resolution_clock::now();
+			CHECK(customerList->TryParse(DirectWriteTestBuffer, size));
+			auto finish = std::chrono::high_resolution_clock::now();
+			durationTryParse += std::chrono::duration_cast<std::chrono::microseconds>(finish - start).count();
+		}
+		delete customerList;
+		delete[] DirectWriteTestBuffer;
+	}
+	char text[512];
+	sprintf(text, "customerList->Add duration(mean %u): %.02f us", avgCount, durationAdd / avgCount / 1000.0);
+	UT_PRINT(text);
+	sprintf(text, "customerList->DirectWriteTo size: %u, duration(mean %u): %.02f us", size, avgCount, durationDirectWriteTo / avgCount / 1000.0);
+	UT_PRINT(text);
+	sprintf(text, "customerList->TryParse duration(mean %u): %.02f us", avgCount, durationTryParse / avgCount / 1000.0);
+	UT_PRINT(text);
 }
