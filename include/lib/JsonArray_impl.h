@@ -140,6 +140,7 @@ template <class TItem> bool JsonArray<TItem>::TryParseInternal(TJsonArray *jArra
 		}
 		return true;
 	}
+	return false;
 }
 template <> bool JsonArray<char *>::TryParseInternal(TJsonArray *jArray) {
 	for (const auto &jItem : *jArray) {
