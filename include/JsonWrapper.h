@@ -37,15 +37,8 @@ class JsonValue : public JsonValueBase {
 	JsonValue(JsonFieldsContainer *container, const char *name) : JsonValue(container, name, T()) {}
 	virtual ~JsonValue() {}
 
-	TJsonDocument *BeginTryParse(const char *jsonStr, size_t length = 0);
-	void EndTryParse(TJsonDocument *doc);
-	bool TryParse(const char *jsonStr, size_t length = 0);
 	bool TryParse(TJsonDocument *doc) override;
-
 	void WriteToDoc(TJsonDocument *doc) override final;
-	size_t WriteToString(char *outBuffer, size_t outBufferSize);
-	typedef void (*TOnCompleted)(void *parent, const char *json, int size);
-	size_t DirectWriteTo(void *parent, TOnCompleted onCompleted);
 
 	void Reset();
 	bool Equals(JsonValueBase *other) override final;

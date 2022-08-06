@@ -2,30 +2,6 @@
 
 #include "LibJson.h"
 
-template <class T> TJsonDocument *JsonValue<T>::BeginTryParse(const char *jsonStr, size_t length) {
-	if (jsonStr == NULL) { return NULL; }
-
-	auto doc = new rapidjson::Document();
-	if (length == 0) {
-		doc->Parse(jsonStr);
-	} else {
-		doc->Parse(jsonStr, length);
-	}
-	if (doc->HasParseError() || !TryParse(doc)) {
-		delete doc;
-		return NULL;
-	}
-	return doc;
-}
-
-template <class T> void JsonValue<T>::EndTryParse(TJsonDocument *doc) { delete doc; }
-
-template <class T> bool JsonValue<T>::TryParse(const char *jsonStr, size_t length) {
-	auto doc = BeginTryParse(jsonStr, length);
-	if (doc == NULL) { return false; }
-	EndTryParse(doc);
-	return true;
-}
 template <class T> bool JsonValue<T>::TryParse(TJsonDocument *doc) {
 	rapidjson::Value::MemberIterator member = doc->FindMember(Name);
 	if (member == doc->MemberEnd()) {
@@ -37,32 +13,7 @@ template <class T> bool JsonValue<T>::TryParse(TJsonDocument *doc) {
 	if (TryParseCore(&jsonVal)) { return true; }
 	return false;
 }
-template <class T> size_t JsonValue<T>::WriteToString(char *outBuffer, size_t outBufferSize) {
-	rapidjson::Document doc;
-	WriteToDoc(&doc);
-	rapidjson::StringBuffer buffer;
-	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-	doc.Accept(writer);
 
-	const char *jsonStr = buffer.GetString();
-	size_t size = buffer.GetSize();
-	if (size > outBufferSize - 1) { size = outBufferSize - 1; }
-	memcpy(outBuffer, jsonStr, size);
-	outBuffer[size] = 0;
-	return size;
-}
-template <class T> size_t JsonValue<T>::DirectWriteTo(void *parent, TOnCompleted onCompleted) {
-	rapidjson::Document doc;
-	WriteToDoc(&doc);
-	rapidjson::StringBuffer buffer;
-	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-	doc.Accept(writer);
-
-	const char *json = buffer.GetString();
-	int size = buffer.GetSize();
-	onCompleted(parent, json, size);
-	return size;
-}
 template <class T> void JsonValue<T>::Reset() { Value = T(); }
 
 template <class T> bool operator!=(const JsonValue<T> &v1, const JsonValue<T> &v2) { return !((JsonValueBase *)&v1)->Equals((JsonValueBase *)&v2); }
