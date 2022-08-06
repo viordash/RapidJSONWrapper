@@ -35,10 +35,6 @@ template <class T> bool JsonValue<T>::TryParse(TJsonDocument *doc) {
 
 	rapidjson::Value &jsonVal = member->value;
 	if (TryParseCore(&jsonVal)) { return true; }
-	if (jsonVal.IsNull()) {
-		this->Reset();
-		return true;
-	}
 	return false;
 }
 template <class T> size_t JsonValue<T>::WriteToString(char *outBuffer, size_t outBufferSize) {
@@ -133,7 +129,14 @@ template <> bool JsonValue<char *>::TryParseCore(TJsonValue *jValue) {
 }
 
 template <> bool JsonValue<TJsonRawData>::TryParseCore(TJsonValue *jValue) {
-	if (!jValue->IsString()) { return false; }
+	if (!jValue->IsString()) {
+		if (jValue->IsNull()) {
+			this->Reset();
+			return true;
+		}
+		return false;
+	}
+
 	TJsonRawData rawData = {(uint8_t *)jValue->GetString(), jValue->GetStringLength()};
 	Value = rawData;
 	return true;

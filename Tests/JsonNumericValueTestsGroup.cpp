@@ -61,14 +61,10 @@ TEST(JsonNumericValueGroup, JsonUIntField_TryParse_Test) {
 	CHECK_EQUAL(testable4.Value, 168);
 
 	doc.Parse("{\"test\":null}");
-	CHECK(testable1.TryParse(&doc));
-	CHECK(testable2.TryParse(&doc));
-	CHECK(testable3.TryParse(&doc));
-	CHECK(testable4.TryParse(&doc));
-	CHECK_EQUAL(testable1.Value, 0);
-	CHECK_EQUAL(testable2.Value, 0);
-	CHECK_EQUAL(testable3.Value, 0);
-	CHECK_EQUAL(testable4.Value, 0);
+	CHECK_FALSE(testable1.TryParse(&doc));
+	CHECK_FALSE(testable2.TryParse(&doc));
+	CHECK_FALSE(testable3.TryParse(&doc));
+	CHECK_FALSE(testable4.TryParse(&doc));
 }
 
 TEST(JsonNumericValueGroup, JsonUIntField_WriteTo_Test) {
@@ -249,14 +245,10 @@ TEST(JsonNumericValueGroup, JsonIntField_TryParse_Test) {
 	CHECK_EQUAL(testable4.Value, -88);
 
 	doc.Parse("{\"test\":null}");
-	CHECK(testable1.TryParse(&doc));
-	CHECK(testable2.TryParse(&doc));
-	CHECK(testable3.TryParse(&doc));
-	CHECK(testable4.TryParse(&doc));
-	CHECK_EQUAL(testable1.Value, 0);
-	CHECK_EQUAL(testable2.Value, 0);
-	CHECK_EQUAL(testable3.Value, 0);
-	CHECK_EQUAL(testable4.Value, 0);
+	CHECK_FALSE(testable1.TryParse(&doc));
+	CHECK_FALSE(testable2.TryParse(&doc));
+	CHECK_FALSE(testable3.TryParse(&doc));
+	CHECK_FALSE(testable4.TryParse(&doc));
 }
 
 TEST(JsonNumericValueGroup, JsonIntField_WriteTo_Test) {
@@ -432,8 +424,7 @@ TEST(JsonNumericValueGroup, JsonBoolField_TryParse_Test) {
 	CHECK_EQUAL(testable1.Value, true);
 
 	doc.Parse("{\"test\":null}");
-	CHECK(testable1.TryParse(&doc));
-	CHECK_EQUAL(testable1.Value, false);
+	CHECK_FALSE(testable1.TryParse(&doc));
 }
 
 TEST(JsonNumericValueGroup, JsonBoolField_WriteTo_Test) {

@@ -30,8 +30,7 @@ TEST(JsonStringValueGroup, JsonStringValue_TryParse_Test) {
 	STRCMP_EQUAL(testable.Value, "User1");
 
 	doc.Parse("{\"testString\":null}");
-	CHECK(testable.TryParse(&doc));
-	STRCMP_EQUAL(testable.Value, "");
+	CHECK_FALSE(testable.TryParse(&doc));
 }
 
 TEST(JsonStringValueGroup, JsonStringValue_WriteTo_Test) {

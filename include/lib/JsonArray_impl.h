@@ -42,6 +42,7 @@ template <class TItem> void JsonArray<TItem>::EndTryParse(TJsonDocument *doc) { 
 
 template <class TItem> void JsonArray<TItem>::WriteToDoc(TJsonDocument *doc) {
 	doc->SetArray();
+	doc->Reserve(Items.size(), doc->GetAllocator());
 	WriteToDocInternal(doc);
 }
 
@@ -139,6 +140,7 @@ template <class TItem> bool JsonArray<TItem>::TryParseInternal(TJsonArray *jArra
 		}
 		return true;
 	}
+	return false;
 }
 template <> bool JsonArray<char *>::TryParseInternal(TJsonArray *jArray) {
 	for (const auto &jItem : *jArray) {
@@ -229,24 +231,15 @@ template <class TItem> void JsonArray<TItem>::WriteToDocInternal(TJsonDocument *
 }
 template <> void JsonArray<char *>::WriteToDocInternal(TJsonDocument *doc) {
 	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
-	for (const auto &item : Items) {
-		rapidjson::Value temp(rapidjson::StringRef((char *)item));
-		doc->PushBack(temp, allocator);
-	}
+	for (const auto &item : Items) { doc->PushBack(rapidjson::Value(rapidjson::StringRef((char *)item)).Move(), allocator); }
 }
 template <> void JsonArray<TBoolArray>::WriteToDocInternal(TJsonDocument *doc) {
 	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
-	for (const auto &item : Items) {
-		rapidjson::Value temp((bool)item);
-		doc->PushBack(temp, allocator);
-	}
+	for (const auto &item : Items) { doc->PushBack(rapidjson::Value((bool)item).Move(), allocator); }
 }
 template <class TItem> void JsonArray<TItem>::GenericWriteToDocInternal(TJsonDocument *doc) {
 	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
-	for (const auto &item : Items) {
-		rapidjson::Value temp((TItem)item);
-		doc->PushBack(temp, allocator);
-	}
+	for (const auto &item : Items) { doc->PushBack(rapidjson::Value((TItem)item).Move(), allocator); }
 }
 template <> void JsonArray<int64_t>::WriteToDocInternal(TJsonDocument *doc) { GenericWriteToDocInternal(doc); }
 template <> void JsonArray<uint64_t>::WriteToDocInternal(TJsonDocument *doc) { GenericWriteToDocInternal(doc); }
