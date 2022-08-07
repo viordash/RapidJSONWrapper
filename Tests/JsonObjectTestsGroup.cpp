@@ -142,7 +142,6 @@ TEST(JsonObjectTestsGroup, JsonObject_Parse_Test) {
 }
 
 TEST(JsonObjectTestsGroup, Complex_JsonObject_TryParse_Test) {
-	JsonFieldsContainer container;
 	OrderDto order;
 
 	CHECK(order.TryParse("{\"supplier\":\"Dell\",\"dateTime\":1657058000,\"goods\":[{\"Id\":1,\"Created\":1657052789,\"Group\":\"Keyboards\",\"Name\":\"K1-100\",\"Price\":58."
@@ -291,8 +290,6 @@ TEST(JsonObjectTestsGroup, JsonObject_WriteTo_Async_Test) {
 }
 
 TEST(JsonObjectTestsGroup, Complex_JsonObject_WriteTo_Test) {
-	JsonFieldsContainer container;
-
 	OrderDto orderDto("Dell", 1657058000, "Joe Doe", TUserRole::uViewer);
 	orderDto.goodsList.Add(new GoodsDto(1, 1657052789, "Keyboards", "K1-100", 58.25, 48.2));
 	orderDto.goodsList.Add(new GoodsDto(2, 1657053789, "Keyboards", "K2-100", 158.25, 448.2));
@@ -317,8 +314,6 @@ TEST(JsonObjectTestsGroup, Complex_JsonObject_WriteTo_Test) {
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_Equals_Test) {
-	JsonFieldsContainer container;
-
 	OrderDto orderDto1("Dell", 1657058000, "Joe Doe", TUserRole::uViewer);
 	orderDto1.goodsList.Add(new GoodsDto(1, 1657052789, "Keyboards", "K1-100", 58.25, 48.2));
 	orderDto1.goodsList.Add(new GoodsDto(2, 1657053789, "Keyboards", "K2-100", 158.25, 448.2));
@@ -337,8 +332,6 @@ TEST(JsonObjectTestsGroup, JsonObject_Equals_Test) {
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_Clone_Test) {
-	JsonFieldsContainer container;
-
 	auto orderDto1 = new OrderDto("Dell", 1657058000, "Joe Doe", TUserRole::uViewer);
 	orderDto1->goodsList.Add(new GoodsDto(1, 1657052789, "Keyboards", "K1-100", 58.25, 48.2));
 	orderDto1->goodsList.Add(new GoodsDto(2, 1657053789, "Keyboards", "K2-100", 158.25, 448.2));
@@ -357,8 +350,6 @@ TEST(JsonObjectTestsGroup, JsonObject_Clone_Test) {
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_With_Blob_Field_Test) {
-	JsonFieldsContainer container;
-
 	const int pictureSize = 1'000'0000;
 	uint8_t *picture = new uint8_t[pictureSize];
 	for (size_t i = 0; i < pictureSize; i++) { picture[i] = 'A' + (i % 58); }
@@ -397,7 +388,6 @@ TEST(JsonObjectTestsGroup, JsonObject_With_Blob_Field_Test) {
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_Optional_Values_Presented_Test) {
-	JsonFieldsContainer container;
 	OrderDto order;
 
 	CHECK_FALSE(order.DateTime.Presented());
