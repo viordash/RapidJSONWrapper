@@ -2,20 +2,22 @@
 
 #include "LibJson.h"
 
-JsonValueBase *JsonFieldsContainer::GetField(const char *name) {
-	for (std::vector<JsonValueBase *>::iterator item = Fields.begin(); item != Fields.end(); item++) {
-		auto field = *item;
-		if (strcmp(field->Name, name) == 0) { return field; }
-	}
-	return NULL;
-}
-
 bool JsonObject::TryParse(TJsonDocument *doc) {
 	if (!doc->IsObject()) { return false; }
 
-	for (std::vector<JsonValueBase *>::iterator item = Fields.begin(); item != Fields.end(); item++) {
-		auto field = *item;
-		if (!field->TryParse(doc)) { return false; }
+	for (size_t i = 0; i < Names.size(); i++) {
+		auto value = Values[i];
+		rapidjson::Value::MemberIterator member = doc->FindMember(Names[i]);
+		if (member == doc->MemberEnd()) {
+			if (value->TryNotPresented()) {
+				value->Reset();
+			} else {
+				return false;
+			}
+		} else {
+			rapidjson::Value &jsonVal = member->value;
+			if (!value->TryParse(&jsonVal)) { return false; }
+		}
 	}
 	return true;
 }
@@ -47,7 +49,7 @@ bool JsonObject::TryParse(const char *jsonStr, size_t length) {
 
 void JsonObject::WriteToDoc(TJsonDocument *doc) {
 	doc->SetObject();
-	for (const auto &field : Fields) { field->WriteToDoc(doc); }
+	for (size_t i = 0; i < Names.size(); i++) { Values[i]->WriteToDoc(doc, &rapidjson::StringRef(Names[i])); }
 }
 
 size_t JsonObject::WriteToString(char *outBuffer, size_t outBufferSize) {
@@ -82,17 +84,18 @@ bool operator!=(const JsonObject &v1, const JsonObject &v2) { return !((JsonObje
 bool operator==(const JsonObject &v1, const JsonObject &v2) { return !(v1 != v2); }
 
 bool JsonObject::Equals(JsonObject *other) {
-	if (Fields.size() != other->Fields.size()) { return false; }
+	if (Names.size() != other->Names.size()) { return false; }
 
-	for (size_t i = 0; i < other->Fields.size(); i++) {
-		if (!Fields[i]->Equals(other->Fields[i])) { return false; }
+	for (size_t i = 0; i < Names.size(); i++) {
+		if (strcmp(Names[i], other->Names[i]) != 0) { return false; }
+		if (!Values[i]->Equals(other->Values[i])) { return false; }
 	}
 	return true;
 }
 
 void JsonObject::CloneTo(JsonObject *other) {
-	for (const auto &field : Fields) {
-		auto otherField = other->GetField(field->Name);
-		if (otherField != NULL) { field->CloneTo(otherField); }
+	for (size_t i = 0; i < Names.size(); i++) {
+		auto otherValue = other->GetField(Names[i]);
+		if (otherValue != NULL) { Values[i]->CloneTo(other->Values[i]); }
 	}
 }

@@ -410,8 +410,6 @@ TEST(JsonObjectTestsGroup, JsonObject_Optional_Values_Presented_Test) {
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_Perfomance_Test) {
-	JsonFieldsContainer container;
-
 	uint64_t durationAdd = 0;
 	uint64_t durationDirectWriteTo = 0;
 	uint64_t durationTryParse = 0;

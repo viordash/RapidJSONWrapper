@@ -8,6 +8,7 @@
 typedef rapidjson::Document TJsonDocument;
 typedef rapidjson::Value::Array TJsonArray;
 typedef rapidjson::Value TJsonValue;
+typedef rapidjson::GenericStringRef<char> TJsonValueName;
 
 class JsonArrayBase {
   public:
@@ -19,26 +20,43 @@ class JsonArrayBase {
 
 class JsonValueBase;
 
-class JsonFieldsContainer {
+class JsonNamesContainer {
   public:
-	std::vector<JsonValueBase *> Fields;
-	void Add(JsonValueBase *field) { Fields.push_back(field); }
-	JsonValueBase *GetField(const char *name);
+	std::vector<const char *> Names;
+};
+
+class JsonValuesContainer {
+  public:
+	std::vector<JsonValueBase *> Values;
+};
+
+class JsonFieldsContainer : public JsonNamesContainer, public JsonValuesContainer {
+  public:
+	void Add(const char *name, JsonValueBase *value) {
+		Names.push_back(name);
+		Values.push_back(value);
+	}
+
+  protected:
+	JsonValueBase *GetField(const char *name) {
+		for (size_t i = 0; i < Names.size(); i++) {
+			if (strcmp(Names[i], name) == 0) { return Values[i]; }
+		}
+		return NULL;
+	}
 };
 
 class JsonValueBase {
   public:
-	const char *Name;
-	JsonValueBase(JsonValueBase &&) = delete;
-	JsonValueBase(const JsonValueBase &) = delete;
-
-	JsonValueBase(JsonFieldsContainer *container, const char *name) : Name(name) { container->Add(this); }
 	virtual ~JsonValueBase(){};
 
-	virtual bool TryParse(TJsonDocument *doc) = 0;
-	virtual void WriteToDoc(TJsonDocument *doc) = 0;
+	virtual bool TryParse(TJsonValue *value) = 0;
+	virtual void WriteToDoc(TJsonDocument *doc, TJsonValueName *name) = 0;
+	virtual void Reset() = 0;
 	virtual bool Equals(JsonValueBase *other) = 0;
 	virtual void CloneTo(JsonValueBase *other) = 0;
+
+	virtual bool TryNotPresented() = 0;
 
   protected:
 };

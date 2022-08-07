@@ -8,8 +8,7 @@ typedef struct {
 	size_t Size;
 } TJsonRawData;
 
-template <class T> //
-class JsonValue : public JsonValueBase {
+template <class T> class JsonValue : public JsonValueBase {
   public:
 	struct ValueWrapper {
 	  public:
@@ -33,16 +32,18 @@ class JsonValue : public JsonValueBase {
 
 	ValueWrapper Value;
 
-	JsonValue(JsonFieldsContainer *container, const char *name, T value) : JsonValueBase(container, name), Value(value) {}
+	JsonValue(JsonFieldsContainer *container, const char *name, T value) : Value(value) { container->Add(name, this); }
 	JsonValue(JsonFieldsContainer *container, const char *name) : JsonValue(container, name, T()) {}
 	virtual ~JsonValue() {}
 
-	bool TryParse(TJsonDocument *doc) override;
-	void WriteToDoc(TJsonDocument *doc) override final;
+	bool TryParse(TJsonValue *value) override final;
+	void WriteToDoc(TJsonDocument *doc, TJsonValueName *name) override final;
 
-	void Reset();
+	void Reset() override final;
 	bool Equals(JsonValueBase *other) override final;
 	void CloneTo(JsonValueBase *other) override final;
+
+	bool TryNotPresented() override { return false; };
 
   protected:
 	bool TryParseCore(TJsonValue *value);
@@ -51,12 +52,15 @@ class JsonValue : public JsonValueBase {
 template <class T> //
 class JsonOptionalValue : public JsonValue<T> {
   public:
-	JsonOptionalValue(JsonFieldsContainer *container, const char *name, T value) : JsonValue<T>(container, name, value), presented(false) {}
+	JsonOptionalValue(JsonFieldsContainer *container, const char *name, T value) : JsonValue<T>(container, name, value), presented(true) {}
 	JsonOptionalValue(JsonFieldsContainer *container, const char *name) : JsonOptionalValue(container, name, T()) {}
 	virtual ~JsonOptionalValue() {}
 
-	bool TryParse(TJsonDocument *doc) override final;
 	bool Presented();
+	bool TryNotPresented() override final {
+		presented = false;
+		return true;
+	};
 
   protected:
 	bool presented;
