@@ -18,13 +18,14 @@ class UserDto : public JsonObject {
 	JsonValue<char *> Name;
 	JsonOptionalValue<uint32_t> Role;
 
-	UserDto(char *name, TUserRole role)
+	UserDto(char *name = NULL, TUserRole role = (TUserRole)0)
 		: Name(this, "name", name), //
 		  Role(this, "role", role){};
 
-	UserDto()
-		: Name(this, "name"), //
-		  Role(this, "role") {}
+	UserDto(JsonObject *container)
+		: JsonObject(container), //
+		  Name(this, "name"),	 //
+		  Role(this, "role"){};
 };
 
 class GoodsDto : public JsonObject {
@@ -38,7 +39,7 @@ class GoodsDto : public JsonObject {
 	JsonOptionalValue<bool> Deleted;
 	JsonOptionalValue<char *> StoreName;
 
-	GoodsDto(int id, uint32_t created, char *group, char *name, float price, double quantity, bool deleted = false, char *storeName = "")
+	GoodsDto(int id = 0, uint32_t created = 0, char *group = NULL, char *name = NULL, float price = 0, double quantity = 0, bool deleted = false, char *storeName = "")
 		: Id(this, "Id", id),					//
 		  Created(this, "Created", created),	//
 		  Group(this, "Group", group),			//
@@ -48,15 +49,15 @@ class GoodsDto : public JsonObject {
 		  Deleted(this, "Deleted", deleted),	//
 		  StoreName(this, "StoreName", storeName){};
 
-	GoodsDto()
-		: Id(this, "Id"),			  //
-		  Created(this, "Created"),	  //
-		  Group(this, "Group"),		  //
-		  Name(this, "Name"),		  //
-		  Price(this, "Price"),		  //
-		  Quantity(this, "Quantity"), //
-		  Deleted(this, "Deleted"),	  //
-		  StoreName(this, "StoreName") {}
+	GoodsDto(JsonObject *container)
+		: JsonObject(container), Id(this, "Id"), //
+		  Created(this, "Created"),				 //
+		  Group(this, "Group"),					 //
+		  Name(this, "Name"),					 //
+		  Price(this, "Price"),					 //
+		  Quantity(this, "Quantity"),			 //
+		  Deleted(this, "Deleted"),				 //
+		  StoreName(this, "StoreName"){};
 };
 
 class GoodsList : public JsonArray<GoodsDto *> {
@@ -73,18 +74,19 @@ class OrderDto : public JsonObject {
 	GoodsList goodsList;
 	UserDto userDto;
 
-	OrderDto(char *supplier, uint32_t dateTime, char *userName, TUserRole userRole)
+	OrderDto(char *supplier = NULL, uint32_t dateTime = 0, char *userName = NULL, TUserRole userRole = (TUserRole)0)
 		: Supplier(this, "supplier", supplier), //
 		  DateTime(this, "dateTime", dateTime), //
 		  Goods(this, "goods", &goodsList),		//
 		  userDto(userName, userRole),			//
 		  User(this, "user", &userDto){};
 
-	OrderDto()
-		: Supplier(this, "supplier"),		//
+	OrderDto(JsonObject *container)
+		: JsonObject(container),			//
+		  Supplier(this, "supplier"),		//
 		  DateTime(this, "dateTime"),		//
 		  Goods(this, "goods", &goodsList), //
-		  User(this, "user", &userDto) {}
+		  User(this, "user", &userDto){};
 };
 
 class OrdersList : public JsonArray<OrderDto *> {
@@ -100,16 +102,17 @@ class CustomerDto : public JsonObject {
 	JsonValue<JsonArrayBase *> Orders;
 	OrdersList ordersList;
 
-	CustomerDto(uint64_t id, char *name, TJsonRawData blob)
+	CustomerDto(uint64_t id = 0, char *name = NULL, TJsonRawData blob = TJsonRawData())
 		: Id(this, "id", id),		//
 		  Name(this, "name", name), //
 		  Blob(this, "blob", blob), //
 		  Orders(this, "orders", &ordersList){};
 
-	CustomerDto()
-		: Id(this, "id"),	  //
-		  Name(this, "name"), //
-		  Blob(this, "blob"), //
+	CustomerDto(JsonObject *container)
+		: JsonObject(container), //
+		  Id(this, "id"),		 //
+		  Name(this, "name"),	 //
+		  Blob(this, "blob"),	 //
 		  Orders(this, "orders", &ordersList){};
 };
 
@@ -390,7 +393,7 @@ TEST(JsonObjectTestsGroup, JsonObject_With_Blob_Field_Test) {
 TEST(JsonObjectTestsGroup, JsonObject_Optional_Values_Presented_Test) {
 	OrderDto order;
 
-	CHECK_FALSE(order.DateTime.Presented());
+	CHECK_TRUE(order.DateTime.Presented());
 
 	CHECK(order.TryParse("{\"supplier\":\"Dell\",\"dateTime\":1657058000,\"goods\":[],\"user\":{\"name\":\"Joe Doe\",\"role\":1}}"));
 	CHECK_TRUE(order.DateTime.Presented());

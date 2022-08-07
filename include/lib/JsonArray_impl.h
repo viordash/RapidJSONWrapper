@@ -131,12 +131,26 @@ template <> std::vector<float>::iterator JsonArray<float>::Find(float item) { re
 */
 template <class TItem> bool JsonArray<TItem>::TryParseInternal(TJsonArray *jArray) {
 	if (std::is_base_of<JsonObject, TNewObjectItem>::value) {
-		for (const auto &jItem : *jArray) {
+
+		JsonObject *firstItem = NULL;
+		auto iter = jArray->Begin();
+		if (iter != jArray->End()) {
 			auto newItem = new TNewObjectItem();
-			if (!((JsonObject *)newItem)->TryParse((TJsonDocument *)&jItem) || !Add((TItem)newItem)) {
+			firstItem = (JsonObject *)newItem;
+			if (!((JsonObject *)newItem)->TryParse((TJsonDocument *)iter) || !Add((TItem)newItem)) {
 				delete newItem;
 				return false;
 			}
+			iter++;
+		}
+
+		while (iter != jArray->End()) {
+			auto newItem = new TNewObjectItem(firstItem);
+			if (!((JsonObject *)newItem)->TryParse((TJsonDocument *)iter) || !Add((TItem)newItem)) {
+				delete newItem;
+				return false;
+			}
+			iter++;
 		}
 		return true;
 	}

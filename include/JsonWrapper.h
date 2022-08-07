@@ -32,8 +32,10 @@ template <class T> class JsonValue : public JsonValueBase {
 
 	ValueWrapper Value;
 
-	JsonValue(JsonFieldsContainer *container, const char *name, size_t nameLen, T value = T()) : Value(value) { container->Add(name, nameLen, this); }
-	template <size_t N> JsonValue(JsonFieldsContainer *container, const char (&name)[N], T value = T()) : JsonValue(container, name, N - 1, value) {}
+	JsonValue(T value = T()) : Value(value) {}
+	JsonValue(JsonFieldsContainer *container, const char *name, T value = T()) : Value(value) { container->Add(name, strlen(name), this); }
+	// JsonValue(JsonFieldsContainer *container, const char *name, size_t nameLen, T value = T()) : Value(value) { container->Add(name, nameLen, this); }
+	// template <size_t N> JsonValue(JsonFieldsContainer *container, const char (&name)[N], T value = T()) : JsonValue(container, name, N - 1, value) {}
 
 	virtual ~JsonValue() {}
 
@@ -53,8 +55,10 @@ template <class T> class JsonValue : public JsonValueBase {
 template <class T> //
 class JsonOptionalValue : public JsonValue<T> {
   public:
-	JsonOptionalValue(JsonFieldsContainer *container, const char *name, size_t nameLen, T value = T()) : JsonValue<T>(container, name, nameLen, value), presented(true) {}
-	template <size_t N> JsonOptionalValue(JsonFieldsContainer *container, const char (&name)[N], T value = T()) : JsonOptionalValue(container, name, N - 1, value) {}
+	JsonOptionalValue(T value = T()) : JsonValue(value), presented(true) {}
+	JsonOptionalValue(JsonFieldsContainer *container, const char *name, T value = T()) : JsonValue<T>(container, name, value), presented(true) {}
+	// JsonOptionalValue(JsonFieldsContainer *container, const char *name, size_t nameLen, T value = T()) : JsonValue<T>(container, name, nameLen, value), presented(true) {}
+	// template <size_t N> JsonOptionalValue(JsonFieldsContainer *container, const char (&name)[N], T value = T()) : JsonOptionalValue(container, name, N - 1, value) {}
 	virtual ~JsonOptionalValue() {}
 
 	bool Presented();
@@ -69,6 +73,8 @@ class JsonOptionalValue : public JsonValue<T> {
 
 class JsonObject : public JsonFieldsContainer {
   public:
+	JsonObject(){};
+
 	virtual ~JsonObject(){};
 
 	virtual bool TryParse(TJsonDocument *doc);
@@ -86,6 +92,8 @@ class JsonObject : public JsonFieldsContainer {
 	void CloneTo(JsonObject *other);
 
   protected:
+	JsonObject(JsonObject *container) : JsonFieldsContainer((JsonFieldsContainer *)container){};
+
   private:
 };
 

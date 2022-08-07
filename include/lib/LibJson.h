@@ -18,38 +18,7 @@ class JsonArrayBase {
 	virtual void CloneTo(JsonArrayBase *other) = 0;
 };
 
-class JsonValueBase;
-
-class JsonNamesContainer {
-  public:
-	std::vector<TJsonValueName *> Names;
-
-	virtual ~JsonNamesContainer() {
-		for (const auto &name : Names) { delete name; }
-	};
-};
-
-class JsonValuesContainer {
-  public:
-	std::vector<JsonValueBase *> Values;
-};
-
-class JsonFieldsContainer : public JsonNamesContainer, public JsonValuesContainer {
-  public:
-	void Add(const char *name, size_t nameLen, JsonValueBase *value) {
-		Names.push_back(new TJsonValueName(name, nameLen));
-		Values.push_back(value);
-	}
-
-  protected:
-	JsonValueBase *GetField(TJsonValueName *name) {
-		for (size_t i = 0; i < Names.size(); i++) {
-			const char *n = *(Names[i]);
-			if (n == *name || strcmp(n, *name) == 0) { return Values[i]; }
-		}
-		return NULL;
-	}
-};
+class JsonFieldsContainer;
 
 class JsonValueBase {
   public:
@@ -60,8 +29,59 @@ class JsonValueBase {
 	virtual void Reset() = 0;
 	virtual bool Equals(JsonValueBase *other) = 0;
 	virtual void CloneTo(JsonValueBase *other) = 0;
-
 	virtual bool TryNotPresented() = 0;
 
   protected:
+};
+
+class JsonValuesContainer {
+  public:
+	std::vector<JsonValueBase *> Values;
+};
+
+class JsonFieldsContainer : public JsonValuesContainer {
+  public:
+	std::vector<TJsonValueName *> *Names;
+	JsonFieldsContainer() {
+		cloned = false;
+		Names = new std::vector<TJsonValueName *>();
+	}
+
+	JsonFieldsContainer(JsonFieldsContainer *container) {
+		cloned = true;
+		Names = container->Names;
+	}
+
+	virtual ~JsonFieldsContainer() {
+		if (!cloned) {
+			for (const auto &name : *Names) { //
+				delete name;
+			}
+			delete Names;
+		}
+	};
+
+	void Add(const char *name, size_t nameLen, JsonValueBase *value) {
+		bool nameExist = false;
+		for (size_t i = 0; i < Names->size(); i++) {
+			const char *n = *((*Names)[i]);
+			if (n == name || strcmp(n, name) == 0) { //
+				nameExist = true;
+				break;
+			}
+		}
+		if (!nameExist) { Names->push_back(new TJsonValueName(name, nameLen)); }
+		Values.push_back(value);
+	}
+
+  protected:
+	JsonValueBase *GetField(TJsonValueName *name) {
+		for (size_t i = 0; i < Names->size(); i++) {
+			const char *n = *((*Names)[i]);
+			if (n == *name || strcmp(n, *name) == 0) { return Values[i]; }
+		}
+		return NULL;
+	}
+
+	bool cloned;
 };

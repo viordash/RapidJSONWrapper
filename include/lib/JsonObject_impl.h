@@ -5,9 +5,9 @@
 bool JsonObject::TryParse(TJsonDocument *doc) {
 	if (!doc->IsObject()) { return false; }
 
-	for (size_t i = 0; i < Names.size(); i++) {
+	for (size_t i = 0; i < Names->size(); i++) {
 		auto value = Values[i];
-		const char *name = *(Names[i]);
+		const char *name = *((*Names)[i]);
 
 		rapidjson::Value::MemberIterator member = doc->MemberBegin();
 		while (member != doc->MemberEnd()) {
@@ -57,7 +57,7 @@ bool JsonObject::TryParse(const char *jsonStr, size_t length) {
 
 void JsonObject::WriteToDoc(TJsonDocument *doc) {
 	doc->SetObject();
-	for (size_t i = 0; i < Names.size(); i++) { Values[i]->WriteToDoc(doc, Names[i]); }
+	for (size_t i = 0; i < Names->size(); i++) { Values[i]->WriteToDoc(doc, (*Names)[i]); }
 }
 
 size_t JsonObject::WriteToString(char *outBuffer, size_t outBufferSize) {
@@ -92,18 +92,18 @@ bool operator!=(const JsonObject &v1, const JsonObject &v2) { return !((JsonObje
 bool operator==(const JsonObject &v1, const JsonObject &v2) { return !(v1 != v2); }
 
 bool JsonObject::Equals(JsonObject *other) {
-	if (Names.size() != other->Names.size()) { return false; }
+	if (Names->size() != other->Names->size()) { return false; }
 
-	for (size_t i = 0; i < Names.size(); i++) {
-		if (strcmp(*(Names[i]), *(other->Names[i])) != 0) { return false; }
+	for (size_t i = 0; i < Names->size(); i++) {
+		if (strcmp(*((*Names)[i]), *((*other->Names)[i])) != 0) { return false; }
 		if (!Values[i]->Equals(other->Values[i])) { return false; }
 	}
 	return true;
 }
 
 void JsonObject::CloneTo(JsonObject *other) {
-	for (size_t i = 0; i < Names.size(); i++) {
-		auto otherValue = other->GetField(Names[i]);
+	for (size_t i = 0; i < Names->size(); i++) {
+		auto otherValue = other->GetField((*Names)[i]);
 		if (otherValue != NULL) { Values[i]->CloneTo(other->Values[i]); }
 	}
 }
