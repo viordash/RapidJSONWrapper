@@ -32,8 +32,9 @@ template <class T> class JsonValue : public JsonValueBase {
 
 	ValueWrapper Value;
 
-	JsonValue(JsonFieldsContainer *container, const char *name, T value) : Value(value) { container->Add(name, this); }
-	JsonValue(JsonFieldsContainer *container, const char *name) : JsonValue(container, name, T()) {}
+	JsonValue(JsonFieldsContainer *container, const char *name, size_t nameLen, T value = T()) : Value(value) { container->Add(name, nameLen, this); }
+	template <size_t N> JsonValue(JsonFieldsContainer *container, const char (&name)[N], T value = T()) : JsonValue(container, name, N - 1, value) {}
+
 	virtual ~JsonValue() {}
 
 	bool TryParse(TJsonValue *value) override final;
@@ -52,8 +53,8 @@ template <class T> class JsonValue : public JsonValueBase {
 template <class T> //
 class JsonOptionalValue : public JsonValue<T> {
   public:
-	JsonOptionalValue(JsonFieldsContainer *container, const char *name, T value) : JsonValue<T>(container, name, value), presented(true) {}
-	JsonOptionalValue(JsonFieldsContainer *container, const char *name) : JsonOptionalValue(container, name, T()) {}
+	JsonOptionalValue(JsonFieldsContainer *container, const char *name, size_t nameLen, T value = T()) : JsonValue<T>(container, name, nameLen, value), presented(true) {}
+	template <size_t N> JsonOptionalValue(JsonFieldsContainer *container, const char (&name)[N], T value = T()) : JsonOptionalValue(container, name, N - 1, value) {}
 	virtual ~JsonOptionalValue() {}
 
 	bool Presented();

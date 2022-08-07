@@ -22,7 +22,11 @@ class JsonValueBase;
 
 class JsonNamesContainer {
   public:
-	std::vector<const char *> Names;
+	std::vector<TJsonValueName *> Names;
+
+	virtual ~JsonNamesContainer() {
+		for (const auto &name : Names) { delete name; }
+	};
 };
 
 class JsonValuesContainer {
@@ -32,15 +36,16 @@ class JsonValuesContainer {
 
 class JsonFieldsContainer : public JsonNamesContainer, public JsonValuesContainer {
   public:
-	void Add(const char *name, JsonValueBase *value) {
-		Names.push_back(name);
+	void Add(const char *name, size_t nameLen, JsonValueBase *value) {
+		Names.push_back(new TJsonValueName(name, nameLen));
 		Values.push_back(value);
 	}
 
   protected:
-	JsonValueBase *GetField(const char *name) {
+	JsonValueBase *GetField(TJsonValueName *name) {
 		for (size_t i = 0; i < Names.size(); i++) {
-			if (strcmp(Names[i], name) == 0) { return Values[i]; }
+			const char *n = *(Names[i]);
+			if (n == *name || strcmp(n, *name) == 0) { return Values[i]; }
 		}
 		return NULL;
 	}

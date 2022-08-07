@@ -7,16 +7,24 @@ bool JsonObject::TryParse(TJsonDocument *doc) {
 
 	for (size_t i = 0; i < Names.size(); i++) {
 		auto value = Values[i];
-		rapidjson::Value::MemberIterator member = doc->FindMember(Names[i]);
+		const char *name = *(Names[i]);
+
+		rapidjson::Value::MemberIterator member = doc->MemberBegin();
+		while (member != doc->MemberEnd()) {
+			auto memberName = member->name.GetString();
+			if (memberName == name || strcmp(memberName, name) == 0) {
+				rapidjson::Value &jsonVal = member->value;
+				if (!value->TryParse(&jsonVal)) { return false; }
+				break;
+			};
+			member++;
+		}
 		if (member == doc->MemberEnd()) {
 			if (value->TryNotPresented()) {
 				value->Reset();
 			} else {
 				return false;
 			}
-		} else {
-			rapidjson::Value &jsonVal = member->value;
-			if (!value->TryParse(&jsonVal)) { return false; }
 		}
 	}
 	return true;
@@ -49,7 +57,7 @@ bool JsonObject::TryParse(const char *jsonStr, size_t length) {
 
 void JsonObject::WriteToDoc(TJsonDocument *doc) {
 	doc->SetObject();
-	for (size_t i = 0; i < Names.size(); i++) { Values[i]->WriteToDoc(doc, &rapidjson::StringRef(Names[i])); }
+	for (size_t i = 0; i < Names.size(); i++) { Values[i]->WriteToDoc(doc, Names[i]); }
 }
 
 size_t JsonObject::WriteToString(char *outBuffer, size_t outBufferSize) {
@@ -87,7 +95,7 @@ bool JsonObject::Equals(JsonObject *other) {
 	if (Names.size() != other->Names.size()) { return false; }
 
 	for (size_t i = 0; i < Names.size(); i++) {
-		if (strcmp(Names[i], other->Names[i]) != 0) { return false; }
+		if (strcmp(*(Names[i]), *(other->Names[i])) != 0) { return false; }
 		if (!Values[i]->Equals(other->Values[i])) { return false; }
 	}
 	return true;
