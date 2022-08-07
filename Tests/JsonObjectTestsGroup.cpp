@@ -19,8 +19,8 @@ class UserDto : public JsonObject {
 	JsonOptionalValue<uint32_t> Role;
 
 	UserDto(char *name, TUserRole role)
-		: Name(this, "name", name), //
-		  Role(this, "role", role){};
+		: Name(this, name, "name"), //
+		  Role(this, role, "role"){};
 
 	UserDto()
 		: Name(this, "name"), //
@@ -39,14 +39,14 @@ class GoodsDto : public JsonObject {
 	JsonOptionalValue<char *> StoreName;
 
 	GoodsDto(int id, uint32_t created, char *group, char *name, float price, double quantity, bool deleted = false, char *storeName = "")
-		: Id(this, "Id", id),					//
-		  Created(this, "Created", created),	//
-		  Group(this, "Group", group),			//
-		  Name(this, "Name", name),				//
-		  Price(this, "Price", price),			//
-		  Quantity(this, "Quantity", quantity), //
-		  Deleted(this, "Deleted", deleted),	//
-		  StoreName(this, "StoreName", storeName){};
+		: Id(this, id, "Id"),					//
+		  Created(this, created, "Created"),	//
+		  Group(this, group, "Group"),			//
+		  Name(this, name, "Name"),				//
+		  Price(this, price, "Price"),			//
+		  Quantity(this, quantity, "Quantity"), //
+		  Deleted(this, deleted, "Deleted"),	//
+		  StoreName(this, storeName, "StoreName"){};
 
 	GoodsDto()
 		: Id(this, "Id"),			  //
@@ -74,17 +74,17 @@ class OrderDto : public JsonObject {
 	UserDto userDto;
 
 	OrderDto(char *supplier, uint32_t dateTime, char *userName, TUserRole userRole)
-		: Supplier(this, "supplier", supplier), //
-		  DateTime(this, "dateTime", dateTime), //
-		  Goods(this, "goods", &goodsList),		//
+		: Supplier(this, supplier, "supplier"), //
+		  DateTime(this, dateTime, "dateTime"), //
+		  Goods(this, &goodsList, "goods"),		//
 		  userDto(userName, userRole),			//
-		  User(this, "user", &userDto){};
+		  User(this, &userDto, "user"){};
 
 	OrderDto()
 		: Supplier(this, "supplier"),		//
 		  DateTime(this, "dateTime"),		//
-		  Goods(this, "goods", &goodsList), //
-		  User(this, "user", &userDto) {}
+		  Goods(this, &goodsList, "goods"), //
+		  User(this, &userDto, "user") {}
 };
 
 class OrdersList : public JsonArray<OrderDto *> {
@@ -101,16 +101,16 @@ class CustomerDto : public JsonObject {
 	OrdersList ordersList;
 
 	CustomerDto(uint64_t id, char *name, TJsonRawData blob)
-		: Id(this, "id", id),		//
-		  Name(this, "name", name), //
-		  Blob(this, "blob", blob), //
-		  Orders(this, "orders", &ordersList){};
+		: Id(this, id, "id"),		//
+		  Name(this, name, "name"), //
+		  Blob(this, blob, "blob"), //
+		  Orders(this, &ordersList, "orders"){};
 
 	CustomerDto()
 		: Id(this, "id"),	  //
 		  Name(this, "name"), //
 		  Blob(this, "blob"), //
-		  Orders(this, "orders", &ordersList){};
+		  Orders(this, &ordersList, "orders"){};
 };
 
 class CustomerList : public JsonArray<CustomerDto *> {
@@ -142,7 +142,7 @@ TEST(JsonObjectTestsGroup, JsonObject_Parse_Test) {
 }
 
 TEST(JsonObjectTestsGroup, Complex_JsonObject_TryParse_Test) {
-	JsonFieldsContainer container;
+
 	OrderDto order;
 
 	CHECK(order.TryParse("{\"supplier\":\"Dell\",\"dateTime\":1657058000,\"goods\":[{\"Id\":1,\"Created\":1657052789,\"Group\":\"Keyboards\",\"Name\":\"K1-100\",\"Price\":58."
@@ -291,7 +291,6 @@ TEST(JsonObjectTestsGroup, JsonObject_WriteTo_Async_Test) {
 }
 
 TEST(JsonObjectTestsGroup, Complex_JsonObject_WriteTo_Test) {
-	JsonFieldsContainer container;
 
 	OrderDto orderDto("Dell", 1657058000, "Joe Doe", TUserRole::uViewer);
 	orderDto.goodsList.Add(new GoodsDto(1, 1657052789, "Keyboards", "K1-100", 58.25, 48.2));
@@ -317,7 +316,6 @@ TEST(JsonObjectTestsGroup, Complex_JsonObject_WriteTo_Test) {
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_Equals_Test) {
-	JsonFieldsContainer container;
 
 	OrderDto orderDto1("Dell", 1657058000, "Joe Doe", TUserRole::uViewer);
 	orderDto1.goodsList.Add(new GoodsDto(1, 1657052789, "Keyboards", "K1-100", 58.25, 48.2));
@@ -337,7 +335,6 @@ TEST(JsonObjectTestsGroup, JsonObject_Equals_Test) {
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_Clone_Test) {
-	JsonFieldsContainer container;
 
 	auto orderDto1 = new OrderDto("Dell", 1657058000, "Joe Doe", TUserRole::uViewer);
 	orderDto1->goodsList.Add(new GoodsDto(1, 1657052789, "Keyboards", "K1-100", 58.25, 48.2));
@@ -357,7 +354,6 @@ TEST(JsonObjectTestsGroup, JsonObject_Clone_Test) {
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_With_Blob_Field_Test) {
-	JsonFieldsContainer container;
 
 	const int pictureSize = 1'000'0000;
 	uint8_t *picture = new uint8_t[pictureSize];
@@ -397,7 +393,7 @@ TEST(JsonObjectTestsGroup, JsonObject_With_Blob_Field_Test) {
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_Optional_Values_Presented_Test) {
-	JsonFieldsContainer container;
+
 	OrderDto order;
 
 	CHECK_FALSE(order.DateTime.Presented());
@@ -410,7 +406,6 @@ TEST(JsonObjectTestsGroup, JsonObject_Optional_Values_Presented_Test) {
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_Perfomance_Test) {
-	JsonFieldsContainer container;
 
 	uint64_t durationAdd = 0;
 	uint64_t durationDirectWriteTo = 0;

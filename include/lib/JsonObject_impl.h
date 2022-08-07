@@ -5,7 +5,7 @@
 JsonValueBase *JsonFieldsContainer::GetField(const char *name) {
 	for (std::vector<JsonValueBase *>::iterator item = Fields.begin(); item != Fields.end(); item++) {
 		auto field = *item;
-		if (strcmp(field->Name, name) == 0) { return field; }
+		if (strcmp(field->Name->s, name) == 0) { return field; }
 	}
 	return NULL;
 }
@@ -92,7 +92,7 @@ bool JsonObject::Equals(JsonObject *other) {
 
 void JsonObject::CloneTo(JsonObject *other) {
 	for (const auto &field : Fields) {
-		auto otherField = other->GetField(field->Name);
+		auto otherField = other->GetField(field->Name->s);
 		if (otherField != NULL) { field->CloneTo(otherField); }
 	}
 }

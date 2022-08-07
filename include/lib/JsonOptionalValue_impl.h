@@ -3,7 +3,7 @@
 #include "LibJson.h"
 
 template <class T> bool JsonOptionalValue<T>::TryParse(TJsonDocument *doc) {
-	rapidjson::Value::MemberIterator member = doc->FindMember(this->Name);
+	rapidjson::Value::MemberIterator member = doc->FindMember(this->Name->s);
 	if (member == doc->MemberEnd()) {
 		this->Reset();
 		presented = false;

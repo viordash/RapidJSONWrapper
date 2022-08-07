@@ -8,6 +8,7 @@
 typedef rapidjson::Document TJsonDocument;
 typedef rapidjson::Value::Array TJsonArray;
 typedef rapidjson::Value TJsonValue;
+typedef rapidjson::GenericStringRef<char> TJsonValueName;
 
 class JsonArrayBase {
   public:
@@ -28,12 +29,15 @@ class JsonFieldsContainer {
 
 class JsonValueBase {
   public:
-	const char *Name;
+	TJsonValueName *Name;
 	JsonValueBase(JsonValueBase &&) = delete;
 	JsonValueBase(const JsonValueBase &) = delete;
 
-	JsonValueBase(JsonFieldsContainer *container, const char *name) : Name(name) { container->Add(this); }
-	virtual ~JsonValueBase(){};
+	JsonValueBase(JsonFieldsContainer *container, const char *name, size_t nameLen) {
+		Name = new TJsonValueName(name, nameLen);
+		container->Add(this);
+	}
+	virtual ~JsonValueBase() { delete Name; };
 
 	virtual bool TryParse(TJsonDocument *doc) = 0;
 	virtual void WriteToDoc(TJsonDocument *doc) = 0;
