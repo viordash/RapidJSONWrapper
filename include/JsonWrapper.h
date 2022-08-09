@@ -36,8 +36,8 @@ template <class T> class JsonValue : public JsonValueBase {
 	JsonValue(JsonFieldsContainer *container, const char *name) : JsonValue(container, name, T()) {}
 	virtual ~JsonValue() {}
 
-	bool TryParse(TJsonDocument *doc) override;
-	void WriteToDoc(TJsonDocument *doc) override final;
+	bool TryParse(const char *name, TJsonDocument *doc) override;
+	void WriteToDoc(const char *name, TJsonDocument *doc) override final;
 
 	void Reset();
 	bool Equals(JsonValueBase *other) override final;
@@ -53,7 +53,7 @@ template <class T> class JsonCommonValue : public JsonValue<T> {
 	JsonCommonValue(JsonFieldsContainer *container, const char *name) : JsonCommonValue(container, name, T()) {}
 	virtual ~JsonCommonValue() {}
 
-	bool TryParse(TJsonDocument *doc) override final;
+	bool TryParse(const char *name, TJsonDocument *doc) override final;
 	bool Presented();
 	bool IsNull();
 

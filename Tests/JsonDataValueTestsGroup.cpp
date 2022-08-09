@@ -16,12 +16,12 @@ TEST(JsonDataValueGroup, JsonDataValue_TryParse_Test) {
 
 	rapidjson::Document doc;
 	doc.Parse("{\"testString\":\"User1\"}");
-	CHECK(testable.TryParse(&doc));
+	CHECK(testable.TryParse("testString", &doc));
 
 	MEMCMP_EQUAL(((TJsonRawData)testable.Value).Data, "User1", ((TJsonRawData)testable.Value).Size);
 
 	doc.Parse("{\"testString\":null}");
-	CHECK_FALSE(testable.TryParse(&doc));
+	CHECK_FALSE(testable.TryParse("testString", &doc));
 }
 
 TEST(JsonDataValueGroup, JsonDataValue_WriteTo_Test) {
@@ -35,7 +35,7 @@ TEST(JsonDataValueGroup, JsonDataValue_WriteTo_Test) {
 	rapidjson::Document doc;
 	doc.SetObject();
 
-	testable.WriteToDoc(&doc);
+	testable.WriteToDoc("testString", &doc);
 
 	rapidjson::StringBuffer buffer;
 	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
@@ -55,7 +55,7 @@ TEST(JsonDataValueGroup, JsonDataValue_WriteToJson_Binary_Test) {
 	rapidjson::Document doc;
 	doc.SetObject();
 
-	testable.WriteToDoc(&doc);
+	testable.WriteToDoc("testString", &doc);
 
 	rapidjson::StringBuffer buffer;
 	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
@@ -77,7 +77,7 @@ TEST(JsonDataValueGroup, JsonDataValue_WriteToJson_Binary_Test) {
 
 	rapidjson::Document readDoc;
 	doc.Parse(jsonStr);
-	CHECK(readTestable.TryParse(&doc));
+	CHECK(readTestable.TryParse("testString", &doc));
 	CHECK(((TJsonRawData)readTestable.Value).Data != NULL);
 	CHECK_EQUAL(((TJsonRawData)readTestable.Value).Size, sizeof(data));
 	MEMCMP_EQUAL(data, ((TJsonRawData)readTestable.Value).Data, ((TJsonRawData)readTestable.Value).Size);
@@ -89,7 +89,7 @@ TEST(JsonDataValueGroup, JsonDataValue_WriteTo_For_Null_Test) {
 
 	rapidjson::Document doc;
 	doc.SetObject();
-	testable.WriteToDoc(&doc);
+	testable.WriteToDoc("testString", &doc);
 
 	rapidjson::StringBuffer buffer;
 	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
@@ -144,21 +144,21 @@ TEST(JsonDataValueGroup, JsonDataValue_Common_TryParse_Test) {
 
 	rapidjson::Document doc;
 	doc.Parse("{\"testOther\":\"01234\"}");
-	CHECK_TRUE(testable1.TryParse(&doc));
+	CHECK_TRUE(testable1.TryParse("test", &doc));
 	CHECK_EQUAL(((TJsonRawData)testable1.Value).Data, NULL);
 	CHECK_EQUAL(((TJsonRawData)testable1.Value).Size, 0);
 	CHECK_FALSE(testable1.Presented());
 	CHECK_FALSE(testable1.IsNull());
 
 	doc.Parse("{\"test\":\"01234\"}");
-	CHECK_TRUE(testable1.TryParse(&doc));
+	CHECK_TRUE(testable1.TryParse("test", &doc));
 	STRCMP_EQUAL((char *)((TJsonRawData)testable1.Value).Data, "01234");
 	CHECK_EQUAL(((TJsonRawData)testable1.Value).Size, sizeof("01234") - 1);
 	CHECK_TRUE(testable1.Presented());
 	CHECK_FALSE(testable1.IsNull());
 
 	doc.Parse("{\"test\":null}");
-	CHECK_TRUE(testable1.TryParse(&doc));
+	CHECK_TRUE(testable1.TryParse("test", &doc));
 	CHECK_TRUE(testable1.Presented());
 	CHECK_TRUE(testable1.IsNull());
 }

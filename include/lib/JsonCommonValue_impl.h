@@ -2,8 +2,8 @@
 
 #include "LibJson.h"
 
-template <class T> bool JsonCommonValue<T>::TryParse(TJsonDocument *doc) {
-	rapidjson::Value::MemberIterator member = doc->FindMember(this->Name);
+template <class T> bool JsonCommonValue<T>::TryParse(const char *name, TJsonDocument *doc) {
+	rapidjson::Value::MemberIterator member = doc->FindMember(name);
 	if (member == doc->MemberEnd()) {
 		this->Reset();
 		presented = false;

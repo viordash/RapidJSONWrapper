@@ -10,27 +10,17 @@ int main(int ac, char **av) { return RUN_ALL_TESTS(ac, av); }
 
 TEST_GROUP(JsonStringValueGroup){void setup(){} void teardown(){}};
 
-TEST(JsonStringValueGroup, JsonField_VeryLong_Name_Test) {
-	JsonFieldsContainer container;
-	JsonValue<char *> testable(&container, "testString0 testString1 testString2 testString3 testString4 testString0 testString1 testString2 testString3 "
-										   "testStrintestString0 testString1 testString2 testString3 testString4testString0 testString1 testString2 testString3 "
-										   "testStrintestString0 testString1 testString2 testString3 testString4testString0 testString1 testString2 testString3 testString4g4g4");
-
-	CHECK_EQUAL(strlen(testable.Name), 355);
-	STRCMP_CONTAINS("testString0 testString1 testString2 testString3 testString4 ", testable.Name);
-}
-
 TEST(JsonStringValueGroup, JsonStringValue_TryParse_Test) {
 	JsonFieldsContainer container;
 	JsonValue<char *> testable(&container, "testString");
 
 	rapidjson::Document doc;
 	doc.Parse("{\"testString\":\"User1\"}");
-	CHECK(testable.TryParse(&doc));
+	CHECK(testable.TryParse("testString", &doc));
 	STRCMP_EQUAL(testable.Value, "User1");
 
 	doc.Parse("{\"testString\":null}");
-	CHECK_FALSE(testable.TryParse(&doc));
+	CHECK_FALSE(testable.TryParse("testString", &doc));
 }
 
 TEST(JsonStringValueGroup, JsonStringValue_WriteTo_Test) {
@@ -40,7 +30,7 @@ TEST(JsonStringValueGroup, JsonStringValue_WriteTo_Test) {
 	rapidjson::Document doc;
 	doc.SetObject();
 
-	testable.WriteToDoc(&doc);
+	testable.WriteToDoc("testString", &doc);
 
 	rapidjson::StringBuffer buffer;
 	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
@@ -92,19 +82,19 @@ TEST(JsonStringValueGroup, JsonStringValue_Common_TryParse_Test) {
 
 	rapidjson::Document doc;
 	doc.Parse("{\"testOther\":\"01234\"}");
-	CHECK_TRUE(testable1.TryParse(&doc));
+	CHECK_TRUE(testable1.TryParse("test", &doc));
 	STRCMP_EQUAL(testable1.Value, "");
 	CHECK_FALSE(testable1.Presented());
 	CHECK_FALSE(testable1.IsNull());
 
 	doc.Parse("{\"test\":\"01234\"}");
-	CHECK_TRUE(testable1.TryParse(&doc));
+	CHECK_TRUE(testable1.TryParse("test", &doc));
 	STRCMP_EQUAL(testable1.Value, "01234");
 	CHECK_TRUE(testable1.Presented());
 	CHECK_FALSE(testable1.IsNull());
 
 	doc.Parse("{\"test\":null}");
-	CHECK_TRUE(testable1.TryParse(&doc));
+	CHECK_TRUE(testable1.TryParse("test", &doc));
 	CHECK_TRUE(testable1.Presented());
 	CHECK_TRUE(testable1.IsNull());
 }

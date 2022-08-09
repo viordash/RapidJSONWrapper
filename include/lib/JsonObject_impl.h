@@ -3,9 +3,8 @@
 #include "LibJson.h"
 
 JsonValueBase *JsonFieldsContainer::GetField(const char *name) {
-	for (std::vector<JsonValueBase *>::iterator item = Fields.begin(); item != Fields.end(); item++) {
-		auto field = *item;
-		if (strcmp(field->Name, name) == 0) { return field; }
+	for (size_t i = 0; i < Names.size(); i++) {
+		if (Names[i] == name || strcmp(Names[i], name) == 0) { return Fields[i]; }
 	}
 	return NULL;
 }
@@ -13,10 +12,7 @@ JsonValueBase *JsonFieldsContainer::GetField(const char *name) {
 bool JsonObject::TryParse(TJsonDocument *doc) {
 	if (!doc->IsObject()) { return false; }
 
-	for (std::vector<JsonValueBase *>::iterator item = Fields.begin(); item != Fields.end(); item++) {
-		auto field = *item;
-		if (!field->TryParse(doc)) { return false; }
-	}
+	for (size_t i = 0; i < Names.size(); i++) { Fields[i]->TryParse(Names[i], doc); }
 	return true;
 }
 
@@ -47,7 +43,7 @@ bool JsonObject::TryParse(const char *jsonStr, size_t length) {
 
 void JsonObject::WriteToDoc(TJsonDocument *doc) {
 	doc->SetObject();
-	for (const auto &field : Fields) { field->WriteToDoc(doc); }
+	for (size_t i = 0; i < Names.size(); i++) { Fields[i]->WriteToDoc(Names[i], doc); }
 }
 
 size_t JsonObject::WriteToString(char *outBuffer, size_t outBufferSize) {
@@ -82,17 +78,18 @@ bool operator!=(const JsonObject &v1, const JsonObject &v2) { return !((JsonObje
 bool operator==(const JsonObject &v1, const JsonObject &v2) { return !(v1 != v2); }
 
 bool JsonObject::Equals(JsonObject *other) {
-	if (Fields.size() != other->Fields.size()) { return false; }
+	if (Names.size() != other->Names.size()) { return false; }
 
-	for (size_t i = 0; i < other->Fields.size(); i++) {
+	for (size_t i = 0; i < Names.size(); i++) {
+		if (Names[i] != other->Names[i] && strcmp(Names[i], other->Names[i]) != 0) { return false; }
 		if (!Fields[i]->Equals(other->Fields[i])) { return false; }
 	}
 	return true;
 }
 
 void JsonObject::CloneTo(JsonObject *other) {
-	for (const auto &field : Fields) {
-		auto otherField = other->GetField(field->Name);
-		if (otherField != NULL) { field->CloneTo(otherField); }
+	for (size_t i = 0; i < Names.size(); i++) {
+		auto otherField = other->GetField(Names[i]);
+		if (otherField != NULL) { Fields[i]->CloneTo(otherField); }
 	}
 }

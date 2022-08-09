@@ -21,22 +21,25 @@ class JsonValueBase;
 
 class JsonFieldsContainer {
   public:
+	std::vector<const char *> Names;
 	std::vector<JsonValueBase *> Fields;
-	void Add(JsonValueBase *field) { Fields.push_back(field); }
+	void Add(const char *name, JsonValueBase *field) {
+		Names.push_back(name);
+		Fields.push_back(field);
+	}
 	JsonValueBase *GetField(const char *name);
 };
 
 class JsonValueBase {
   public:
-	const char *Name;
 	JsonValueBase(JsonValueBase &&) = delete;
 	JsonValueBase(const JsonValueBase &) = delete;
 
-	JsonValueBase(JsonFieldsContainer *container, const char *name) : Name(name) { container->Add(this); }
+	JsonValueBase(JsonFieldsContainer *container, const char *name) { container->Add(name, this); }
 	virtual ~JsonValueBase(){};
 
-	virtual bool TryParse(TJsonDocument *doc) = 0;
-	virtual void WriteToDoc(TJsonDocument *doc) = 0;
+	virtual bool TryParse(const char *name, TJsonDocument *doc) = 0;
+	virtual void WriteToDoc(const char *name, TJsonDocument *doc) = 0;
 	virtual bool Equals(JsonValueBase *other) = 0;
 	virtual void CloneTo(JsonValueBase *other) = 0;
 
