@@ -407,18 +407,21 @@ TEST(JsonNumericValueGroup, JsonBoolField_CloneTo_Test) {
 
 
 */
-
-TEST(JsonNumericValueGroup, JsonUIntField_Optional_TryParse_Test) {
+TEST(JsonNumericValueGroup, JsonUIntField_Common_TryParse_Test) {
 	JsonFieldsContainer container;
-	JsonOptionalValue<unsigned int> testable1(&container, "test", 100);
-	JsonOptionalValue<uint32_t> testable2(&container, "test", 101);
-	JsonOptionalValue<uint16_t> testable3(&container, "test", 102);
-	JsonOptionalValue<uint8_t> testable4(&container, "test", 103);
+	JsonCommonValue<unsigned int> testable1(&container, "test", 100);
+	JsonCommonValue<uint32_t> testable2(&container, "test", 101);
+	JsonCommonValue<uint16_t> testable3(&container, "test", 102);
+	JsonCommonValue<uint8_t> testable4(&container, "test", 103);
 
 	CHECK_FALSE(testable1.Presented());
 	CHECK_FALSE(testable2.Presented());
 	CHECK_FALSE(testable3.Presented());
 	CHECK_FALSE(testable4.Presented());
+	CHECK_FALSE(testable1.IsNull());
+	CHECK_FALSE(testable2.IsNull());
+	CHECK_FALSE(testable3.IsNull());
+	CHECK_FALSE(testable4.IsNull());
 
 	rapidjson::Document doc;
 	doc.Parse("{\"testOther\":42}");
@@ -434,6 +437,10 @@ TEST(JsonNumericValueGroup, JsonUIntField_Optional_TryParse_Test) {
 	CHECK_FALSE(testable2.Presented());
 	CHECK_FALSE(testable3.Presented());
 	CHECK_FALSE(testable4.Presented());
+	CHECK_FALSE(testable1.IsNull());
+	CHECK_FALSE(testable2.IsNull());
+	CHECK_FALSE(testable3.IsNull());
+	CHECK_FALSE(testable4.IsNull());
 
 	doc.Parse("{\"test\":42}");
 	CHECK_TRUE(testable1.TryParse(&doc));
@@ -448,25 +455,41 @@ TEST(JsonNumericValueGroup, JsonUIntField_Optional_TryParse_Test) {
 	CHECK_TRUE(testable2.Presented());
 	CHECK_TRUE(testable3.Presented());
 	CHECK_TRUE(testable4.Presented());
+	CHECK_FALSE(testable1.IsNull());
+	CHECK_FALSE(testable2.IsNull());
+	CHECK_FALSE(testable3.IsNull());
+	CHECK_FALSE(testable4.IsNull());
 
 	doc.Parse("{\"test\":null}");
-	CHECK_FALSE(testable1.TryParse(&doc));
-	CHECK_FALSE(testable2.TryParse(&doc));
-	CHECK_FALSE(testable3.TryParse(&doc));
-	CHECK_FALSE(testable4.TryParse(&doc));
+	CHECK_TRUE(testable1.TryParse(&doc));
+	CHECK_TRUE(testable2.TryParse(&doc));
+	CHECK_TRUE(testable3.TryParse(&doc));
+	CHECK_TRUE(testable4.TryParse(&doc));
+	CHECK_TRUE(testable1.Presented());
+	CHECK_TRUE(testable2.Presented());
+	CHECK_TRUE(testable3.Presented());
+	CHECK_TRUE(testable4.Presented());
+	CHECK_TRUE(testable1.IsNull());
+	CHECK_TRUE(testable2.IsNull());
+	CHECK_TRUE(testable3.IsNull());
+	CHECK_TRUE(testable4.IsNull());
 }
 
-TEST(JsonNumericValueGroup, JsonIntField_Optional_TryParse_Test) {
+TEST(JsonNumericValueGroup, JsonIntField_Common_TryParse_Test) {
 	JsonFieldsContainer container;
-	JsonOptionalValue<int> testable1(&container, "test", 100);
-	JsonOptionalValue<int32_t> testable2(&container, "test", 101);
-	JsonOptionalValue<int16_t> testable3(&container, "test", 102);
-	JsonOptionalValue<int8_t> testable4(&container, "test", 103);
+	JsonCommonValue<int> testable1(&container, "test", 100);
+	JsonCommonValue<int32_t> testable2(&container, "test", 101);
+	JsonCommonValue<int16_t> testable3(&container, "test", 102);
+	JsonCommonValue<int8_t> testable4(&container, "test", 103);
 
 	CHECK_FALSE(testable1.Presented());
 	CHECK_FALSE(testable2.Presented());
 	CHECK_FALSE(testable3.Presented());
 	CHECK_FALSE(testable4.Presented());
+	CHECK_FALSE(testable1.IsNull());
+	CHECK_FALSE(testable2.IsNull());
+	CHECK_FALSE(testable3.IsNull());
+	CHECK_FALSE(testable4.IsNull());
 
 	rapidjson::Document doc;
 	doc.Parse("{\"testOther\":42}");
@@ -482,6 +505,10 @@ TEST(JsonNumericValueGroup, JsonIntField_Optional_TryParse_Test) {
 	CHECK_FALSE(testable2.Presented());
 	CHECK_FALSE(testable3.Presented());
 	CHECK_FALSE(testable4.Presented());
+	CHECK_FALSE(testable1.IsNull());
+	CHECK_FALSE(testable2.IsNull());
+	CHECK_FALSE(testable3.IsNull());
+	CHECK_FALSE(testable4.IsNull());
 
 	doc.Parse("{\"test\":42}");
 	CHECK_TRUE(testable1.TryParse(&doc));
@@ -496,160 +523,48 @@ TEST(JsonNumericValueGroup, JsonIntField_Optional_TryParse_Test) {
 	CHECK_TRUE(testable2.Presented());
 	CHECK_TRUE(testable3.Presented());
 	CHECK_TRUE(testable4.Presented());
+	CHECK_FALSE(testable1.IsNull());
+	CHECK_FALSE(testable2.IsNull());
+	CHECK_FALSE(testable3.IsNull());
+	CHECK_FALSE(testable4.IsNull());
 
 	doc.Parse("{\"test\":null}");
-	CHECK_FALSE(testable1.TryParse(&doc));
-	CHECK_FALSE(testable2.TryParse(&doc));
-	CHECK_FALSE(testable3.TryParse(&doc));
-	CHECK_FALSE(testable4.TryParse(&doc));
+	CHECK_TRUE(testable1.TryParse(&doc));
+	CHECK_TRUE(testable2.TryParse(&doc));
+	CHECK_TRUE(testable3.TryParse(&doc));
+	CHECK_TRUE(testable4.TryParse(&doc));
+	CHECK_TRUE(testable1.Presented());
+	CHECK_TRUE(testable2.Presented());
+	CHECK_TRUE(testable3.Presented());
+	CHECK_TRUE(testable4.Presented());
+	CHECK_TRUE(testable1.IsNull());
+	CHECK_TRUE(testable2.IsNull());
+	CHECK_TRUE(testable3.IsNull());
+	CHECK_TRUE(testable4.IsNull());
 }
 
-TEST(JsonNumericValueGroup, JsonBoolField_Optional_TryParse_Test) {
+TEST(JsonNumericValueGroup, JsonBoolField_Common_TryParse_Test) {
 	JsonFieldsContainer container;
-	JsonOptionalValue<bool> testable1(&container, "test");
+	JsonCommonValue<bool> testable1(&container, "test", false);
 
 	CHECK_FALSE(testable1.Presented());
+	CHECK_FALSE(testable1.IsNull());
+
 	rapidjson::Document doc;
 	doc.Parse("{\"testOther\":true}");
 	CHECK_TRUE(testable1.TryParse(&doc));
 	CHECK_EQUAL(testable1.Value, false);
 	CHECK_FALSE(testable1.Presented());
+	CHECK_FALSE(testable1.IsNull());
 
 	doc.Parse("{\"test\":true}");
 	CHECK_TRUE(testable1.TryParse(&doc));
 	CHECK_EQUAL(testable1.Value, true);
 	CHECK_TRUE(testable1.Presented());
-
-	doc.Parse("{\"test\":null}");
-	CHECK_FALSE(testable1.TryParse(&doc));
-}
-/*
-
-
-*/
-
-TEST(JsonNumericValueGroup, JsonUIntField_Nullable_TryParse_Test) {
-	JsonFieldsContainer container;
-	JsonNullableValue<unsigned int> testable1(&container, "test", 100);
-	JsonNullableValue<uint32_t> testable2(&container, "test", 101);
-	JsonNullableValue<uint16_t> testable3(&container, "test", 102);
-	JsonNullableValue<uint8_t> testable4(&container, "test", 103);
-
-	CHECK_FALSE(testable1.IsNull());
-	CHECK_FALSE(testable2.IsNull());
-	CHECK_FALSE(testable3.IsNull());
-	CHECK_FALSE(testable4.IsNull());
-
-	rapidjson::Document doc;
-	doc.Parse("{\"testOther\":42}");
-	CHECK_FALSE(testable1.TryParse(&doc));
-	CHECK_FALSE(testable2.TryParse(&doc));
-	CHECK_FALSE(testable3.TryParse(&doc));
-	CHECK_FALSE(testable4.TryParse(&doc));
-	CHECK_EQUAL(testable1.Value, 0);
-	CHECK_EQUAL(testable2.Value, 0);
-	CHECK_EQUAL(testable3.Value, 0);
-	CHECK_EQUAL(testable4.Value, 0);
-	CHECK_FALSE(testable1.IsNull());
-	CHECK_FALSE(testable2.IsNull());
-	CHECK_FALSE(testable3.IsNull());
-	CHECK_FALSE(testable4.IsNull());
-
-	doc.Parse("{\"test\":42}");
-	CHECK_TRUE(testable1.TryParse(&doc));
-	CHECK_TRUE(testable2.TryParse(&doc));
-	CHECK_TRUE(testable3.TryParse(&doc));
-	CHECK_TRUE(testable4.TryParse(&doc));
-	CHECK_EQUAL(testable1.Value, 42);
-	CHECK_EQUAL(testable2.Value, 42);
-	CHECK_EQUAL(testable3.Value, 42);
-	CHECK_EQUAL(testable4.Value, 42);
-	CHECK_FALSE(testable1.IsNull());
-	CHECK_FALSE(testable2.IsNull());
-	CHECK_FALSE(testable3.IsNull());
-	CHECK_FALSE(testable4.IsNull());
-
-	doc.Parse("{\"test\":null}");
-	CHECK_TRUE(testable1.TryParse(&doc));
-	CHECK_TRUE(testable2.TryParse(&doc));
-	CHECK_TRUE(testable3.TryParse(&doc));
-	CHECK_TRUE(testable4.TryParse(&doc));
-	CHECK_TRUE(testable1.IsNull());
-	CHECK_TRUE(testable2.IsNull());
-	CHECK_TRUE(testable3.IsNull());
-	CHECK_TRUE(testable4.IsNull());
-}
-
-TEST(JsonNumericValueGroup, JsonIntField_Nullable_TryParse_Test) {
-	JsonFieldsContainer container;
-	JsonNullableValue<int> testable1(&container, "test", 100);
-	JsonNullableValue<int32_t> testable2(&container, "test", 101);
-	JsonNullableValue<int16_t> testable3(&container, "test", 102);
-	JsonNullableValue<int8_t> testable4(&container, "test", 103);
-
-	CHECK_FALSE(testable1.IsNull());
-	CHECK_FALSE(testable2.IsNull());
-	CHECK_FALSE(testable3.IsNull());
-	CHECK_FALSE(testable4.IsNull());
-
-	rapidjson::Document doc;
-	doc.Parse("{\"testOther\":42}");
-	CHECK_FALSE(testable1.TryParse(&doc));
-	CHECK_FALSE(testable2.TryParse(&doc));
-	CHECK_FALSE(testable3.TryParse(&doc));
-	CHECK_FALSE(testable4.TryParse(&doc));
-	CHECK_EQUAL(testable1.Value, 0);
-	CHECK_EQUAL(testable2.Value, 0);
-	CHECK_EQUAL(testable3.Value, 0);
-	CHECK_EQUAL(testable4.Value, 0);
-	CHECK_FALSE(testable1.IsNull());
-	CHECK_FALSE(testable2.IsNull());
-	CHECK_FALSE(testable3.IsNull());
-	CHECK_FALSE(testable4.IsNull());
-
-	doc.Parse("{\"test\":42}");
-	CHECK_TRUE(testable1.TryParse(&doc));
-	CHECK_TRUE(testable2.TryParse(&doc));
-	CHECK_TRUE(testable3.TryParse(&doc));
-	CHECK_TRUE(testable4.TryParse(&doc));
-	CHECK_EQUAL(testable1.Value, 42);
-	CHECK_EQUAL(testable2.Value, 42);
-	CHECK_EQUAL(testable3.Value, 42);
-	CHECK_EQUAL(testable4.Value, 42);
-	CHECK_FALSE(testable1.IsNull());
-	CHECK_FALSE(testable2.IsNull());
-	CHECK_FALSE(testable3.IsNull());
-	CHECK_FALSE(testable4.IsNull());
-
-	doc.Parse("{\"test\":null}");
-	CHECK_TRUE(testable1.TryParse(&doc));
-	CHECK_TRUE(testable2.TryParse(&doc));
-	CHECK_TRUE(testable3.TryParse(&doc));
-	CHECK_TRUE(testable4.TryParse(&doc));
-	CHECK_TRUE(testable1.IsNull());
-	CHECK_TRUE(testable2.IsNull());
-	CHECK_TRUE(testable3.IsNull());
-	CHECK_TRUE(testable4.IsNull());
-}
-
-TEST(JsonNumericValueGroup, JsonBoolField_Nullable_TryParse_Test) {
-	JsonFieldsContainer container;
-	JsonNullableValue<bool> testable1(&container, "test", 100);
-
-	CHECK_FALSE(testable1.IsNull());
-
-	rapidjson::Document doc;
-	doc.Parse("{\"testOther\":true}");
-	CHECK_FALSE(testable1.TryParse(&doc));
-	CHECK_EQUAL(testable1.Value, 0);
-	CHECK_FALSE(testable1.IsNull());
-
-	doc.Parse("{\"test\":true}");
-	CHECK_TRUE(testable1.TryParse(&doc));
-	CHECK_EQUAL(testable1.Value, true);
 	CHECK_FALSE(testable1.IsNull());
 
 	doc.Parse("{\"test\":null}");
 	CHECK_TRUE(testable1.TryParse(&doc));
+	CHECK_TRUE(testable1.Presented());
 	CHECK_TRUE(testable1.IsNull());
 }

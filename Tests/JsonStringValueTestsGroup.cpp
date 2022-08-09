@@ -51,21 +51,6 @@ TEST(JsonStringValueGroup, JsonStringValue_WriteTo_Test) {
 	STRCMP_EQUAL(jsonStr, "{\"testString\":\"1234567\"}");
 }
 
-TEST(JsonStringValueGroup, JsonStringValue_TryParse_Field_Optional_Test) {
-	rapidjson::Document doc;
-	JsonFieldsContainer container;
-	auto testableFieldMustExists = new JsonValue<char *>(&container, "testString");
-	doc.Parse("{\"otherField\":\"User1\"}");
-	CHECK_FALSE(testableFieldMustExists->TryParse(&doc));
-	delete testableFieldMustExists;
-
-	auto testableWithOptional = new JsonOptionalValue<char *>(&container, "testString");
-	doc.Parse("{\"otherField\":\"User1\"}");
-	CHECK_TRUE(testableWithOptional->TryParse(&doc));
-	STRCMP_EQUAL(testableWithOptional->Value, "");
-	delete testableWithOptional;
-}
-
 TEST(JsonStringValueGroup, JsonStringValue_SetValue_Test) {
 	JsonFieldsContainer container;
 	JsonValue<char *> testable(&container, "testString");
@@ -85,15 +70,6 @@ TEST(JsonStringValueGroup, JsonStringValue_Equals_Test) {
 	testable01.Value = "otherValue";
 	CHECK_TRUE(testable1 != testable01);
 	CHECK_FALSE(testable1 == testable01);
-
-	JsonOptionalValue<char *> optional1(&container, "test", "testString");
-	JsonOptionalValue<char *> optional01(&container, "test", "testString");
-
-	CHECK_TRUE(optional1 == optional01);
-	CHECK_FALSE(optional1 != optional01);
-	optional01.Value = "otherValue";
-	CHECK_TRUE(optional1 != optional01);
-	CHECK_FALSE(optional1 == optional01);
 }
 
 TEST(JsonStringValueGroup, JsonStringValue_CloneTo_Test) {
@@ -105,4 +81,30 @@ TEST(JsonStringValueGroup, JsonStringValue_CloneTo_Test) {
 	testable1.CloneTo((JsonValueBase *)&clone1);
 	testable1.Value = "check the full data buffer is cloned";
 	STRCMP_EQUAL(clone1.Value, "0123456789");
+}
+
+TEST(JsonStringValueGroup, JsonStringValue_Common_TryParse_Test) {
+	JsonFieldsContainer container;
+	JsonCommonValue<char *> testable1(&container, "test", "0123456789");
+
+	CHECK_FALSE(testable1.Presented());
+	CHECK_FALSE(testable1.IsNull());
+
+	rapidjson::Document doc;
+	doc.Parse("{\"testOther\":\"01234\"}");
+	CHECK_TRUE(testable1.TryParse(&doc));
+	STRCMP_EQUAL(testable1.Value, "");
+	CHECK_FALSE(testable1.Presented());
+	CHECK_FALSE(testable1.IsNull());
+
+	doc.Parse("{\"test\":\"01234\"}");
+	CHECK_TRUE(testable1.TryParse(&doc));
+	STRCMP_EQUAL(testable1.Value, "01234");
+	CHECK_TRUE(testable1.Presented());
+	CHECK_FALSE(testable1.IsNull());
+
+	doc.Parse("{\"test\":null}");
+	CHECK_TRUE(testable1.TryParse(&doc));
+	CHECK_TRUE(testable1.Presented());
+	CHECK_TRUE(testable1.IsNull());
 }

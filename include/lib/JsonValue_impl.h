@@ -80,14 +80,7 @@ template <> bool JsonValue<char *>::TryParseCore(TJsonValue *jValue) {
 }
 
 template <> bool JsonValue<TJsonRawData>::TryParseCore(TJsonValue *jValue) {
-	if (!jValue->IsString()) {
-		if (jValue->IsNull()) {
-			this->Reset();
-			return true;
-		}
-		return false;
-	}
-
+	if (!jValue->IsString()) { return false; }
 	TJsonRawData rawData = {(uint8_t *)jValue->GetString(), jValue->GetStringLength()};
 	Value = rawData;
 	return true;

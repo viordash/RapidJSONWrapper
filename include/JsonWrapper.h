@@ -8,8 +8,7 @@ typedef struct {
 	size_t Size;
 } TJsonRawData;
 
-template <class T> //
-class JsonValue : public JsonValueBase {
+template <class T> class JsonValue : public JsonValueBase {
   public:
 	struct ValueWrapper {
 	  public:
@@ -48,31 +47,18 @@ class JsonValue : public JsonValueBase {
 	bool TryParseCore(TJsonValue *value);
 };
 
-template <class T> //
-class JsonOptionalValue : public JsonValue<T> {
+template <class T> class JsonCommonValue : public JsonValue<T> {
   public:
-	JsonOptionalValue(JsonFieldsContainer *container, const char *name, T value) : JsonValue<T>(container, name, value), presented(false) {}
-	JsonOptionalValue(JsonFieldsContainer *container, const char *name) : JsonOptionalValue(container, name, T()) {}
-	virtual ~JsonOptionalValue() {}
+	JsonCommonValue(JsonFieldsContainer *container, const char *name, T value) : JsonValue<T>(container, name, value), presented(false), isNull(false) {}
+	JsonCommonValue(JsonFieldsContainer *container, const char *name) : JsonCommonValue(container, name, T()) {}
+	virtual ~JsonCommonValue() {}
 
 	bool TryParse(TJsonDocument *doc) override final;
 	bool Presented();
-
-  protected:
-	bool presented;
-};
-
-template <class T> //
-class JsonNullableValue : public JsonValue<T> {
-  public:
-	JsonNullableValue(JsonFieldsContainer *container, const char *name, T value) : JsonValue<T>(container, name, value), isNull(false) {}
-	JsonNullableValue(JsonFieldsContainer *container, const char *name) : JsonNullableValue(container, name, T()) {}
-	virtual ~JsonNullableValue() {}
-
-	bool TryParse(TJsonDocument *doc) override final;
 	bool IsNull();
 
   protected:
+	bool presented;
 	bool isNull;
 };
 
@@ -162,7 +148,6 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 };
 
 #include "lib/JsonValue_impl.h"
-#include "lib/JsonOptionalValue_impl.h"
-#include "lib/JsonNullableValue_impl.h"
+#include "lib/JsonCommonValue_impl.h"
 #include "lib/JsonObject_impl.h"
 #include "lib/JsonArray_impl.h"
