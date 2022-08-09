@@ -16,7 +16,7 @@ typedef enum { uAdmin, uViewer } TUserRole;
 class UserDto : public JsonObject {
   public:
 	JsonValue<char *> Name;
-	JsonOptionalValue<uint32_t> Role;
+	JsonCommonValue<uint32_t> Role;
 
 	UserDto(char *name, TUserRole role)
 		: Name(this, "name", name), //
@@ -35,8 +35,8 @@ class GoodsDto : public JsonObject {
 	JsonValue<char *> Name;
 	JsonValue<float> Price;
 	JsonValue<double> Quantity;
-	JsonOptionalValue<bool> Deleted;
-	JsonOptionalValue<char *> StoreName;
+	JsonCommonValue<bool> Deleted;
+	JsonCommonValue<char *> StoreName;
 
 	GoodsDto(int id, uint32_t created, char *group, char *name, float price, double quantity, bool deleted = false, char *storeName = "")
 		: Id(this, "Id", id),					//
@@ -67,7 +67,7 @@ class GoodsList : public JsonArray<GoodsDto *> {
 class OrderDto : public JsonObject {
   public:
 	JsonValue<char *> Supplier;
-	JsonOptionalValue<uint32_t> DateTime;
+	JsonCommonValue<uint32_t> DateTime;
 	JsonValue<JsonArrayBase *> Goods;
 	JsonValue<JsonObject *> User;
 	GoodsList goodsList;
@@ -96,7 +96,7 @@ class CustomerDto : public JsonObject {
   public:
 	JsonValue<uint64_t> Id;
 	JsonValue<char *> Name;
-	JsonValue<TJsonRawData> Blob;
+	JsonCommonValue<TJsonRawData> Blob;
 	JsonValue<JsonArrayBase *> Orders;
 	OrdersList ordersList;
 

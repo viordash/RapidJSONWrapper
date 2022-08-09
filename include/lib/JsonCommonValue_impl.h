@@ -2,7 +2,7 @@
 
 #include "LibJson.h"
 
-template <class T> bool JsonOptionalValue<T>::TryParse(TJsonDocument *doc) {
+template <class T> bool JsonCommonValue<T>::TryParse(TJsonDocument *doc) {
 	rapidjson::Value::MemberIterator member = doc->FindMember(this->Name);
 	if (member == doc->MemberEnd()) {
 		this->Reset();
@@ -12,12 +12,17 @@ template <class T> bool JsonOptionalValue<T>::TryParse(TJsonDocument *doc) {
 	presented = true;
 
 	rapidjson::Value &jsonVal = member->value;
-	if (this->TryParseCore(&jsonVal)) { return true; }
+	if (this->TryParseCore(&jsonVal)) {
+		isNull = false;
+		return true;
+	}
 	if (jsonVal.IsNull()) {
 		this->Reset();
+		isNull = true;
 		return true;
 	}
 	return false;
 }
 
-template <class T> bool JsonOptionalValue<T>::Presented() { return presented; }
+template <class T> bool JsonCommonValue<T>::Presented() { return presented; }
+template <class T> bool JsonCommonValue<T>::IsNull() { return isNull; }

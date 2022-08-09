@@ -8,8 +8,7 @@ typedef struct {
 	size_t Size;
 } TJsonRawData;
 
-template <class T> //
-class JsonValue : public JsonValueBase {
+template <class T> class JsonValue : public JsonValueBase {
   public:
 	struct ValueWrapper {
 	  public:
@@ -37,15 +36,8 @@ class JsonValue : public JsonValueBase {
 	JsonValue(JsonFieldsContainer *container, const char *name) : JsonValue(container, name, T()) {}
 	virtual ~JsonValue() {}
 
-	TJsonDocument *BeginTryParse(const char *jsonStr, size_t length = 0);
-	void EndTryParse(TJsonDocument *doc);
-	bool TryParse(const char *jsonStr, size_t length = 0);
 	bool TryParse(TJsonDocument *doc) override;
-
 	void WriteToDoc(TJsonDocument *doc) override final;
-	size_t WriteToString(char *outBuffer, size_t outBufferSize);
-	typedef void (*TOnCompleted)(void *parent, const char *json, int size);
-	size_t DirectWriteTo(void *parent, TOnCompleted onCompleted);
 
 	void Reset();
 	bool Equals(JsonValueBase *other) override final;
@@ -55,18 +47,19 @@ class JsonValue : public JsonValueBase {
 	bool TryParseCore(TJsonValue *value);
 };
 
-template <class T> //
-class JsonOptionalValue : public JsonValue<T> {
+template <class T> class JsonCommonValue : public JsonValue<T> {
   public:
-	JsonOptionalValue(JsonFieldsContainer *container, const char *name, T value) : JsonValue<T>(container, name, value), presented(false) {}
-	JsonOptionalValue(JsonFieldsContainer *container, const char *name) : JsonOptionalValue(container, name, T()) {}
-	virtual ~JsonOptionalValue() {}
+	JsonCommonValue(JsonFieldsContainer *container, const char *name, T value) : JsonValue<T>(container, name, value), presented(false), isNull(false) {}
+	JsonCommonValue(JsonFieldsContainer *container, const char *name) : JsonCommonValue(container, name, T()) {}
+	virtual ~JsonCommonValue() {}
 
 	bool TryParse(TJsonDocument *doc) override final;
 	bool Presented();
+	bool IsNull();
 
   protected:
 	bool presented;
+	bool isNull;
 };
 
 class JsonObject : public JsonFieldsContainer {
@@ -155,6 +148,6 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 };
 
 #include "lib/JsonValue_impl.h"
-#include "lib/JsonOptionalValue_impl.h"
+#include "lib/JsonCommonValue_impl.h"
 #include "lib/JsonObject_impl.h"
 #include "lib/JsonArray_impl.h"
