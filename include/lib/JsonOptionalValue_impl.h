@@ -13,10 +13,6 @@ template <class T> bool JsonOptionalValue<T>::TryParse(TJsonDocument *doc) {
 
 	rapidjson::Value &jsonVal = member->value;
 	if (this->TryParseCore(&jsonVal)) { return true; }
-	if (jsonVal.IsNull()) {
-		this->Reset();
-		return true;
-	}
 	return false;
 }
 

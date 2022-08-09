@@ -62,6 +62,20 @@ class JsonOptionalValue : public JsonValue<T> {
 	bool presented;
 };
 
+template <class T> //
+class JsonNullableValue : public JsonValue<T> {
+  public:
+	JsonNullableValue(JsonFieldsContainer *container, const char *name, T value) : JsonValue<T>(container, name, value), isNull(false) {}
+	JsonNullableValue(JsonFieldsContainer *container, const char *name) : JsonNullableValue(container, name, T()) {}
+	virtual ~JsonNullableValue() {}
+
+	bool TryParse(TJsonDocument *doc) override final;
+	bool IsNull();
+
+  protected:
+	bool isNull;
+};
+
 class JsonObject : public JsonFieldsContainer {
   public:
 	virtual ~JsonObject(){};
@@ -149,5 +163,6 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 
 #include "lib/JsonValue_impl.h"
 #include "lib/JsonOptionalValue_impl.h"
+#include "lib/JsonNullableValue_impl.h"
 #include "lib/JsonObject_impl.h"
 #include "lib/JsonArray_impl.h"
