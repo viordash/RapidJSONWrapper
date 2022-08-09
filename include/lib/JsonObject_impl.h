@@ -12,7 +12,10 @@ JsonValueBase *JsonFieldsContainer::GetField(const char *name) {
 bool JsonObject::TryParse(TJsonDocument *doc) {
 	if (!doc->IsObject()) { return false; }
 
-	for (size_t i = 0; i < Names.size(); i++) { Fields[i]->TryParse(Names[i], doc); }
+	for (size_t i = 0; i < Names.size(); i++) {
+		if (!Fields[i]->TryParse(Names[i], doc)) { return false; }
+	}
+
 	return true;
 }
 
