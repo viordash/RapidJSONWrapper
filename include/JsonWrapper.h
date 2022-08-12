@@ -32,8 +32,9 @@ template <class T> class JsonValue : public JsonValueBase {
 
 	ValueWrapper Value;
 
-	JsonValue(JsonFieldsContainer *container, const char *name, T value) : JsonValueBase(container, name), Value(value) {}
-	JsonValue(JsonFieldsContainer *container, const char *name) : JsonValue(container, name, T()) {}
+	JsonValue(JsonFieldsContainer *container, size_t nameLen, const char *name, T value = T()) : JsonValueBase(container, name, nameLen), Value(value) {}
+	template <size_t N> JsonValue(JsonFieldsContainer *container, const char (&name)[N], T value = T()) : JsonValue(container, N - 1, name, value) {}
+
 	virtual ~JsonValue() {}
 
 	bool TryParse(TJsonDocument *doc) override;
@@ -49,8 +50,9 @@ template <class T> class JsonValue : public JsonValueBase {
 
 template <class T> class JsonCommonValue : public JsonValue<T> {
   public:
-	JsonCommonValue(JsonFieldsContainer *container, const char *name, T value) : JsonValue<T>(container, name, value), presented(false), isNull(false) {}
-	JsonCommonValue(JsonFieldsContainer *container, const char *name) : JsonCommonValue(container, name, T()) {}
+	JsonCommonValue(JsonFieldsContainer *container, size_t nameLen, const char *name, T value = T()) : JsonValue<T>(container, nameLen, name, value), presented(false), isNull(false) {}
+	template <size_t N> JsonCommonValue(JsonFieldsContainer *container, const char (&name)[N], T value = T()) : JsonCommonValue(container, N - 1, name, value) {}
+
 	virtual ~JsonCommonValue() {}
 
 	bool TryParse(TJsonDocument *doc) override final;

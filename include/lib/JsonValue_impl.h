@@ -93,9 +93,9 @@ template <> bool JsonValue<JsonArrayBase *>::TryParseCore(TJsonValue *jValue) { 
 
 
 */
-template <class T> void JsonValue<T>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (T)Value, doc->GetAllocator()); }
+template <class T> void JsonValue<T>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (T)Value, doc->GetAllocator()); }
 
-template <> void JsonValue<char *>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), rapidjson::StringRef((char *)Value), doc->GetAllocator()); }
+template <> void JsonValue<char *>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, rapidjson::StringRef((char *)Value), doc->GetAllocator()); }
 
 template <> void JsonValue<TJsonRawData>::WriteToDoc(TJsonDocument *doc) {
 	rapidjson::Value json_val;
@@ -105,7 +105,7 @@ template <> void JsonValue<TJsonRawData>::WriteToDoc(TJsonDocument *doc) {
 	} else {
 		json_val.SetString(rapidjson::StringRef((char *)rawData.Data, (rapidjson::SizeType)rawData.Size));
 	}
-	doc->AddMember(rapidjson::StringRef(Name), json_val, doc->GetAllocator());
+	doc->AddMember(Name, json_val, doc->GetAllocator());
 }
 
 template <> void JsonValue<JsonObject *>::WriteToDoc(TJsonDocument *doc) {
@@ -113,14 +113,14 @@ template <> void JsonValue<JsonObject *>::WriteToDoc(TJsonDocument *doc) {
 	rapidjson::Document jObject(&allocator);
 	jObject.SetObject();
 	Value->WriteToDoc(&jObject);
-	doc->AddMember(rapidjson::StringRef(Name), jObject, allocator);
+	doc->AddMember(Name, jObject, allocator);
 }
 
 template <> void JsonValue<JsonArrayBase *>::WriteToDoc(TJsonDocument *doc) {
 	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
 	rapidjson::Document jArray(&allocator);
 	Value->WriteToDoc(&jArray);
-	doc->AddMember(rapidjson::StringRef(Name), jArray, allocator);
+	doc->AddMember(Name, jArray, allocator);
 }
 /*
 
