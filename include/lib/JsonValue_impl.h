@@ -3,9 +3,14 @@
 #include "LibJson.h"
 
 template <class T> bool JsonValue<T>::TryParse(TJsonDocument *doc) {
-	rapidjson::Value::MemberIterator member = doc->FindMember(Name);
+	rapidjson::Value::MemberIterator member = doc->MemberBegin();
+	while (member != doc->MemberEnd()) {
+		auto &memberName = member->name;
+		if (strcmp(Name, memberName.GetString()) == 0) break;
+		++member;
+	}
+
 	if (member == doc->MemberEnd()) {
-		this->Reset();
 		return false;
 	}
 

@@ -141,7 +141,7 @@ TEST(JsonObjectTestsGroup, JsonObject_Parse_Test) {
 	CHECK_EQUAL(goods.Created.Value, 1657052047);
 }
 
-TEST(JsonObjectTestsGroup, Complex_JsonObject_TryParse_Test) {
+TEST(JsonObjectTestsGroup, JsonObject_Complex_TryParse_Test) {
 	JsonFieldsContainer container;
 	OrderDto order;
 
@@ -290,7 +290,7 @@ TEST(JsonObjectTestsGroup, JsonObject_WriteTo_Async_Test) {
 	delete[] DirectWriteTestBuffer;
 }
 
-TEST(JsonObjectTestsGroup, Complex_JsonObject_WriteTo_Test) {
+TEST(JsonObjectTestsGroup, JsonObject_Complex_WriteTo_Test) {
 	JsonFieldsContainer container;
 
 	OrderDto orderDto("Dell", 1657058000, "Joe Doe", TUserRole::uViewer);
