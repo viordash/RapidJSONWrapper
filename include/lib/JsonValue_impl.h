@@ -10,9 +10,7 @@ template <class T> bool JsonValue<T>::TryParse(TJsonDocument *doc) {
 		++member;
 	}
 
-	if (member == doc->MemberEnd()) {
-		return false;
-	}
+	if (member == doc->MemberEnd()) { return false; }
 
 	rapidjson::Value &jsonVal = member->value;
 	if (TryParseCore(&jsonVal)) { return true; }
