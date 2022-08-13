@@ -18,13 +18,9 @@ class UserDto : public JsonObject {
 	JsonValue<char *> Name;
 	JsonCommonValue<uint32_t> Role;
 
-	UserDto(char *name, TUserRole role)
+	UserDto(char *name = {}, TUserRole role = {})
 		: Name(this, "name", name), //
 		  Role(this, "role", role){};
-
-	UserDto()
-		: Name(this, "name"), //
-		  Role(this, "role") {}
 };
 
 class GoodsDto : public JsonObject {
@@ -38,7 +34,7 @@ class GoodsDto : public JsonObject {
 	JsonCommonValue<bool> Deleted;
 	JsonCommonValue<char *> StoreName;
 
-	GoodsDto(int id, uint32_t created, char *group, char *name, float price, double quantity, bool deleted = false, char *storeName = "")
+	GoodsDto(int id = {}, uint32_t created = {}, char *group = {}, char *name = {}, float price = {}, double quantity = {}, bool deleted = {}, char *storeName = {})
 		: Id(this, "Id", id),					//
 		  Created(this, "Created", created),	//
 		  Group(this, "Group", group),			//
@@ -47,16 +43,6 @@ class GoodsDto : public JsonObject {
 		  Quantity(this, "Quantity", quantity), //
 		  Deleted(this, "Deleted", deleted),	//
 		  StoreName(this, "StoreName", storeName){};
-
-	GoodsDto()
-		: Id(this, "Id"),			  //
-		  Created(this, "Created"),	  //
-		  Group(this, "Group"),		  //
-		  Name(this, "Name"),		  //
-		  Price(this, "Price"),		  //
-		  Quantity(this, "Quantity"), //
-		  Deleted(this, "Deleted"),	  //
-		  StoreName(this, "StoreName") {}
 };
 
 class GoodsList : public JsonArray<GoodsDto *> {
@@ -73,18 +59,12 @@ class OrderDto : public JsonObject {
 	GoodsList goodsList;
 	UserDto userDto;
 
-	OrderDto(char *supplier, uint32_t dateTime, char *userName, TUserRole userRole)
+	OrderDto(char *supplier = {}, uint32_t dateTime = {}, char *userName = {}, TUserRole userRole = {})
 		: Supplier(this, "supplier", supplier), //
 		  DateTime(this, "dateTime", dateTime), //
 		  Goods(this, "goods", &goodsList),		//
 		  userDto(userName, userRole),			//
 		  User(this, "user", &userDto){};
-
-	OrderDto()
-		: Supplier(this, "supplier"),		//
-		  DateTime(this, "dateTime"),		//
-		  Goods(this, "goods", &goodsList), //
-		  User(this, "user", &userDto) {}
 };
 
 class OrdersList : public JsonArray<OrderDto *> {
@@ -100,16 +80,10 @@ class CustomerDto : public JsonObject {
 	JsonValue<JsonArrayBase *> Orders;
 	OrdersList ordersList;
 
-	CustomerDto(uint64_t id, char *name, TJsonRawData blob)
+	CustomerDto(uint64_t id = {}, char *name = {}, TJsonRawData blob = {})
 		: Id(this, "id", id),		//
 		  Name(this, "name", name), //
 		  Blob(this, "blob", blob), //
-		  Orders(this, "orders", &ordersList){};
-
-	CustomerDto()
-		: Id(this, "id"),	  //
-		  Name(this, "name"), //
-		  Blob(this, "blob"), //
 		  Orders(this, "orders", &ordersList){};
 };
 
@@ -285,7 +259,7 @@ TEST(JsonObjectTestsGroup, JsonObject_WriteTo_Async_Test) {
 
 	CHECK_EQUAL(TestParent, (void *)987654321);
 	STRCMP_EQUAL(DirectWriteTestBuffer, "{\"Id\":2,\"Created\":1657052789,\"Group\":\"group\",\"Name\":\"name\",\"Price\":58.25,\"Quantity\":48.2,\"Deleted\":false,"
-										"\"StoreName\":\"\"}");
+										"\"StoreName\":null}");
 	delete[] DirectWriteTestBuffer;
 }
 
@@ -307,10 +281,10 @@ TEST(JsonObjectTestsGroup, JsonObject_Complex_WriteTo_Test) {
 
 	const char *jsonStr = buffer.GetString();
 	STRCMP_EQUAL(jsonStr, "{\"supplier\":\"Dell\",\"dateTime\":1657058000,\"goods\":[{\"Id\":1,\"Created\":1657052789,\"Group\":\"Keyboards\",\"Name\":\"K1-100\",\"Price\":58."
-						  "25,\"Quantity\":48.2,\"Deleted\":false,\"StoreName\":\"\"},{\"Id\":2,\"Created\":1657053789,\"Group\":\"Keyboards\",\"Name\":\"K2-100\",\"Price\":158."
-						  "25,\"Quantity\":448.2,\"Deleted\":false,\"StoreName\":\"\"},{\"Id\":3,\"Created\":1657054789,\"Group\":\"Keyboards\",\"Name\":\"K3-100\",\"Price\":"
-						  "258.25,\"Quantity\":548.2,\"Deleted\":false,\"StoreName\":\"\"},{\"Id\":4,\"Created\":1657055789,\"Group\":\"Keyboards\",\"Name\":\"K4-100\","
-						  "\"Price\":358.25,\"Quantity\":648.2,\"Deleted\":false,\"StoreName\":\"\"}],\"user\":{\"name\":\"Joe Doe\",\"role\":1}}");
+						  "25,\"Quantity\":48.2,\"Deleted\":false,\"StoreName\":null},{\"Id\":2,\"Created\":1657053789,\"Group\":\"Keyboards\",\"Name\":\"K2-100\",\"Price\":158."
+						  "25,\"Quantity\":448.2,\"Deleted\":false,\"StoreName\":null},{\"Id\":3,\"Created\":1657054789,\"Group\":\"Keyboards\",\"Name\":\"K3-100\",\"Price\":"
+						  "258.25,\"Quantity\":548.2,\"Deleted\":false,\"StoreName\":null},{\"Id\":4,\"Created\":1657055789,\"Group\":\"Keyboards\",\"Name\":\"K4-100\","
+						  "\"Price\":358.25,\"Quantity\":648.2,\"Deleted\":false,\"StoreName\":null}],\"user\":{\"name\":\"Joe Doe\",\"role\":1}}");
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_Equals_Test) {
@@ -366,7 +340,7 @@ TEST(JsonObjectTestsGroup, JsonObject_With_Blob_Field_Test) {
 	CHECK(orderDto2->goodsList.Add(new GoodsDto(200, 2007053789, "Mouse", "M2-100", 48.25, 28.2)));
 
 	auto size = customerDto1->DirectWriteTo(0, OnReady);
-	CHECK_EQUAL(size, 10173289);
+	CHECK_EQUAL(size, 10173299);
 	delete customerDto1;
 	delete[] picture;
 

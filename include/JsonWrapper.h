@@ -13,7 +13,6 @@ template <class T> class JsonValue : public JsonValueBase {
 	struct ValueWrapper {
 	  public:
 		ValueWrapper(const T value) { InitValue(value); }
-		~ValueWrapper() { DeleteValue(); }
 
 		T operator=(const T right) {
 			SetValue(right);
@@ -23,13 +22,15 @@ template <class T> class JsonValue : public JsonValueBase {
 
 		operator T() const { return value; }
 
-		void InitStringValue(char *value, size_t len);
-		void SetStringValue(char *value, size_t len);
-
 	  private:
+		friend class JsonValue;
+
+		~ValueWrapper() { DeleteValue(); }
 		T value;
 		void InitValue(T value);
+		void InitStringValue(char *value, size_t len);
 		void SetValue(T value);
+		void SetStringValue(char *value, size_t len);
 		void DeleteValue();
 	};
 

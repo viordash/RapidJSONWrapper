@@ -27,7 +27,9 @@ template <class T> bool operator==(const JsonValue<T> &v1, const JsonValue<T> &v
 */
 template <class T> bool JsonValue<T>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && Value == ((JsonValue<T> *)other)->Value; }
 
-template <> bool JsonValue<char *>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && strcmp(Value, ((JsonValue<char *> *)other)->Value) == 0; }
+template <> bool JsonValue<char *>::Equals(JsonValueBase *other) { //
+	return strcmp(Name, other->Name) == 0 && (Value == ((JsonValue<char *> *)other)->Value || strcmp(Value, ((JsonValue<char *> *)other)->Value) == 0);
+}
 
 template <> bool JsonValue<TJsonRawData>::Equals(JsonValueBase *other) {
 	return strcmp(Name, other->Name) == 0																  //
@@ -104,7 +106,15 @@ template <> bool JsonValue<JsonArrayBase *>::TryParseCore(TJsonValue *jValue) { 
 */
 template <class T> void JsonValue<T>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (T)Value, doc->GetAllocator()); }
 
-template <> void JsonValue<char *>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, rapidjson::StringRef((char *)Value), doc->GetAllocator()); }
+template <> void JsonValue<char *>::WriteToDoc(TJsonDocument *doc) {
+	rapidjson::Value json_val;
+	if (Value == NULL) {
+		json_val.SetNull();
+	} else {
+		json_val.SetString(rapidjson::StringRef((char *)Value));
+	}
+	doc->AddMember(Name, json_val, doc->GetAllocator());
+}
 
 template <> void JsonValue<TJsonRawData>::WriteToDoc(TJsonDocument *doc) {
 	rapidjson::Value json_val;
@@ -179,14 +189,9 @@ template <> void JsonValue<char *>::ValueWrapper::InitValue(char *value) {
 }
 
 template <> void JsonValue<char *>::ValueWrapper::InitStringValue(char *value, size_t len) {
-	if (value != NULL) {
-		this->value = new char[len + 1];
-		memcpy(this->value, value, len);
-		this->value[len] = 0;
-	} else {
-		this->value = new char[1];
-		this->value[0] = 0;
-	}
+	this->value = new char[len + 1];
+	memcpy(this->value, value, len);
+	this->value[len] = 0;
 }
 
 template <> void JsonValue<JsonObject *>::ValueWrapper::InitValue(JsonObject *value) { this->value = value; }
