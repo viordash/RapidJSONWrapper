@@ -129,7 +129,7 @@ TEST(JsonObjectTestsGroup, JsonObject_Parse_Test) {
 	CHECK_EQUAL(goods.Price.Value, 123.25);
 	CHECK_EQUAL(goods.Quantity.Value, 165.052045);
 	CHECK_EQUAL(goods.Deleted.Value, false);
-	STRCMP_EQUAL(goods.StoreName.Value, "");
+	STRCMP_EQUAL(goods.StoreName.Value, NULL);
 
 	CHECK_TRUE(goods.TryParse("{\"Id\":1,\"Created\":1657052046,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045,"
 							  "\"StoreName\":\"Store #1\"}               \t  \r\n"));
@@ -164,7 +164,7 @@ TEST(JsonObjectTestsGroup, JsonObject_Parse_With_Optionaly_Fields_Test) {
 	CHECK_EQUAL(goods.Price.Value, 123.25);
 	CHECK_EQUAL(goods.Quantity.Value, 165.052045);
 	CHECK_EQUAL(goods.Deleted.Value, true);
-	STRCMP_EQUAL(goods.StoreName.Value, "");
+	STRCMP_EQUAL(goods.StoreName.Value, NULL);
 
 	CHECK_TRUE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045,\"StoreName\":\"Store #1\"}"));
 	CHECK_EQUAL(goods.Deleted.Value, false);
@@ -192,12 +192,12 @@ TEST(JsonObjectTestsGroup, JsonObject_Parse_Error_Test) {
 
 	CHECK_EQUAL(goods.Id.Value, 0);
 	CHECK_EQUAL(goods.Created.Value, 0);
-	STRCMP_EQUAL(goods.Group.Value, "");
-	STRCMP_EQUAL(goods.Name.Value, "");
+	STRCMP_EQUAL(goods.Group.Value, NULL);
+	STRCMP_EQUAL(goods.Name.Value, NULL);
 	CHECK_EQUAL(goods.Price.Value, 0.0);
 	CHECK_EQUAL(goods.Quantity.Value, 0.0);
 	CHECK_EQUAL(goods.Deleted.Value, false);
-	STRCMP_EQUAL(goods.StoreName.Value, "");
+	STRCMP_EQUAL(goods.StoreName.Value, NULL);
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_Parse_With_Reordered_Fields_Test) {
@@ -233,7 +233,7 @@ TEST(JsonObjectTestsGroup, JsonObject_Parse_And_Length_Defined_Test) {
 TEST(JsonObjectTestsGroup, JsonObject_Parse_With_Nullable_Values_Test) {
 	GoodsDto goods;
 	CHECK_FALSE(goods.TryParse("{\"Id\":1,\"Created\":null,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}"));
-	CHECK_FALSE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":null,\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}"));
+	CHECK_TRUE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":null,\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}"));
 	CHECK_FALSE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":null}"));
 	CHECK_FALSE(goods.TryParse("{\"Id\":null,\"Created\":null,\"Group\":null,\"Name\":null,\"Price\":null,\"Quantity\":null}"));
 
