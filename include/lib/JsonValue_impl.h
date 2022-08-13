@@ -84,7 +84,7 @@ template <> bool JsonValue<char *>::TryParseCore(TJsonValue *jValue) {
 		}
 		return false;
 	}
-	Value.InitStringValue((char *)jValue->GetString(), jValue->GetStringLength());
+	Value.SetStringValue((char *)jValue->GetString(), jValue->GetStringLength());
 	return true;
 }
 
@@ -180,7 +180,6 @@ template <> void JsonValue<char *>::ValueWrapper::InitValue(char *value) {
 
 template <> void JsonValue<char *>::ValueWrapper::InitStringValue(char *value, size_t len) {
 	if (value != NULL) {
-		auto len = strlen(value);
 		this->value = new char[len + 1];
 		memcpy(this->value, value, len);
 		this->value[len] = 0;
@@ -202,6 +201,10 @@ template <class T> void JsonValue<T>::ValueWrapper::SetValue(T value) { this->va
 template <> void JsonValue<char *>::ValueWrapper::SetValue(char *value) {
 	DeleteValue();
 	InitValue(value);
+}
+template <> void JsonValue<char *>::ValueWrapper::SetStringValue(char *value, size_t len) {
+	DeleteValue();
+	InitStringValue(value, len);
 }
 
 template <> void JsonValue<JsonObject *>::ValueWrapper::SetValue(JsonObject *value) { this->value = value; }
