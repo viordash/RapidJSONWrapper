@@ -32,3 +32,4 @@ template <class T> bool JsonCommonValue<T>::TryParse(TJsonDocument *doc) {
 
 template <class T> bool JsonCommonValue<T>::Presented() { return presented; }
 template <class T> bool JsonCommonValue<T>::IsNull() { return isNull; }
+template <> bool JsonCommonValue<char *>::IsNull() { return isNull || Value == NULL; }

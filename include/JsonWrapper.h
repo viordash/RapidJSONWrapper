@@ -23,6 +23,8 @@ template <class T> class JsonValue : public JsonValueBase {
 
 		operator T() const { return value; }
 
+		void InitStringValue(char *value, size_t len);
+
 	  private:
 		T value;
 		void InitValue(T value);

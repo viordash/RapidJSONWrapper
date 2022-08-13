@@ -443,6 +443,7 @@ TEST(JsonObjectTestsGroup, JsonObject_Perfomance_Test) {
 			durationAdd += std::chrono::duration_cast<std::chrono::microseconds>(finish - start).count();
 		}
 
+		DirectWriteTestBuffer = NULL;
 		{
 			auto start = std::chrono::high_resolution_clock::now();
 			size = customerList->DirectWriteTo(0, OnReady);

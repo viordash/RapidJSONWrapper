@@ -77,8 +77,14 @@ template <> bool JsonValue<uint16_t>::TryParseCore(TJsonValue *jValue) {
 }
 
 template <> bool JsonValue<char *>::TryParseCore(TJsonValue *jValue) {
-	if (!jValue->IsString()) { return false; }
-	Value = (char *)jValue->GetString();
+	if (!jValue->IsString()) {
+		if (jValue->IsNull()) {
+			Value = NULL;
+			return true;
+		}
+		return false;
+	}
+	Value.InitStringValue((char *)jValue->GetString(), jValue->GetStringLength());
 	return true;
 }
 
@@ -165,6 +171,14 @@ template <> void JsonValue<JsonArrayBase *>::ValueWrapper::DeleteValue() {}
 template <class T> void JsonValue<T>::ValueWrapper::InitValue(T value) { this->value = value; }
 
 template <> void JsonValue<char *>::ValueWrapper::InitValue(char *value) {
+	if (value == NULL) {
+		this->value = NULL;
+	} else {
+		InitStringValue(value, strlen(value));
+	}
+}
+
+template <> void JsonValue<char *>::ValueWrapper::InitStringValue(char *value, size_t len) {
 	if (value != NULL) {
 		auto len = strlen(value);
 		this->value = new char[len + 1];

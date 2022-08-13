@@ -26,11 +26,12 @@ TEST(JsonStringValueGroup, JsonStringValue_TryParse_Test) {
 
 	rapidjson::Document doc;
 	doc.Parse("{\"testString\":\"User1\"}");
-	CHECK(testable.TryParse(&doc));
+	CHECK_TRUE(testable.TryParse(&doc));
 	STRCMP_EQUAL(testable.Value, "User1");
 
 	doc.Parse("{\"testString\":null}");
-	CHECK_FALSE(testable.TryParse(&doc));
+	CHECK_TRUE(testable.TryParse(&doc));
+	CHECK_EQUAL(testable.Value, NULL);
 }
 
 TEST(JsonStringValueGroup, JsonStringValue_WriteTo_Test) {
@@ -54,7 +55,7 @@ TEST(JsonStringValueGroup, JsonStringValue_WriteTo_Test) {
 TEST(JsonStringValueGroup, JsonStringValue_SetValue_Test) {
 	JsonFieldsContainer container;
 	JsonValue<char *> testable(&container, "testString");
-	STRCMP_EQUAL(testable.Value, "");
+	STRCMP_EQUAL(testable.Value, NULL);
 
 	testable.Value = "0123456789";
 	STRCMP_EQUAL(testable.Value, "0123456789");
@@ -93,9 +94,9 @@ TEST(JsonStringValueGroup, JsonStringValue_Common_TryParse_Test) {
 	rapidjson::Document doc;
 	doc.Parse("{\"testOther\":\"01234\"}");
 	CHECK_TRUE(testable1.TryParse(&doc));
-	STRCMP_EQUAL(testable1.Value, "");
+	CHECK_EQUAL(testable1.Value, NULL);
 	CHECK_FALSE(testable1.Presented());
-	CHECK_FALSE(testable1.IsNull());
+	CHECK_TRUE(testable1.IsNull());
 
 	doc.Parse("{\"test\":\"01234\"}");
 	CHECK_TRUE(testable1.TryParse(&doc));
