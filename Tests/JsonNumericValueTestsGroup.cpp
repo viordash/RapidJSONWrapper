@@ -14,14 +14,14 @@ TEST(JsonNumericValueGroup, JsonField_Equals_By_Name_Test) {
 	JsonFieldsContainer container;
 	JsonValue<unsigned int> testable1(&container, "test", 100);
 	JsonValue<unsigned int> testable01(&container, "test", 100);
+	JsonValue<unsigned int> testable02(&container, "other", 100);
 
 	CHECK_TRUE(testable1 == testable01);
 	testable01.Value = testable01.Value + 1;
 	CHECK_FALSE(testable1 == testable01);
 	testable1.Value = testable1.Value + 1;
 	CHECK_TRUE(testable1 == testable01);
-	testable1.Name = "other";
-	CHECK_FALSE(testable1 == testable01);
+	CHECK_FALSE(testable1 == testable02);
 }
 
 TEST(JsonNumericValueGroup, JsonUIntField_SetValue_Test) {
