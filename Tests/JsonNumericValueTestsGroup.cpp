@@ -36,7 +36,6 @@ TEST(JsonNumericValueGroup, JsonUIntField_SetValue_Test) {
 	testable4.Value = 0xFFFFFFFF;
 
 	CHECK_EQUAL(testable1.Value, 4294967295);
-	CHECK_EQUAL(testable1.Value, 4294967295);
 	CHECK_EQUAL(testable2.Value, 4294967295);
 	CHECK_EQUAL(testable3.Value, 65535);
 	CHECK_EQUAL(testable4.Value, 255);
@@ -567,4 +566,100 @@ TEST(JsonNumericValueGroup, JsonBoolField_Common_TryParse_Test) {
 	CHECK_TRUE(testable1.TryParse(&doc));
 	CHECK_TRUE(testable1.Presented());
 	CHECK_TRUE(testable1.IsNull());
+}
+/*
+
+
+*/
+TEST(JsonNumericValueGroup, JsonFloatField_SetValue_Test) {
+	JsonFieldsContainer container;
+	JsonValue<float> testable1(&container, "test");
+	JsonValue<double> testable2(&container, "test");
+	testable1.Value = 429496729.5;
+	testable2.Value = 42949672.95;
+
+	CHECK_EQUAL(testable1.Value, 429496729.5F);
+	CHECK_EQUAL(testable2.Value, 42949672.95);
+}
+
+TEST(JsonNumericValueGroup, JsonFloatField_TryParse_Test) {
+	JsonFieldsContainer container;
+	JsonValue<float> testable1(&container, "test");
+	JsonValue<double> testable2(&container, "test");
+
+	rapidjson::Document doc;
+	doc.Parse("{\"test\":150.25}");
+	CHECK_TRUE(testable1.TryParse(&doc));
+	CHECK_TRUE(testable2.TryParse(&doc));
+	CHECK_EQUAL(testable1.Value, 150.25F);
+	CHECK_EQUAL(testable2.Value, 150.25);
+
+	doc.Parse("{\"testOther\":42.1}");
+	CHECK_FALSE(testable1.TryParse(&doc));
+	CHECK_FALSE(testable2.TryParse(&doc));
+
+	doc.Parse("{\"test\":null}");
+	CHECK_FALSE(testable1.TryParse(&doc));
+	CHECK_FALSE(testable2.TryParse(&doc));
+}
+
+TEST(JsonNumericValueGroup, JsonFloatField_WriteTo_Test) {
+	JsonFieldsContainer container;
+	JsonValue<float> testable1(&container, "test", 19.25);
+	JsonValue<double> testable2(&container, "test", 20.5);
+
+	{
+		rapidjson::Document doc;
+		doc.SetObject();
+		testable1.WriteToDoc(&doc);
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		STRCMP_EQUAL(buffer.GetString(), "{\"test\":19.25}");
+	}
+	{
+		rapidjson::Document doc;
+		doc.SetObject();
+		testable2.WriteToDoc(&doc);
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		STRCMP_EQUAL(buffer.GetString(), "{\"test\":20.5}");
+	}
+}
+
+TEST(JsonNumericValueGroup, JsonFloatField_Equals_Test) {
+	JsonFieldsContainer container;
+	JsonValue<float> testable1(&container, "test", 100.5);
+	JsonValue<float> testable01(&container, "test", 100.5);
+
+	JsonValue<double> testable2(&container, "test", 101.75);
+	JsonValue<double> testable02(&container, "test", 101.75);
+
+	CHECK_TRUE(testable1 == testable01);
+	CHECK_FALSE(testable1 != testable01);
+	testable01.Value = testable01.Value + 1;
+	CHECK_TRUE(testable1 != testable01);
+	CHECK_FALSE(testable1 == testable01);
+
+	CHECK_TRUE(testable2 == testable02);
+	CHECK_FALSE(testable2 != testable02);
+	testable02.Value = testable02.Value + 1;
+	CHECK_TRUE(testable2 != testable02);
+	CHECK_FALSE(testable2 == testable02);
+}
+
+TEST(JsonNumericValueGroup, JsonFloatField_CloneTo_Test) {
+	JsonFieldsContainer container;
+	JsonValue<float> testable1(&container, "test", 100.5);
+	JsonValue<double> testable2(&container, "test", 101.15);
+
+	JsonValue<float> clone1(&container, "test");
+	JsonValue<double> clone2(&container, "test");
+
+	testable1.CloneTo((JsonValueBase *)&clone1);
+	testable2.CloneTo((JsonValueBase *)&clone2);
+
+	CHECK_EQUAL(clone1.Value, 100.5);
+	CHECK_EQUAL(clone2.Value, 101.15);
 }
