@@ -86,6 +86,9 @@ template <class TItem> void JsonArray<TItem>::Remove(TItem item) {
 		Items.erase(iter);
 	}
 }
+
+template <class TItem> void JsonArray<TItem>::Reserve(size_t capacity) { Items.reserve(capacity); }
+
 /*
 
 

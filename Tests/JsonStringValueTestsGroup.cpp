@@ -26,11 +26,12 @@ TEST(JsonStringValueGroup, JsonStringValue_TryParse_Test) {
 
 	rapidjson::Document doc;
 	doc.Parse("{\"testString\":\"User1\"}");
-	CHECK(testable.TryParse(&doc));
+	CHECK_TRUE(testable.TryParse(&doc));
 	STRCMP_EQUAL(testable.Value, "User1");
 
 	doc.Parse("{\"testString\":null}");
-	CHECK_FALSE(testable.TryParse(&doc));
+	CHECK_TRUE(testable.TryParse(&doc));
+	CHECK_EQUAL(testable.Value, NULL);
 }
 
 TEST(JsonStringValueGroup, JsonStringValue_WriteTo_Test) {
@@ -54,7 +55,7 @@ TEST(JsonStringValueGroup, JsonStringValue_WriteTo_Test) {
 TEST(JsonStringValueGroup, JsonStringValue_SetValue_Test) {
 	JsonFieldsContainer container;
 	JsonValue<char *> testable(&container, "testString");
-	STRCMP_EQUAL(testable.Value, "");
+	STRCMP_EQUAL(testable.Value, NULL);
 
 	testable.Value = "0123456789";
 	STRCMP_EQUAL(testable.Value, "0123456789");
@@ -70,6 +71,10 @@ TEST(JsonStringValueGroup, JsonStringValue_Equals_Test) {
 	testable01.Value = "otherValue";
 	CHECK_TRUE(testable1 != testable01);
 	CHECK_FALSE(testable1 == testable01);
+
+	JsonValue<char *> testable2(&container, "test");
+	JsonValue<char *> testable02(&container, "test", NULL);
+	CHECK_TRUE(testable2 == testable02);
 }
 
 TEST(JsonStringValueGroup, JsonStringValue_CloneTo_Test) {
@@ -93,9 +98,9 @@ TEST(JsonStringValueGroup, JsonStringValue_Common_TryParse_Test) {
 	rapidjson::Document doc;
 	doc.Parse("{\"testOther\":\"01234\"}");
 	CHECK_TRUE(testable1.TryParse(&doc));
-	STRCMP_EQUAL(testable1.Value, "");
+	CHECK_EQUAL(testable1.Value, NULL);
 	CHECK_FALSE(testable1.Presented());
-	CHECK_FALSE(testable1.IsNull());
+	CHECK_TRUE(testable1.IsNull());
 
 	doc.Parse("{\"test\":\"01234\"}");
 	CHECK_TRUE(testable1.TryParse(&doc));
@@ -107,4 +112,38 @@ TEST(JsonStringValueGroup, JsonStringValue_Common_TryParse_Test) {
 	CHECK_TRUE(testable1.TryParse(&doc));
 	CHECK_TRUE(testable1.Presented());
 	CHECK_TRUE(testable1.IsNull());
+}
+
+TEST(JsonStringValueGroup, JsonStringValue_Null_And_Empty_Value_Test) {
+	JsonFieldsContainer container;
+	JsonValue<char *> testDefault(&container, "testDefault");
+	JsonValue<char *> testNull(&container, "testNull", NULL);
+	JsonValue<char *> testEmpty(&container, "testEmpty", "");
+
+	JsonCommonValue<char *> testCommonDefault(&container, "testDefault");
+	JsonCommonValue<char *> testCommonNull(&container, "testNull", NULL);
+	JsonCommonValue<char *> testCommonEmpty(&container, "testEmpty", "");
+
+	CHECK_EQUAL(testDefault.Value, NULL);
+	CHECK_EQUAL(testNull.Value, NULL);
+	STRCMP_EQUAL(testEmpty.Value, "");
+
+	CHECK_TRUE(testCommonDefault.IsNull());
+	CHECK_TRUE(testCommonNull.IsNull());
+	CHECK_FALSE(testCommonEmpty.IsNull());
+	CHECK_EQUAL(testCommonDefault.Value, NULL);
+	CHECK_EQUAL(testCommonNull.Value, NULL);
+	STRCMP_EQUAL(testCommonEmpty.Value, "");
+
+	testDefault.Value = "";
+	STRCMP_EQUAL(testDefault.Value, "");
+
+	testEmpty.Value = NULL;
+	CHECK_EQUAL(testEmpty.Value, NULL);
+
+	testCommonDefault.Value = "";
+	STRCMP_EQUAL(testDefault.Value, "");
+
+	testCommonEmpty.Value = NULL;
+	CHECK_EQUAL(testEmpty.Value, NULL);
 }

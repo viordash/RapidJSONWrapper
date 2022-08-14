@@ -3,11 +3,14 @@
 #include "LibJson.h"
 
 template <class T> bool JsonValue<T>::TryParse(TJsonDocument *doc) {
-	rapidjson::Value::MemberIterator member = doc->FindMember(Name);
-	if (member == doc->MemberEnd()) {
-		this->Reset();
-		return false;
+	rapidjson::Value::MemberIterator member = doc->MemberBegin();
+	while (member != doc->MemberEnd()) {
+		auto &memberName = member->name;
+		if (strcmp(this->Name, memberName.GetString()) == 0) break;
+		++member;
 	}
+
+	if (member == doc->MemberEnd()) { return false; }
 
 	rapidjson::Value &jsonVal = member->value;
 	if (TryParseCore(&jsonVal)) { return true; }
@@ -24,7 +27,9 @@ template <class T> bool operator==(const JsonValue<T> &v1, const JsonValue<T> &v
 */
 template <class T> bool JsonValue<T>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && Value == ((JsonValue<T> *)other)->Value; }
 
-template <> bool JsonValue<char *>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && strcmp(Value, ((JsonValue<char *> *)other)->Value) == 0; }
+template <> bool JsonValue<char *>::Equals(JsonValueBase *other) { //
+	return strcmp(Name, other->Name) == 0 && (Value == ((JsonValue<char *> *)other)->Value || strcmp(Value, ((JsonValue<char *> *)other)->Value) == 0);
+}
 
 template <> bool JsonValue<TJsonRawData>::Equals(JsonValueBase *other) {
 	return strcmp(Name, other->Name) == 0																  //
@@ -43,59 +48,17 @@ template <> bool JsonValue<JsonArrayBase *>::Equals(JsonValueBase *other) {
 
 
 */
-template <class T> bool JsonValue<T>::TryParseCore(TJsonValue *jValue) {
-	if (!jValue->Is<T>()) { return false; }
-	Value = jValue->Get<T>();
-	return true;
+template <class T> void JsonValue<T>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (T)Value, doc->GetAllocator()); }
+
+template <> void JsonValue<char *>::WriteToDoc(TJsonDocument *doc) {
+	rapidjson::Value json_val;
+	if (Value == NULL) {
+		json_val.SetNull();
+	} else {
+		json_val.SetString(rapidjson::StringRef((char *)Value));
+	}
+	doc->AddMember(Name, json_val, doc->GetAllocator());
 }
-
-template <> bool JsonValue<int8_t>::TryParseCore(TJsonValue *jValue) {
-	if (!jValue->IsInt()) { return false; }
-	Value = jValue->GetInt();
-	return true;
-}
-
-template <> bool JsonValue<int16_t>::TryParseCore(TJsonValue *jValue) {
-	if (!jValue->IsInt()) { return false; }
-	Value = jValue->GetInt();
-	return true;
-}
-
-template <> bool JsonValue<uint8_t>::TryParseCore(TJsonValue *jValue) {
-	if (!jValue->IsUint()) { return false; }
-	Value = jValue->GetUint();
-	return true;
-}
-
-template <> bool JsonValue<uint16_t>::TryParseCore(TJsonValue *jValue) {
-	if (!jValue->IsUint()) { return false; }
-	Value = jValue->GetUint();
-	return true;
-}
-
-template <> bool JsonValue<char *>::TryParseCore(TJsonValue *jValue) {
-	if (!jValue->IsString()) { return false; }
-	Value = (char *)jValue->GetString();
-	return true;
-}
-
-template <> bool JsonValue<TJsonRawData>::TryParseCore(TJsonValue *jValue) {
-	if (!jValue->IsString()) { return false; }
-	TJsonRawData rawData = {(uint8_t *)jValue->GetString(), jValue->GetStringLength()};
-	Value = rawData;
-	return true;
-}
-
-template <> bool JsonValue<JsonObject *>::TryParseCore(TJsonValue *jValue) { return jValue->IsObject() && (jValue->ObjectEmpty() || Value->TryParse((TJsonDocument *)jValue)); }
-
-template <> bool JsonValue<JsonArrayBase *>::TryParseCore(TJsonValue *jValue) { return jValue->IsArray() && Value->TryParse((TJsonDocument *)jValue); }
-/*
-
-
-*/
-template <class T> void JsonValue<T>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), (T)Value, doc->GetAllocator()); }
-
-template <> void JsonValue<char *>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(rapidjson::StringRef(Name), rapidjson::StringRef((char *)Value), doc->GetAllocator()); }
 
 template <> void JsonValue<TJsonRawData>::WriteToDoc(TJsonDocument *doc) {
 	rapidjson::Value json_val;
@@ -103,9 +66,9 @@ template <> void JsonValue<TJsonRawData>::WriteToDoc(TJsonDocument *doc) {
 	if (rawData.Data == NULL) {
 		json_val.SetNull();
 	} else {
-		json_val.SetString(rapidjson::StringRef((char *)rawData.Data), (rapidjson::SizeType)rawData.Size);
+		json_val.SetString(rapidjson::StringRef((char *)rawData.Data, (rapidjson::SizeType)rawData.Size));
 	}
-	doc->AddMember(rapidjson::StringRef(Name), json_val, doc->GetAllocator());
+	doc->AddMember(Name, json_val, doc->GetAllocator());
 }
 
 template <> void JsonValue<JsonObject *>::WriteToDoc(TJsonDocument *doc) {
@@ -113,14 +76,14 @@ template <> void JsonValue<JsonObject *>::WriteToDoc(TJsonDocument *doc) {
 	rapidjson::Document jObject(&allocator);
 	jObject.SetObject();
 	Value->WriteToDoc(&jObject);
-	doc->AddMember(rapidjson::StringRef(Name), jObject, allocator);
+	doc->AddMember(Name, jObject, allocator);
 }
 
 template <> void JsonValue<JsonArrayBase *>::WriteToDoc(TJsonDocument *doc) {
 	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
 	rapidjson::Document jArray(&allocator);
 	Value->WriteToDoc(&jArray);
-	doc->AddMember(rapidjson::StringRef(Name), jArray, allocator);
+	doc->AddMember(Name, jArray, allocator);
 }
 /*
 
@@ -161,15 +124,16 @@ template <> void JsonValue<JsonArrayBase *>::ValueWrapper::DeleteValue() {}
 */
 template <class T> void JsonValue<T>::ValueWrapper::InitValue(T value) { this->value = value; }
 
+template <> void JsonValue<char *>::ValueWrapper::InitStringValue(char *value, size_t len) {
+	this->value = new char[len + 1];
+	memcpy(this->value, value, len);
+	this->value[len] = 0;
+}
 template <> void JsonValue<char *>::ValueWrapper::InitValue(char *value) {
-	if (value != NULL) {
-		auto len = strlen(value);
-		this->value = new char[len + 1];
-		memcpy(this->value, value, len);
-		this->value[len] = 0;
+	if (value == NULL) {
+		this->value = NULL;
 	} else {
-		this->value = new char[1];
-		this->value[0] = 0;
+		InitStringValue(value, strlen(value));
 	}
 }
 
@@ -185,6 +149,10 @@ template <class T> void JsonValue<T>::ValueWrapper::SetValue(T value) { this->va
 template <> void JsonValue<char *>::ValueWrapper::SetValue(char *value) {
 	DeleteValue();
 	InitValue(value);
+}
+template <> void JsonValue<char *>::ValueWrapper::SetStringValue(char *value, size_t len) {
+	DeleteValue();
+	InitStringValue(value, len);
 }
 
 template <> void JsonValue<JsonObject *>::ValueWrapper::SetValue(JsonObject *value) { this->value = value; }
@@ -207,3 +175,59 @@ template <> void JsonValue<JsonArrayBase *>::CloneTo(JsonValueBase *other) {
 	auto otherArray = ((JsonArrayBase *)((JsonValue<JsonArrayBase *> *)other)->Value);
 	thisArray->CloneTo(otherArray);
 }
+/*
+
+
+*/
+template <class T> bool JsonValue<T>::TryParseCore(TJsonValue *jValue) {
+	if (!jValue->Is<T>()) { return false; }
+	Value = jValue->Get<T>();
+	return true;
+}
+
+template <> bool JsonValue<int8_t>::TryParseCore(TJsonValue *jValue) {
+	if (!jValue->IsInt()) { return false; }
+	Value = jValue->GetInt();
+	return true;
+}
+
+template <> bool JsonValue<int16_t>::TryParseCore(TJsonValue *jValue) {
+	if (!jValue->IsInt()) { return false; }
+	Value = jValue->GetInt();
+	return true;
+}
+
+template <> bool JsonValue<uint8_t>::TryParseCore(TJsonValue *jValue) {
+	if (!jValue->IsUint()) { return false; }
+	Value = jValue->GetUint();
+	return true;
+}
+
+template <> bool JsonValue<uint16_t>::TryParseCore(TJsonValue *jValue) {
+	if (!jValue->IsUint()) { return false; }
+	Value = jValue->GetUint();
+	return true;
+}
+
+template <> bool JsonValue<char *>::TryParseCore(TJsonValue *jValue) {
+	if (!jValue->IsString()) {
+		if (jValue->IsNull()) {
+			Value = NULL;
+			return true;
+		}
+		return false;
+	}
+	Value.SetStringValue((char *)jValue->GetString(), jValue->GetStringLength());
+	return true;
+}
+
+template <> bool JsonValue<TJsonRawData>::TryParseCore(TJsonValue *jValue) {
+	if (!jValue->IsString()) { return false; }
+	TJsonRawData rawData = {(uint8_t *)jValue->GetString(), jValue->GetStringLength()};
+	Value = rawData;
+	return true;
+}
+
+template <> bool JsonValue<JsonObject *>::TryParseCore(TJsonValue *jValue) { return jValue->IsObject() && (jValue->ObjectEmpty() || Value->TryParse((TJsonDocument *)jValue)); }
+
+template <> bool JsonValue<JsonArrayBase *>::TryParseCore(TJsonValue *jValue) { return jValue->IsArray() && Value->TryParse((TJsonDocument *)jValue); }

@@ -18,13 +18,9 @@ class UserDto : public JsonObject {
 	JsonValue<char *> Name;
 	JsonCommonValue<uint32_t> Role;
 
-	UserDto(char *name, TUserRole role)
+	UserDto(char *name = {}, TUserRole role = {})
 		: Name(this, "name", name), //
 		  Role(this, "role", role){};
-
-	UserDto()
-		: Name(this, "name"), //
-		  Role(this, "role") {}
 };
 
 class GoodsDto : public JsonObject {
@@ -38,7 +34,7 @@ class GoodsDto : public JsonObject {
 	JsonCommonValue<bool> Deleted;
 	JsonCommonValue<char *> StoreName;
 
-	GoodsDto(int id, uint32_t created, char *group, char *name, float price, double quantity, bool deleted = false, char *storeName = "")
+	GoodsDto(int id = {}, uint32_t created = {}, char *group = {}, char *name = {}, float price = {}, double quantity = {}, bool deleted = {}, char *storeName = {})
 		: Id(this, "Id", id),					//
 		  Created(this, "Created", created),	//
 		  Group(this, "Group", group),			//
@@ -47,16 +43,6 @@ class GoodsDto : public JsonObject {
 		  Quantity(this, "Quantity", quantity), //
 		  Deleted(this, "Deleted", deleted),	//
 		  StoreName(this, "StoreName", storeName){};
-
-	GoodsDto()
-		: Id(this, "Id"),			  //
-		  Created(this, "Created"),	  //
-		  Group(this, "Group"),		  //
-		  Name(this, "Name"),		  //
-		  Price(this, "Price"),		  //
-		  Quantity(this, "Quantity"), //
-		  Deleted(this, "Deleted"),	  //
-		  StoreName(this, "StoreName") {}
 };
 
 class GoodsList : public JsonArray<GoodsDto *> {
@@ -73,18 +59,12 @@ class OrderDto : public JsonObject {
 	GoodsList goodsList;
 	UserDto userDto;
 
-	OrderDto(char *supplier, uint32_t dateTime, char *userName, TUserRole userRole)
+	OrderDto(char *supplier = {}, uint32_t dateTime = {}, char *userName = {}, TUserRole userRole = {})
 		: Supplier(this, "supplier", supplier), //
 		  DateTime(this, "dateTime", dateTime), //
 		  Goods(this, "goods", &goodsList),		//
 		  userDto(userName, userRole),			//
 		  User(this, "user", &userDto){};
-
-	OrderDto()
-		: Supplier(this, "supplier"),		//
-		  DateTime(this, "dateTime"),		//
-		  Goods(this, "goods", &goodsList), //
-		  User(this, "user", &userDto) {}
 };
 
 class OrdersList : public JsonArray<OrderDto *> {
@@ -100,22 +80,11 @@ class CustomerDto : public JsonObject {
 	JsonValue<JsonArrayBase *> Orders;
 	OrdersList ordersList;
 
-	CustomerDto(uint64_t id, char *name, TJsonRawData blob)
+	CustomerDto(uint64_t id = {}, char *name = {}, TJsonRawData blob = {})
 		: Id(this, "id", id),		//
 		  Name(this, "name", name), //
 		  Blob(this, "blob", blob), //
 		  Orders(this, "orders", &ordersList){};
-
-	CustomerDto()
-		: Id(this, "id"),	  //
-		  Name(this, "name"), //
-		  Blob(this, "blob"), //
-		  Orders(this, "orders", &ordersList){};
-};
-
-class CustomerList : public JsonArray<CustomerDto *> {
-  public:
-	bool Validate(CustomerDto *item) { return item->Validate(); }
 };
 
 TEST(JsonObjectTestsGroup, JsonObject_Parse_Test) {
@@ -129,7 +98,7 @@ TEST(JsonObjectTestsGroup, JsonObject_Parse_Test) {
 	CHECK_EQUAL(goods.Price.Value, 123.25);
 	CHECK_EQUAL(goods.Quantity.Value, 165.052045);
 	CHECK_EQUAL(goods.Deleted.Value, false);
-	STRCMP_EQUAL(goods.StoreName.Value, "");
+	STRCMP_EQUAL(goods.StoreName.Value, NULL);
 
 	CHECK_TRUE(goods.TryParse("{\"Id\":1,\"Created\":1657052046,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045,"
 							  "\"StoreName\":\"Store #1\"}               \t  \r\n"));
@@ -141,8 +110,7 @@ TEST(JsonObjectTestsGroup, JsonObject_Parse_Test) {
 	CHECK_EQUAL(goods.Created.Value, 1657052047);
 }
 
-TEST(JsonObjectTestsGroup, Complex_JsonObject_TryParse_Test) {
-	JsonFieldsContainer container;
+TEST(JsonObjectTestsGroup, JsonObject_Complex_TryParse_Test) {
 	OrderDto order;
 
 	CHECK(order.TryParse("{\"supplier\":\"Dell\",\"dateTime\":1657058000,\"goods\":[{\"Id\":1,\"Created\":1657052789,\"Group\":\"Keyboards\",\"Name\":\"K1-100\",\"Price\":58."
@@ -165,7 +133,7 @@ TEST(JsonObjectTestsGroup, JsonObject_Parse_With_Optionaly_Fields_Test) {
 	CHECK_EQUAL(goods.Price.Value, 123.25);
 	CHECK_EQUAL(goods.Quantity.Value, 165.052045);
 	CHECK_EQUAL(goods.Deleted.Value, true);
-	STRCMP_EQUAL(goods.StoreName.Value, "");
+	STRCMP_EQUAL(goods.StoreName.Value, NULL);
 
 	CHECK_TRUE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045,\"StoreName\":\"Store #1\"}"));
 	CHECK_EQUAL(goods.Deleted.Value, false);
@@ -193,12 +161,12 @@ TEST(JsonObjectTestsGroup, JsonObject_Parse_Error_Test) {
 
 	CHECK_EQUAL(goods.Id.Value, 0);
 	CHECK_EQUAL(goods.Created.Value, 0);
-	STRCMP_EQUAL(goods.Group.Value, "");
-	STRCMP_EQUAL(goods.Name.Value, "");
+	STRCMP_EQUAL(goods.Group.Value, NULL);
+	STRCMP_EQUAL(goods.Name.Value, NULL);
 	CHECK_EQUAL(goods.Price.Value, 0.0);
 	CHECK_EQUAL(goods.Quantity.Value, 0.0);
 	CHECK_EQUAL(goods.Deleted.Value, false);
-	STRCMP_EQUAL(goods.StoreName.Value, "");
+	STRCMP_EQUAL(goods.StoreName.Value, NULL);
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_Parse_With_Reordered_Fields_Test) {
@@ -234,7 +202,7 @@ TEST(JsonObjectTestsGroup, JsonObject_Parse_And_Length_Defined_Test) {
 TEST(JsonObjectTestsGroup, JsonObject_Parse_With_Nullable_Values_Test) {
 	GoodsDto goods;
 	CHECK_FALSE(goods.TryParse("{\"Id\":1,\"Created\":null,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}"));
-	CHECK_FALSE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":null,\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}"));
+	CHECK_TRUE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":null,\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}"));
 	CHECK_FALSE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":null}"));
 	CHECK_FALSE(goods.TryParse("{\"Id\":null,\"Created\":null,\"Group\":null,\"Name\":null,\"Price\":null,\"Quantity\":null}"));
 
@@ -286,13 +254,11 @@ TEST(JsonObjectTestsGroup, JsonObject_WriteTo_Async_Test) {
 
 	CHECK_EQUAL(TestParent, (void *)987654321);
 	STRCMP_EQUAL(DirectWriteTestBuffer, "{\"Id\":2,\"Created\":1657052789,\"Group\":\"group\",\"Name\":\"name\",\"Price\":58.25,\"Quantity\":48.2,\"Deleted\":false,"
-										"\"StoreName\":\"\"}");
+										"\"StoreName\":null}");
 	delete[] DirectWriteTestBuffer;
 }
 
-TEST(JsonObjectTestsGroup, Complex_JsonObject_WriteTo_Test) {
-	JsonFieldsContainer container;
-
+TEST(JsonObjectTestsGroup, JsonObject_Complex_WriteTo_Test) {
 	OrderDto orderDto("Dell", 1657058000, "Joe Doe", TUserRole::uViewer);
 	orderDto.goodsList.Add(new GoodsDto(1, 1657052789, "Keyboards", "K1-100", 58.25, 48.2));
 	orderDto.goodsList.Add(new GoodsDto(2, 1657053789, "Keyboards", "K2-100", 158.25, 448.2));
@@ -310,15 +276,13 @@ TEST(JsonObjectTestsGroup, Complex_JsonObject_WriteTo_Test) {
 
 	const char *jsonStr = buffer.GetString();
 	STRCMP_EQUAL(jsonStr, "{\"supplier\":\"Dell\",\"dateTime\":1657058000,\"goods\":[{\"Id\":1,\"Created\":1657052789,\"Group\":\"Keyboards\",\"Name\":\"K1-100\",\"Price\":58."
-						  "25,\"Quantity\":48.2,\"Deleted\":false,\"StoreName\":\"\"},{\"Id\":2,\"Created\":1657053789,\"Group\":\"Keyboards\",\"Name\":\"K2-100\",\"Price\":158."
-						  "25,\"Quantity\":448.2,\"Deleted\":false,\"StoreName\":\"\"},{\"Id\":3,\"Created\":1657054789,\"Group\":\"Keyboards\",\"Name\":\"K3-100\",\"Price\":"
-						  "258.25,\"Quantity\":548.2,\"Deleted\":false,\"StoreName\":\"\"},{\"Id\":4,\"Created\":1657055789,\"Group\":\"Keyboards\",\"Name\":\"K4-100\","
-						  "\"Price\":358.25,\"Quantity\":648.2,\"Deleted\":false,\"StoreName\":\"\"}],\"user\":{\"name\":\"Joe Doe\",\"role\":1}}");
+						  "25,\"Quantity\":48.2,\"Deleted\":false,\"StoreName\":null},{\"Id\":2,\"Created\":1657053789,\"Group\":\"Keyboards\",\"Name\":\"K2-100\",\"Price\":158."
+						  "25,\"Quantity\":448.2,\"Deleted\":false,\"StoreName\":null},{\"Id\":3,\"Created\":1657054789,\"Group\":\"Keyboards\",\"Name\":\"K3-100\",\"Price\":"
+						  "258.25,\"Quantity\":548.2,\"Deleted\":false,\"StoreName\":null},{\"Id\":4,\"Created\":1657055789,\"Group\":\"Keyboards\",\"Name\":\"K4-100\","
+						  "\"Price\":358.25,\"Quantity\":648.2,\"Deleted\":false,\"StoreName\":null}],\"user\":{\"name\":\"Joe Doe\",\"role\":1}}");
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_Equals_Test) {
-	JsonFieldsContainer container;
-
 	OrderDto orderDto1("Dell", 1657058000, "Joe Doe", TUserRole::uViewer);
 	orderDto1.goodsList.Add(new GoodsDto(1, 1657052789, "Keyboards", "K1-100", 58.25, 48.2));
 	orderDto1.goodsList.Add(new GoodsDto(2, 1657053789, "Keyboards", "K2-100", 158.25, 448.2));
@@ -337,8 +301,6 @@ TEST(JsonObjectTestsGroup, JsonObject_Equals_Test) {
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_Clone_Test) {
-	JsonFieldsContainer container;
-
 	auto orderDto1 = new OrderDto("Dell", 1657058000, "Joe Doe", TUserRole::uViewer);
 	orderDto1->goodsList.Add(new GoodsDto(1, 1657052789, "Keyboards", "K1-100", 58.25, 48.2));
 	orderDto1->goodsList.Add(new GoodsDto(2, 1657053789, "Keyboards", "K2-100", 158.25, 448.2));
@@ -357,8 +319,6 @@ TEST(JsonObjectTestsGroup, JsonObject_Clone_Test) {
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_With_Blob_Field_Test) {
-	JsonFieldsContainer container;
-
 	const int pictureSize = 1'000'0000;
 	uint8_t *picture = new uint8_t[pictureSize];
 	for (size_t i = 0; i < pictureSize; i++) { picture[i] = 'A' + (i % 58); }
@@ -375,7 +335,7 @@ TEST(JsonObjectTestsGroup, JsonObject_With_Blob_Field_Test) {
 	CHECK(orderDto2->goodsList.Add(new GoodsDto(200, 2007053789, "Mouse", "M2-100", 48.25, 28.2)));
 
 	auto size = customerDto1->DirectWriteTo(0, OnReady);
-	CHECK_EQUAL(size, 10173289);
+	CHECK_EQUAL(size, 10173299);
 	delete customerDto1;
 	delete[] picture;
 
@@ -397,7 +357,6 @@ TEST(JsonObjectTestsGroup, JsonObject_With_Blob_Field_Test) {
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_Optional_Values_Presented_Test) {
-	JsonFieldsContainer container;
 	OrderDto order;
 
 	CHECK_FALSE(order.DateTime.Presented());
@@ -407,66 +366,4 @@ TEST(JsonObjectTestsGroup, JsonObject_Optional_Values_Presented_Test) {
 
 	CHECK(order.TryParse("{\"supplier\":\"Dell\",\"goods\":[],\"user\":{\"name\":\"Joe Doe\",\"role\":1}}"));
 	CHECK_FALSE(order.DateTime.Presented());
-}
-
-TEST(JsonObjectTestsGroup, JsonObject_Perfomance_Test) {
-	JsonFieldsContainer container;
-
-	uint64_t durationAdd = 0;
-	uint64_t durationDirectWriteTo = 0;
-	uint64_t durationTryParse = 0;
-
-	size_t size = 0;
-	int picture[] = {0x66, 0x00, 0x67, 0x67, 0x67, 0x00, 0x68, 0x68, 0x68, 0x00, 0x69, 0x69, 0x69, 0x00, 0x6A, 0x6A};
-
-	const int avgCount = 10;
-	for (size_t a = 0; a < avgCount; a++) {
-
-		auto customerList = new CustomerList();
-		const int count = 1'000;
-		{
-			auto start = std::chrono::high_resolution_clock::now();
-			for (size_t i = 0; i < count; i++) {
-				picture[0] = i;
-				customerList->Add(new CustomerDto(12345678901100LL + i, "Viordash", {(uint8_t *)picture, sizeof(picture)}));
-				auto customerDto = (*customerList)[i];
-				for (size_t k = 0; k < (count / 100) + 1; k++) {
-					customerDto->ordersList.Add(new OrderDto("Dell1", 165700 + i + k, "Joe Doe", TUserRole::uViewer));
-
-					auto orderDto = customerDto->ordersList[k];
-					for (size_t m = 0; m < (count / 1000) + 1; m++) { //
-						orderDto->goodsList.Add(new GoodsDto(1, 16570 + i + k + m, "Keyboards", "K1-100", k * 2.5, k * 0.1));
-					}
-				}
-			}
-			auto finish = std::chrono::high_resolution_clock::now();
-			durationAdd += std::chrono::duration_cast<std::chrono::microseconds>(finish - start).count();
-		}
-
-		{
-			auto start = std::chrono::high_resolution_clock::now();
-			size = customerList->DirectWriteTo(0, OnReady);
-			CHECK(size > 0);
-			auto finish = std::chrono::high_resolution_clock::now();
-			durationDirectWriteTo += std::chrono::duration_cast<std::chrono::microseconds>(finish - start).count();
-		}
-		delete customerList;
-
-		customerList = new CustomerList();
-		{
-			auto start = std::chrono::high_resolution_clock::now();
-			CHECK(customerList->TryParse(DirectWriteTestBuffer, size));
-			auto finish = std::chrono::high_resolution_clock::now();
-			durationTryParse += std::chrono::duration_cast<std::chrono::microseconds>(finish - start).count();
-		}
-		delete customerList;
-		delete[] DirectWriteTestBuffer;
-	}
-	char text[512];
-	sprintf(text, "customerList->Add duration(mean %u): %.02f us", avgCount, durationAdd / avgCount / 1000.0);
-	UT_PRINT(text);
-	sprintf(text, "customerList->DirectWriteTo size: %u, duration(mean %u): %.02f us", size, avgCount, durationDirectWriteTo / avgCount / 1000.0);
-	UT_PRINT(text);
-	sprintf(text, "customerList->TryParse duration(mean %u): %.02f us", avgCount, durationTryParse / avgCount / 1000.0);
-	UT_PRINT(text);
 }

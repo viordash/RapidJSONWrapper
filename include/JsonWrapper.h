@@ -13,7 +13,6 @@ template <class T> class JsonValue : public JsonValueBase {
 	struct ValueWrapper {
 	  public:
 		ValueWrapper(const T value) { InitValue(value); }
-		~ValueWrapper() { DeleteValue(); }
 
 		T operator=(const T right) {
 			SetValue(right);
@@ -24,16 +23,22 @@ template <class T> class JsonValue : public JsonValueBase {
 		operator T() const { return value; }
 
 	  private:
+		friend class JsonValue;
+
+		~ValueWrapper() { DeleteValue(); }
 		T value;
 		void InitValue(T value);
+		void InitStringValue(char *value, size_t len);
 		void SetValue(T value);
+		void SetStringValue(char *value, size_t len);
 		void DeleteValue();
 	};
 
 	ValueWrapper Value;
 
-	JsonValue(JsonFieldsContainer *container, const char *name, T value) : JsonValueBase(container, name), Value(value) {}
-	JsonValue(JsonFieldsContainer *container, const char *name) : JsonValue(container, name, T()) {}
+	JsonValue(JsonFieldsContainer *container, size_t nameLen, const char *name, T value = T()) : JsonValueBase(container, name, nameLen), Value(value) {}
+	template <size_t N> JsonValue(JsonFieldsContainer *container, const char (&name)[N], T value = T()) : JsonValue(container, N - 1, name, value) {}
+
 	virtual ~JsonValue() {}
 
 	bool TryParse(TJsonDocument *doc) override;
@@ -49,8 +54,9 @@ template <class T> class JsonValue : public JsonValueBase {
 
 template <class T> class JsonCommonValue : public JsonValue<T> {
   public:
-	JsonCommonValue(JsonFieldsContainer *container, const char *name, T value) : JsonValue<T>(container, name, value), presented(false), isNull(false) {}
-	JsonCommonValue(JsonFieldsContainer *container, const char *name) : JsonCommonValue(container, name, T()) {}
+	JsonCommonValue(JsonFieldsContainer *container, size_t nameLen, const char *name, T value = T()) : JsonValue<T>(container, nameLen, name, value), presented(false), isNull(false) {}
+	template <size_t N> JsonCommonValue(JsonFieldsContainer *container, const char (&name)[N], T value = T()) : JsonCommonValue(container, N - 1, name, value) {}
+
 	virtual ~JsonCommonValue() {}
 
 	bool TryParse(TJsonDocument *doc) override final;
@@ -128,6 +134,7 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 	virtual bool Update(size_t index, TItem item);
 	virtual void Remove(TItem item);
 	typename std::vector<TItem>::iterator Find(TItem item);
+	void Reserve(size_t capacity);
 
 	bool Equals(JsonArrayBase *other) override final;
 	void CloneTo(JsonArrayBase *other) override final;
