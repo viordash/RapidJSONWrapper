@@ -24,7 +24,7 @@ typedef enum { uAdmin, uViewer } TUserRole;
 class UserDto : public JsonObject {
   public:
 	JsonValue<char *> Name;
-	JsonCommonValue<uint32_t> Role;
+	JsonValue<uint32_t> Role;
 
 	UserDto(char *name = {}, TUserRole role = {})
 		: Name(this, "name", name), //
@@ -68,8 +68,8 @@ class GoodsDto : public JsonObject {
 	JsonValue<char *> Name;
 	JsonValue<float> Price;
 	JsonValue<double> Quantity;
-	JsonCommonValue<bool> Deleted;
-	JsonCommonValue<char *> StoreName;
+	JsonValue<bool> Deleted;
+	JsonValue<char *> StoreName;
 
 	GoodsDto(int id = {}, uint32_t created = {}, char *group = {}, char *name = {}, float price = {}, double quantity = {}, bool deleted = {}, char *storeName = {})
 		: Id(this, "Id", id),					//
@@ -110,11 +110,8 @@ static void SerializeGoodsDto(rapidjson::Writer<rapidjson::StringBuffer> *writer
 	writer->String("Deleted");
 	writer->Bool(pGoodsDto->deleted);
 	writer->String("StoreName");
-	if (pGoodsDto->storeName == NULL) {
-		writer->Null();
-	} else {
-		writer->String(pGoodsDto->storeName);
-	}
+	writer->String(pGoodsDto->storeName);
+
 	writer->EndObject();
 }
 
@@ -146,11 +143,7 @@ static TGoodsDto *DeserializeGoodsDto(rapidjson::Value *doc) {
 	goodsDto->price = price->value.GetDouble();
 	goodsDto->quantity = quantity->value.GetDouble();
 	goodsDto->deleted = deleted->value.GetBool();
-	if (storeName == doc->MemberEnd() || !storeName->value.IsString()) {
-		goodsDto->storeName = NULL;
-	} else {
-		goodsDto->storeName = strDuplicate(storeName->value.GetString());
-	}
+	goodsDto->storeName = strDuplicate(storeName->value.GetString());
 	return goodsDto;
 }
 
@@ -187,7 +180,7 @@ static std::vector<TGoodsDto *> *DeserializeGoodsList(rapidjson::Value *doc) {
 class OrderDto : public JsonObject {
   public:
 	JsonValue<char *> Supplier;
-	JsonCommonValue<uint32_t> DateTime;
+	JsonValue<uint32_t> DateTime;
 	JsonValue<JsonArrayBase *> Goods;
 	JsonValue<JsonObject *> User;
 	GoodsList goodsList;
@@ -278,7 +271,7 @@ class CustomerDto : public JsonObject {
   public:
 	JsonValue<uint64_t> Id;
 	JsonValue<char *> Name;
-	JsonCommonValue<TJsonRawData> Blob;
+	JsonValue<TJsonRawData> Blob;
 	JsonValue<JsonArrayBase *> Orders;
 	OrdersList ordersList;
 
@@ -375,6 +368,7 @@ int picture[] = {0x66, 0x00, 0x67, 0x67, 0x67, 0x00, 0x68, 0x68, 0x68, 0x00, 0x6
 
 static uint64_t testFillArray(CustomerList *customerList) {
 	auto start = std::chrono::high_resolution_clock::now();
+	customerList->Reserve(perfTestItemsCount);
 	for (size_t i = 0; i < perfTestItemsCount; i++) {
 		picture[0] = i;
 		customerList->Add(new CustomerDto(12345678901100LL + i, "Viordash", {(uint8_t *)picture, sizeof(picture)}));
@@ -384,7 +378,8 @@ static uint64_t testFillArray(CustomerList *customerList) {
 
 			auto orderDto = customerDto->ordersList[k];
 			for (size_t m = 0; m < (perfTestItemsCount / 1000) + 1; m++) { //
-				orderDto->goodsList.Add(new GoodsDto(1, 16570 + i + k + m, "Keyboards", "K1-100", k * 2.5, k * 0.1));
+				orderDto->goodsList.Add(
+					new GoodsDto(1, 16570 + i + k + m, "Keyboards", "K1-100", k * 2.5, k * 0.1, m % 2 == 0, "Chargoggagoggmanchauggagoggchaubunagungamaugg 0123456789012345678901234567890123456789"));
 			}
 		}
 	}
@@ -431,6 +426,7 @@ static void DeleteCustomerList(std::vector<TCustomerDto *> *customerList) {
 
 static uint64_t testFillRapidArray(std::vector<TCustomerDto *> *customerList) {
 	auto start = std::chrono::high_resolution_clock::now();
+	customerList->reserve(perfTestItemsCount);
 	for (size_t i = 0; i < perfTestItemsCount; i++) {
 		picture[0] = i;
 		auto customer = new TCustomerDto();
@@ -461,6 +457,8 @@ static uint64_t testFillRapidArray(std::vector<TCustomerDto *> *customerList) {
 				goods->name = strDuplicate("K1-100");
 				goods->price = k * 2.5;
 				goods->quantity = k * 0.1;
+				goods->deleted = m % 2 == 0;
+				goods->storeName = strDuplicate("Chargoggagoggmanchauggagoggchaubunagungamaugg 0123456789012345678901234567890123456789");
 				orderDto->goods->push_back(goods);
 			}
 		}
@@ -541,7 +539,7 @@ TEST(JsonHeavyDutyTestsGroup, JsonObject_Perfomance_Test) {
 
 	sprintf(text, "wrapper WriteTo size: %u, dur(mean %u): %.02f us", size, avgCount, durationDirectWriteTo / avgCount / 1000.0);
 	UT_PRINT(text);
-	sprintf(text, "rapid   WriteTo size: %u, dur(mean %u): %.02f us", size, avgCount, rapidDurationDirectWriteTo / avgCount / 1000.0);
+	sprintf(text, "rapid   WriteTo size: %u, dur(mean %u): %.02f us", rapidSize, avgCount, rapidDurationDirectWriteTo / avgCount / 1000.0);
 	UT_PRINT(text);
 
 	sprintf(text, "wrapper TryParse dur(mean %u): %.02f us", avgCount, durationTryParse / avgCount / 1000.0);
@@ -549,6 +547,7 @@ TEST(JsonHeavyDutyTestsGroup, JsonObject_Perfomance_Test) {
 	sprintf(text, "rapid   TryParse dur(mean %u): %.02f us", avgCount, rapidDurationTryParse / avgCount / 1000.0);
 	UT_PRINT(text);
 
+	CHECK_EQUAL(size, rapidSize);
 	CHECK_FALSE(durationAdd > rapidDurationAdd * 3);
 	CHECK_FALSE(durationDirectWriteTo > rapidDurationDirectWriteTo * 3);
 	CHECK_FALSE(durationTryParse > rapidDurationTryParse * 3);

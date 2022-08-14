@@ -134,6 +134,7 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 	virtual bool Update(size_t index, TItem item);
 	virtual void Remove(TItem item);
 	typename std::vector<TItem>::iterator Find(TItem item);
+	void Reserve(size_t capacity);
 
 	bool Equals(JsonArrayBase *other) override final;
 	void CloneTo(JsonArrayBase *other) override final;
