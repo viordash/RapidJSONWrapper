@@ -87,11 +87,6 @@ class CustomerDto : public JsonObject {
 		  Orders(this, "orders", &ordersList){};
 };
 
-class CustomerList : public JsonArray<CustomerDto *> {
-  public:
-	bool Validate(CustomerDto *item) { return item->Validate(); }
-};
-
 TEST(JsonObjectTestsGroup, JsonObject_Parse_Test) {
 	GoodsDto goods;
 	CHECK_TRUE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}"));
@@ -371,65 +366,4 @@ TEST(JsonObjectTestsGroup, JsonObject_Optional_Values_Presented_Test) {
 
 	CHECK(order.TryParse("{\"supplier\":\"Dell\",\"goods\":[],\"user\":{\"name\":\"Joe Doe\",\"role\":1}}"));
 	CHECK_FALSE(order.DateTime.Presented());
-}
-
-TEST(JsonObjectTestsGroup, JsonObject_Perfomance_Test) {
-	uint64_t durationAdd = 0;
-	uint64_t durationDirectWriteTo = 0;
-	uint64_t durationTryParse = 0;
-
-	size_t size = 0;
-	int picture[] = {0x66, 0x00, 0x67, 0x67, 0x67, 0x00, 0x68, 0x68, 0x68, 0x00, 0x69, 0x69, 0x69, 0x00, 0x6A, 0x6A};
-
-	const int avgCount = 10;
-	for (size_t a = 0; a < avgCount; a++) {
-
-		auto customerList = new CustomerList();
-		const int count = 1'000;
-		{
-			auto start = std::chrono::high_resolution_clock::now();
-			for (size_t i = 0; i < count; i++) {
-				picture[0] = i;
-				customerList->Add(new CustomerDto(12345678901100LL + i, "Viordash", {(uint8_t *)picture, sizeof(picture)}));
-				auto customerDto = (*customerList)[i];
-				for (size_t k = 0; k < (count / 100) + 1; k++) {
-					customerDto->ordersList.Add(new OrderDto("Dell1", 165700 + i + k, "Joe Doe", TUserRole::uViewer));
-
-					auto orderDto = customerDto->ordersList[k];
-					for (size_t m = 0; m < (count / 1000) + 1; m++) { //
-						orderDto->goodsList.Add(new GoodsDto(1, 16570 + i + k + m, "Keyboards", "K1-100", k * 2.5, k * 0.1));
-					}
-				}
-			}
-			auto finish = std::chrono::high_resolution_clock::now();
-			durationAdd += std::chrono::duration_cast<std::chrono::microseconds>(finish - start).count();
-		}
-
-		DirectWriteTestBuffer = NULL;
-		{
-			auto start = std::chrono::high_resolution_clock::now();
-			size = customerList->DirectWriteTo(0, OnReady);
-			CHECK(size > 0);
-			auto finish = std::chrono::high_resolution_clock::now();
-			durationDirectWriteTo += std::chrono::duration_cast<std::chrono::microseconds>(finish - start).count();
-		}
-		delete customerList;
-
-		customerList = new CustomerList();
-		{
-			auto start = std::chrono::high_resolution_clock::now();
-			CHECK(customerList->TryParse(DirectWriteTestBuffer, size));
-			auto finish = std::chrono::high_resolution_clock::now();
-			durationTryParse += std::chrono::duration_cast<std::chrono::microseconds>(finish - start).count();
-		}
-		delete customerList;
-		delete[] DirectWriteTestBuffer;
-	}
-	char text[512];
-	sprintf(text, "customerList->Add duration(mean %u): %.02f us", avgCount, durationAdd / avgCount / 1000.0);
-	UT_PRINT(text);
-	sprintf(text, "customerList->DirectWriteTo size: %u, duration(mean %u): %.02f us", size, avgCount, durationDirectWriteTo / avgCount / 1000.0);
-	UT_PRINT(text);
-	sprintf(text, "customerList->TryParse duration(mean %u): %.02f us", avgCount, durationTryParse / avgCount / 1000.0);
-	UT_PRINT(text);
 }

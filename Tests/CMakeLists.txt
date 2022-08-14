@@ -66,3 +66,13 @@ endif(WIN32)
 target_link_libraries(JsonArrayTestsGroup CppUTest)
 target_include_directories(JsonArrayTestsGroup PRIVATE ${CPPUTEST_SOURCE_DIRS})
 add_test(JsonArrayTestsGroup JsonArrayTestsGroup)
+
+add_executable(JsonHeavyDutyTestsGroup    
+	${CPPUTEST_SOURCE_FILES}
+    JsonHeavyDutyTestsGroup.cpp)
+if(WIN32)
+	target_link_libraries(JsonHeavyDutyTestsGroup Winmm.lib)
+endif(WIN32)
+target_link_libraries(JsonHeavyDutyTestsGroup CppUTest)
+target_include_directories(JsonHeavyDutyTestsGroup PRIVATE ${CPPUTEST_SOURCE_DIRS})
+add_test(JsonHeavyDutyTestsGroup JsonHeavyDutyTestsGroup)
