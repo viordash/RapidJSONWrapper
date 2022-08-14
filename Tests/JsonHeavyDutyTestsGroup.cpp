@@ -537,9 +537,9 @@ TEST(JsonHeavyDutyTestsGroup, JsonObject_Perfomance_Test) {
 	sprintf(text, "rapid   Add dur(mean %u): %.02f us", avgCount, rapidDurationAdd / avgCount / 1000.0);
 	UT_PRINT(text);
 
-	sprintf(text, "wrapper WriteTo size: %u, dur(mean %u): %.02f us", size, avgCount, durationDirectWriteTo / avgCount / 1000.0);
+	sprintf(text, "wrapper WriteTo size: %lu, dur(mean %u): %.02f us", size, avgCount, durationDirectWriteTo / avgCount / 1000.0);
 	UT_PRINT(text);
-	sprintf(text, "rapid   WriteTo size: %u, dur(mean %u): %.02f us", rapidSize, avgCount, rapidDurationDirectWriteTo / avgCount / 1000.0);
+	sprintf(text, "rapid   WriteTo size: %lu, dur(mean %u): %.02f us", rapidSize, avgCount, rapidDurationDirectWriteTo / avgCount / 1000.0);
 	UT_PRINT(text);
 
 	sprintf(text, "wrapper TryParse dur(mean %u): %.02f us", avgCount, durationTryParse / avgCount / 1000.0);

@@ -6,7 +6,7 @@ template <class T> bool JsonCommonValue<T>::TryParse(TJsonDocument *doc) {
 	rapidjson::Value::MemberIterator member = doc->MemberBegin();
 	while (member != doc->MemberEnd()) {
 		auto &memberName = member->name;
-		if (strcmp(Name, memberName.GetString()) == 0) break;
+		if (strcmp(this->Name, memberName.GetString()) == 0) break;
 		++member;
 	}
 
