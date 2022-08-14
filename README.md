@@ -1,5 +1,5 @@
 # RapidJSONWrapper
-Wrap RapidJSON to be used as objects of predefined classes
+Wrap RapidJSON to be used as objects of predefined class
 
 
 Objects are represented as DTOs with json serialization/deserialization support:
