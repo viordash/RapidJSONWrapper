@@ -75,6 +75,13 @@ TEST(JsonStringValueGroup, JsonStringValue_Equals_Test) {
 	JsonValue<char *> testable2(&container, "test");
 	JsonValue<char *> testable02(&container, "test", NULL);
 	CHECK_TRUE(testable2 == testable02);
+
+	testable2.Value = "123";
+	CHECK_FALSE(testable2 == testable02);
+
+	testable2.Value = NULL;
+	testable02.Value = "123";
+	CHECK_FALSE(testable2 == testable02);
 }
 
 TEST(JsonStringValueGroup, JsonStringValue_CloneTo_Test) {

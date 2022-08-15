@@ -28,7 +28,8 @@ template <class T> bool operator==(const JsonValue<T> &v1, const JsonValue<T> &v
 template <class T> bool JsonValue<T>::Equals(JsonValueBase *other) { return strcmp(Name, other->Name) == 0 && Value == ((JsonValue<T> *)other)->Value; }
 
 template <> bool JsonValue<char *>::Equals(JsonValueBase *other) { //
-	return strcmp(Name, other->Name) == 0 && (Value == ((JsonValue<char *> *)other)->Value || strcmp(Value, ((JsonValue<char *> *)other)->Value) == 0);
+	return strcmp(Name, other->Name) == 0
+		&& (Value == ((JsonValue<char *> *)other)->Value || (Value != NULL && ((JsonValue<char *> *)other)->Value != NULL && strcmp(Value, ((JsonValue<char *> *)other)->Value) == 0));
 }
 
 template <> bool JsonValue<TJsonRawData>::Equals(JsonValueBase *other) {
