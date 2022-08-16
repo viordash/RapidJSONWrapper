@@ -17,8 +17,6 @@ template <class T> bool JsonValue<T>::TryParse(TJsonDocument *doc) {
 	return false;
 }
 
-template <class T> void JsonValue<T>::Reset() { Value = T(); }
-
 template <class T> bool operator!=(const JsonValue<T> &v1, const JsonValue<T> &v2) { return !((JsonValueBase *)&v1)->Equals((JsonValueBase *)&v2); }
 template <class T> bool operator==(const JsonValue<T> &v1, const JsonValue<T> &v2) { return !(v1 != v2); }
 /*

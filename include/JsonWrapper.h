@@ -44,7 +44,6 @@ template <class T> class JsonValue : public JsonValueBase {
 	bool TryParse(TJsonDocument *doc) override;
 	void WriteToDoc(TJsonDocument *doc) override final;
 
-	void Reset();
 	bool Equals(JsonValueBase *other) override final;
 	void CloneTo(JsonValueBase *other) override final;
 

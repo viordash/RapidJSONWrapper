@@ -105,9 +105,8 @@ TEST(JsonStringValueGroup, JsonStringValue_Common_TryParse_Test) {
 	rapidjson::Document doc;
 	doc.Parse("{\"testOther\":\"01234\"}");
 	CHECK_TRUE(testable1.TryParse(&doc));
-	CHECK_EQUAL(testable1.Value, NULL);
 	CHECK_FALSE(testable1.Presented());
-	CHECK_TRUE(testable1.IsNull());
+	CHECK_FALSE(testable1.IsNull());
 
 	doc.Parse("{\"test\":\"01234\"}");
 	CHECK_TRUE(testable1.TryParse(&doc));

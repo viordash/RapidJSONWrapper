@@ -428,10 +428,6 @@ TEST(JsonNumericValueGroup, JsonUIntField_Common_TryParse_Test) {
 	CHECK_TRUE(testable2.TryParse(&doc));
 	CHECK_TRUE(testable3.TryParse(&doc));
 	CHECK_TRUE(testable4.TryParse(&doc));
-	CHECK_EQUAL(testable1.Value, 0);
-	CHECK_EQUAL(testable2.Value, 0);
-	CHECK_EQUAL(testable3.Value, 0);
-	CHECK_EQUAL(testable4.Value, 0);
 	CHECK_FALSE(testable1.Presented());
 	CHECK_FALSE(testable2.Presented());
 	CHECK_FALSE(testable3.Presented());
@@ -496,10 +492,6 @@ TEST(JsonNumericValueGroup, JsonIntField_Common_TryParse_Test) {
 	CHECK_TRUE(testable2.TryParse(&doc));
 	CHECK_TRUE(testable3.TryParse(&doc));
 	CHECK_TRUE(testable4.TryParse(&doc));
-	CHECK_EQUAL(testable1.Value, 0);
-	CHECK_EQUAL(testable2.Value, 0);
-	CHECK_EQUAL(testable3.Value, 0);
-	CHECK_EQUAL(testable4.Value, 0);
 	CHECK_FALSE(testable1.Presented());
 	CHECK_FALSE(testable2.Presented());
 	CHECK_FALSE(testable3.Presented());
