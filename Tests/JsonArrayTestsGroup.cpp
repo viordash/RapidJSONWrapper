@@ -15,13 +15,9 @@ class UserDto : public JsonObject {
 	JsonValue<char *> Name;
 	JsonValue<uint32_t> Role;
 
-	UserDto(char *name, uint32_t role)
+	UserDto(char *name = {}, uint32_t role = {}, bool optional = {})
 		: Name(this, "name", name), //
 		  Role(this, "role", role){};
-
-	UserDto()
-		: Name(this, "name"), //
-		  Role(this, "role") {}
 
 	bool Validate() override { return Role.Value < 1000; }
 };
@@ -329,6 +325,26 @@ TEST(JsonArrayTestsGroup, JsonObjectArray_Incorrect_Update_Test) {
 	CHECK_EQUAL(list1[0]->Role.Value, 0);
 }
 
+TEST(JsonArrayTestsGroup, JsonObjectArray_Field_Optional_Test) {
+	JsonFieldsContainer container;
+	rapidjson::Document doc;
+	StringsList stringArray;
+	auto testableFieldMustExists = new JsonValue<JsonArrayBase *>(&container, "testStringArray", &stringArray);
+	doc.Parse("{\"otherField\":[\"Item4\"]}");
+	CHECK_FALSE(testableFieldMustExists->TryParse(&doc));
+	delete testableFieldMustExists;
+
+	auto testableWithOptional = new JsonCommonValue<JsonArrayBase *>(&container, "testStringArray", &stringArray);
+	doc.Parse("{\"otherField\":[\"Item4\"]}");
+	CHECK_TRUE(testableWithOptional->TryParse(&doc));
+	CHECK_FALSE(testableWithOptional->Presented());
+
+	doc.Parse("{\"testStringArray\":[\"Item4\"]}");
+	CHECK_TRUE(testableWithOptional->TryParse(&doc));
+	CHECK_TRUE(testableWithOptional->Presented());
+	delete testableWithOptional;
+}
+
 TEST(JsonArrayTestsGroup, JsonStringArray_Parse_Test) {
 	StringsList list;
 
@@ -496,7 +512,7 @@ TEST(JsonArrayTestsGroup, JsonBoolArray_Parse_Test) {
 	CHECK_TRUE(list.TryParse("[true,false,true,false]"));
 	CHECK_EQUAL(list.Size(), 4);
 
-	CHECK_EQUAL(list[0], (TBoolArray)true);
+	CHECK_EQUAL(list[0], (TBoolArray) true);
 	CHECK_EQUAL(list[3], false);
 
 	CHECK_FALSE(list.TryParse("[false,1,true,0]"));
@@ -550,7 +566,7 @@ TEST(JsonArrayTestsGroup, JsonBoolArray_Clone_Test) {
 	delete list1;
 	CHECK_EQUAL(list2.Size(), 4);
 	CHECK_EQUAL(list2[2], false);
-	CHECK_EQUAL(list2[3], (TBoolArray)true);
+	CHECK_EQUAL(list2[3], (TBoolArray) true);
 }
 
 TEST(JsonArrayTestsGroup, JsonBoolArray_Find_Test) {
@@ -558,7 +574,7 @@ TEST(JsonArrayTestsGroup, JsonBoolArray_Find_Test) {
 	list1.Add(true);
 
 	CHECK(list1.Find(true) != list1.End());
-	CHECK_EQUAL(*(list1.Find(true)), (TBoolArray)true);
+	CHECK_EQUAL(*(list1.Find(true)), (TBoolArray) true);
 	CHECK_TRUE(list1.Find(false) == list1.End());
 }
 
@@ -582,7 +598,7 @@ TEST(JsonArrayTestsGroup, JsonBoolArray_Add_Test) {
 	CHECK_TRUE(list1.Add(false));
 
 	CHECK_EQUAL(list1.Size(), 2);
-	CHECK_EQUAL(list1[0], (TBoolArray)true);
+	CHECK_EQUAL(list1[0], (TBoolArray) true);
 }
 
 TEST(JsonArrayTestsGroup, JsonBoolArray_Update_Test) {
@@ -602,7 +618,7 @@ TEST(JsonArrayTestsGroup, JsonBoolArray_Incorrect_Update_Test) {
 
 	CHECK_FALSE(list1.Update(100, false));
 	CHECK_EQUAL(list1.Size(), 2);
-	CHECK_EQUAL(list1[0], (TBoolArray)true);
+	CHECK_EQUAL(list1[0], (TBoolArray) true);
 }
 
 TEST(JsonArrayTestsGroup, JsonInt64Array_Parse_Test) {

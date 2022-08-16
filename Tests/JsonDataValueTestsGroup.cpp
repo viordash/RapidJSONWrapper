@@ -145,8 +145,6 @@ TEST(JsonDataValueGroup, JsonDataValue_Common_TryParse_Test) {
 	rapidjson::Document doc;
 	doc.Parse("{\"testOther\":\"01234\"}");
 	CHECK_TRUE(testable1.TryParse(&doc));
-	CHECK_EQUAL(((TJsonRawData)testable1.Value).Data, NULL);
-	CHECK_EQUAL(((TJsonRawData)testable1.Value).Size, 0);
 	CHECK_FALSE(testable1.Presented());
 	CHECK_FALSE(testable1.IsNull());
 

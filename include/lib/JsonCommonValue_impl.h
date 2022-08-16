@@ -11,7 +11,6 @@ template <class T> bool JsonCommonValue<T>::TryParse(TJsonDocument *doc) {
 	}
 
 	if (member == doc->MemberEnd()) {
-		this->Reset();
 		presented = false;
 		return true;
 	}
@@ -23,7 +22,6 @@ template <class T> bool JsonCommonValue<T>::TryParse(TJsonDocument *doc) {
 		return true;
 	}
 	if (jsonVal.IsNull()) {
-		this->Reset();
 		isNull = true;
 		return true;
 	}

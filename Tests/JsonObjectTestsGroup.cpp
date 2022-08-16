@@ -132,11 +132,12 @@ TEST(JsonObjectTestsGroup, JsonObject_Parse_With_Optionaly_Fields_Test) {
 	STRCMP_EQUAL(goods.Name.Value, "Tomato");
 	CHECK_EQUAL(goods.Price.Value, 123.25);
 	CHECK_EQUAL(goods.Quantity.Value, 165.052045);
+	CHECK_EQUAL(goods.Deleted.Presented(), true);
 	CHECK_EQUAL(goods.Deleted.Value, true);
 	STRCMP_EQUAL(goods.StoreName.Value, NULL);
 
 	CHECK_TRUE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045,\"StoreName\":\"Store #1\"}"));
-	CHECK_EQUAL(goods.Deleted.Value, false);
+	CHECK_EQUAL(goods.Deleted.Presented(), false);
 	STRCMP_EQUAL(goods.StoreName.Value, "Store #1");
 
 	CHECK_TRUE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045,"
@@ -366,4 +367,57 @@ TEST(JsonObjectTestsGroup, JsonObject_Optional_Values_Presented_Test) {
 
 	CHECK(order.TryParse("{\"supplier\":\"Dell\",\"goods\":[],\"user\":{\"name\":\"Joe Doe\",\"role\":1}}"));
 	CHECK_FALSE(order.DateTime.Presented());
+}
+
+class OptionalObjectDto : public JsonObject {
+  public:
+	JsonValue<int> Id;
+	JsonCommonValue<JsonArrayBase *> Goods;
+	JsonCommonValue<JsonObject *> User;
+	GoodsList goodsList;
+	UserDto userDto;
+
+	OptionalObjectDto(int id = {}, char *userName = {}, TUserRole userRole = {})
+		: Id(this, "id", id),				//
+		  Goods(this, "goods", &goodsList), //
+		  userDto(userName, userRole),		//
+		  User(this, "user", &userDto){};
+};
+
+TEST(JsonObjectTestsGroup, JsonObject_Optional_TryParse_Test) {
+	OptionalObjectDto optionalObjectDto;
+
+	CHECK_TRUE(optionalObjectDto.TryParse("{\"id\":1,\"goods\":[{\"Id\":1,\"Created\":1657052789,\"Group\":\"Keyboards\",\"Name\":\"K1-100\",\"Price\":58."
+										  "25,\"Quantity\":48.2,\"Deleted\":false,\"StoreName\":\"\"}],\"user\":{\"name\":\"Joe Doe\",\"role\":1}}"));
+	CHECK_TRUE(optionalObjectDto.Goods.Presented());
+	CHECK_FALSE(optionalObjectDto.Goods.IsNull());
+	CHECK_TRUE(optionalObjectDto.User.Presented());
+	CHECK_FALSE(optionalObjectDto.User.IsNull());
+
+	CHECK_TRUE(optionalObjectDto.TryParse("{\"id\":1,\"goods\":null,\"user\":{\"name\":\"Joe Doe\",\"role\":1}}"));
+	CHECK_TRUE(optionalObjectDto.Goods.Presented());
+	CHECK_TRUE(optionalObjectDto.Goods.IsNull());
+	CHECK_TRUE(optionalObjectDto.User.Presented());
+	CHECK_FALSE(optionalObjectDto.User.IsNull());
+
+	CHECK_TRUE(optionalObjectDto.TryParse("{\"id\":1,\"goods\":[{\"Id\":1,\"Created\":1657052789,\"Group\":\"Keyboards\",\"Name\":\"K1-100\",\"Price\":58."
+										  "25,\"Quantity\":48.2,\"Deleted\":false,\"StoreName\":\"\"}],\"user\":null}"));
+	CHECK_TRUE(optionalObjectDto.Goods.Presented());
+	CHECK_FALSE(optionalObjectDto.Goods.IsNull());
+	CHECK_TRUE(optionalObjectDto.User.Presented());
+	CHECK_TRUE(optionalObjectDto.User.IsNull());
+
+	CHECK_TRUE(optionalObjectDto.TryParse("{\"id\":1,\"goodsOther\":[{\"Id\":1,\"Created\":1657052789,\"Group\":\"Keyboards\",\"Name\":\"K1-100\",\"Price\":58."
+										  "25,\"Quantity\":48.2,\"Deleted\":false,\"StoreName\":\"\"}],\"user\":{\"name\":\"Joe Doe\",\"role\":1}}"));
+	CHECK_FALSE(optionalObjectDto.Goods.Presented());
+	CHECK_FALSE(optionalObjectDto.Goods.IsNull());
+	CHECK_TRUE(optionalObjectDto.User.Presented());
+	CHECK_FALSE(optionalObjectDto.User.IsNull());
+
+	CHECK_TRUE(optionalObjectDto.TryParse("{\"id\":1,\"goods\":[{\"Id\":1,\"Created\":1657052789,\"Group\":\"Keyboards\",\"Name\":\"K1-100\",\"Price\":58."
+										  "25,\"Quantity\":48.2,\"Deleted\":false,\"StoreName\":\"\"}],\"userOther\":{\"name\":\"Joe Doe\",\"role\":1}}"));
+	CHECK_TRUE(optionalObjectDto.Goods.Presented());
+	CHECK_FALSE(optionalObjectDto.Goods.IsNull());
+	CHECK_FALSE(optionalObjectDto.User.Presented());
+	CHECK_FALSE(optionalObjectDto.User.IsNull());
 }
