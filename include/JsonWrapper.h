@@ -82,7 +82,7 @@ class JsonObject : public JsonFieldsContainer {
 	size_t DirectWriteTo(void *parent, TOnReady onReady);
 
 	virtual bool Validate() { return true; }
-	bool Equals(JsonObject *other);
+	virtual bool Equals(JsonObject *other);
 	void CloneTo(JsonObject *other);
 
   protected:
