@@ -10,6 +10,9 @@ endif(WIN32)
 
 add_executable(RapidJSONWrapper     
     main.cpp 
+	test.cpp 
+	JsonValue.cpp
+	JsonCommonValue.cpp
     )
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
@@ -17,5 +20,5 @@ set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
 
 
-enable_testing()
-add_subdirectory(Tests)
+# enable_testing()
+# add_subdirectory(Tests)
