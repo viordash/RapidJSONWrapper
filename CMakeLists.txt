@@ -11,8 +11,9 @@ endif(WIN32)
 add_executable(RapidJSONWrapper     
     main.cpp 
 	test.cpp 
-	JsonValue.cpp
-	JsonCommonValue.cpp
+	src/JsonValue.cpp
+	src/JsonCommonValue.cpp
+	src/JsonObject.cpp
     )
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})

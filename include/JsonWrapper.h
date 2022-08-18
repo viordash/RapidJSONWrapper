@@ -74,19 +74,19 @@ class JsonObject : public JsonFieldsContainer {
   public:
 	virtual ~JsonObject(){};
 
-	virtual bool TryParse(TJsonDocument *doc) {}
-	// virtual bool TryParse(const char *jsonStr, size_t length = 0);
-	// TJsonDocument *BeginTryParse(const char *jsonStr, size_t length = 0);
-	// void EndTryParse(TJsonDocument *doc);
+	virtual bool TryParse(TJsonDocument *doc);
+	virtual bool TryParse(const char *jsonStr, size_t length = 0);
+	TJsonDocument *BeginTryParse(const char *jsonStr, size_t length = 0);
+	void EndTryParse(TJsonDocument *doc);
 
-	void WriteToDoc(TJsonDocument *doc){};
-	// size_t WriteToString(char *outBuffer, size_t outBufferSize);
-	// typedef void (*TOnReady)(void *parent, const char *json, size_t size);
-	// size_t DirectWriteTo(void *parent, TOnReady onReady);
+	void WriteToDoc(TJsonDocument *doc);
+	size_t WriteToString(char *outBuffer, size_t outBufferSize);
+	typedef void (*TOnReady)(void *parent, const char *json, size_t size);
+	size_t DirectWriteTo(void *parent, TOnReady onReady);
 
-	// virtual bool Validate() { return true; }
-	virtual bool Equals(JsonObject *other) {}
-	void CloneTo(JsonObject *other) {}
+	virtual bool Validate() { return true; }
+	virtual bool Equals(JsonObject *other);
+	void CloneTo(JsonObject *other);
 
   protected:
   private:
@@ -156,5 +156,4 @@ class JsonObject : public JsonFieldsContainer {
 //	void GenericCloneTo(JsonArrayBase *other);
 //};
 
-//#include "lib/JsonObject_impl.h"
 //#include "lib/JsonArray_impl.h"

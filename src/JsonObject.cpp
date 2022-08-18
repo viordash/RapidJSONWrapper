@@ -1,6 +1,8 @@
-#pragma once
 
-#include "LibJson.h"
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include "JsonWrapper.h"
 
 JsonValueBase *JsonFieldsContainer::GetField(const char *name) {
 	for (std::vector<JsonValueBase *>::iterator item = Fields.begin(); item != Fields.end(); item++) {
