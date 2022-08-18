@@ -321,7 +321,7 @@ template <> void JsonValue<JsonArrayBase *>::ValueWrapper::SetValue(JsonArrayBas
 template <> void JsonValue<bool>::CloneTo(JsonValueBase *other) { ((JsonValue<bool> *)other)->Value = (bool)this->Value; }
 template <> void JsonValue<int8_t>::CloneTo(JsonValueBase *other) { ((JsonValue<int8_t> *)other)->Value = (int8_t)this->Value; }
 template <> void JsonValue<int16_t>::CloneTo(JsonValueBase *other) { ((JsonValue<int16_t> *)other)->Value = (int16_t)this->Value; }
-template <> void JsonValue<int32_t>::CloneTo(JsonValueBase *other) { ((JsonValue<bool> *)other)->Value = (int32_t)this->Value; }
+template <> void JsonValue<int32_t>::CloneTo(JsonValueBase *other) { ((JsonValue<int32_t> *)other)->Value = (int32_t)this->Value; }
 template <> void JsonValue<int64_t>::CloneTo(JsonValueBase *other) { ((JsonValue<int64_t> *)other)->Value = (int64_t)this->Value; }
 template <> void JsonValue<uint8_t>::CloneTo(JsonValueBase *other) { ((JsonValue<uint8_t> *)other)->Value = (uint8_t)this->Value; }
 template <> void JsonValue<uint16_t>::CloneTo(JsonValueBase *other) { ((JsonValue<uint16_t> *)other)->Value = (uint16_t)this->Value; }

@@ -1,6 +1,9 @@
-#pragma once
 
-#include "LibJson.h"
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include "JsonWrapper.h"
+
 
 template <class TItem> JsonArray<TItem>::~JsonArray() {
 	for (const auto &item : Items) { DeleteItem(item); }

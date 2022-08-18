@@ -8,12 +8,18 @@ if(WIN32)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif(WIN32)
 
+
+set(CPP_SOURCE_FILES 
+src/JsonValue.cpp
+src/JsonCommonValue.cpp
+src/JsonObject.cpp
+src/JsonArray.cpp
+)
+
 add_executable(RapidJSONWrapper     
     main.cpp 
 	test.cpp 
-	src/JsonValue.cpp
-	src/JsonCommonValue.cpp
-	src/JsonObject.cpp
+	${CPP_SOURCE_FILES}
     )
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
@@ -21,5 +27,5 @@ set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
 
 
-# enable_testing()
-# add_subdirectory(Tests)
+enable_testing()
+add_subdirectory(Tests)

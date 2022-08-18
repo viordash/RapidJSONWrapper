@@ -10,6 +10,7 @@ template <> bool JsonCommonValue<bool>::TryParse(TJsonDocument *doc) {
 		presented = false;
 		return true;
 	}
+	presented = true;
 	if (jsonVal->IsBool()) {
 		Value = jsonVal->GetBool();
 		isNull = false;
@@ -27,6 +28,7 @@ template <> bool JsonCommonValue<int8_t>::TryParse(TJsonDocument *doc) {
 		presented = false;
 		return true;
 	}
+	presented = true;
 	if (jsonVal->IsInt()) {
 		Value = jsonVal->GetInt();
 		isNull = false;
@@ -44,6 +46,7 @@ template <> bool JsonCommonValue<int16_t>::TryParse(TJsonDocument *doc) {
 		presented = false;
 		return true;
 	}
+	presented = true;
 	if (jsonVal->IsInt()) {
 		Value = jsonVal->GetInt();
 		isNull = false;
@@ -61,6 +64,7 @@ template <> bool JsonCommonValue<int32_t>::TryParse(TJsonDocument *doc) {
 		presented = false;
 		return true;
 	}
+	presented = true;
 	if (jsonVal->IsInt()) {
 		Value = jsonVal->GetInt();
 		isNull = false;
@@ -78,6 +82,7 @@ template <> bool JsonCommonValue<int64_t>::TryParse(TJsonDocument *doc) {
 		presented = false;
 		return true;
 	}
+	presented = true;
 	if (jsonVal->IsInt64()) {
 		Value = jsonVal->GetInt64();
 		isNull = false;
@@ -95,6 +100,7 @@ template <> bool JsonCommonValue<uint8_t>::TryParse(TJsonDocument *doc) {
 		presented = false;
 		return true;
 	}
+	presented = true;
 	if (jsonVal->IsUint()) {
 		Value = jsonVal->GetUint();
 		isNull = false;
@@ -112,6 +118,7 @@ template <> bool JsonCommonValue<uint16_t>::TryParse(TJsonDocument *doc) {
 		presented = false;
 		return true;
 	}
+	presented = true;
 	if (jsonVal->IsUint()) {
 		Value = jsonVal->GetUint();
 		isNull = false;
@@ -129,6 +136,7 @@ template <> bool JsonCommonValue<uint32_t>::TryParse(TJsonDocument *doc) {
 		presented = false;
 		return true;
 	}
+	presented = true;
 	if (jsonVal->IsUint()) {
 		Value = jsonVal->GetUint();
 		isNull = false;
@@ -146,6 +154,7 @@ template <> bool JsonCommonValue<uint64_t>::TryParse(TJsonDocument *doc) {
 		presented = false;
 		return true;
 	}
+	presented = true;
 	if (jsonVal->IsUint()) {
 		Value = jsonVal->GetUint();
 		isNull = false;
@@ -163,6 +172,7 @@ template <> bool JsonCommonValue<float>::TryParse(TJsonDocument *doc) {
 		presented = false;
 		return true;
 	}
+	presented = true;
 	if (jsonVal->IsDouble()) {
 		Value = jsonVal->GetDouble();
 		isNull = false;
@@ -180,6 +190,7 @@ template <> bool JsonCommonValue<double>::TryParse(TJsonDocument *doc) {
 		presented = false;
 		return true;
 	}
+	presented = true;
 	if (jsonVal->IsDouble()) {
 		Value = jsonVal->GetDouble();
 		isNull = false;
@@ -197,6 +208,7 @@ template <> bool JsonCommonValue<char *>::TryParse(TJsonDocument *doc) {
 		presented = false;
 		return true;
 	}
+	presented = true;
 	if (jsonVal->IsString()) {
 		Value.DeleteValue();
 		size_t len = jsonVal->GetStringLength();
@@ -219,6 +231,7 @@ template <> bool JsonCommonValue<TJsonRawData>::TryParse(TJsonDocument *doc) {
 		presented = false;
 		return true;
 	}
+	presented = true;
 	if (jsonVal->IsDouble()) {
 		TJsonRawData rawData = {(uint8_t *)jsonVal->GetString(), jsonVal->GetStringLength()};
 		Value = rawData;
@@ -238,6 +251,7 @@ template <> bool JsonCommonValue<JsonObject *>::TryParse(TJsonDocument *doc) {
 		presented = false;
 		return true;
 	}
+	presented = true;
 	if (jsonVal->IsObject()) {
 		Value->TryParse((TJsonDocument *)jsonVal);
 		isNull = false;
@@ -255,6 +269,7 @@ template <> bool JsonCommonValue<JsonArrayBase *>::TryParse(TJsonDocument *doc) 
 		presented = false;
 		return true;
 	}
+	presented = true;
 	if (jsonVal->IsArray()) {
 		Value->TryParse((TJsonDocument *)jsonVal);
 		isNull = false;

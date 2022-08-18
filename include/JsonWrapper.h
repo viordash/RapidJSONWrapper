@@ -17,8 +17,8 @@ template <class T> class JsonCommonValue : public JsonValue<T> {
 	virtual ~JsonCommonValue() {}
 
 	bool TryParse(TJsonDocument *doc) override final;
-	bool Presented();
-	bool IsNull();
+	bool Presented() { return presented; }
+	bool IsNull() { return isNull; }
 
   protected:
 	bool presented;
@@ -91,69 +91,67 @@ class JsonObject : public JsonFieldsContainer {
   protected:
   private:
 };
-//
-// template <class TItem> class JsonArray : public JsonArrayBase {
-//  public:
-//	typedef typename std::remove_pointer<TItem>::type TNewObjectItem;
-//	struct ItemWrapper {
-//	  public:
-//		ItemWrapper(JsonArray *owner, size_t index) {
-//			this->owner = owner;
-//			this->index = index;
-//		}
-//		virtual ~ItemWrapper(){};
-//
-//		TItem operator=(const TItem right) {
-//			owner->Update(index, right);
-//			return owner->Items[index];
-//		}
-//		TItem operator->() { return owner->Items[index]; }
-//		operator TItem() const { return owner->Items[index]; }
-//
-//	  private:
-//		JsonArray *owner;
-//		size_t index;
-//	};
-//
-//	virtual ~JsonArray();
-//
-//	ItemWrapper operator[](size_t index) { return ItemWrapper(this, index); }
-//	size_t Size() { return Items.size(); }
-//	typename std::vector<TItem>::iterator const Begin() { return Items.begin(); }
-//	typename std::vector<TItem>::iterator const End() { return Items.end(); }
-//
-//	bool TryParse(TJsonDocument *doc) override final;
-//	bool TryParse(const char *jsonStr, size_t length = 0);
-//	TJsonDocument *BeginTryParse(const char *jsonStr, size_t length = 0);
-//	void EndTryParse(TJsonDocument *doc);
-//
-//	void WriteToDoc(TJsonDocument *doc) override final;
-//	size_t WriteToString(char *outBuffer, size_t outBufferSize);
-//	typedef void (*TOnReady)(void *parent, const char *json, size_t size);
-//	size_t DirectWriteTo(void *parent, TOnReady onReady);
-//
-//	virtual bool Add(TItem item);
-//	virtual bool Update(size_t index, TItem item);
-//	virtual void Remove(TItem item);
-//	typename std::vector<TItem>::iterator Find(TItem item);
-//	void Reserve(size_t capacity);
-//
-//	bool Equals(JsonArrayBase *other) override final;
-//	void CloneTo(JsonArrayBase *other) override final;
-//
-//  protected:
-//	std::vector<TItem> Items;
-//	virtual bool Validate(TItem item) = 0;
-//
-//  private:
-//	bool TryParseInternal(TJsonArray *jArray);
-//	void WriteToDocInternal(TJsonDocument *doc);
-//	void GenericWriteToDocInternal(TJsonDocument *doc);
-//	void AddInternal(TItem item);
-//	void DeleteItem(TItem item);
-//	typename std::vector<TItem>::iterator GenericFind(TItem item);
-//	bool GenericEquals(JsonArrayBase *other);
-//	void GenericCloneTo(JsonArrayBase *other);
-//};
 
-//#include "lib/JsonArray_impl.h"
+template <class TItem> class JsonArray : public JsonArrayBase {
+  public:
+	typedef typename std::remove_pointer<TItem>::type TNewObjectItem;
+	struct ItemWrapper {
+	  public:
+		ItemWrapper(JsonArray *owner, size_t index) {
+			this->owner = owner;
+			this->index = index;
+		}
+		virtual ~ItemWrapper(){};
+
+		TItem operator=(const TItem right) {
+			owner->Update(index, right);
+			return owner->Items[index];
+		}
+		TItem operator->() { return owner->Items[index]; }
+		operator TItem() const { return owner->Items[index]; }
+
+	  private:
+		JsonArray *owner;
+		size_t index;
+	};
+
+	virtual ~JsonArray();
+
+	ItemWrapper operator[](size_t index) { return ItemWrapper(this, index); }
+	size_t Size() { return Items.size(); }
+	typename std::vector<TItem>::iterator const Begin() { return Items.begin(); }
+	typename std::vector<TItem>::iterator const End() { return Items.end(); }
+
+	bool TryParse(TJsonDocument *doc) override final;
+	bool TryParse(const char *jsonStr, size_t length = 0);
+	TJsonDocument *BeginTryParse(const char *jsonStr, size_t length = 0);
+	void EndTryParse(TJsonDocument *doc);
+
+	void WriteToDoc(TJsonDocument *doc) override final;
+	size_t WriteToString(char *outBuffer, size_t outBufferSize);
+	typedef void (*TOnReady)(void *parent, const char *json, size_t size);
+	size_t DirectWriteTo(void *parent, TOnReady onReady);
+
+	virtual bool Add(TItem item);
+	virtual bool Update(size_t index, TItem item);
+	virtual void Remove(TItem item);
+	typename std::vector<TItem>::iterator Find(TItem item);
+	void Reserve(size_t capacity);
+
+	bool Equals(JsonArrayBase *other) override final;
+	void CloneTo(JsonArrayBase *other) override final;
+
+  protected:
+	std::vector<TItem> Items;
+	virtual bool Validate(TItem item) = 0;
+
+  private:
+	bool TryParseInternal(TJsonArray *jArray);
+	void WriteToDocInternal(TJsonDocument *doc);
+	void GenericWriteToDocInternal(TJsonDocument *doc);
+	void AddInternal(TItem item);
+	void DeleteItem(TItem item);
+	typename std::vector<TItem>::iterator GenericFind(TItem item);
+	bool GenericEquals(JsonArrayBase *other);
+	void GenericCloneTo(JsonArrayBase *other);
+};

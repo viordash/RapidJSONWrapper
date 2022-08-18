@@ -16,7 +16,18 @@ endif(WIN32)
 
 add_subdirectory(cpputest)
 
-set(CPPUTEST_SOURCE_DIRS cpputest/include cpputest/src cpputest/CppUTest)
+set(CPPUTEST_SOURCE_DIRS 
+	cpputest/include 
+	cpputest/src 
+	cpputest/CppUTest 		
+	)
+	
+set(CPPUTEST_SOURCE_FILES 	
+		${CMAKE_CURRENT_SOURCE_DIR}/../src/JsonValue.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../src/JsonCommonValue.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../src/JsonObject.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../src/JsonArray.cpp	
+	)
 
 add_executable(JsonStringValueTestsGroup    
     JsonStringValueTestsGroup.cpp)
