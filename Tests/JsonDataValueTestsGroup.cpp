@@ -16,12 +16,14 @@ TEST(JsonDataValueGroup, JsonDataValue_TryParse_Test) {
 
 	rapidjson::Document doc;
 	doc.Parse("{\"testString\":\"User1\"}");
-	CHECK(testable.TryParse(&doc));
+	CHECK_TRUE(testable.TryParse(&doc));
 
 	MEMCMP_EQUAL(((TJsonRawData)testable.Value).Data, "User1", ((TJsonRawData)testable.Value).Size);
 
 	doc.Parse("{\"testString\":null}");
-	CHECK_FALSE(testable.TryParse(&doc));
+	CHECK_TRUE(testable.TryParse(&doc));
+	CHECK_EQUAL(((TJsonRawData)testable.Value).Data, NULL);
+	CHECK_EQUAL(((TJsonRawData)testable.Value).Size, 0);
 }
 
 TEST(JsonDataValueGroup, JsonDataValue_WriteTo_Test) {

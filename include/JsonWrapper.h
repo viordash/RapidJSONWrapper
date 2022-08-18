@@ -18,7 +18,7 @@ template <class T> class JsonCommonValue : public JsonValue<T> {
 
 	bool TryParse(TJsonDocument *doc) override final;
 	bool Presented() { return presented; }
-	bool IsNull() { return isNull; }
+	bool IsNull();
 
   protected:
 	bool presented;
@@ -87,6 +87,9 @@ class JsonObject : public JsonFieldsContainer {
 	virtual bool Validate() { return true; }
 	virtual bool Equals(JsonObject *other);
 	void CloneTo(JsonObject *other);
+
+	friend bool operator!=(const JsonObject &v1, const JsonObject &v2);
+	friend bool operator==(const JsonObject &v1, const JsonObject &v2);
 
   protected:
   private:

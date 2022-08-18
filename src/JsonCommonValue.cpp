@@ -232,7 +232,7 @@ template <> bool JsonCommonValue<TJsonRawData>::TryParse(TJsonDocument *doc) {
 		return true;
 	}
 	presented = true;
-	if (jsonVal->IsDouble()) {
+	if (jsonVal->IsString()) {
 		TJsonRawData rawData = {(uint8_t *)jsonVal->GetString(), jsonVal->GetStringLength()};
 		Value = rawData;
 		isNull = false;
@@ -281,3 +281,23 @@ template <> bool JsonCommonValue<JsonArrayBase *>::TryParse(TJsonDocument *doc) 
 	}
 	return false;
 }
+/*
+
+
+
+*/
+template <> bool JsonCommonValue<bool>::IsNull() { return isNull; }
+template <> bool JsonCommonValue<int8_t>::IsNull() { return isNull; }
+template <> bool JsonCommonValue<int16_t>::IsNull() { return isNull; }
+template <> bool JsonCommonValue<int32_t>::IsNull() { return isNull; }
+template <> bool JsonCommonValue<int64_t>::IsNull() { return isNull; }
+template <> bool JsonCommonValue<uint8_t>::IsNull() { return isNull; }
+template <> bool JsonCommonValue<uint16_t>::IsNull() { return isNull; }
+template <> bool JsonCommonValue<uint32_t>::IsNull() { return isNull; }
+template <> bool JsonCommonValue<uint64_t>::IsNull() { return isNull; }
+template <> bool JsonCommonValue<float>::IsNull() { return isNull; }
+template <> bool JsonCommonValue<double>::IsNull() { return isNull; }
+template <> bool JsonCommonValue<char *>::IsNull() { return isNull || (char *)Value == NULL; }
+template <> bool JsonCommonValue<TJsonRawData>::IsNull() { return isNull; }
+template <> bool JsonCommonValue<JsonObject *>::IsNull() { return isNull; }
+template <> bool JsonCommonValue<JsonArrayBase *>::IsNull() { return isNull; }

@@ -29,7 +29,8 @@ set(CPPUTEST_SOURCE_FILES
 		${CMAKE_CURRENT_SOURCE_DIR}/../src/JsonArray.cpp	
 	)
 
-add_executable(JsonStringValueTestsGroup    
+add_executable(JsonStringValueTestsGroup     
+	${CPPUTEST_SOURCE_FILES}
     JsonStringValueTestsGroup.cpp)
 if(WIN32)
 	target_link_libraries(JsonStringValueTestsGroup Winmm.lib)

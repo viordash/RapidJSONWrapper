@@ -330,6 +330,7 @@ template <> void JsonValue<uint64_t>::CloneTo(JsonValueBase *other) { ((JsonValu
 template <> void JsonValue<float>::CloneTo(JsonValueBase *other) { ((JsonValue<float> *)other)->Value = (float)this->Value; }
 template <> void JsonValue<double>::CloneTo(JsonValueBase *other) { ((JsonValue<double> *)other)->Value = (double)this->Value; }
 template <> void JsonValue<char *>::CloneTo(JsonValueBase *other) { ((JsonValue<char *> *)other)->Value = (char *)this->Value; }
+template <> void JsonValue<TJsonRawData>::CloneTo(JsonValueBase *other) { ((JsonValue<TJsonRawData> *)other)->Value = (TJsonRawData)this->Value; }
 template <> void JsonValue<JsonObject *>::CloneTo(JsonValueBase *other) {
 	auto thisObject = ((JsonObject *)Value);
 	auto otherObject = ((JsonObject *)((JsonValue<JsonObject *> *)other)->Value);
