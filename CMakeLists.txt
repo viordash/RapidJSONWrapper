@@ -15,6 +15,7 @@ src/JsonValue.cpp
 src/JsonCommonValue.cpp
 src/JsonObject.cpp
 src/JsonArray.cpp
+src/JsonObjectsArray.cpp
 )
 
 add_executable(RapidJSONWrapper     

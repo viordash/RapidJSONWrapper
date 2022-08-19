@@ -206,3 +206,57 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 		return Items.end();
 	}
 };
+
+class JsonObjectsArray : public JsonArrayBase {
+  public:
+	struct ItemWrapper {
+	  public:
+		ItemWrapper(JsonObjectsArray *owner, size_t index) {
+			this->owner = owner;
+			this->index = index;
+		}
+		virtual ~ItemWrapper(){};
+
+		JsonObject *operator=(const JsonObject *right) {
+			owner->Update(index, right);
+			return owner->Items[index];
+		}
+		JsonObject *operator->() { return owner->Items[index]; }
+		operator JsonObject *() const { return owner->Items[index]; }
+
+	  private:
+		JsonObjectsArray *owner;
+		size_t index;
+	};
+
+	virtual ~JsonObjectsArray();
+
+	ItemWrapper operator[](size_t index) { return ItemWrapper(this, index); }
+	template <class TItem> TItem Item(size_t index) { return (TItem)((JsonObject *)ItemWrapper(this, index)); }
+	size_t Size() { return Items.size(); }
+	typename std::vector<JsonObject *>::iterator const Begin() { return Items.begin(); }
+	typename std::vector<JsonObject *>::iterator const End() { return Items.end(); }
+
+	bool TryParse(TJsonDocument *doc) override final;
+
+	bool TryParse(const char *jsonStr, size_t length = 0);
+	TJsonDocument *BeginTryParse(const char *jsonStr, size_t length = 0);
+	void EndTryParse(TJsonDocument *doc);
+
+	void WriteToDoc(TJsonDocument *doc) override final {}
+
+	virtual bool Add(JsonObject *item);
+	virtual bool Update(size_t index, const JsonObject *item) { return false; }
+	virtual void Remove(JsonObject *item) {}
+
+	bool Equals(JsonArrayBase *other) override final { return false; }
+	void CloneTo(JsonArrayBase *other) override final {}
+
+  protected:
+	std::vector<JsonObject *> Items;
+	virtual bool Validate(JsonObject *item) = 0;
+	virtual JsonObject *CreateInstance() = 0;
+	void DeleteItem(JsonObject *item);
+
+  private:
+};
