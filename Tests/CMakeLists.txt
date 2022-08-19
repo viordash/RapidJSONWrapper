@@ -23,6 +23,7 @@ set(CPPUTEST_SOURCE_DIRS
 	)
 	
 set(CPPUTEST_SOURCE_FILES 	
+		${CMAKE_CURRENT_SOURCE_DIR}/../src/ValueProvider.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/../src/JsonValue.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/../src/JsonCommonValue.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/../src/JsonObject.cpp

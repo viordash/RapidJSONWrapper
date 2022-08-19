@@ -27,30 +27,7 @@ template <class T> class JsonCommonValue : public JsonValue<T> {
 
 template <class T> class JsonValue : public JsonValueBase {
   public:
-	struct ValueWrapper {
-	  public:
-		ValueWrapper(const T value) { InitValue(value); }
-
-		T operator=(const T right) {
-			SetValue(right);
-			return value;
-		}
-		T operator->() { return value; }
-		operator T() const { return value; }
-
-	  private:
-		friend class JsonValue;
-		template <class T> friend class JsonCommonValue;
-
-		~ValueWrapper() { DeleteValue(); }
-		T value;
-
-		void InitValue(T value);
-		void SetValue(T value);
-		void DeleteValue();
-	};
-
-	ValueWrapper Value;
+	ValueProvider<T> Value;
 
 	JsonValue(JsonFieldsContainer *container, size_t nameLen, const char *name, T value = T()) : JsonValueBase(container, name, nameLen), Value(value) {}
 	template <size_t N> JsonValue(JsonFieldsContainer *container, const char (&name)[N], T value = T()) : JsonValue(container, N - 1, name, value) {}

@@ -43,3 +43,28 @@ class JsonValueBase {
 
   protected:
 };
+
+template <class T> class JsonValue;
+template <class T> class JsonCommonValue;
+template <class T> struct ValueProvider {
+  public:
+	ValueProvider(const T value) { InitValue(value); }
+
+	T operator=(const T right) {
+		SetValue(right);
+		return value;
+	}
+	T operator->() { return value; }
+	operator T() const { return value; }
+
+  private:
+	template <class T> friend class JsonValue;
+	template <class T> friend class JsonCommonValue;
+
+	~ValueProvider() { DeleteValue(); }
+	T value;
+
+	void InitValue(T value);
+	void SetValue(T value);
+	void DeleteValue();
+};
