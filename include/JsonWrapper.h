@@ -118,31 +118,100 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 		size_t index;
 	};
 
-	virtual ~JsonArray();
+	virtual ~JsonArray() {
+		for (const auto &item : Items) { DeleteItem(item); }
+	}
 
 	ItemWrapper operator[](size_t index) { return ItemWrapper(this, index); }
 	size_t Size() { return Items.size(); }
 	typename std::vector<TItem>::iterator const Begin() { return Items.begin(); }
 	typename std::vector<TItem>::iterator const End() { return Items.end(); }
 
-	bool TryParse(TJsonDocument *doc) override final;
-	bool TryParse(const char *jsonStr, size_t length = 0);
-	TJsonDocument *BeginTryParse(const char *jsonStr, size_t length = 0);
-	void EndTryParse(TJsonDocument *doc);
+	bool TryParse(TJsonDocument *doc) override final {
+		if (!doc->IsArray()) { return false; }
+		auto jArray = doc->GetArray();
+		Items.reserve(jArray.Size());
+		if (TryParseInternal(&jArray)) { return true; }
+		Items.shrink_to_fit();
+		return false;
+	}
+	bool TryParse(const char *jsonStr, size_t length = 0) {
+		auto doc = BeginTryParse(jsonStr, length);
+		if (doc == NULL) { return false; }
+		EndTryParse(doc);
+		return true;
+	}
+	TJsonDocument *BeginTryParse(const char *jsonStr, size_t length = 0) {
+		if (jsonStr == NULL) { return NULL; }
 
-	void WriteToDoc(TJsonDocument *doc) override final;
-	size_t WriteToString(char *outBuffer, size_t outBufferSize);
+		rapidjson::Document *doc = new rapidjson::Document();
+		if (length == 0) {
+			doc->Parse(jsonStr);
+		} else {
+			doc->Parse(jsonStr, length);
+		}
+		if (doc->HasParseError() || !this->TryParse(doc)) {
+			delete doc;
+			return NULL;
+		}
+		return doc;
+	}
+	void EndTryParse(TJsonDocument *doc) { delete doc; }
+
+	void WriteToDoc(TJsonDocument *doc) override final {
+		doc->SetArray();
+		doc->Reserve(Items.size(), doc->GetAllocator());
+		WriteToDocInternal(doc);
+	}
+	size_t WriteToString(char *outBuffer, size_t outBufferSize) {
+		rapidjson::Document doc;
+		this->WriteToDoc(&doc);
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		doc.Accept(writer);
+
+		const char *jsonStr = buffer.GetString();
+		size_t size = buffer.GetSize();
+		if (size > outBufferSize - 1) { size = outBufferSize - 1; }
+		strncpy(outBuffer, jsonStr, size);
+		outBuffer[size] = 0;
+		return size;
+	}
 	typedef void (*TOnReady)(void *parent, const char *json, size_t size);
-	size_t DirectWriteTo(void *parent, TOnReady onReady);
+	size_t DirectWriteTo(void *parent, TOnReady onReady) {
+		rapidjson::Document doc;
+		this->WriteToDoc(&doc);
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		doc.Accept(writer);
 
-	virtual bool Add(TItem item);
+		const char *json = buffer.GetString();
+		size_t size = buffer.GetSize();
+		onReady(parent, json, size);
+		return size;
+	}
+
+	virtual bool Add(TItem item) {
+		if (!Validate(item)) { return false; }
+		AddInternal(item);
+		return true;
+	}
 	virtual bool Update(size_t index, TItem item);
-	virtual void Remove(TItem item);
+	virtual void Remove(TItem item) {
+		auto iter = Find(item);
+		if (iter != Items.end()) {
+			DeleteItem(*iter);
+			Items.erase(iter);
+		}
+	}
 	typename std::vector<TItem>::iterator Find(TItem item);
-	void Reserve(size_t capacity);
+	void Reserve(size_t capacity) { Items.reserve(capacity); }
 
 	bool Equals(JsonArrayBase *other) override final;
 	void CloneTo(JsonArrayBase *other) override final;
+
+	friend bool operator!=(const JsonArray<TItem> &v1, const JsonArray<TItem> &v2) { return !((JsonArray<TItem> *)&v1)->Equals((JsonArray<TItem> *)&v2); }
+	friend bool operator==(const JsonArray<TItem> &v1, const JsonArray<TItem> &v2) { return !(v1 != v2); }
 
   protected:
 	std::vector<TItem> Items;
@@ -151,10 +220,12 @@ template <class TItem> class JsonArray : public JsonArrayBase {
   private:
 	bool TryParseInternal(TJsonArray *jArray);
 	void WriteToDocInternal(TJsonDocument *doc);
-	void GenericWriteToDocInternal(TJsonDocument *doc);
 	void AddInternal(TItem item);
 	void DeleteItem(TItem item);
-	typename std::vector<TItem>::iterator GenericFind(TItem item);
-	bool GenericEquals(JsonArrayBase *other);
-	void GenericCloneTo(JsonArrayBase *other);
+	typename std::vector<TItem>::iterator GenericFind(TItem item) {
+		for (auto iter = Items.begin(); iter != Items.end(); iter++) {
+			if (*iter == item) { return iter; }
+		}
+		return Items.end();
+	}
 };
