@@ -96,255 +96,255 @@ TEST(JsonArrayTestsGroup, JsonObjectArray_Parse_Test) {
 	CHECK_EQUAL(list.Item<UserDto *>(0)->Role.Value, 100);
 }
 
-// TEST(JsonArrayTestsGroup, JsonObjectArray_Parse_Error_Test) {
-//	UsersList list;
-//	CHECK_FALSE(list.TryParse("[{\"name\":\"User1\",\"role\":100},{\"name\":\"User2\",\"role\":0},{\"name\":\"User3\","
-//							  "\"role\":255}"));
-//	CHECK_FALSE(list.TryParse("{\"name\":\"User1\",\"role\":100},{\"name\":\"User2\",\"role\":0},{\"name\":\"User3\","
-//							  "\"role\":255}]"));
-//	CHECK_FALSE(list.TryParse("[\"name\":\"User1\",\"role\":100},{\"name\":\"User2\",\"role\":0},{\"name\":\"User3\","
-//							  "\"role\":255}]"));
-//	CHECK_FALSE(list.TryParse("[{\"name\":\"User1\",\"role\":100},{\"name\":\"User2\",\"role\":0},{\"name\":\"User3\","
-//							  "\"role\":255]"));
-//	CHECK_FALSE(list.TryParse("[{\"name\":\"User1\",\"role\":100},{\"name\":\"User2\",\"role\":0},{\"name\"\"User3\","
-//							  "\"role\":255}]"));
-//	CHECK_FALSE(list.TryParse("[{\"name\":\"User1\",\"role\":100}{\"name\":\"User2\",\"role\":0},{\"name\":\"User3\","
-//							  "\"role\":255}]"));
-//	CHECK_FALSE(list.TryParse("[{},{\"name\":\"User2\",\"role\":0},{\"name\":\"User3\",\"role\":255}]"));
-//	CHECK_FALSE(list.TryParse(NULL, 1));
-//	CHECK_EQUAL(list.Size(), 0);
-//
-//	CHECK_FALSE(list.TryParse("[{\"name\":\"User2\",\"role\":0},null]"));
-//	CHECK_EQUAL(list.Size(), 1);
-//}
-//
-// TEST(JsonArrayTestsGroup, JsonObjectArray_Parse_With_Begin_End_Stages_Test) {
-//	UsersList list;
-//	auto doc = list.BeginTryParse("[{\"name\":\"User1\",\"role\":100},{\"name\":\"User2\",\"role\":0},{\"name\":\"User3\","
-//								  "\"role\":255}]");
-//
-//	CHECK(doc != NULL);
-//	CHECK_EQUAL(list.Size(), 3);
-//
-//	STRCMP_EQUAL(list[0]->Name.Value, "User1");
-//	CHECK_EQUAL(list[0]->Role.Value, 100);
-//	list.EndTryParse(doc);
-//}
-//
-// TEST(JsonArrayTestsGroup, JsonObjectArray_Parse_With_Begin_End_Stages_And_Specified_Length_Test) {
-//	UsersList list;
-//	auto doc = list.BeginTryParse("[{\"name\":\"User1\",\"role\":100},{\"name\":\"User2\",\"role\":0},{\"name\":\"User3\","
-//								  "\"role\":255}]  some data 0123456                     ",
-//								  83);
-//
-//	CHECK(doc != NULL);
-//	CHECK_EQUAL(list.Size(), 3);
-//
-//	STRCMP_EQUAL(list[2]->Name.Value, "User3");
-//	CHECK_EQUAL(list[2]->Role.Value, 255);
-//	list.EndTryParse(doc);
-//}
-//
-// TEST(JsonArrayTestsGroup, JsonObjectArray_WriteTo_Test) {
-//	char buffer[2048];
-//	UsersList list;
-//	list.Add(new UserDto("user 1", 0));
-//	list.Add(new UserDto("user 2", 10));
-//	list.Add(new UserDto("user 3", 100));
-//	UserDto user("user 4", 1000);
-//	list.Add(&user);
-//
-//	CHECK_EQUAL(list.WriteToString(buffer, sizeof(buffer)), 85);
-//	STRCMP_EQUAL(buffer, "[{\"name\":\"user 1\",\"role\":0},{\"name\":\"user 2\",\"role\":10},{\"name\":\"user 3\",\"role\":100}]");
-//}
+TEST(JsonArrayTestsGroup, JsonObjectArray_Parse_Error_Test) {
+	UsersList list;
+	CHECK_FALSE(list.TryParse("[{\"name\":\"User1\",\"role\":100},{\"name\":\"User2\",\"role\":0},{\"name\":\"User3\","
+							  "\"role\":255}"));
+	CHECK_FALSE(list.TryParse("{\"name\":\"User1\",\"role\":100},{\"name\":\"User2\",\"role\":0},{\"name\":\"User3\","
+							  "\"role\":255}]"));
+	CHECK_FALSE(list.TryParse("[\"name\":\"User1\",\"role\":100},{\"name\":\"User2\",\"role\":0},{\"name\":\"User3\","
+							  "\"role\":255}]"));
+	CHECK_FALSE(list.TryParse("[{\"name\":\"User1\",\"role\":100},{\"name\":\"User2\",\"role\":0},{\"name\":\"User3\","
+							  "\"role\":255]"));
+	CHECK_FALSE(list.TryParse("[{\"name\":\"User1\",\"role\":100},{\"name\":\"User2\",\"role\":0},{\"name\"\"User3\","
+							  "\"role\":255}]"));
+	CHECK_FALSE(list.TryParse("[{\"name\":\"User1\",\"role\":100}{\"name\":\"User2\",\"role\":0},{\"name\":\"User3\","
+							  "\"role\":255}]"));
+	CHECK_FALSE(list.TryParse("[{},{\"name\":\"User2\",\"role\":0},{\"name\":\"User3\",\"role\":255}]"));
+	CHECK_FALSE(list.TryParse(NULL, 1));
+	CHECK_EQUAL(list.Size(), 0);
 
-// TEST(JsonArrayTestsGroup, JsonObjectArray_WriteTo_With_Limited_Buffer_Test) {
-// 	char buffer[100];
-// 	UsersList list;
-// 	list.Add(new UserDto("user 1", 0));
-// 	list.Add(new UserDto("user 2", 10));
-// 	list.Add(new UserDto("user 3", 100));
-// 	list.Add(new UserDto("user 4", 999));
+	CHECK_FALSE(list.TryParse("[{\"name\":\"User2\",\"role\":0},null]"));
+	CHECK_EQUAL(list.Size(), 1);
+}
 
-// 	CHECK_EQUAL(list.WriteToString(buffer, sizeof(buffer)), 99);
+TEST(JsonArrayTestsGroup, JsonObjectArray_Parse_With_Begin_End_Stages_Test) {
+	UsersList list;
+	auto doc = list.BeginTryParse("[{\"name\":\"User1\",\"role\":100},{\"name\":\"User2\",\"role\":0},{\"name\":\"User3\","
+								  "\"role\":255}]");
 
-// 	STRCMP_EQUAL(buffer, "[{\"name\":\"user 1\",\"role\":0},{\"name\":\"user 2\",\"role\":10},{\"name\":\"user 3\",\"role\":100},{\"name\":\"user ");
-// }
+	CHECK(doc != NULL);
+	CHECK_EQUAL(list.Size(), 3);
 
-// static void *TestParent = NULL;
-// static char *DirectWriteTestBuffer = NULL;
-// static void OnReady(void *parent, const char *json, size_t size) {
-// 	TestParent = parent;
-// 	DirectWriteTestBuffer = new char[size + 1];
-// 	memcpy(DirectWriteTestBuffer, json, size);
-// 	DirectWriteTestBuffer[size] = 0;
-// }
+	STRCMP_EQUAL(list.Item<UserDto *>(0)->Name.Value, "User1");
+	CHECK_EQUAL(list.Item<UserDto *>(0)->Role.Value, 100);
+	list.EndTryParse(doc);
+}
 
-// TEST(JsonArrayTestsGroup, JsonObjectArray_Direct_Write_From_Json_Memory_Test) {
-// 	UsersList list;
-// 	list.Add(new UserDto("user 1", 0));
-// 	list.Add(new UserDto("user 2", 10));
-// 	list.Add(new UserDto("user 3", 100));
-// 	list.Add(new UserDto("user 4", 999));
+TEST(JsonArrayTestsGroup, JsonObjectArray_Parse_With_Begin_End_Stages_And_Specified_Length_Test) {
+	UsersList list;
+	auto doc = list.BeginTryParse("[{\"name\":\"User1\",\"role\":100},{\"name\":\"User2\",\"role\":0},{\"name\":\"User3\","
+								  "\"role\":255}]  some data 0123456                     ",
+								  83);
 
-// 	list.DirectWriteTo((void *)987654321, OnReady);
-// 	CHECK_EQUAL(TestParent, (void *)987654321);
-// 	STRCMP_EQUAL(DirectWriteTestBuffer, "[{\"name\":\"user 1\",\"role\":0},{\"name\":\"user 2\",\"role\":10},{\"name\":\"user 3\",\"role\":100},{\"name\":\"user 4\",\"role\":999}]");
-// 	delete[] DirectWriteTestBuffer;
-// }
+	CHECK(doc != NULL);
+	CHECK_EQUAL(list.Size(), 3);
 
-// TEST(JsonArrayTestsGroup, JsonObjectArray_Equals_Test) {
-// 	UsersList list1;
-// 	list1.Add(new UserDto("user 1", 0));
-// 	list1.Add(new UserDto("user 2", 10));
-// 	list1.Add(new UserDto("user 3", 100));
-// 	list1.Add(new UserDto("user 4", 999));
+	STRCMP_EQUAL(list.Item<UserDto *>(2)->Name.Value, "User3");
+	CHECK_EQUAL(list.Item<UserDto *>(2)->Role.Value, 255);
+	list.EndTryParse(doc);
+}
 
-// 	UsersList list2;
-// 	list2.Add(new UserDto("user 1", 0));
-// 	list2.Add(new UserDto("user 2", 10));
-// 	list2.Add(new UserDto("user 3", 100));
-// 	list2.Add(new UserDto("user 4", 999));
+TEST(JsonArrayTestsGroup, JsonObjectArray_WriteTo_Test) {
+	char buffer[2048];
+	UsersList list;
+	list.Add(new UserDto("user 1", 0));
+	list.Add(new UserDto("user 2", 10));
+	list.Add(new UserDto("user 3", 100));
+	UserDto user("user 4", 1000);
+	list.Add(&user);
 
-// 	CHECK_TRUE(list1 == list2);
-// 	CHECK_FALSE(list1 != list2);
-// 	list1[2]->Name.Value = "User3";
-// 	CHECK_TRUE(list1 != list2);
-// 	CHECK_FALSE(list1 == list2);
-// }
+	CHECK_EQUAL(list.WriteToString(buffer, sizeof(buffer)), 85);
+	STRCMP_EQUAL(buffer, "[{\"name\":\"user 1\",\"role\":0},{\"name\":\"user 2\",\"role\":10},{\"name\":\"user 3\",\"role\":100}]");
+}
 
-// TEST(JsonArrayTestsGroup, JsonObjectArray_Clone_Test) {
-// 	auto list1 = new UsersList();
-// 	list1->Add(new UserDto("user 1", 0));
-// 	list1->Add(new UserDto("user 2", 10));
-// 	list1->Add(new UserDto("user 3", 100));
-// 	list1->Add(new UserDto("user 4", 999));
+TEST(JsonArrayTestsGroup, JsonObjectArray_WriteTo_With_Limited_Buffer_Test) {
+	char buffer[100];
+	UsersList list;
+	list.Add(new UserDto("user 1", 0));
+	list.Add(new UserDto("user 2", 10));
+	list.Add(new UserDto("user 3", 100));
+	list.Add(new UserDto("user 4", 999));
 
-// 	UsersList list2;
-// 	list2.Add(new UserDto(" 1", 0));
-// 	list2.Add(new UserDto(" 2", 10));
+	CHECK_EQUAL(list.WriteToString(buffer, sizeof(buffer)), 99);
 
-// 	list1->CloneTo(&list2);
-// 	delete list1;
-// 	CHECK_EQUAL(list2.Size(), 4);
+	STRCMP_EQUAL(buffer, "[{\"name\":\"user 1\",\"role\":0},{\"name\":\"user 2\",\"role\":10},{\"name\":\"user 3\",\"role\":100},{\"name\":\"user ");
+}
 
-// 	STRCMP_EQUAL(list2[2]->Name.Value, "user 3");
-// 	CHECK_EQUAL(list2[2]->Role.Value, 100);
-// 	STRCMP_EQUAL(list2[3]->Name.Value, "user 4");
-// 	CHECK_EQUAL(list2[3]->Role.Value, 999);
-// }
+static void *TestParent = NULL;
+static char *DirectWriteTestBuffer = NULL;
+static void OnReady(void *parent, const char *json, size_t size) {
+	TestParent = parent;
+	DirectWriteTestBuffer = new char[size + 1];
+	memcpy(DirectWriteTestBuffer, json, size);
+	DirectWriteTestBuffer[size] = 0;
+}
 
-// TEST(JsonArrayTestsGroup, JsonObjectArray_Find_Test) {
-// 	UsersList list1;
-// 	list1.Add(new UserDto("user 1", 0));
-// 	list1.Add(new UserDto("user 2", 10));
-// 	list1.Add(new UserDto("user 3", 100));
-// 	list1.Add(new UserDto("user 4", 999));
-// 	UserDto user1("user 3", 100);
-// 	auto iter = list1.Find(&user1);
-// 	CHECK(iter != list1.End());
-// 	STRCMP_EQUAL((*iter)->Name.Value, "user 3");
-// 	UserDto user2("user 3", 0);
-// 	CHECK_TRUE(list1.Find(&user2) == list1.End());
-// }
+TEST(JsonArrayTestsGroup, JsonObjectArray_Direct_Write_From_Json_Memory_Test) {
+	UsersList list;
+	list.Add(new UserDto("user 1", 0));
+	list.Add(new UserDto("user 2", 10));
+	list.Add(new UserDto("user 3", 100));
+	list.Add(new UserDto("user 4", 999));
 
-// TEST(JsonArrayTestsGroup, JsonObjectArray_Remove_Test) {
-// 	UsersList list1;
-// 	list1.Add(new UserDto("user 1", 0));
-// 	list1.Add(new UserDto("user 2", 10));
-// 	list1.Add(new UserDto("user 3", 100));
-// 	list1.Add(new UserDto("user 4", 999));
+	list.DirectWriteTo((void *)987654321, OnReady);
+	CHECK_EQUAL(TestParent, (void *)987654321);
+	STRCMP_EQUAL(DirectWriteTestBuffer, "[{\"name\":\"user 1\",\"role\":0},{\"name\":\"user 2\",\"role\":10},{\"name\":\"user 3\",\"role\":100},{\"name\":\"user 4\",\"role\":999}]");
+	delete[] DirectWriteTestBuffer;
+}
 
-// 	auto item1 = new UserDto("user 3", 100);
-// 	list1.Remove(item1);
-// 	delete item1;
+TEST(JsonArrayTestsGroup, JsonObjectArray_Equals_Test) {
+	UsersList list1;
+	list1.Add(new UserDto("user 1", 0));
+	list1.Add(new UserDto("user 2", 10));
+	list1.Add(new UserDto("user 3", 100));
+	list1.Add(new UserDto("user 4", 999));
 
-// 	auto item2 = new UserDto("user 2", 10);
-// 	list1.Remove(item2);
-// 	delete item2;
+	UsersList list2;
+	list2.Add(new UserDto("user 1", 0));
+	list2.Add(new UserDto("user 2", 10));
+	list2.Add(new UserDto("user 3", 100));
+	list2.Add(new UserDto("user 4", 999));
 
-// 	CHECK_EQUAL(list1.Size(), 2);
-// }
+	CHECK_TRUE(list1 == list2);
+	CHECK_FALSE(list1 != list2);
+	list1.Item<UserDto *>(2)->Name.Value = "User3";
+	CHECK_TRUE(list1 != list2);
+	CHECK_FALSE(list1 == list2);
+}
 
-// TEST(JsonArrayTestsGroup, JsonObjectArray_Add_Test) {
-// 	UsersList list1;
-// 	auto item1 = new UserDto("user 1", 0);
-// 	CHECK_TRUE(list1.Add(item1));
-// 	auto item2 = new UserDto("user 2", 10);
-// 	CHECK_TRUE(list1.Add(item2));
+TEST(JsonArrayTestsGroup, JsonObjectArray_Clone_Test) {
+	auto list1 = new UsersList();
+	list1->Add(new UserDto("user 1", 0));
+	list1->Add(new UserDto("user 2", 10));
+	list1->Add(new UserDto("user 3", 100));
+	list1->Add(new UserDto("user 4", 999));
 
-// 	CHECK_EQUAL(list1.Size(), 2);
-// 	STRCMP_EQUAL(list1[0]->Name.Value, "user 1");
-// 	CHECK_EQUAL(list1[0]->Role.Value, 0);
-// }
+	UsersList list2;
+	list2.Add(new UserDto(" 1", 0));
+	list2.Add(new UserDto(" 2", 10));
 
-// TEST(JsonArrayTestsGroup, JsonObjectArray_Incorrect_Add_Test) {
-// 	UsersList list1;
-// 	auto item1 = new UserDto("user 1", 0);
-// 	CHECK_TRUE(list1.Add(item1));
-// 	auto item2 = new UserDto("user 2", 1010);
-// 	CHECK_FALSE(list1.Add(item2));
-// 	delete item2;
+	list1->CloneTo(&list2);
+	delete list1;
+	CHECK_EQUAL(list2.Size(), 4);
 
-// 	CHECK_EQUAL(list1.Size(), 1);
-// 	STRCMP_EQUAL(list1[0]->Name.Value, "user 1");
-// 	CHECK_EQUAL(list1[0]->Role.Value, 0);
-// }
+	STRCMP_EQUAL(list2.Item<UserDto *>(2)->Name.Value, "user 3");
+	CHECK_EQUAL(list2.Item<UserDto *>(2)->Role.Value, 100);
+	STRCMP_EQUAL(list2.Item<UserDto *>(3)->Name.Value, "user 4");
+	CHECK_EQUAL(list2.Item<UserDto *>(3)->Role.Value, 999);
+}
 
-// TEST(JsonArrayTestsGroup, JsonObjectArray_Update_Test) {
-// 	UsersList list1;
-// 	auto item1 = new UserDto("user 1", 0);
-// 	list1.Add(item1);
-// 	auto item2 = new UserDto("user 2", 10);
-// 	list1.Add(item2);
+TEST(JsonArrayTestsGroup, JsonObjectArray_Find_Test) {
+	UsersList list1;
+	list1.Add(new UserDto("user 1", 0));
+	list1.Add(new UserDto("user 2", 10));
+	list1.Add(new UserDto("user 3", 100));
+	list1.Add(new UserDto("user 4", 999));
+	UserDto user1("user 3", 100);
+	auto iter = list1.Find(&user1);
+	CHECK(iter != list1.End());
+	STRCMP_EQUAL(((UserDto *)*iter)->Name.Value, "user 3");
+	UserDto user2("user 3", 0);
+	CHECK_TRUE(list1.Find(&user2) == list1.End());
+}
 
-// 	auto item3 = new UserDto("user 3", 100);
-// 	CHECK_TRUE(list1.Update(0, item3));
-// 	CHECK_EQUAL(list1.Size(), 2);
+TEST(JsonArrayTestsGroup, JsonObjectArray_Remove_Test) {
+	UsersList list1;
+	list1.Add(new UserDto("user 1", 0));
+	list1.Add(new UserDto("user 2", 10));
+	list1.Add(new UserDto("user 3", 100));
+	list1.Add(new UserDto("user 4", 999));
 
-// 	STRCMP_EQUAL(list1[0]->Name.Value, "user 3");
-// 	CHECK_EQUAL(list1[0]->Role.Value, 100);
-// }
+	auto item1 = new UserDto("user 3", 100);
+	list1.Remove(item1);
+	delete item1;
 
-// TEST(JsonArrayTestsGroup, JsonObjectArray_Incorrect_Update_Test) {
-// 	UsersList list1;
-// 	list1.Add(new UserDto("user 1", 0));
-// 	list1.Add(new UserDto("user 2", 10));
+	auto item2 = new UserDto("user 2", 10);
+	list1.Remove(item2);
+	delete item2;
 
-// 	auto item3 = new UserDto("user 2", 10);
-// 	CHECK_FALSE(list1.Update(100, item3));
-// 	delete item3;
+	CHECK_EQUAL(list1.Size(), 2);
+}
 
-// 	auto item4 = new UserDto("user 3", 1000);
-// 	CHECK_FALSE(list1.Update(0, item4));
-// 	delete item4;
+TEST(JsonArrayTestsGroup, JsonObjectArray_Add_Test) {
+	UsersList list1;
+	auto item1 = new UserDto("user 1", 0);
+	CHECK_TRUE(list1.Add(item1));
+	auto item2 = new UserDto("user 2", 10);
+	CHECK_TRUE(list1.Add(item2));
 
-// 	CHECK_FALSE(list1.Update(0, NULL));
-// 	CHECK_EQUAL(list1.Size(), 2);
+	CHECK_EQUAL(list1.Size(), 2);
+	STRCMP_EQUAL(list1.Item<UserDto *>(0)->Name.Value, "user 1");
+	CHECK_EQUAL(list1.Item<UserDto *>(0)->Role.Value, 0);
+}
 
-// 	STRCMP_EQUAL(list1[0]->Name.Value, "user 1");
-// 	CHECK_EQUAL(list1[0]->Role.Value, 0);
-// }
+TEST(JsonArrayTestsGroup, JsonObjectArray_Incorrect_Add_Test) {
+	UsersList list1;
+	auto item1 = new UserDto("user 1", 0);
+	CHECK_TRUE(list1.Add(item1));
+	auto item2 = new UserDto("user 2", 1010);
+	CHECK_FALSE(list1.Add(item2));
+	delete item2;
 
-// TEST(JsonArrayTestsGroup, JsonObjectArray_Field_Optional_Test) {
-// 	JsonFieldsContainer container;
-// 	rapidjson::Document doc;
-// 	StringsList stringArray;
-// 	auto testableFieldMustExists = new JsonValue<JsonArrayBase *>(&container, "testStringArray", &stringArray);
-// 	doc.Parse("{\"otherField\":[\"Item4\"]}");
-// 	CHECK_FALSE(testableFieldMustExists->TryParse(&doc));
-// 	delete testableFieldMustExists;
+	CHECK_EQUAL(list1.Size(), 1);
+	STRCMP_EQUAL(list1.Item<UserDto *>(0)->Name.Value, "user 1");
+	CHECK_EQUAL(list1.Item<UserDto *>(0)->Role.Value, 0);
+}
 
-// 	auto testableWithOptional = new JsonCommonValue<JsonArrayBase *>(&container, "testStringArray", &stringArray);
-// 	doc.Parse("{\"otherField\":[\"Item4\"]}");
-// 	CHECK_TRUE(testableWithOptional->TryParse(&doc));
-// 	CHECK_FALSE(testableWithOptional->Presented());
+TEST(JsonArrayTestsGroup, JsonObjectArray_Update_Test) {
+	UsersList list1;
+	auto item1 = new UserDto("user 1", 0);
+	list1.Add(item1);
+	auto item2 = new UserDto("user 2", 10);
+	list1.Add(item2);
 
-// 	doc.Parse("{\"testStringArray\":[\"Item4\"]}");
-// 	CHECK_TRUE(testableWithOptional->TryParse(&doc));
-// 	CHECK_TRUE(testableWithOptional->Presented());
-// 	delete testableWithOptional;
-// }
+	auto item3 = new UserDto("user 3", 100);
+	CHECK_TRUE(list1.Update(0, item3));
+	CHECK_EQUAL(list1.Size(), 2);
+
+	STRCMP_EQUAL(list1.Item<UserDto *>(0)->Name.Value, "user 3");
+	CHECK_EQUAL(list1.Item<UserDto *>(0)->Role.Value, 100);
+}
+
+TEST(JsonArrayTestsGroup, JsonObjectArray_Incorrect_Update_Test) {
+	UsersList list1;
+	list1.Add(new UserDto("user 1", 0));
+	list1.Add(new UserDto("user 2", 10));
+
+	auto item3 = new UserDto("user 2", 10);
+	CHECK_FALSE(list1.Update(100, item3));
+	delete item3;
+
+	auto item4 = new UserDto("user 3", 1000);
+	CHECK_FALSE(list1.Update(0, item4));
+	delete item4;
+
+	CHECK_FALSE(list1.Update(0, NULL));
+	CHECK_EQUAL(list1.Size(), 2);
+
+	STRCMP_EQUAL(list1.Item<UserDto *>(0)->Name.Value, "user 1");
+	CHECK_EQUAL(list1.Item<UserDto *>(0)->Role.Value, 0);
+}
+
+TEST(JsonArrayTestsGroup, JsonObjectArray_Field_Optional_Test) {
+	JsonFieldsContainer container;
+	rapidjson::Document doc;
+	StringsList stringArray;
+	auto testableFieldMustExists = new JsonValue<JsonArrayBase *>(&container, "testStringArray", &stringArray);
+	doc.Parse("{\"otherField\":[\"Item4\"]}");
+	CHECK_FALSE(testableFieldMustExists->TryParse(&doc));
+	delete testableFieldMustExists;
+
+	auto testableWithOptional = new JsonCommonValue<JsonArrayBase *>(&container, "testStringArray", &stringArray);
+	doc.Parse("{\"otherField\":[\"Item4\"]}");
+	CHECK_TRUE(testableWithOptional->TryParse(&doc));
+	CHECK_FALSE(testableWithOptional->Presented());
+
+	doc.Parse("{\"testStringArray\":[\"Item4\"]}");
+	CHECK_TRUE(testableWithOptional->TryParse(&doc));
+	CHECK_TRUE(testableWithOptional->Presented());
+	delete testableWithOptional;
+}
 
 TEST(JsonArrayTestsGroup, JsonStringArray_Parse_Test) {
 	StringsList list;
