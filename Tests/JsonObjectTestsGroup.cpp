@@ -45,9 +45,10 @@ class GoodsDto : public JsonObject {
 		  StoreName(this, "StoreName", storeName){};
 };
 
-class GoodsList : public JsonArray<GoodsDto *> {
+class GoodsList : public JsonObjectsArray {
   public:
-	bool Validate(GoodsDto *item) { return item->Validate(); }
+	bool Validate(JsonObject *item) override { return item->Validate(); }
+	JsonObject *CreateInstance() { return new GoodsDto(); }
 };
 
 class OrderDto : public JsonObject {
@@ -67,9 +68,10 @@ class OrderDto : public JsonObject {
 		  User(this, "user", &userDto){};
 };
 
-class OrdersList : public JsonArray<OrderDto *> {
+class OrdersList : public JsonObjectsArray {
   public:
-	bool Validate(OrderDto *item) { return item->Validate(); }
+	bool Validate(JsonObject *item) override { return item->Validate(); }
+	JsonObject *CreateInstance() { return new OrderDto(); }
 };
 
 class CustomerDto : public JsonObject {
@@ -118,8 +120,8 @@ TEST(JsonObjectTestsGroup, JsonObject_Complex_TryParse_Test) {
 						 "258.25,\"Quantity\":548.2,\"Deleted\":false,\"StoreName\":\"\"},{\"Id\":4,\"Created\":1657055789,\"Group\":\"Keyboards\",\"Name\":\"K4-100\","
 						 "\"Price\":358.25,\"Quantity\":648.2,\"Deleted\":false,\"StoreName\":\"\"}],\"user\":{\"name\":\"Joe Doe\",\"role\":1}}"));
 	CHECK_EQUAL(order.goodsList.Size(), 3);
-	CHECK_EQUAL(order.goodsList[0]->Created.Value, 1657052789);
-	STRCMP_EQUAL(order.goodsList[2]->Name.Value, "K4-100");
+	CHECK_EQUAL(order.goodsList.Item<GoodsDto *>(0)->Created.Value, 1657052789);
+	STRCMP_EQUAL(order.goodsList.Item<GoodsDto *>(2)->Name.Value, "K4-100");
 	STRCMP_EQUAL(order.userDto.Name.Value, "Joe Doe");
 }
 
@@ -314,8 +316,8 @@ TEST(JsonObjectTestsGroup, JsonObject_Clone_Test) {
 	STRCMP_EQUAL(orderDto2.Supplier.Value, "Dell");
 	CHECK_EQUAL(orderDto2.DateTime.Value, 1657058000);
 	CHECK_EQUAL(orderDto2.goodsList.Size(), 2);
-	CHECK_EQUAL(orderDto2.goodsList[0]->Created.Value, 1657052789);
-	STRCMP_EQUAL(orderDto2.goodsList[1]->Name.Value, "K2-100");
+	CHECK_EQUAL(orderDto2.goodsList.Item<GoodsDto *>(0)->Created.Value, 1657052789);
+	STRCMP_EQUAL(orderDto2.goodsList.Item<GoodsDto *>(1)->Name.Value, "K2-100");
 	STRCMP_EQUAL(orderDto2.userDto.Name.Value, "Joe Doe");
 }
 
@@ -327,11 +329,11 @@ TEST(JsonObjectTestsGroup, JsonObject_With_Blob_Field_Test) {
 	auto customerDto1 = new CustomerDto(1234567890123456789LL, "Viordash", {picture, pictureSize});
 	CHECK(customerDto1->ordersList.Add(new OrderDto("Dell1", 1657058001, "Joe Doe", TUserRole::uViewer)));
 	CHECK(customerDto1->ordersList.Add(new OrderDto("Dell2", 1657058002, "Joe Doe", TUserRole::uViewer)));
-	auto orderDto1 = customerDto1->ordersList[0];
+	auto orderDto1 = customerDto1->ordersList.Item<OrderDto *>(0);
 	CHECK(orderDto1->goodsList.Add(new GoodsDto(1, 1657052789, "Keyboards", "K1-100", 58.25, 48.2)));
 	CHECK(orderDto1->goodsList.Add(new GoodsDto(2, 1657053789, "Keyboards", "K2-100", 158.25, 448.2)));
 	CHECK(orderDto1->goodsList.Add(new GoodsDto(3, 1657054789, "Keyboards", "K3-100", 258.25, 548.2)));
-	auto orderDto2 = customerDto1->ordersList[1];
+	auto orderDto2 = customerDto1->ordersList.Item<OrderDto *>(1);
 	CHECK(orderDto2->goodsList.Add(new GoodsDto(100, 1007052789, "Mouse", "M1-100", 8.25, 18.2)));
 	CHECK(orderDto2->goodsList.Add(new GoodsDto(200, 2007053789, "Mouse", "M2-100", 48.25, 28.2)));
 
@@ -347,8 +349,8 @@ TEST(JsonObjectTestsGroup, JsonObject_With_Blob_Field_Test) {
 	CHECK_EQUAL(customerDto2.Id.Value, 1234567890123456789LL);
 	STRCMP_EQUAL(customerDto2.Name.Value, "Viordash");
 	CHECK_EQUAL(customerDto2.ordersList.Size(), 2);
-	CHECK_EQUAL(customerDto2.ordersList[0]->goodsList.Size(), 3);
-	CHECK_EQUAL(customerDto2.ordersList[1]->goodsList.Size(), 2);
+	CHECK_EQUAL(customerDto2.ordersList.Item<OrderDto *>(0)->goodsList.Size(), 3);
+	CHECK_EQUAL(customerDto2.ordersList.Item<OrderDto *>(1)->goodsList.Size(), 2);
 	CHECK_EQUAL(((TJsonRawData)customerDto2.Blob.Value).Size, pictureSize);
 	CHECK_FALSE(((TJsonRawData)customerDto2.Blob.Value).Data == picture);
 	for (size_t i = 0; i < pictureSize; i++) { CHECK_EQUAL(((TJsonRawData)customerDto2.Blob.Value).Data[i], 'A' + (i % 58)); }

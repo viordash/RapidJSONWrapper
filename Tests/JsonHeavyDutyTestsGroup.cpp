@@ -147,9 +147,10 @@ static TGoodsDto *DeserializeGoodsDto(rapidjson::Value *doc) {
 	return goodsDto;
 }
 
-class GoodsList : public JsonArray<GoodsDto *> {
+class GoodsList : public JsonObjectsArray {
   public:
-	bool Validate(GoodsDto *item) { return item->Validate(); }
+	bool Validate(JsonObject *item) override { return item->Validate(); }
+	JsonObject *CreateInstance() { return new GoodsDto(); }
 };
 
 static void SerializeGoodsList(rapidjson::Writer<rapidjson::StringBuffer> *writer, std::vector<TGoodsDto *> *goods) {
@@ -237,9 +238,10 @@ static TOrderDto *DeserializeOrderDto(rapidjson::Value *doc) {
 	return orderDto;
 }
 
-class OrdersList : public JsonArray<OrderDto *> {
+class OrdersList : public JsonObjectsArray {
   public:
-	bool Validate(OrderDto *item) { return item->Validate(); }
+	bool Validate(JsonObject *item) override { return item->Validate(); }
+	JsonObject *CreateInstance() { return new OrderDto(); }
 };
 
 static void SerializeOrdersList(rapidjson::Writer<rapidjson::StringBuffer> *writer, std::vector<TOrderDto *> *orders) {
@@ -324,9 +326,10 @@ static TCustomerDto *DeserializeCustomerDto(rapidjson::Value *doc) {
 	return customerDto;
 }
 
-class CustomerList : public JsonArray<CustomerDto *> {
+class CustomerList : public JsonObjectsArray {
   public:
-	bool Validate(CustomerDto *item) { return item->Validate(); }
+	bool Validate(JsonObject *item) override { return item->Validate(); }
+	JsonObject *CreateInstance() { return new CustomerDto(); }
 };
 
 static void SerializeCustomerList(rapidjson::Writer<rapidjson::StringBuffer> *writer, std::vector<TCustomerDto *> *customers) {
@@ -372,11 +375,11 @@ static uint64_t testFillArray(CustomerList *customerList) {
 	for (size_t i = 0; i < perfTestItemsCount; i++) {
 		picture[0] = i;
 		customerList->Add(new CustomerDto(12345678901100LL + i, "Viordash", {(uint8_t *)picture, sizeof(picture)}));
-		auto customerDto = (*customerList)[i];
+		auto customerDto = customerList->Item<CustomerDto *>(i);
 		for (size_t k = 0; k < (perfTestItemsCount / 100) + 1; k++) {
 			customerDto->ordersList.Add(new OrderDto("Dell1", 165700 + i + k, "Joe Doe", TUserRole::uViewer));
 
-			auto orderDto = customerDto->ordersList[k];
+			auto orderDto = customerDto->ordersList.Item<OrderDto *>(k);
 			for (size_t m = 0; m < (perfTestItemsCount / 1000) + 1; m++) { //
 				orderDto->goodsList.Add(
 					new GoodsDto(1, 16570 + i + k + m, "Keyboards", "K1-100", k * 2.5, k * 0.1, m % 2 == 0, "Chargoggagoggmanchauggagoggchaubunagungamaugg 0123456789012345678901234567890123456789"));
