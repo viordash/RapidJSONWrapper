@@ -4,46 +4,6 @@
 #include <stdlib.h>
 #include "JsonWrapper.h"
 
-template <> JsonArray<char *>::~JsonArray() {
-	for (const auto &item : Items) { DeleteItem(item); }
-}
-template <> JsonArray<TBoolArray>::~JsonArray() {
-	for (const auto &item : Items) { DeleteItem(item); }
-}
-template <> JsonArray<int64_t>::~JsonArray() {
-	for (const auto &item : Items) { DeleteItem(item); }
-}
-template <> JsonArray<uint64_t>::~JsonArray() {
-	for (const auto &item : Items) { DeleteItem(item); }
-}
-template <> JsonArray<int32_t>::~JsonArray() {
-	for (const auto &item : Items) { DeleteItem(item); }
-}
-template <> JsonArray<uint32_t>::~JsonArray() {
-	for (const auto &item : Items) { DeleteItem(item); }
-}
-template <> JsonArray<int16_t>::~JsonArray() {
-	for (const auto &item : Items) { DeleteItem(item); }
-}
-template <> JsonArray<uint16_t>::~JsonArray() {
-	for (const auto &item : Items) { DeleteItem(item); }
-}
-template <> JsonArray<int8_t>::~JsonArray() {
-	for (const auto &item : Items) { DeleteItem(item); }
-}
-template <> JsonArray<uint8_t>::~JsonArray() {
-	for (const auto &item : Items) { DeleteItem(item); }
-}
-template <> JsonArray<double>::~JsonArray() {
-	for (const auto &item : Items) { DeleteItem(item); }
-}
-template <> JsonArray<float>::~JsonArray() {
-	for (const auto &item : Items) { DeleteItem(item); }
-}
-/*
-
-
-*/
 template <> std::vector<char *>::iterator JsonArray<char *>::Find(char *item) {
 	if (item != NULL) {
 		for (auto iter = Items.begin(); iter != Items.end(); iter++) {
@@ -119,167 +79,6 @@ template <> std::vector<float>::iterator JsonArray<float>::Find(float item) {
 	}
 	return Items.end();
 }
-/*
-
-
-*/
-template <> bool JsonArray<char *>::TryDocParse(TJsonDocument *doc) {
-	if (!doc->IsArray()) { return false; }
-	auto jArray = doc->GetArray();
-	Items.reserve(jArray.Size());
-	for (const auto &jItem : jArray) {
-		if (!jItem.IsString() || !Add((char *)jItem.GetString())) {
-			Items.shrink_to_fit();
-			return false;
-		}
-	}
-	Items.shrink_to_fit();
-	return true;
-}
-template <> bool JsonArray<TBoolArray>::TryDocParse(TJsonDocument *doc) {
-	if (!doc->IsArray()) { return false; }
-	auto jArray = doc->GetArray();
-	Items.reserve(jArray.Size());
-	for (const auto &jItem : jArray) {
-		if (!jItem.IsBool() || !Add((TBoolArray)jItem.GetBool())) {
-			Items.shrink_to_fit();
-			return false;
-		}
-	}
-	Items.shrink_to_fit();
-	return true;
-}
-template <> bool JsonArray<int64_t>::TryDocParse(TJsonDocument *doc) {
-	if (!doc->IsArray()) { return false; }
-	auto jArray = doc->GetArray();
-	Items.reserve(jArray.Size());
-	for (const auto &jItem : jArray) {
-		if (!jItem.IsInt64() || !Add((int64_t)jItem.GetInt64())) {
-			Items.shrink_to_fit();
-			return false;
-		}
-	}
-	Items.shrink_to_fit();
-	return true;
-}
-template <> bool JsonArray<uint64_t>::TryDocParse(TJsonDocument *doc) {
-	if (!doc->IsArray()) { return false; }
-	auto jArray = doc->GetArray();
-	Items.reserve(jArray.Size());
-	for (const auto &jItem : jArray) {
-		if (!jItem.IsUint64() || !Add((uint64_t)jItem.GetUint64())) {
-			Items.shrink_to_fit();
-			return false;
-		}
-	}
-	Items.shrink_to_fit();
-	return true;
-}
-template <> bool JsonArray<int32_t>::TryDocParse(TJsonDocument *doc) {
-	if (!doc->IsArray()) { return false; }
-	auto jArray = doc->GetArray();
-	Items.reserve(jArray.Size());
-	for (const auto &jItem : jArray) {
-		if (!jItem.IsInt() || !Add((int32_t)jItem.GetInt())) {
-			Items.shrink_to_fit();
-			return false;
-		}
-	}
-	Items.shrink_to_fit();
-	return true;
-}
-template <> bool JsonArray<uint32_t>::TryDocParse(TJsonDocument *doc) {
-	if (!doc->IsArray()) { return false; }
-	auto jArray = doc->GetArray();
-	Items.reserve(jArray.Size());
-	for (const auto &jItem : jArray) {
-		if (!jItem.IsUint() || !Add((uint32_t)jItem.GetUint())) {
-			Items.shrink_to_fit();
-			return false;
-		}
-	}
-	Items.shrink_to_fit();
-	return true;
-}
-template <> bool JsonArray<int16_t>::TryDocParse(TJsonDocument *doc) {
-	if (!doc->IsArray()) { return false; }
-	auto jArray = doc->GetArray();
-	Items.reserve(jArray.Size());
-	for (const auto &jItem : jArray) {
-		if (!jItem.IsInt() || !Add((int16_t)jItem.GetInt())) {
-			Items.shrink_to_fit();
-			return false;
-		}
-	}
-	Items.shrink_to_fit();
-	return true;
-}
-template <> bool JsonArray<uint16_t>::TryDocParse(TJsonDocument *doc) {
-	if (!doc->IsArray()) { return false; }
-	auto jArray = doc->GetArray();
-	Items.reserve(jArray.Size());
-	for (const auto &jItem : jArray) {
-		if (!jItem.IsUint() || !Add((uint16_t)jItem.GetUint())) {
-			Items.shrink_to_fit();
-			return false;
-		}
-	}
-	Items.shrink_to_fit();
-	return true;
-}
-template <> bool JsonArray<int8_t>::TryDocParse(TJsonDocument *doc) {
-	if (!doc->IsArray()) { return false; }
-	auto jArray = doc->GetArray();
-	Items.reserve(jArray.Size());
-	for (const auto &jItem : jArray) {
-		if (!jItem.IsInt() || !Add((int8_t)jItem.GetInt())) {
-			Items.shrink_to_fit();
-			return false;
-		}
-	}
-	Items.shrink_to_fit();
-	return true;
-}
-template <> bool JsonArray<uint8_t>::TryDocParse(TJsonDocument *doc) {
-	if (!doc->IsArray()) { return false; }
-	auto jArray = doc->GetArray();
-	Items.reserve(jArray.Size());
-	for (const auto &jItem : jArray) {
-		if (!jItem.IsUint() || !Add((uint8_t)jItem.GetUint())) {
-			Items.shrink_to_fit();
-			return false;
-		}
-	}
-	Items.shrink_to_fit();
-	return true;
-}
-template <> bool JsonArray<double>::TryDocParse(TJsonDocument *doc) {
-	if (!doc->IsArray()) { return false; }
-	auto jArray = doc->GetArray();
-	Items.reserve(jArray.Size());
-	for (const auto &jItem : jArray) {
-		if (!jItem.IsDouble() || !Add((double)jItem.GetDouble())) {
-			Items.shrink_to_fit();
-			return false;
-		}
-	}
-	Items.shrink_to_fit();
-	return true;
-}
-template <> bool JsonArray<float>::TryDocParse(TJsonDocument *doc) {
-	if (!doc->IsArray()) { return false; }
-	auto jArray = doc->GetArray();
-	Items.reserve(jArray.Size());
-	for (const auto &jItem : jArray) {
-		if (!jItem.IsFloat() || !Add((float)jItem.GetFloat())) {
-			Items.shrink_to_fit();
-			return false;
-		}
-	}
-	Items.shrink_to_fit();
-	return true;
-}
-
 /*
 
 
@@ -360,6 +159,28 @@ template <> void JsonArray<float>::WriteToDoc(TJsonDocument *doc) {
 
 
 */
+template <> void JsonArray<char *>::AddInternal(char *item) {
+	auto len = strlen((char *)item);
+	auto newItem = new char[len + 1];
+	memcpy(newItem, (char *)item, len);
+	newItem[len] = 0;
+	Items.push_back(newItem);
+}
+template <> void JsonArray<TBoolArray>::AddInternal(TBoolArray item) { Items.push_back(item); }
+template <> void JsonArray<int64_t>::AddInternal(int64_t item) { Items.push_back(item); }
+template <> void JsonArray<uint64_t>::AddInternal(uint64_t item) { Items.push_back(item); }
+template <> void JsonArray<int32_t>::AddInternal(int32_t item) { Items.push_back(item); }
+template <> void JsonArray<uint32_t>::AddInternal(uint32_t item) { Items.push_back(item); }
+template <> void JsonArray<int16_t>::AddInternal(int16_t item) { Items.push_back(item); }
+template <> void JsonArray<uint16_t>::AddInternal(uint16_t item) { Items.push_back(item); }
+template <> void JsonArray<int8_t>::AddInternal(int8_t item) { Items.push_back(item); }
+template <> void JsonArray<uint8_t>::AddInternal(uint8_t item) { Items.push_back(item); }
+template <> void JsonArray<double>::AddInternal(double item) { Items.push_back(item); }
+template <> void JsonArray<float>::AddInternal(float item) { Items.push_back(item); }
+/*
+
+
+*/
 template <> bool JsonArray<char *>::Add(char *item) {
 	if (!Validate(item)) { return false; }
 	AddInternal(item);
@@ -424,24 +245,18 @@ template <> bool JsonArray<float>::Add(float item) {
 
 
 */
-template <> void JsonArray<char *>::AddInternal(char *item) {
-	auto len = strlen((char *)item);
-	auto newItem = new char[len + 1];
-	memcpy(newItem, (char *)item, len);
-	newItem[len] = 0;
-	Items.push_back(newItem);
-}
-template <> void JsonArray<TBoolArray>::AddInternal(TBoolArray item) { Items.push_back(item); }
-template <> void JsonArray<int64_t>::AddInternal(int64_t item) { Items.push_back(item); }
-template <> void JsonArray<uint64_t>::AddInternal(uint64_t item) { Items.push_back(item); }
-template <> void JsonArray<int32_t>::AddInternal(int32_t item) { Items.push_back(item); }
-template <> void JsonArray<uint32_t>::AddInternal(uint32_t item) { Items.push_back(item); }
-template <> void JsonArray<int16_t>::AddInternal(int16_t item) { Items.push_back(item); }
-template <> void JsonArray<uint16_t>::AddInternal(uint16_t item) { Items.push_back(item); }
-template <> void JsonArray<int8_t>::AddInternal(int8_t item) { Items.push_back(item); }
-template <> void JsonArray<uint8_t>::AddInternal(uint8_t item) { Items.push_back(item); }
-template <> void JsonArray<double>::AddInternal(double item) { Items.push_back(item); }
-template <> void JsonArray<float>::AddInternal(float item) { Items.push_back(item); }
+template <> void JsonArray<char *>::DeleteItem(char *item) { delete[] item; }
+template <> void JsonArray<TBoolArray>::DeleteItem(TBoolArray item) {}
+template <> void JsonArray<int64_t>::DeleteItem(int64_t item) {}
+template <> void JsonArray<uint64_t>::DeleteItem(uint64_t item) {}
+template <> void JsonArray<int32_t>::DeleteItem(int32_t item) {}
+template <> void JsonArray<uint32_t>::DeleteItem(uint32_t item) {}
+template <> void JsonArray<int16_t>::DeleteItem(int16_t item) {}
+template <> void JsonArray<uint16_t>::DeleteItem(uint16_t item) {}
+template <> void JsonArray<int8_t>::DeleteItem(int8_t item) {}
+template <> void JsonArray<uint8_t>::DeleteItem(uint8_t item) {}
+template <> void JsonArray<double>::DeleteItem(double item) {}
+template <> void JsonArray<float>::DeleteItem(float item) {}
 /*
 
 
@@ -675,22 +490,6 @@ template <> void JsonArray<float>::CloneTo(JsonArrayBase *other) {
 
 
 */
-template <> void JsonArray<char *>::DeleteItem(char *item) { delete[] item; }
-template <> void JsonArray<TBoolArray>::DeleteItem(TBoolArray item) {}
-template <> void JsonArray<int64_t>::DeleteItem(int64_t item) {}
-template <> void JsonArray<uint64_t>::DeleteItem(uint64_t item) {}
-template <> void JsonArray<int32_t>::DeleteItem(int32_t item) {}
-template <> void JsonArray<uint32_t>::DeleteItem(uint32_t item) {}
-template <> void JsonArray<int16_t>::DeleteItem(int16_t item) {}
-template <> void JsonArray<uint16_t>::DeleteItem(uint16_t item) {}
-template <> void JsonArray<int8_t>::DeleteItem(int8_t item) {}
-template <> void JsonArray<uint8_t>::DeleteItem(uint8_t item) {}
-template <> void JsonArray<double>::DeleteItem(double item) {}
-template <> void JsonArray<float>::DeleteItem(float item) {}
-/*
-
-
-*/
 template <> bool JsonArray<char *>::Update(size_t index, char *item) {
 	if (index >= Size() || !Validate(item)) { return false; }
 	DeleteItem(Items[index]);
@@ -766,4 +565,204 @@ template <> bool JsonArray<float>::Update(size_t index, float item) {
 	DeleteItem(Items[index]);
 	Items[index] = item;
 	return true;
+}
+/*
+
+
+*/
+template <> bool JsonArray<char *>::TryDocParse(TJsonDocument *doc) {
+	if (!doc->IsArray()) { return false; }
+	auto jArray = doc->GetArray();
+	Items.reserve(jArray.Size());
+	for (const auto &jItem : jArray) {
+		if (!jItem.IsString() || !Add((char *)jItem.GetString())) {
+			Items.shrink_to_fit();
+			return false;
+		}
+	}
+	Items.shrink_to_fit();
+	return true;
+}
+template <> bool JsonArray<TBoolArray>::TryDocParse(TJsonDocument *doc) {
+	if (!doc->IsArray()) { return false; }
+	auto jArray = doc->GetArray();
+	Items.reserve(jArray.Size());
+	for (const auto &jItem : jArray) {
+		if (!jItem.IsBool() || !Add((TBoolArray)jItem.GetBool())) {
+			Items.shrink_to_fit();
+			return false;
+		}
+	}
+	Items.shrink_to_fit();
+	return true;
+}
+template <> bool JsonArray<int64_t>::TryDocParse(TJsonDocument *doc) {
+	if (!doc->IsArray()) { return false; }
+	auto jArray = doc->GetArray();
+	Items.reserve(jArray.Size());
+	for (const auto &jItem : jArray) {
+		if (!jItem.IsInt64() || !Add((int64_t)jItem.GetInt64())) {
+			Items.shrink_to_fit();
+			return false;
+		}
+	}
+	Items.shrink_to_fit();
+	return true;
+}
+template <> bool JsonArray<uint64_t>::TryDocParse(TJsonDocument *doc) {
+	if (!doc->IsArray()) { return false; }
+	auto jArray = doc->GetArray();
+	Items.reserve(jArray.Size());
+	for (const auto &jItem : jArray) {
+		if (!jItem.IsUint64() || !Add((uint64_t)jItem.GetUint64())) {
+			Items.shrink_to_fit();
+			return false;
+		}
+	}
+	Items.shrink_to_fit();
+	return true;
+}
+template <> bool JsonArray<int32_t>::TryDocParse(TJsonDocument *doc) {
+	if (!doc->IsArray()) { return false; }
+	auto jArray = doc->GetArray();
+	Items.reserve(jArray.Size());
+	for (const auto &jItem : jArray) {
+		if (!jItem.IsInt() || !Add((int32_t)jItem.GetInt())) {
+			Items.shrink_to_fit();
+			return false;
+		}
+	}
+	Items.shrink_to_fit();
+	return true;
+}
+template <> bool JsonArray<uint32_t>::TryDocParse(TJsonDocument *doc) {
+	if (!doc->IsArray()) { return false; }
+	auto jArray = doc->GetArray();
+	Items.reserve(jArray.Size());
+	for (const auto &jItem : jArray) {
+		if (!jItem.IsUint() || !Add((uint32_t)jItem.GetUint())) {
+			Items.shrink_to_fit();
+			return false;
+		}
+	}
+	Items.shrink_to_fit();
+	return true;
+}
+template <> bool JsonArray<int16_t>::TryDocParse(TJsonDocument *doc) {
+	if (!doc->IsArray()) { return false; }
+	auto jArray = doc->GetArray();
+	Items.reserve(jArray.Size());
+	for (const auto &jItem : jArray) {
+		if (!jItem.IsInt() || !Add((int16_t)jItem.GetInt())) {
+			Items.shrink_to_fit();
+			return false;
+		}
+	}
+	Items.shrink_to_fit();
+	return true;
+}
+template <> bool JsonArray<uint16_t>::TryDocParse(TJsonDocument *doc) {
+	if (!doc->IsArray()) { return false; }
+	auto jArray = doc->GetArray();
+	Items.reserve(jArray.Size());
+	for (const auto &jItem : jArray) {
+		if (!jItem.IsUint() || !Add((uint16_t)jItem.GetUint())) {
+			Items.shrink_to_fit();
+			return false;
+		}
+	}
+	Items.shrink_to_fit();
+	return true;
+}
+template <> bool JsonArray<int8_t>::TryDocParse(TJsonDocument *doc) {
+	if (!doc->IsArray()) { return false; }
+	auto jArray = doc->GetArray();
+	Items.reserve(jArray.Size());
+	for (const auto &jItem : jArray) {
+		if (!jItem.IsInt() || !Add((int8_t)jItem.GetInt())) {
+			Items.shrink_to_fit();
+			return false;
+		}
+	}
+	Items.shrink_to_fit();
+	return true;
+}
+template <> bool JsonArray<uint8_t>::TryDocParse(TJsonDocument *doc) {
+	if (!doc->IsArray()) { return false; }
+	auto jArray = doc->GetArray();
+	Items.reserve(jArray.Size());
+	for (const auto &jItem : jArray) {
+		if (!jItem.IsUint() || !Add((uint8_t)jItem.GetUint())) {
+			Items.shrink_to_fit();
+			return false;
+		}
+	}
+	Items.shrink_to_fit();
+	return true;
+}
+template <> bool JsonArray<double>::TryDocParse(TJsonDocument *doc) {
+	if (!doc->IsArray()) { return false; }
+	auto jArray = doc->GetArray();
+	Items.reserve(jArray.Size());
+	for (const auto &jItem : jArray) {
+		if (!jItem.IsDouble() || !Add((double)jItem.GetDouble())) {
+			Items.shrink_to_fit();
+			return false;
+		}
+	}
+	Items.shrink_to_fit();
+	return true;
+}
+template <> bool JsonArray<float>::TryDocParse(TJsonDocument *doc) {
+	if (!doc->IsArray()) { return false; }
+	auto jArray = doc->GetArray();
+	Items.reserve(jArray.Size());
+	for (const auto &jItem : jArray) {
+		if (!jItem.IsFloat() || !Add((float)jItem.GetFloat())) {
+			Items.shrink_to_fit();
+			return false;
+		}
+	}
+	Items.shrink_to_fit();
+	return true;
+}
+/*
+
+
+*/
+template <> JsonArray<char *>::~JsonArray() {
+	for (const auto &item : Items) { DeleteItem(item); }
+}
+template <> JsonArray<TBoolArray>::~JsonArray() {
+	for (const auto &item : Items) { DeleteItem(item); }
+}
+template <> JsonArray<int64_t>::~JsonArray() {
+	for (const auto &item : Items) { DeleteItem(item); }
+}
+template <> JsonArray<uint64_t>::~JsonArray() {
+	for (const auto &item : Items) { DeleteItem(item); }
+}
+template <> JsonArray<int32_t>::~JsonArray() {
+	for (const auto &item : Items) { DeleteItem(item); }
+}
+template <> JsonArray<uint32_t>::~JsonArray() {
+	for (const auto &item : Items) { DeleteItem(item); }
+}
+template <> JsonArray<int16_t>::~JsonArray() {
+	for (const auto &item : Items) { DeleteItem(item); }
+}
+template <> JsonArray<uint16_t>::~JsonArray() {
+	for (const auto &item : Items) { DeleteItem(item); }
+}
+template <> JsonArray<int8_t>::~JsonArray() {
+	for (const auto &item : Items) { DeleteItem(item); }
+}
+template <> JsonArray<uint8_t>::~JsonArray() {
+	for (const auto &item : Items) { DeleteItem(item); }
+}
+template <> JsonArray<double>::~JsonArray() {
+	for (const auto &item : Items) { DeleteItem(item); }
+}
+template <> JsonArray<float>::~JsonArray() {
+	for (const auto &item : Items) { DeleteItem(item); }
 }

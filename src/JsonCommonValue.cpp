@@ -4,8 +4,18 @@
 #include <stdlib.h>
 #include "JsonWrapper.h"
 
+static TJsonValue *GetMember(TJsonDocument *doc, const char *name) {
+	rapidjson::Value::MemberIterator member = doc->MemberBegin();
+	while (member != doc->MemberEnd()) {
+		auto &memberName = member->name;
+		if (strcmp(name, memberName.GetString()) == 0) return &member->value;
+		++member;
+	}
+	return NULL;
+}
+
 template <> bool JsonCommonValue<bool>::TryParse(TJsonDocument *doc) {
-	auto jsonVal = JsonCommonValue<bool>::GetMember(doc, this->Name);
+	auto jsonVal = GetMember(doc, this->Name);
 	if (jsonVal == NULL) {
 		presented = false;
 		return true;
@@ -23,7 +33,7 @@ template <> bool JsonCommonValue<bool>::TryParse(TJsonDocument *doc) {
 	return false;
 }
 template <> bool JsonCommonValue<int8_t>::TryParse(TJsonDocument *doc) {
-	auto jsonVal = JsonCommonValue<int8_t>::GetMember(doc, this->Name);
+	auto jsonVal = GetMember(doc, this->Name);
 	if (jsonVal == NULL) {
 		presented = false;
 		return true;
@@ -41,7 +51,7 @@ template <> bool JsonCommonValue<int8_t>::TryParse(TJsonDocument *doc) {
 	return false;
 }
 template <> bool JsonCommonValue<int16_t>::TryParse(TJsonDocument *doc) {
-	auto jsonVal = JsonCommonValue<int16_t>::GetMember(doc, this->Name);
+	auto jsonVal = GetMember(doc, this->Name);
 	if (jsonVal == NULL) {
 		presented = false;
 		return true;
@@ -59,7 +69,7 @@ template <> bool JsonCommonValue<int16_t>::TryParse(TJsonDocument *doc) {
 	return false;
 }
 template <> bool JsonCommonValue<int32_t>::TryParse(TJsonDocument *doc) {
-	auto jsonVal = JsonCommonValue<int32_t>::GetMember(doc, this->Name);
+	auto jsonVal = GetMember(doc, this->Name);
 	if (jsonVal == NULL) {
 		presented = false;
 		return true;
@@ -77,7 +87,7 @@ template <> bool JsonCommonValue<int32_t>::TryParse(TJsonDocument *doc) {
 	return false;
 }
 template <> bool JsonCommonValue<int64_t>::TryParse(TJsonDocument *doc) {
-	auto jsonVal = JsonCommonValue<int64_t>::GetMember(doc, this->Name);
+	auto jsonVal = GetMember(doc, this->Name);
 	if (jsonVal == NULL) {
 		presented = false;
 		return true;
@@ -95,7 +105,7 @@ template <> bool JsonCommonValue<int64_t>::TryParse(TJsonDocument *doc) {
 	return false;
 }
 template <> bool JsonCommonValue<uint8_t>::TryParse(TJsonDocument *doc) {
-	auto jsonVal = JsonCommonValue<uint8_t>::GetMember(doc, this->Name);
+	auto jsonVal = GetMember(doc, this->Name);
 	if (jsonVal == NULL) {
 		presented = false;
 		return true;
@@ -113,7 +123,7 @@ template <> bool JsonCommonValue<uint8_t>::TryParse(TJsonDocument *doc) {
 	return false;
 }
 template <> bool JsonCommonValue<uint16_t>::TryParse(TJsonDocument *doc) {
-	auto jsonVal = JsonCommonValue<uint16_t>::GetMember(doc, this->Name);
+	auto jsonVal = GetMember(doc, this->Name);
 	if (jsonVal == NULL) {
 		presented = false;
 		return true;
@@ -131,7 +141,7 @@ template <> bool JsonCommonValue<uint16_t>::TryParse(TJsonDocument *doc) {
 	return false;
 }
 template <> bool JsonCommonValue<uint32_t>::TryParse(TJsonDocument *doc) {
-	auto jsonVal = JsonCommonValue<uint32_t>::GetMember(doc, this->Name);
+	auto jsonVal = GetMember(doc, this->Name);
 	if (jsonVal == NULL) {
 		presented = false;
 		return true;
@@ -149,7 +159,7 @@ template <> bool JsonCommonValue<uint32_t>::TryParse(TJsonDocument *doc) {
 	return false;
 }
 template <> bool JsonCommonValue<uint64_t>::TryParse(TJsonDocument *doc) {
-	auto jsonVal = JsonCommonValue<uint64_t>::GetMember(doc, this->Name);
+	auto jsonVal = GetMember(doc, this->Name);
 	if (jsonVal == NULL) {
 		presented = false;
 		return true;
@@ -167,7 +177,7 @@ template <> bool JsonCommonValue<uint64_t>::TryParse(TJsonDocument *doc) {
 	return false;
 }
 template <> bool JsonCommonValue<float>::TryParse(TJsonDocument *doc) {
-	auto jsonVal = JsonCommonValue<float>::GetMember(doc, this->Name);
+	auto jsonVal = GetMember(doc, this->Name);
 	if (jsonVal == NULL) {
 		presented = false;
 		return true;
@@ -185,7 +195,7 @@ template <> bool JsonCommonValue<float>::TryParse(TJsonDocument *doc) {
 	return false;
 }
 template <> bool JsonCommonValue<double>::TryParse(TJsonDocument *doc) {
-	auto jsonVal = JsonCommonValue<double>::GetMember(doc, this->Name);
+	auto jsonVal = GetMember(doc, this->Name);
 	if (jsonVal == NULL) {
 		presented = false;
 		return true;
@@ -203,7 +213,7 @@ template <> bool JsonCommonValue<double>::TryParse(TJsonDocument *doc) {
 	return false;
 }
 template <> bool JsonCommonValue<char *>::TryParse(TJsonDocument *doc) {
-	auto jsonVal = JsonCommonValue<char *>::GetMember(doc, this->Name);
+	auto jsonVal = GetMember(doc, this->Name);
 	if (jsonVal == NULL) {
 		presented = false;
 		return true;
@@ -226,7 +236,7 @@ template <> bool JsonCommonValue<char *>::TryParse(TJsonDocument *doc) {
 	return false;
 }
 template <> bool JsonCommonValue<TJsonRawData>::TryParse(TJsonDocument *doc) {
-	auto jsonVal = JsonCommonValue<TJsonRawData>::GetMember(doc, this->Name);
+	auto jsonVal = GetMember(doc, this->Name);
 	if (jsonVal == NULL) {
 		presented = false;
 		return true;
@@ -246,7 +256,7 @@ template <> bool JsonCommonValue<TJsonRawData>::TryParse(TJsonDocument *doc) {
 	return false;
 }
 template <> bool JsonCommonValue<JsonObject *>::TryParse(TJsonDocument *doc) {
-	auto jsonVal = JsonCommonValue<JsonObject *>::GetMember(doc, this->Name);
+	auto jsonVal = GetMember(doc, this->Name);
 	if (jsonVal == NULL) {
 		presented = false;
 		return true;
@@ -264,7 +274,7 @@ template <> bool JsonCommonValue<JsonObject *>::TryParse(TJsonDocument *doc) {
 	return false;
 }
 template <> bool JsonCommonValue<JsonArrayBase *>::TryParse(TJsonDocument *doc) {
-	auto jsonVal = JsonCommonValue<JsonArrayBase *>::GetMember(doc, this->Name);
+	auto jsonVal = GetMember(doc, this->Name);
 	if (jsonVal == NULL) {
 		presented = false;
 		return true;

@@ -139,24 +139,24 @@ void JsonFloatCommonField_Equals_Test() {
 
 void JsonStringValue_CloneTo_Test() {
 	JsonFieldsContainer container;
-	JsonValue<char *> testable1(&container, "test", "0123456789");
+	JsonValue<char *> testable1(&container, "test", (char *)"0123456789");
 
 	JsonValue<char *> clone1(&container, "test");
 
 	testable1.CloneTo((JsonValueBase *)&clone1);
-	testable1.Value = "check the full data buffer is cloned";
-	if (clone1.Value == "0123456789") { printf("1000\n"); }
+	testable1.Value = (char *)"check the full data buffer is cloned";
+	if (clone1.Value == (char *)"0123456789") { printf("1000\n"); }
 }
 
 void JsonStringCommonValue_CloneTo_Test() {
 	JsonFieldsContainer container;
-	JsonCommonValue<char *> testable1(&container, "test", "0123456789");
+	JsonCommonValue<char *> testable1(&container, "test", (char *)"0123456789");
 
 	JsonCommonValue<char *> clone1(&container, "test");
 
 	testable1.CloneTo((JsonValueBase *)&clone1);
-	testable1.Value = "check the full data buffer is cloned";
-	if (clone1.Value == "0123456789") { printf("1000\n"); }
+	testable1.Value = (char *)"check the full data buffer is cloned";
+	if (clone1.Value == (char *)"0123456789") { printf("1000\n"); }
 }
 
 int main(const int argc, const char *argv[]) {

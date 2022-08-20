@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include "JsonWrapper.h"
 
-template <class T> TJsonValue *JsonValue<T>::GetMember(TJsonDocument *doc, const char *name) {
+static TJsonValue *GetMember(TJsonDocument *doc, const char *name) {
 	rapidjson::Value::MemberIterator member = doc->MemberBegin();
 	while (member != doc->MemberEnd()) {
 		auto &memberName = member->name;
@@ -15,73 +15,73 @@ template <class T> TJsonValue *JsonValue<T>::GetMember(TJsonDocument *doc, const
 }
 
 template <> bool JsonValue<bool>::TryParse(TJsonDocument *doc) {
-	auto jsonVal = JsonValue<bool>::GetMember(doc, this->Name);
+	auto jsonVal = GetMember(doc, this->Name);
 	if (jsonVal == NULL || !jsonVal->IsBool()) { return false; }
 	Value = jsonVal->GetBool();
 	return true;
 }
 template <> bool JsonValue<int8_t>::TryParse(TJsonDocument *doc) {
-	auto jsonVal = JsonValue<int8_t>::GetMember(doc, this->Name);
+	auto jsonVal = GetMember(doc, this->Name);
 	if (jsonVal == NULL || !jsonVal->IsInt()) { return false; }
 	Value = jsonVal->GetInt();
 	return true;
 }
 template <> bool JsonValue<int16_t>::TryParse(TJsonDocument *doc) {
-	auto jsonVal = JsonValue<int16_t>::GetMember(doc, this->Name);
+	auto jsonVal = GetMember(doc, this->Name);
 	if (jsonVal == NULL || !jsonVal->IsInt()) { return false; }
 	Value = jsonVal->GetInt();
 	return true;
 }
 template <> bool JsonValue<int32_t>::TryParse(TJsonDocument *doc) {
-	auto jsonVal = JsonValue<int32_t>::GetMember(doc, this->Name);
+	auto jsonVal = GetMember(doc, this->Name);
 	if (jsonVal == NULL || !jsonVal->IsInt()) { return false; }
 	Value = jsonVal->GetInt();
 	return true;
 }
 template <> bool JsonValue<int64_t>::TryParse(TJsonDocument *doc) {
-	auto jsonVal = JsonValue<int64_t>::GetMember(doc, this->Name);
+	auto jsonVal = GetMember(doc, this->Name);
 	if (jsonVal == NULL || !jsonVal->IsInt64()) { return false; }
 	Value = jsonVal->GetInt64();
 	return true;
 }
 template <> bool JsonValue<uint8_t>::TryParse(TJsonDocument *doc) {
-	auto jsonVal = JsonValue<uint8_t>::GetMember(doc, this->Name);
+	auto jsonVal = GetMember(doc, this->Name);
 	if (jsonVal == NULL || !jsonVal->IsUint()) { return false; }
 	Value = jsonVal->GetUint();
 	return true;
 }
 template <> bool JsonValue<uint16_t>::TryParse(TJsonDocument *doc) {
-	auto jsonVal = JsonValue<uint16_t>::GetMember(doc, this->Name);
+	auto jsonVal = GetMember(doc, this->Name);
 	if (jsonVal == NULL || !jsonVal->IsUint()) { return false; }
 	Value = jsonVal->GetUint();
 	return true;
 }
 template <> bool JsonValue<uint32_t>::TryParse(TJsonDocument *doc) {
-	auto jsonVal = JsonValue<uint32_t>::GetMember(doc, this->Name);
+	auto jsonVal = GetMember(doc, this->Name);
 	if (jsonVal == NULL || !jsonVal->IsUint()) { return false; }
 	Value = jsonVal->GetUint();
 	return true;
 }
 template <> bool JsonValue<uint64_t>::TryParse(TJsonDocument *doc) {
-	auto jsonVal = JsonValue<uint64_t>::GetMember(doc, this->Name);
+	auto jsonVal = GetMember(doc, this->Name);
 	if (jsonVal == NULL || !jsonVal->IsUint64()) { return false; }
 	Value = jsonVal->GetUint64();
 	return true;
 }
 template <> bool JsonValue<float>::TryParse(TJsonDocument *doc) {
-	auto jsonVal = JsonValue<float>::GetMember(doc, this->Name);
+	auto jsonVal = GetMember(doc, this->Name);
 	if (jsonVal == NULL || !jsonVal->IsFloat()) { return false; }
 	Value = (float)jsonVal->GetFloat();
 	return true;
 }
 template <> bool JsonValue<double>::TryParse(TJsonDocument *doc) {
-	auto jsonVal = JsonValue<double>::GetMember(doc, this->Name);
+	auto jsonVal = GetMember(doc, this->Name);
 	if (jsonVal == NULL || !jsonVal->IsDouble()) { return false; }
 	Value = jsonVal->GetDouble();
 	return true;
 }
 template <> bool JsonValue<char *>::TryParse(TJsonDocument *doc) {
-	auto jsonVal = JsonValue<char *>::GetMember(doc, this->Name);
+	auto jsonVal = GetMember(doc, this->Name);
 	if (jsonVal == NULL) { return false; }
 	if (!jsonVal->IsString()) {
 		if (jsonVal->IsNull()) {
@@ -98,7 +98,7 @@ template <> bool JsonValue<char *>::TryParse(TJsonDocument *doc) {
 	return true;
 }
 template <> bool JsonValue<TJsonRawData>::TryParse(TJsonDocument *doc) {
-	auto jsonVal = JsonValue<TJsonRawData>::GetMember(doc, this->Name);
+	auto jsonVal = GetMember(doc, this->Name);
 	if (jsonVal == NULL) { return false; }
 	if (!jsonVal->IsString()) {
 		if (jsonVal->IsNull()) {
@@ -112,61 +112,13 @@ template <> bool JsonValue<TJsonRawData>::TryParse(TJsonDocument *doc) {
 	return true;
 }
 template <> bool JsonValue<JsonObject *>::TryParse(TJsonDocument *doc) {
-	auto jsonVal = JsonValue<JsonObject *>::GetMember(doc, this->Name);
+	auto jsonVal = GetMember(doc, this->Name);
 	return jsonVal != NULL && jsonVal->IsObject() && (/*jsonVal->ObjectEmpty() ||*/ Value->TryParse((TJsonDocument *)jsonVal));
 }
 template <> bool JsonValue<JsonArrayBase *>::TryParse(TJsonDocument *doc) {
-	auto jsonVal = JsonValue<JsonArrayBase *>::GetMember(doc, this->Name);
+	auto jsonVal = GetMember(doc, this->Name);
 	return jsonVal != NULL && jsonVal->IsArray() && Value->TryDocParse((TJsonDocument *)jsonVal);
 }
-/*
-
-
-*/
-bool operator!=(const JsonValue<bool> &v1, const JsonValue<bool> &v2) { return !((JsonValueBase *)&v1)->Equals((JsonValueBase *)&v2); }
-bool operator==(const JsonValue<bool> &v1, const JsonValue<bool> &v2) { return !(v1 != v2); }
-
-bool operator!=(const JsonValue<int8_t> &v1, const JsonValue<int8_t> &v2) { return !((JsonValueBase *)&v1)->Equals((JsonValueBase *)&v2); }
-bool operator==(const JsonValue<int8_t> &v1, const JsonValue<int8_t> &v2) { return !(v1 != v2); }
-
-bool operator!=(const JsonValue<int16_t> &v1, const JsonValue<int16_t> &v2) { return !((JsonValueBase *)&v1)->Equals((JsonValueBase *)&v2); }
-bool operator==(const JsonValue<int16_t> &v1, const JsonValue<int16_t> &v2) { return !(v1 != v2); }
-
-bool operator!=(const JsonValue<int32_t> &v1, const JsonValue<int32_t> &v2) { return !((JsonValueBase *)&v1)->Equals((JsonValueBase *)&v2); }
-bool operator==(const JsonValue<int32_t> &v1, const JsonValue<int32_t> &v2) { return !(v1 != v2); }
-
-bool operator!=(const JsonValue<int64_t> &v1, const JsonValue<int64_t> &v2) { return !((JsonValueBase *)&v1)->Equals((JsonValueBase *)&v2); }
-bool operator==(const JsonValue<int64_t> &v1, const JsonValue<int64_t> &v2) { return !(v1 != v2); }
-
-bool operator!=(const JsonValue<uint8_t> &v1, const JsonValue<uint8_t> &v2) { return !((JsonValueBase *)&v1)->Equals((JsonValueBase *)&v2); }
-bool operator==(const JsonValue<uint8_t> &v1, const JsonValue<uint8_t> &v2) { return !(v1 != v2); }
-
-bool operator!=(const JsonValue<uint16_t> &v1, const JsonValue<uint16_t> &v2) { return !((JsonValueBase *)&v1)->Equals((JsonValueBase *)&v2); }
-bool operator==(const JsonValue<uint16_t> &v1, const JsonValue<uint16_t> &v2) { return !(v1 != v2); }
-
-bool operator!=(const JsonValue<uint32_t> &v1, const JsonValue<uint32_t> &v2) { return !((JsonValueBase *)&v1)->Equals((JsonValueBase *)&v2); }
-bool operator==(const JsonValue<uint32_t> &v1, const JsonValue<uint32_t> &v2) { return !(v1 != v2); }
-
-bool operator!=(const JsonValue<uint64_t> &v1, const JsonValue<uint64_t> &v2) { return !((JsonValueBase *)&v1)->Equals((JsonValueBase *)&v2); }
-bool operator==(const JsonValue<uint64_t> &v1, const JsonValue<uint64_t> &v2) { return !(v1 != v2); }
-
-bool operator!=(const JsonValue<float> &v1, const JsonValue<float> &v2) { return !((JsonValueBase *)&v1)->Equals((JsonValueBase *)&v2); }
-bool operator==(const JsonValue<float> &v1, const JsonValue<float> &v2) { return !(v1 != v2); }
-
-bool operator!=(const JsonValue<double> &v1, const JsonValue<double> &v2) { return !((JsonValueBase *)&v1)->Equals((JsonValueBase *)&v2); }
-bool operator==(const JsonValue<double> &v1, const JsonValue<double> &v2) { return !(v1 != v2); }
-
-bool operator!=(const JsonValue<char *> &v1, const JsonValue<char *> &v2) { return !((JsonValueBase *)&v1)->Equals((JsonValueBase *)&v2); }
-bool operator==(const JsonValue<char *> &v1, const JsonValue<char *> &v2) { return !(v1 != v2); }
-
-bool operator!=(const JsonValue<TJsonRawData> &v1, const JsonValue<TJsonRawData> &v2) { return !((JsonValueBase *)&v1)->Equals((JsonValueBase *)&v2); }
-bool operator==(const JsonValue<TJsonRawData> &v1, const JsonValue<TJsonRawData> &v2) { return !(v1 != v2); }
-
-bool operator!=(const JsonValue<JsonObject *> &v1, const JsonValue<JsonObject *> &v2) { return !((JsonValueBase *)&v1)->Equals((JsonValueBase *)&v2); }
-bool operator==(const JsonValue<JsonObject *> &v1, const JsonValue<JsonObject *> &v2) { return !(v1 != v2); }
-
-bool operator!=(const JsonValue<JsonArrayBase *> &v1, const JsonValue<JsonArrayBase *> &v2) { return !((JsonValueBase *)&v1)->Equals((JsonValueBase *)&v2); }
-bool operator==(const JsonValue<JsonArrayBase *> &v1, const JsonValue<JsonArrayBase *> &v2) { return !(v1 != v2); }
 /*
 
 

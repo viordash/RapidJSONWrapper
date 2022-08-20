@@ -40,11 +40,10 @@ template <class T> class JsonValue : public JsonValueBase {
 	bool Equals(JsonValueBase *other) override final;
 	void CloneTo(JsonValueBase *other) override final;
 
-	friend bool operator!=(const JsonValue<T> &v1, const JsonValue<T> &v2);
-	friend bool operator==(const JsonValue<T> &v1, const JsonValue<T> &v2);
+	friend bool operator!=(const JsonValue<T> &v1, const JsonValue<T> &v2){ return !((JsonValueBase *)&v1)->Equals((JsonValueBase *)&v2); }
+	friend bool operator==(const JsonValue<T> &v1, const JsonValue<T> &v2){ return !(v1 != v2); }
 
   protected:
-	static TJsonValue *GetMember(TJsonDocument *doc, const char *name);
 };
 
 class JsonObject : public JsonFieldsContainer {
