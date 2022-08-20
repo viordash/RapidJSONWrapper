@@ -70,8 +70,8 @@ template <> bool JsonValue<uint64_t>::TryParse(TJsonDocument *doc) {
 }
 template <> bool JsonValue<float>::TryParse(TJsonDocument *doc) {
 	auto jsonVal = JsonValue<float>::GetMember(doc, this->Name);
-	if (jsonVal == NULL || !jsonVal->IsDouble()) { return false; }
-	Value = (float)jsonVal->GetDouble();
+	if (jsonVal == NULL || !jsonVal->IsFloat()) { return false; }
+	Value = (float)jsonVal->GetFloat();
 	return true;
 }
 template <> bool JsonValue<double>::TryParse(TJsonDocument *doc) {
@@ -117,7 +117,7 @@ template <> bool JsonValue<JsonObject *>::TryParse(TJsonDocument *doc) {
 }
 template <> bool JsonValue<JsonArrayBase *>::TryParse(TJsonDocument *doc) {
 	auto jsonVal = JsonValue<JsonArrayBase *>::GetMember(doc, this->Name);
-	return jsonVal != NULL && jsonVal->IsArray() && Value->TryParse((TJsonDocument *)jsonVal);
+	return jsonVal != NULL && jsonVal->IsArray() && Value->TryDocParse((TJsonDocument *)jsonVal);
 }
 /*
 

@@ -8,7 +8,7 @@ JsonObjectsArray::~JsonObjectsArray() {
 	for (const auto &item : Items) { DeleteItem(item); }
 }
 
-bool JsonObjectsArray::TryParse(TJsonDocument *doc) {
+bool JsonObjectsArray::TryDocParse(TJsonDocument *doc) {
 	if (!doc->IsArray()) { return false; }
 	auto jArray = doc->GetArray();
 	Items.reserve(jArray.Size());
@@ -24,31 +24,6 @@ bool JsonObjectsArray::TryParse(TJsonDocument *doc) {
 	Items.shrink_to_fit();
 	return true;
 }
-
-bool JsonObjectsArray::TryParse(const char *jsonStr, size_t length) {
-	auto doc = BeginTryParse(jsonStr, length);
-	if (doc == NULL) { return false; }
-	EndTryParse(doc);
-	return true;
-}
-
-TJsonDocument *JsonObjectsArray::BeginTryParse(const char *jsonStr, size_t length) {
-	if (jsonStr == NULL) { return NULL; }
-
-	rapidjson::Document *doc = new rapidjson::Document();
-	if (length == 0) {
-		doc->Parse(jsonStr);
-	} else {
-		doc->Parse(jsonStr, length);
-	}
-	if (doc->HasParseError() || !this->TryParse(doc)) {
-		delete doc;
-		return NULL;
-	}
-	return doc;
-}
-
-void JsonObjectsArray::EndTryParse(TJsonDocument *doc) { delete doc; }
 
 bool JsonObjectsArray::Add(JsonObject *item) {
 	if (!Validate(item)) { return false; }
@@ -94,34 +69,6 @@ void JsonObjectsArray::WriteToDoc(TJsonDocument *doc) {
 		jObject->WriteToDoc(&childDoc);
 		doc->PushBack(childDoc, allocator);
 	}
-}
-
-size_t JsonObjectsArray::WriteToString(char *outBuffer, size_t outBufferSize) {
-	rapidjson::Document doc;
-	this->WriteToDoc(&doc);
-	rapidjson::StringBuffer buffer;
-	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-	doc.Accept(writer);
-
-	const char *jsonStr = buffer.GetString();
-	size_t size = buffer.GetSize();
-	if (size > outBufferSize - 1) { size = outBufferSize - 1; }
-	strncpy(outBuffer, jsonStr, size);
-	outBuffer[size] = 0;
-	return size;
-}
-
-size_t JsonObjectsArray::DirectWriteTo(void *parent, TOnReady onReady) {
-	rapidjson::Document doc;
-	this->WriteToDoc(&doc);
-	rapidjson::StringBuffer buffer;
-	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-	doc.Accept(writer);
-
-	const char *json = buffer.GetString();
-	size_t size = buffer.GetSize();
-	onReady(parent, json, size);
-	return size;
 }
 
 bool operator!=(const JsonObjectsArray &v1, const JsonObjectsArray &v2) { return !((JsonObjectsArray *)&v1)->Equals((JsonObjectsArray *)&v2); }

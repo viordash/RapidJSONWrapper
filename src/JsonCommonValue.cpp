@@ -271,7 +271,7 @@ template <> bool JsonCommonValue<JsonArrayBase *>::TryParse(TJsonDocument *doc) 
 	}
 	presented = true;
 	if (jsonVal->IsArray()) {
-		Value->TryParse((TJsonDocument *)jsonVal);
+		Value->TryDocParse((TJsonDocument *)jsonVal);
 		isNull = false;
 		return true;
 	}

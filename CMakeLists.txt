@@ -14,6 +14,7 @@ src/ValueProvider.cpp
 src/JsonValue.cpp
 src/JsonCommonValue.cpp
 src/JsonObject.cpp
+src/JsonArrayBase.cpp
 src/JsonArray.cpp
 src/JsonObjectsArray.cpp
 )

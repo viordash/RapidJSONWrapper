@@ -27,6 +27,7 @@ set(CPPUTEST_SOURCE_FILES
 		${CMAKE_CURRENT_SOURCE_DIR}/../src/JsonValue.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/../src/JsonCommonValue.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/../src/JsonObject.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../src/JsonArrayBase.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/../src/JsonArray.cpp	
 		${CMAKE_CURRENT_SOURCE_DIR}/../src/JsonObjectsArray.cpp
 	)
