@@ -27,7 +27,7 @@ static size_t maxCount = 10;
 class UsersList : public JsonObjectsArray {
   public:
 	bool Validate(JsonObject *item) override { return Size() < maxCount && item != NULL && item->Validate(); }
-	JsonObject *CreateInstance() { return new UserDto(); }
+	JsonObject *CreateItem() { return new UserDto(); }
 };
 
 class StringsList : public JsonArray<char *> {

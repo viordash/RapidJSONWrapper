@@ -14,7 +14,7 @@ bool JsonObjectsArray::TryDocParse(TJsonDocument *doc) {
 	Items.reserve(jArray.Size());
 
 	for (const auto &jItem : jArray) {
-		auto newItem = CreateInstance();
+		auto newItem = CreateItem();
 		if (!newItem->TryParse((TJsonDocument *)&jItem) || !Add(newItem)) {
 			delete newItem;
 			Items.shrink_to_fit();
@@ -88,7 +88,7 @@ void JsonObjectsArray::CloneTo(JsonArrayBase *other) {
 	otherArray->Items.clear();
 
 	for (const auto &item : Items) {
-		auto newItem = CreateInstance();
+		auto newItem = CreateItem();
 		item->CloneTo(newItem);
 		otherArray->AddInternal(newItem);
 	}

@@ -132,7 +132,7 @@ class JsonObjectsArray : public JsonArrayBase {
   protected:
 	std::vector<JsonObject *> Items;
 	virtual bool Validate(JsonObject *item) = 0;
-	virtual JsonObject *CreateInstance() = 0;
+	virtual JsonObject *CreateItem() = 0;
 	void DeleteItem(JsonObject *item);
 
   private:
