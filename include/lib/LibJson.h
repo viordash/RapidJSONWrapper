@@ -65,7 +65,6 @@ class JsonValueBase {
 template <class T> struct ValueProvider {
   public:
 	ValueProvider(const T value) { InitValue(value); }
-	~ValueProvider() { DeleteValue(); }
 
 	T operator=(const T right) {
 		SetValue(right);
@@ -80,6 +79,7 @@ template <class T> struct ValueProvider {
 
 	T value;
 
+	~ValueProvider() { DeleteValue(); }
 	void InitValue(T value);
 	void DeleteValue();
 	virtual void SetValue(T value) {
@@ -91,7 +91,6 @@ template <class T> struct ValueProvider {
 template <class T> struct CommonValueProvider : public ValueProvider<T> {
   public:
 	CommonValueProvider(const T value) : ValueProvider<T>(value), isNull(false) {}
-	~CommonValueProvider() {}
 
 	T operator=(const T right) {
 		SetValue(right);
@@ -103,6 +102,7 @@ template <class T> struct CommonValueProvider : public ValueProvider<T> {
   protected:
 	template <class> friend class JsonCommonValue;
 
+	~CommonValueProvider() {}
 	void SetValue(T value) override final;
 	bool isNull;
 };
