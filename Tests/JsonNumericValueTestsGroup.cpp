@@ -487,163 +487,6 @@ TEST(JsonNumericValueGroup, JsonBoolField_CloneTo_Test) {
 
 
 */
-TEST(JsonNumericValueGroup, JsonUIntField_Common_TryParse_Test) {
-	JsonFieldsContainer container;
-	JsonCommonValue<unsigned int> testable1(&container, "test", 100);
-	JsonCommonValue<uint32_t> testable2(&container, "test", 101);
-	JsonCommonValue<uint16_t> testable3(&container, "test", 102);
-	JsonCommonValue<uint8_t> testable4(&container, "test", 103);
-
-	CHECK_FALSE(testable1.Presented());
-	CHECK_FALSE(testable2.Presented());
-	CHECK_FALSE(testable3.Presented());
-	CHECK_FALSE(testable4.Presented());
-	CHECK_FALSE(testable1.IsNull());
-	CHECK_FALSE(testable2.IsNull());
-	CHECK_FALSE(testable3.IsNull());
-	CHECK_FALSE(testable4.IsNull());
-
-	rapidjson::Document doc;
-	doc.Parse("{\"testOther\":42}");
-	CHECK_TRUE(testable1.TryParse(&doc));
-	CHECK_TRUE(testable2.TryParse(&doc));
-	CHECK_TRUE(testable3.TryParse(&doc));
-	CHECK_TRUE(testable4.TryParse(&doc));
-	CHECK_FALSE(testable1.Presented());
-	CHECK_FALSE(testable2.Presented());
-	CHECK_FALSE(testable3.Presented());
-	CHECK_FALSE(testable4.Presented());
-	CHECK_FALSE(testable1.IsNull());
-	CHECK_FALSE(testable2.IsNull());
-	CHECK_FALSE(testable3.IsNull());
-	CHECK_FALSE(testable4.IsNull());
-
-	doc.Parse("{\"test\":42}");
-	CHECK_TRUE(testable1.TryParse(&doc));
-	CHECK_TRUE(testable2.TryParse(&doc));
-	CHECK_TRUE(testable3.TryParse(&doc));
-	CHECK_TRUE(testable4.TryParse(&doc));
-	CHECK_EQUAL(testable1.Value, 42);
-	CHECK_EQUAL(testable2.Value, 42);
-	CHECK_EQUAL(testable3.Value, 42);
-	CHECK_EQUAL(testable4.Value, 42);
-	CHECK_TRUE(testable1.Presented());
-	CHECK_TRUE(testable2.Presented());
-	CHECK_TRUE(testable3.Presented());
-	CHECK_TRUE(testable4.Presented());
-	CHECK_FALSE(testable1.IsNull());
-	CHECK_FALSE(testable2.IsNull());
-	CHECK_FALSE(testable3.IsNull());
-	CHECK_FALSE(testable4.IsNull());
-
-	doc.Parse("{\"test\":null}");
-	CHECK_TRUE(testable1.TryParse(&doc));
-	CHECK_TRUE(testable2.TryParse(&doc));
-	CHECK_TRUE(testable3.TryParse(&doc));
-	CHECK_TRUE(testable4.TryParse(&doc));
-	CHECK_TRUE(testable1.Presented());
-	CHECK_TRUE(testable2.Presented());
-	CHECK_TRUE(testable3.Presented());
-	CHECK_TRUE(testable4.Presented());
-	CHECK_TRUE(testable1.IsNull());
-	CHECK_TRUE(testable2.IsNull());
-	CHECK_TRUE(testable3.IsNull());
-	CHECK_TRUE(testable4.IsNull());
-}
-
-TEST(JsonNumericValueGroup, JsonIntField_Common_TryParse_Test) {
-	JsonFieldsContainer container;
-	JsonCommonValue<int> testable1(&container, "test", 100);
-	JsonCommonValue<int32_t> testable2(&container, "test", 101);
-	JsonCommonValue<int16_t> testable3(&container, "test", 102);
-	JsonCommonValue<int8_t> testable4(&container, "test", 103);
-
-	CHECK_FALSE(testable1.Presented());
-	CHECK_FALSE(testable2.Presented());
-	CHECK_FALSE(testable3.Presented());
-	CHECK_FALSE(testable4.Presented());
-	CHECK_FALSE(testable1.IsNull());
-	CHECK_FALSE(testable2.IsNull());
-	CHECK_FALSE(testable3.IsNull());
-	CHECK_FALSE(testable4.IsNull());
-
-	rapidjson::Document doc;
-	doc.Parse("{\"testOther\":42}");
-	CHECK_TRUE(testable1.TryParse(&doc));
-	CHECK_TRUE(testable2.TryParse(&doc));
-	CHECK_TRUE(testable3.TryParse(&doc));
-	CHECK_TRUE(testable4.TryParse(&doc));
-	CHECK_FALSE(testable1.Presented());
-	CHECK_FALSE(testable2.Presented());
-	CHECK_FALSE(testable3.Presented());
-	CHECK_FALSE(testable4.Presented());
-	CHECK_FALSE(testable1.IsNull());
-	CHECK_FALSE(testable2.IsNull());
-	CHECK_FALSE(testable3.IsNull());
-	CHECK_FALSE(testable4.IsNull());
-
-	doc.Parse("{\"test\":42}");
-	CHECK_TRUE(testable1.TryParse(&doc));
-	CHECK_TRUE(testable2.TryParse(&doc));
-	CHECK_TRUE(testable3.TryParse(&doc));
-	CHECK_TRUE(testable4.TryParse(&doc));
-	CHECK_EQUAL(testable1.Value, 42);
-	CHECK_EQUAL(testable2.Value, 42);
-	CHECK_EQUAL(testable3.Value, 42);
-	CHECK_EQUAL(testable4.Value, 42);
-	CHECK_TRUE(testable1.Presented());
-	CHECK_TRUE(testable2.Presented());
-	CHECK_TRUE(testable3.Presented());
-	CHECK_TRUE(testable4.Presented());
-	CHECK_FALSE(testable1.IsNull());
-	CHECK_FALSE(testable2.IsNull());
-	CHECK_FALSE(testable3.IsNull());
-	CHECK_FALSE(testable4.IsNull());
-
-	doc.Parse("{\"test\":null}");
-	CHECK_TRUE(testable1.TryParse(&doc));
-	CHECK_TRUE(testable2.TryParse(&doc));
-	CHECK_TRUE(testable3.TryParse(&doc));
-	CHECK_TRUE(testable4.TryParse(&doc));
-	CHECK_TRUE(testable1.Presented());
-	CHECK_TRUE(testable2.Presented());
-	CHECK_TRUE(testable3.Presented());
-	CHECK_TRUE(testable4.Presented());
-	CHECK_TRUE(testable1.IsNull());
-	CHECK_TRUE(testable2.IsNull());
-	CHECK_TRUE(testable3.IsNull());
-	CHECK_TRUE(testable4.IsNull());
-}
-
-TEST(JsonNumericValueGroup, JsonBoolField_Common_TryParse_Test) {
-	JsonFieldsContainer container;
-	JsonCommonValue<bool> testable1(&container, "test", false);
-
-	CHECK_FALSE(testable1.Presented());
-	CHECK_FALSE(testable1.IsNull());
-
-	rapidjson::Document doc;
-	doc.Parse("{\"testOther\":true}");
-	CHECK_TRUE(testable1.TryParse(&doc));
-	CHECK_EQUAL(testable1.Value, false);
-	CHECK_FALSE(testable1.Presented());
-	CHECK_FALSE(testable1.IsNull());
-
-	doc.Parse("{\"test\":true}");
-	CHECK_TRUE(testable1.TryParse(&doc));
-	CHECK_EQUAL(testable1.Value, true);
-	CHECK_TRUE(testable1.Presented());
-	CHECK_FALSE(testable1.IsNull());
-
-	doc.Parse("{\"test\":null}");
-	CHECK_TRUE(testable1.TryParse(&doc));
-	CHECK_TRUE(testable1.Presented());
-	CHECK_TRUE(testable1.IsNull());
-}
-/*
-
-
-*/
 TEST(JsonNumericValueGroup, JsonFloatField_SetValue_Test) {
 	JsonFieldsContainer container;
 	JsonValue<float> testable1(&container, "test");
@@ -753,4 +596,505 @@ TEST(JsonNumericValueGroup, JsonFloatField_CloneTo_Test) {
 
 	CHECK_EQUAL(clone1.Value, 100.5);
 	CHECK_EQUAL(clone2.Value, 101.15);
+}
+/*
+
+
+*/
+TEST(JsonNumericValueGroup, JsonUIntField_Common_TryParse_Test) {
+	JsonFieldsContainer container;
+	JsonCommonValue<unsigned int> testable1(&container, "test", 100);
+	JsonCommonValue<uint32_t> testable2(&container, "test", 101);
+	JsonCommonValue<uint16_t> testable3(&container, "test", 102);
+	JsonCommonValue<uint8_t> testable4(&container, "test", 103);
+	JsonCommonValue<uint64_t> testable5(&container, "test", 104);
+
+	CHECK_FALSE(testable1.Presented());
+	CHECK_FALSE(testable2.Presented());
+	CHECK_FALSE(testable3.Presented());
+	CHECK_FALSE(testable4.Presented());
+	CHECK_FALSE(testable5.Presented());
+	CHECK_FALSE(testable1.IsNull());
+	CHECK_FALSE(testable2.IsNull());
+	CHECK_FALSE(testable3.IsNull());
+	CHECK_FALSE(testable4.IsNull());
+	CHECK_FALSE(testable5.IsNull());
+
+	rapidjson::Document doc;
+	doc.Parse("{\"testOther\":42}");
+	CHECK_TRUE(testable1.TryParse(&doc));
+	CHECK_TRUE(testable2.TryParse(&doc));
+	CHECK_TRUE(testable3.TryParse(&doc));
+	CHECK_TRUE(testable4.TryParse(&doc));
+	CHECK_TRUE(testable5.TryParse(&doc));
+	CHECK_FALSE(testable1.Presented());
+	CHECK_FALSE(testable2.Presented());
+	CHECK_FALSE(testable3.Presented());
+	CHECK_FALSE(testable4.Presented());
+	CHECK_FALSE(testable5.Presented());
+	CHECK_FALSE(testable1.IsNull());
+	CHECK_FALSE(testable2.IsNull());
+	CHECK_FALSE(testable3.IsNull());
+	CHECK_FALSE(testable4.IsNull());
+	CHECK_FALSE(testable5.IsNull());
+
+	doc.Parse("{\"test\":42}");
+	CHECK_TRUE(testable1.TryParse(&doc));
+	CHECK_TRUE(testable2.TryParse(&doc));
+	CHECK_TRUE(testable3.TryParse(&doc));
+	CHECK_TRUE(testable4.TryParse(&doc));
+	CHECK_TRUE(testable5.TryParse(&doc));
+	CHECK_EQUAL(testable1.Value, 42);
+	CHECK_EQUAL(testable2.Value, 42);
+	CHECK_EQUAL(testable3.Value, 42);
+	CHECK_EQUAL(testable4.Value, 42);
+	CHECK_EQUAL(testable5.Value, 42);
+	CHECK_TRUE(testable1.Presented());
+	CHECK_TRUE(testable2.Presented());
+	CHECK_TRUE(testable3.Presented());
+	CHECK_TRUE(testable4.Presented());
+	CHECK_TRUE(testable5.Presented());
+	CHECK_FALSE(testable1.IsNull());
+	CHECK_FALSE(testable2.IsNull());
+	CHECK_FALSE(testable3.IsNull());
+	CHECK_FALSE(testable4.IsNull());
+	CHECK_FALSE(testable5.IsNull());
+
+	doc.Parse("{\"test\":null}");
+	CHECK_TRUE(testable1.TryParse(&doc));
+	CHECK_TRUE(testable2.TryParse(&doc));
+	CHECK_TRUE(testable3.TryParse(&doc));
+	CHECK_TRUE(testable4.TryParse(&doc));
+	CHECK_TRUE(testable5.TryParse(&doc));
+	CHECK_TRUE(testable1.Presented());
+	CHECK_TRUE(testable2.Presented());
+	CHECK_TRUE(testable3.Presented());
+	CHECK_TRUE(testable4.Presented());
+	CHECK_TRUE(testable5.Presented());
+	CHECK_TRUE(testable1.IsNull());
+	CHECK_TRUE(testable2.IsNull());
+	CHECK_TRUE(testable3.IsNull());
+	CHECK_TRUE(testable4.IsNull());
+	CHECK_TRUE(testable5.IsNull());
+}
+
+TEST(JsonNumericValueGroup, JsonUIntField_Common_WriteTo_Test) {
+	JsonFieldsContainer container;
+	JsonCommonValue<unsigned int> testable1(&container, "test", 19);
+	JsonCommonValue<uint32_t> testable2(&container, "test", 20);
+	JsonCommonValue<uint16_t> testable3(&container, "test", 21);
+	JsonCommonValue<uint8_t> testable4(&container, "test", 22);
+	JsonCommonValue<uint64_t> testable5(&container, "test", 22);
+
+	{
+		rapidjson::Document doc;
+		doc.SetObject();
+		testable1.WriteToDoc(&doc);
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		STRCMP_EQUAL(buffer.GetString(), "{\"test\":19}");
+	}
+	{
+		rapidjson::Document doc;
+		doc.SetObject();
+		testable1.ResetToNull();
+		testable1.WriteToDoc(&doc);
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		STRCMP_EQUAL(buffer.GetString(), "{\"test\":null}");
+	}
+	{
+		rapidjson::Document doc;
+		doc.SetObject();
+		testable2.WriteToDoc(&doc);
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		STRCMP_EQUAL(buffer.GetString(), "{\"test\":20}");
+	}
+	{
+		rapidjson::Document doc;
+		doc.SetObject();
+		testable2.ResetToNull();
+		testable2.WriteToDoc(&doc);
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		STRCMP_EQUAL(buffer.GetString(), "{\"test\":null}");
+	}
+	{
+		rapidjson::Document doc;
+		doc.SetObject();
+		testable3.WriteToDoc(&doc);
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		STRCMP_EQUAL(buffer.GetString(), "{\"test\":21}");
+	}
+	{
+		rapidjson::Document doc;
+		doc.SetObject();
+		testable3.ResetToNull();
+		testable3.WriteToDoc(&doc);
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		STRCMP_EQUAL(buffer.GetString(), "{\"test\":null}");
+	}
+	{
+		rapidjson::Document doc;
+		doc.SetObject();
+		testable4.WriteToDoc(&doc);
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		STRCMP_EQUAL(buffer.GetString(), "{\"test\":22}");
+	}
+	{
+		rapidjson::Document doc;
+		doc.SetObject();
+		testable4.ResetToNull();
+		testable4.WriteToDoc(&doc);
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		STRCMP_EQUAL(buffer.GetString(), "{\"test\":null}");
+	}
+	{
+		rapidjson::Document doc;
+		doc.SetObject();
+		testable5.WriteToDoc(&doc);
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		STRCMP_EQUAL(buffer.GetString(), "{\"test\":22}");
+	}
+	{
+		rapidjson::Document doc;
+		doc.SetObject();
+		testable5.ResetToNull();
+		testable5.WriteToDoc(&doc);
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		STRCMP_EQUAL(buffer.GetString(), "{\"test\":null}");
+	}
+}
+
+TEST(JsonNumericValueGroup, JsonIntField_Common_TryParse_Test) {
+	JsonFieldsContainer container;
+	JsonCommonValue<int> testable1(&container, "test", 100);
+	JsonCommonValue<int32_t> testable2(&container, "test", 101);
+	JsonCommonValue<int16_t> testable3(&container, "test", 102);
+	JsonCommonValue<int8_t> testable4(&container, "test", 103);
+	JsonCommonValue<int64_t> testable5(&container, "test", 103);
+
+	CHECK_FALSE(testable1.Presented());
+	CHECK_FALSE(testable2.Presented());
+	CHECK_FALSE(testable3.Presented());
+	CHECK_FALSE(testable4.Presented());
+	CHECK_FALSE(testable5.Presented());
+	CHECK_FALSE(testable1.IsNull());
+	CHECK_FALSE(testable2.IsNull());
+	CHECK_FALSE(testable3.IsNull());
+	CHECK_FALSE(testable4.IsNull());
+	CHECK_FALSE(testable5.IsNull());
+
+	rapidjson::Document doc;
+	doc.Parse("{\"testOther\":42}");
+	CHECK_TRUE(testable1.TryParse(&doc));
+	CHECK_TRUE(testable2.TryParse(&doc));
+	CHECK_TRUE(testable3.TryParse(&doc));
+	CHECK_TRUE(testable4.TryParse(&doc));
+	CHECK_TRUE(testable5.TryParse(&doc));
+	CHECK_FALSE(testable1.Presented());
+	CHECK_FALSE(testable2.Presented());
+	CHECK_FALSE(testable3.Presented());
+	CHECK_FALSE(testable4.Presented());
+	CHECK_FALSE(testable5.Presented());
+	CHECK_FALSE(testable1.IsNull());
+	CHECK_FALSE(testable2.IsNull());
+	CHECK_FALSE(testable3.IsNull());
+	CHECK_FALSE(testable4.IsNull());
+	CHECK_FALSE(testable5.IsNull());
+
+	doc.Parse("{\"test\":42}");
+	CHECK_TRUE(testable1.TryParse(&doc));
+	CHECK_TRUE(testable2.TryParse(&doc));
+	CHECK_TRUE(testable3.TryParse(&doc));
+	CHECK_TRUE(testable4.TryParse(&doc));
+	CHECK_TRUE(testable5.TryParse(&doc));
+	CHECK_EQUAL(testable1.Value, 42);
+	CHECK_EQUAL(testable2.Value, 42);
+	CHECK_EQUAL(testable3.Value, 42);
+	CHECK_EQUAL(testable4.Value, 42);
+	CHECK_EQUAL(testable5.Value, 42);
+	CHECK_TRUE(testable1.Presented());
+	CHECK_TRUE(testable2.Presented());
+	CHECK_TRUE(testable3.Presented());
+	CHECK_TRUE(testable4.Presented());
+	CHECK_TRUE(testable5.Presented());
+	CHECK_FALSE(testable1.IsNull());
+	CHECK_FALSE(testable2.IsNull());
+	CHECK_FALSE(testable3.IsNull());
+	CHECK_FALSE(testable4.IsNull());
+	CHECK_FALSE(testable5.IsNull());
+
+	doc.Parse("{\"test\":null}");
+	CHECK_TRUE(testable1.TryParse(&doc));
+	CHECK_TRUE(testable2.TryParse(&doc));
+	CHECK_TRUE(testable3.TryParse(&doc));
+	CHECK_TRUE(testable4.TryParse(&doc));
+	CHECK_TRUE(testable5.TryParse(&doc));
+	CHECK_TRUE(testable1.Presented());
+	CHECK_TRUE(testable2.Presented());
+	CHECK_TRUE(testable3.Presented());
+	CHECK_TRUE(testable4.Presented());
+	CHECK_TRUE(testable5.Presented());
+	CHECK_TRUE(testable1.IsNull());
+	CHECK_TRUE(testable2.IsNull());
+	CHECK_TRUE(testable3.IsNull());
+	CHECK_TRUE(testable4.IsNull());
+	CHECK_TRUE(testable5.IsNull());
+}
+
+TEST(JsonNumericValueGroup, JsonIntField_Common_WriteTo_Test) {
+	JsonFieldsContainer container;
+	JsonCommonValue<int> testable1(&container, "test", 19);
+	JsonCommonValue<int32_t> testable2(&container, "test", 20);
+	JsonCommonValue<int16_t> testable3(&container, "test", 21);
+	JsonCommonValue<int8_t> testable4(&container, "test", 22);
+	JsonCommonValue<int64_t> testable5(&container, "test", 22);
+
+	{
+		rapidjson::Document doc;
+		doc.SetObject();
+		testable1.WriteToDoc(&doc);
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		STRCMP_EQUAL(buffer.GetString(), "{\"test\":19}");
+	}
+	{
+		rapidjson::Document doc;
+		doc.SetObject();
+		testable1.ResetToNull();
+		testable1.WriteToDoc(&doc);
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		STRCMP_EQUAL(buffer.GetString(), "{\"test\":null}");
+	}
+	{
+		rapidjson::Document doc;
+		doc.SetObject();
+		testable2.WriteToDoc(&doc);
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		STRCMP_EQUAL(buffer.GetString(), "{\"test\":20}");
+	}
+	{
+		rapidjson::Document doc;
+		doc.SetObject();
+		testable2.ResetToNull();
+		testable2.WriteToDoc(&doc);
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		STRCMP_EQUAL(buffer.GetString(), "{\"test\":null}");
+	}
+	{
+		rapidjson::Document doc;
+		doc.SetObject();
+		testable3.WriteToDoc(&doc);
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		STRCMP_EQUAL(buffer.GetString(), "{\"test\":21}");
+	}
+	{
+		rapidjson::Document doc;
+		doc.SetObject();
+		testable3.ResetToNull();
+		testable3.WriteToDoc(&doc);
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		STRCMP_EQUAL(buffer.GetString(), "{\"test\":null}");
+	}
+	{
+		rapidjson::Document doc;
+		doc.SetObject();
+		testable4.WriteToDoc(&doc);
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		STRCMP_EQUAL(buffer.GetString(), "{\"test\":22}");
+	}
+	{
+		rapidjson::Document doc;
+		doc.SetObject();
+		testable4.ResetToNull();
+		testable4.WriteToDoc(&doc);
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		STRCMP_EQUAL(buffer.GetString(), "{\"test\":null}");
+	}
+	{
+		rapidjson::Document doc;
+		doc.SetObject();
+		testable5.WriteToDoc(&doc);
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		STRCMP_EQUAL(buffer.GetString(), "{\"test\":22}");
+	}
+	{
+		rapidjson::Document doc;
+		doc.SetObject();
+		testable5.ResetToNull();
+		testable5.WriteToDoc(&doc);
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		STRCMP_EQUAL(buffer.GetString(), "{\"test\":null}");
+	}
+}
+
+TEST(JsonNumericValueGroup, JsonBoolField_Common_TryParse_Test) {
+	JsonFieldsContainer container;
+	JsonCommonValue<bool> testable1(&container, "test", false);
+
+	CHECK_FALSE(testable1.Presented());
+	CHECK_FALSE(testable1.IsNull());
+
+	rapidjson::Document doc;
+	doc.Parse("{\"testOther\":true}");
+	CHECK_TRUE(testable1.TryParse(&doc));
+	CHECK_EQUAL(testable1.Value, false);
+	CHECK_FALSE(testable1.Presented());
+	CHECK_FALSE(testable1.IsNull());
+
+	doc.Parse("{\"test\":true}");
+	CHECK_TRUE(testable1.TryParse(&doc));
+	CHECK_EQUAL(testable1.Value, true);
+	CHECK_TRUE(testable1.Presented());
+	CHECK_FALSE(testable1.IsNull());
+
+	doc.Parse("{\"test\":null}");
+	CHECK_TRUE(testable1.TryParse(&doc));
+	CHECK_TRUE(testable1.Presented());
+	CHECK_TRUE(testable1.IsNull());
+}
+
+TEST(JsonNumericValueGroup, JsonBoolField_Common_WriteTo_Test) {
+	JsonFieldsContainer container;
+	JsonCommonValue<bool> testable1(&container, "test", true);
+
+	{
+		rapidjson::Document doc;
+		doc.SetObject();
+		testable1.WriteToDoc(&doc);
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		STRCMP_EQUAL(buffer.GetString(), "{\"test\":true}");
+	}
+	{
+		rapidjson::Document doc;
+		doc.SetObject();
+		testable1.ResetToNull();
+		testable1.WriteToDoc(&doc);
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		STRCMP_EQUAL(buffer.GetString(), "{\"test\":null}");
+	}
+}
+
+TEST(JsonNumericValueGroup, JsonFloatField_Common_TryParse_Test) {
+	JsonFieldsContainer container;
+	JsonCommonValue<float> testable1(&container, "test", 100);
+	JsonCommonValue<double> testable2(&container, "test", 101);
+
+	CHECK_FALSE(testable1.Presented());
+	CHECK_FALSE(testable2.Presented());
+	CHECK_FALSE(testable1.IsNull());
+	CHECK_FALSE(testable2.IsNull());
+
+	rapidjson::Document doc;
+	doc.Parse("{\"testOther\":42.0}");
+	CHECK_TRUE(testable1.TryParse(&doc));
+	CHECK_TRUE(testable2.TryParse(&doc));
+	CHECK_FALSE(testable1.Presented());
+	CHECK_FALSE(testable2.Presented());
+	CHECK_FALSE(testable1.IsNull());
+	CHECK_FALSE(testable2.IsNull());
+
+	doc.Parse("{\"test\":42.0}");
+	CHECK_TRUE(testable1.TryParse(&doc));
+	CHECK_TRUE(testable2.TryParse(&doc));
+	CHECK_EQUAL(testable1.Value, 42);
+	CHECK_EQUAL(testable2.Value, 42);
+	CHECK_TRUE(testable1.Presented());
+	CHECK_TRUE(testable2.Presented());
+	CHECK_FALSE(testable1.IsNull());
+	CHECK_FALSE(testable2.IsNull());
+
+	doc.Parse("{\"test\":null}");
+	CHECK_TRUE(testable1.TryParse(&doc));
+	CHECK_TRUE(testable2.TryParse(&doc));
+	CHECK_TRUE(testable1.Presented());
+	CHECK_TRUE(testable2.Presented());
+	CHECK_TRUE(testable1.IsNull());
+	CHECK_TRUE(testable2.IsNull());
+}
+
+TEST(JsonNumericValueGroup, JsonFloatField_Common_WriteTo_Test) {
+	JsonFieldsContainer container;
+	JsonCommonValue<float> testable1(&container, "test", 19);
+	JsonCommonValue<double> testable2(&container, "test", 20);
+
+	{
+		rapidjson::Document doc;
+		doc.SetObject();
+		testable1.WriteToDoc(&doc);
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		STRCMP_EQUAL(buffer.GetString(), "{\"test\":19.0}");
+	}
+	{
+		rapidjson::Document doc;
+		doc.SetObject();
+		testable1.ResetToNull();
+		testable1.WriteToDoc(&doc);
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		STRCMP_EQUAL(buffer.GetString(), "{\"test\":null}");
+	}
+	{
+		rapidjson::Document doc;
+		doc.SetObject();
+		testable2.WriteToDoc(&doc);
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		STRCMP_EQUAL(buffer.GetString(), "{\"test\":20.0}");
+	}
+	{
+		rapidjson::Document doc;
+		doc.SetObject();
+		testable2.ResetToNull();
+		testable2.WriteToDoc(&doc);
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		STRCMP_EQUAL(buffer.GetString(), "{\"test\":null}");
+	}
 }

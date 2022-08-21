@@ -294,6 +294,148 @@ template <> bool JsonCommonValue<JsonArrayBase *>::TryParse(TJsonDocument *doc) 
 /*
 
 
+*/
+template <> void JsonCommonValue<bool>::WriteToDoc(TJsonDocument *doc) {
+	rapidjson::Value json_val;
+	if (isNull) {
+		json_val.SetNull();
+	} else {
+		json_val.SetBool(Value);
+	}
+	doc->AddMember(Name, json_val, doc->GetAllocator());
+}
+template <> void JsonCommonValue<int8_t>::WriteToDoc(TJsonDocument *doc) {
+	rapidjson::Value json_val;
+	if (isNull) {
+		json_val.SetNull();
+	} else {
+		json_val.SetInt(Value);
+	}
+	doc->AddMember(Name, json_val, doc->GetAllocator());
+}
+template <> void JsonCommonValue<int16_t>::WriteToDoc(TJsonDocument *doc) {
+	rapidjson::Value json_val;
+	if (isNull) {
+		json_val.SetNull();
+	} else {
+		json_val.SetInt(Value);
+	}
+	doc->AddMember(Name, json_val, doc->GetAllocator());
+}
+template <> void JsonCommonValue<int32_t>::WriteToDoc(TJsonDocument *doc) {
+	rapidjson::Value json_val;
+	if (isNull) {
+		json_val.SetNull();
+	} else {
+		json_val.SetInt(Value);
+	}
+	doc->AddMember(Name, json_val, doc->GetAllocator());
+}
+template <> void JsonCommonValue<int64_t>::WriteToDoc(TJsonDocument *doc) {
+	rapidjson::Value json_val;
+	if (isNull) {
+		json_val.SetNull();
+	} else {
+		json_val.SetInt64(Value);
+	}
+	doc->AddMember(Name, json_val, doc->GetAllocator());
+}
+template <> void JsonCommonValue<uint8_t>::WriteToDoc(TJsonDocument *doc) {
+	rapidjson::Value json_val;
+	if (isNull) {
+		json_val.SetNull();
+	} else {
+		json_val.SetUint(Value);
+	}
+	doc->AddMember(Name, json_val, doc->GetAllocator());
+}
+template <> void JsonCommonValue<uint16_t>::WriteToDoc(TJsonDocument *doc) {
+	rapidjson::Value json_val;
+	if (isNull) {
+		json_val.SetNull();
+	} else {
+		json_val.SetUint(Value);
+	}
+	doc->AddMember(Name, json_val, doc->GetAllocator());
+}
+template <> void JsonCommonValue<uint32_t>::WriteToDoc(TJsonDocument *doc) {
+	rapidjson::Value json_val;
+	if (isNull) {
+		json_val.SetNull();
+	} else {
+		json_val.SetUint(Value);
+	}
+	doc->AddMember(Name, json_val, doc->GetAllocator());
+}
+template <> void JsonCommonValue<uint64_t>::WriteToDoc(TJsonDocument *doc) {
+	rapidjson::Value json_val;
+	if (isNull) {
+		json_val.SetNull();
+	} else {
+		json_val.SetUint64(Value);
+	}
+	doc->AddMember(Name, json_val, doc->GetAllocator());
+}
+template <> void JsonCommonValue<float>::WriteToDoc(TJsonDocument *doc) {
+	rapidjson::Value json_val;
+	if (isNull) {
+		json_val.SetNull();
+	} else {
+		json_val.SetFloat(Value);
+	}
+	doc->AddMember(Name, json_val, doc->GetAllocator());
+}
+template <> void JsonCommonValue<double>::WriteToDoc(TJsonDocument *doc) {
+	rapidjson::Value json_val;
+	if (isNull) {
+		json_val.SetNull();
+	} else {
+		json_val.SetDouble(Value);
+	}
+	doc->AddMember(Name, json_val, doc->GetAllocator());
+}
+template <> void JsonCommonValue<char *>::WriteToDoc(TJsonDocument *doc) {
+	rapidjson::Value json_val;
+	if (isNull || Value == NULL) {
+		json_val.SetNull();
+	} else {
+		json_val.SetString(rapidjson::StringRef((char *)Value));
+	}
+	doc->AddMember(Name, json_val, doc->GetAllocator());
+}
+template <> void JsonCommonValue<TJsonRawData>::WriteToDoc(TJsonDocument *doc) {
+	rapidjson::Value json_val;
+	TJsonRawData rawData = Value;
+	if (isNull || rawData.Data == NULL) {
+		json_val.SetNull();
+	} else {
+		json_val.SetString(rapidjson::StringRef((char *)rawData.Data, (rapidjson::SizeType)rawData.Size));
+	}
+	doc->AddMember(Name, json_val, doc->GetAllocator());
+}
+template <> void JsonCommonValue<JsonObject *>::WriteToDoc(TJsonDocument *doc) {
+	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
+	rapidjson::Document jObject(&allocator);
+	if (isNull || Value == NULL) {
+		jObject.SetNull();
+	} else {
+		Value->WriteToDoc(&jObject);
+	}
+	doc->AddMember(Name, jObject, allocator);
+}
+template <> void JsonCommonValue<JsonArrayBase *>::WriteToDoc(TJsonDocument *doc) {
+	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
+	rapidjson::Document jArray(&allocator);
+	if (isNull || Value == NULL) {
+		jArray.SetNull();
+	} else {
+		Value->WriteToDoc(&jArray);
+	}
+	doc->AddMember(Name, jArray, allocator);
+}
+/*
+
+
 
 */
 template <> bool JsonCommonValue<bool>::IsNull() { return isNull; }
@@ -311,3 +453,26 @@ template <> bool JsonCommonValue<char *>::IsNull() { return isNull || (char *)Va
 template <> bool JsonCommonValue<TJsonRawData>::IsNull() { return isNull; }
 template <> bool JsonCommonValue<JsonObject *>::IsNull() { return isNull; }
 template <> bool JsonCommonValue<JsonArrayBase *>::IsNull() { return isNull; }
+/*
+
+
+
+*/
+template <> void JsonCommonValue<bool>::ResetToNull() { isNull = true; }
+template <> void JsonCommonValue<int8_t>::ResetToNull() { isNull = true; }
+template <> void JsonCommonValue<int16_t>::ResetToNull() { isNull = true; }
+template <> void JsonCommonValue<int32_t>::ResetToNull() { isNull = true; }
+template <> void JsonCommonValue<int64_t>::ResetToNull() { isNull = true; }
+template <> void JsonCommonValue<uint8_t>::ResetToNull() { isNull = true; }
+template <> void JsonCommonValue<uint16_t>::ResetToNull() { isNull = true; }
+template <> void JsonCommonValue<uint32_t>::ResetToNull() { isNull = true; }
+template <> void JsonCommonValue<uint64_t>::ResetToNull() { isNull = true; }
+template <> void JsonCommonValue<float>::ResetToNull() { isNull = true; }
+template <> void JsonCommonValue<double>::ResetToNull() { isNull = true; }
+template <> void JsonCommonValue<char *>::ResetToNull() {
+	isNull = true;
+	Value = NULL;
+}
+template <> void JsonCommonValue<TJsonRawData>::ResetToNull() { isNull = true; }
+template <> void JsonCommonValue<JsonObject *>::ResetToNull() { isNull = true; }
+template <> void JsonCommonValue<JsonArrayBase *>::ResetToNull() { isNull = true; }

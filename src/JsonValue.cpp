@@ -187,7 +187,6 @@ template <> void JsonValue<TJsonRawData>::WriteToDoc(TJsonDocument *doc) {
 template <> void JsonValue<JsonObject *>::WriteToDoc(TJsonDocument *doc) {
 	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
 	rapidjson::Document jObject(&allocator);
-	jObject.SetObject();
 	Value->WriteToDoc(&jObject);
 	doc->AddMember(Name, jObject, allocator);
 }
