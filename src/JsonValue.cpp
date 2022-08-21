@@ -123,7 +123,7 @@ template <> bool JsonValue<JsonArrayBase *>::TryParse(TJsonDocument *doc) {
 
 
 */
-static bool NamesCompare(const char *name1, const char *name2) { return name1 == name2 || strcmp(name1, name1) == 0; };
+static bool NamesCompare(const char *name1, const char *name2) { return name1 == name2 || strcmp(name1, name2) == 0; };
 template <> bool JsonValue<bool>::Equals(JsonValueBase *other) { return NamesCompare(Name, other->Name) && Value == ((JsonValue<bool> *)other)->Value; }
 template <> bool JsonValue<int8_t>::Equals(JsonValueBase *other) { return NamesCompare(Name, other->Name) && Value == ((JsonValue<int8_t> *)other)->Value; }
 template <> bool JsonValue<int16_t>::Equals(JsonValueBase *other) { return NamesCompare(Name, other->Name) && Value == ((JsonValue<int16_t> *)other)->Value; }

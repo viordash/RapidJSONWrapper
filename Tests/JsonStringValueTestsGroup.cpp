@@ -65,21 +65,30 @@ TEST(JsonStringValueGroup, JsonStringValue_Equals_Test) {
 	JsonFieldsContainer container;
 	JsonValue<char *> testable1(&container, "test", "testString");
 	JsonValue<char *> testable01(&container, "test", "testString");
+	JsonValue<char *> testable001(&container, "testOtherField", "testString");
 
 	CHECK_TRUE(testable1 == testable01);
 	CHECK_FALSE(testable1 != testable01);
+	CHECK_TRUE(testable1.Equals(&testable01));
+	CHECK_TRUE(testable01.Equals(&testable1));	
 	testable01.Value = "otherValue";
 	CHECK_TRUE(testable1 != testable01);
 	CHECK_FALSE(testable1 == testable01);
+	CHECK_FALSE(testable1.Equals(&testable01));
+	CHECK_FALSE(testable01.Equals(&testable1));
+	CHECK_FALSE(testable001 == testable1);
+	CHECK_FALSE(testable1 == testable001);
+	CHECK_FALSE(testable001.Equals(&testable1));
+	CHECK_FALSE(testable1.Equals(&testable001));
 
 	JsonValue<char *> testable2(&container, "test");
 	JsonValue<char *> testable02(&container, "test", NULL);
 	CHECK_TRUE(testable2 == testable02);
-
 	testable2.Value = "123";
 	CHECK_FALSE(testable2 == testable02);
 
 	testable2.Value = NULL;
+	CHECK_TRUE(testable2 == testable02);
 	testable02.Value = "123";
 	CHECK_FALSE(testable2 == testable02);
 }
