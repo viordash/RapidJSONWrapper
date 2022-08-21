@@ -70,7 +70,7 @@ TEST(JsonStringValueGroup, JsonStringValue_Equals_Test) {
 	CHECK_TRUE(testable1 == testable01);
 	CHECK_FALSE(testable1 != testable01);
 	CHECK_TRUE(testable1.Equals(&testable01));
-	CHECK_TRUE(testable01.Equals(&testable1));	
+	CHECK_TRUE(testable01.Equals(&testable1));
 	testable01.Value = "otherValue";
 	CHECK_TRUE(testable1 != testable01);
 	CHECK_FALSE(testable1 == testable01);
@@ -117,6 +117,7 @@ TEST(JsonStringValueGroup, JsonStringValue_Common_TryParse_Test) {
 	CHECK_FALSE(testable1.Presented());
 	CHECK_FALSE(testable1.IsNull());
 
+	testable1.ResetToNull();
 	doc.Parse("{\"test\":\"01234\"}");
 	CHECK_TRUE(testable1.TryParse(&doc));
 	STRCMP_EQUAL(testable1.Value, "01234");

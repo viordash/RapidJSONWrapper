@@ -54,7 +54,12 @@ class JsonValueBase {
 	virtual bool Equals(JsonValueBase *other) = 0;
 	virtual void CloneTo(JsonValueBase *other) = 0;
 
+	friend bool operator!=(const JsonValueBase &v1, const JsonValueBase &v2) { return !((JsonValueBase *)&v1)->Equals((JsonValueBase *)&v2); }
+	friend bool operator==(const JsonValueBase &v1, const JsonValueBase &v2) { return !(v1 != v2); }
+
   protected:
+	static TJsonValue *GetMember(TJsonDocument *doc, const char *name);
+	static bool JsonValueBase::NamesCompare(const char *name1, const char *name2);
 };
 
 template <class T> struct ValueProvider {
@@ -69,13 +74,35 @@ template <class T> struct ValueProvider {
 	T operator->() { return value; }
 	operator T() const { return value; }
 
-  private:
+  protected:
 	template <class> friend class JsonValue;
 	template <class> friend class JsonCommonValue;
 
 	T value;
 
 	void InitValue(T value);
-	void SetValue(T value);
 	void DeleteValue();
+	virtual void SetValue(T value) {
+		DeleteValue();
+		InitValue(value);
+	}
+};
+
+template <class T> struct CommonValueProvider : public ValueProvider<T> {
+  public:
+	CommonValueProvider(const T value) : ValueProvider(value), isNull(false) {}
+	~CommonValueProvider() {}
+
+	T operator=(const T right) {
+		SetValue(right);
+		return value;
+	}
+	T operator->() { return value; }
+	operator T() const { return value; }
+
+  protected:
+	template <class> friend class JsonCommonValue;
+
+	void SetValue(T value) override final;
+	bool isNull;
 };

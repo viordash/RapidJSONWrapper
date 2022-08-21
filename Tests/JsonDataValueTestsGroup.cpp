@@ -150,6 +150,8 @@ TEST(JsonDataValueGroup, JsonDataValue_Common_TryParse_Test) {
 	CHECK_FALSE(testable1.Presented());
 	CHECK_FALSE(testable1.IsNull());
 
+	
+	testable1.ResetToNull();
 	doc.Parse("{\"test\":\"01234\"}");
 	CHECK_TRUE(testable1.TryParse(&doc));
 	STRCMP_EQUAL((char *)((TJsonRawData)testable1.Value).Data, "01234");

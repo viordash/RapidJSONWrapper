@@ -17,34 +17,36 @@ template <class T> class JsonValue : public JsonValueBase {
 
 	virtual ~JsonValue() {}
 
-	bool TryParse(TJsonDocument *doc) override;
-	void WriteToDoc(TJsonDocument *doc) override;
+	bool TryParse(TJsonDocument *doc) override final;
+	void WriteToDoc(TJsonDocument *doc) override final;
 
 	bool Equals(JsonValueBase *other) override final;
 	void CloneTo(JsonValueBase *other) override final;
 
-	friend bool operator!=(const JsonValue<T> &v1, const JsonValue<T> &v2) { return !((JsonValueBase *)&v1)->Equals((JsonValueBase *)&v2); }
-	friend bool operator==(const JsonValue<T> &v1, const JsonValue<T> &v2) { return !(v1 != v2); }
-
   protected:
 };
 
-template <class T> class JsonCommonValue : public JsonValue<T> {
+template <class T> class JsonCommonValue : public JsonValueBase {
   public:
-	JsonCommonValue(JsonFieldsContainer *container, size_t nameLen, const char *name, T value = T()) : JsonValue<T>(container, nameLen, name, value), presented(false), isNull(false) {}
+	CommonValueProvider<T> Value;
+
+	JsonCommonValue(JsonFieldsContainer *container, size_t nameLen, const char *name, T value = T()) : JsonValueBase(container, name, nameLen), presented(false), Value(value) {}
 	template <size_t N> JsonCommonValue(JsonFieldsContainer *container, const char (&name)[N], T value = T()) : JsonCommonValue(container, N - 1, name, value) {}
 
 	virtual ~JsonCommonValue() {}
 
 	bool TryParse(TJsonDocument *doc) override final;
 	void WriteToDoc(TJsonDocument *doc) override final;
+
+	bool Equals(JsonValueBase *other) override final;
+	void CloneTo(JsonValueBase *other) override final;
+
 	bool Presented() { return presented; }
 	bool IsNull();
 	void ResetToNull();
 
   protected:
 	bool presented;
-	bool isNull;
 };
 
 class JsonObject : public JsonFieldsContainer {
