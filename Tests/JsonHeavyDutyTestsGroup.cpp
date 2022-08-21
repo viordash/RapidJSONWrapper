@@ -535,19 +535,23 @@ TEST(JsonHeavyDutyTestsGroup, JsonObject_Perfomance_Test) {
 		delete[] DirectWriteTestBuffer;
 	}
 	char text[512];
-	sprintf(text, "wrapper Add dur(mean %u): %.02f us", avgCount, durationAdd / avgCount / 1000.0);
+	sprintf(text, "wrapper 'Add' dur(mean %u): %.02f us", avgCount, durationAdd / avgCount / 1000.0);
 	UT_PRINT(text);
-	sprintf(text, "rapid   Add dur(mean %u): %.02f us", avgCount, rapidDurationAdd / avgCount / 1000.0);
+	sprintf(text, "rapid   'Add' dur(mean %u): %.02f us", avgCount, rapidDurationAdd / avgCount / 1000.0);
 	UT_PRINT(text);
 
-	sprintf(text, "wrapper WriteTo size: %lu, dur(mean %u): %.02f us", size, avgCount, durationDirectWriteTo / avgCount / 1000.0);
+	sprintf(text, "wrapper 'WriteTo' size: %lu, dur(mean %u): %.02f us", size, avgCount, durationDirectWriteTo / avgCount / 1000.0);
 	UT_PRINT(text);
-	sprintf(text, "rapid   WriteTo size: %lu, dur(mean %u): %.02f us", rapidSize, avgCount, rapidDurationDirectWriteTo / avgCount / 1000.0);
+	sprintf(text, "rapid   'WriteTo' size: %lu, dur(mean %u): %.02f us", rapidSize, avgCount, rapidDurationDirectWriteTo / avgCount / 1000.0);
 	UT_PRINT(text);
 
 	sprintf(text, "wrapper TryParse dur(mean %u): %.02f us", avgCount, durationTryParse / avgCount / 1000.0);
 	UT_PRINT(text);
 	sprintf(text, "rapid   TryParse dur(mean %u): %.02f us", avgCount, rapidDurationTryParse / avgCount / 1000.0);
+	UT_PRINT(text);
+
+	sprintf(text, "wrapper to rapid ratio 'Add':%.03f, 'WriteTo':%.03f, 'TryParse':%.03f", (double)durationAdd / (double)rapidDurationAdd,
+			(double)durationDirectWriteTo / (double)rapidDurationDirectWriteTo, (double)durationTryParse / (double)rapidDurationTryParse);
 	UT_PRINT(text);
 
 	CHECK_EQUAL(size, rapidSize);
