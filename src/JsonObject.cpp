@@ -7,7 +7,7 @@
 JsonValueBase *JsonFieldsContainer::GetField(const char *name) {
 	for (std::vector<JsonValueBase *>::iterator item = Fields.begin(); item != Fields.end(); item++) {
 		auto field = *item;
-		if (strcmp(field->Name, name) == 0) { return field; }
+		if (field->Name == name || strcmp(field->Name, name) == 0) { return field; }
 	}
 	return NULL;
 }

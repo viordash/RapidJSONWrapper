@@ -89,6 +89,19 @@ class CustomerDto : public JsonObject {
 		  Orders(this, "orders", &ordersList){};
 };
 
+class ValuesWoInstance : public JsonObject {
+  public:
+	ValuesWoInstance(uint64_t id = {}, char *name = {}, TJsonRawData blob = {}) {
+		new JsonValue<uint64_t>(this, "id", id);
+		new JsonValue<char *>(this, "name", name);
+		new JsonValue<TJsonRawData>(this, "blob", blob);
+	};
+
+	~ValuesWoInstance() {
+		for (const auto &field : Fields) { delete field; }
+	}
+};
+
 TEST(JsonObjectTestsGroup, JsonObject_Parse_Test) {
 	GoodsDto goods;
 	CHECK_TRUE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}"));
@@ -422,4 +435,35 @@ TEST(JsonObjectTestsGroup, JsonObject_Optional_TryParse_Test) {
 	CHECK_FALSE(optionalObjectDto.Goods.IsNull());
 	CHECK_FALSE(optionalObjectDto.User.Presented());
 	CHECK_FALSE(optionalObjectDto.User.IsNull());
+}
+
+TEST(JsonObjectTestsGroup, JsonObject_Values_Without_Instance_Parse_Test) {
+	ValuesWoInstance valuesWoInstance;
+
+	auto doc = valuesWoInstance.BeginTryParse("{\"id\":123,\"name\":\"Tomato\",\"blob\":\"ABCDEFGHIJKLMNOPQR\"}");
+	CHECK(doc != NULL);
+
+	auto id = (JsonValue<uint64_t> *)valuesWoInstance.GetField("id");
+	CHECK_FALSE(id == NULL);
+	CHECK_EQUAL(id->Value, 123);
+
+	auto name = (JsonValue<char *> *)valuesWoInstance.GetField("name");
+	CHECK_FALSE(name == NULL);
+	STRCMP_EQUAL(name->Value, "Tomato");
+
+	auto blob = (JsonValue<TJsonRawData> *)valuesWoInstance.GetField("blob");
+	CHECK_FALSE(blob == NULL);
+	STRCMP_EQUAL((char *)((TJsonRawData)(blob->Value)).Data, "ABCDEFGHIJKLMNOPQR");
+
+	auto notExistsValue = (JsonValue<uint32_t> *)valuesWoInstance.GetField("notExistsValue");
+	CHECK_TRUE(notExistsValue == NULL);
+	valuesWoInstance.EndTryParse(doc);
+}
+
+TEST(JsonObjectTestsGroup, JsonObject_Values_Without_Instance_WriteTo_Test) {
+	char buffer[2048];
+	ValuesWoInstance valuesWoInstance(1657052789, "Tomato", {(uint8_t *)"ABCDEFGHIJKLMNOPQR", strlen("ABCDEFGHIJKLMNOPQR")});
+	valuesWoInstance.WriteToString(buffer, sizeof(buffer));
+
+	STRCMP_EQUAL(buffer, "{\"id\":1657052789,\"name\":\"Tomato\",\"blob\":\"ABCDEFGHIJKLMNOPQR\"}");
 }
