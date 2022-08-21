@@ -150,7 +150,7 @@ static TGoodsDto *DeserializeGoodsDto(rapidjson::Value *doc) {
 class GoodsList : public JsonObjectsArray {
   public:
 	bool Validate(JsonObject *item) override { return item->Validate(); }
-	JsonObject *CreateInstance() { return new GoodsDto(); }
+	JsonObject *CreateInstance() override { return new GoodsDto(); }
 };
 
 static void SerializeGoodsList(rapidjson::Writer<rapidjson::StringBuffer> *writer, std::vector<TGoodsDto *> *goods) {
@@ -241,7 +241,7 @@ static TOrderDto *DeserializeOrderDto(rapidjson::Value *doc) {
 class OrdersList : public JsonObjectsArray {
   public:
 	bool Validate(JsonObject *item) override { return item->Validate(); }
-	JsonObject *CreateInstance() { return new OrderDto(); }
+	JsonObject *CreateInstance() override { return new OrderDto(); }
 };
 
 static void SerializeOrdersList(rapidjson::Writer<rapidjson::StringBuffer> *writer, std::vector<TOrderDto *> *orders) {
@@ -329,7 +329,7 @@ static TCustomerDto *DeserializeCustomerDto(rapidjson::Value *doc) {
 class CustomerList : public JsonObjectsArray {
   public:
 	bool Validate(JsonObject *item) override { return item->Validate(); }
-	JsonObject *CreateInstance() { return new CustomerDto(); }
+	JsonObject *CreateInstance() override { return new CustomerDto(); }
 };
 
 static void SerializeCustomerList(rapidjson::Writer<rapidjson::StringBuffer> *writer, std::vector<TCustomerDto *> *customers) {
