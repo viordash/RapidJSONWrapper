@@ -51,21 +51,76 @@ template <> void ValueProvider<JsonArrayBase *>::InitValue(JsonArrayBase *value)
 
 
 */
-template <> void ValueProvider<bool>::SetValue(bool value) { this->value = value; }
-template <> void ValueProvider<int8_t>::SetValue(int8_t value) { this->value = value; }
-template <> void ValueProvider<int16_t>::SetValue(int16_t value) { this->value = value; }
-template <> void ValueProvider<int32_t>::SetValue(int32_t value) { this->value = value; }
-template <> void ValueProvider<int64_t>::SetValue(int64_t value) { this->value = value; }
-template <> void ValueProvider<uint8_t>::SetValue(uint8_t value) { this->value = value; }
-template <> void ValueProvider<uint16_t>::SetValue(uint16_t value) { this->value = value; }
-template <> void ValueProvider<uint32_t>::SetValue(uint32_t value) { this->value = value; }
-template <> void ValueProvider<uint64_t>::SetValue(uint64_t value) { this->value = value; }
-template <> void ValueProvider<float>::SetValue(float value) { this->value = value; }
-template <> void ValueProvider<double>::SetValue(double value) { this->value = value; }
-template <> void ValueProvider<char *>::SetValue(char *value) {
+template <> void CommonValueProvider<bool>::SetValue(bool value) {
 	DeleteValue();
 	InitValue(value);
+	this->isNull = false;
 }
-template <> void ValueProvider<TJsonRawData>::SetValue(TJsonRawData value) { this->value = value; }
-template <> void ValueProvider<JsonObject *>::SetValue(JsonObject *value) { this->value = value; }
-template <> void ValueProvider<JsonArrayBase *>::SetValue(JsonArrayBase *value) { this->value = value; }
+template <> void CommonValueProvider<int8_t>::SetValue(int8_t value) {
+	DeleteValue();
+	InitValue(value);
+	this->isNull = false;
+}
+template <> void CommonValueProvider<int16_t>::SetValue(int16_t value) {
+	DeleteValue();
+	InitValue(value);
+	this->isNull = false;
+}
+template <> void CommonValueProvider<int32_t>::SetValue(int32_t value) {
+	DeleteValue();
+	InitValue(value);
+	this->isNull = false;
+}
+template <> void CommonValueProvider<int64_t>::SetValue(int64_t value) {
+	DeleteValue();
+	InitValue(value);
+	this->isNull = false;
+}
+template <> void CommonValueProvider<uint8_t>::SetValue(uint8_t value) {
+	this->value = value;
+	this->isNull = false;
+}
+template <> void CommonValueProvider<uint16_t>::SetValue(uint16_t value) {
+	DeleteValue();
+	InitValue(value);
+	this->isNull = false;
+}
+template <> void CommonValueProvider<uint32_t>::SetValue(uint32_t value) {
+	this->value = value;
+	this->isNull = false;
+}
+template <> void CommonValueProvider<uint64_t>::SetValue(uint64_t value) {
+	DeleteValue();
+	InitValue(value);
+	this->isNull = false;
+}
+template <> void CommonValueProvider<float>::SetValue(float value) {
+	DeleteValue();
+	InitValue(value);
+	this->isNull = false;
+}
+template <> void CommonValueProvider<double>::SetValue(double value) {
+	DeleteValue();
+	InitValue(value);
+	this->isNull = false;
+}
+template <> void CommonValueProvider<char *>::SetValue(char *value) {
+	DeleteValue();
+	InitValue(value);
+	this->isNull = this->value == NULL;
+}
+template <> void CommonValueProvider<TJsonRawData>::SetValue(TJsonRawData value) {
+	DeleteValue();
+	InitValue(value);
+	this->isNull = this->value.Data == NULL;
+}
+template <> void CommonValueProvider<JsonObject *>::SetValue(JsonObject *value) {
+	DeleteValue();
+	InitValue(value);
+	this->isNull = this->value == NULL;
+}
+template <> void CommonValueProvider<JsonArrayBase *>::SetValue(JsonArrayBase *value) {
+	DeleteValue();
+	InitValue(value);
+	this->isNull = this->value == NULL;
+}

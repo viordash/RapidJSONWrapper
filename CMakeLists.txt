@@ -11,6 +11,7 @@ endif(WIN32)
 
 set(CPP_SOURCE_FILES 
 src/ValueProvider.cpp
+src/JsonValueBase.cpp
 src/JsonValue.cpp
 src/JsonCommonValue.cpp
 src/JsonObject.cpp
