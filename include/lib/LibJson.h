@@ -59,7 +59,7 @@ class JsonValueBase {
 
   protected:
 	static TJsonValue *GetMember(TJsonDocument *doc, const char *name);
-	static bool JsonValueBase::NamesCompare(const char *name1, const char *name2);
+	static bool NamesCompare(const char *name1, const char *name2);
 };
 
 template <class T> struct ValueProvider {
@@ -90,15 +90,15 @@ template <class T> struct ValueProvider {
 
 template <class T> struct CommonValueProvider : public ValueProvider<T> {
   public:
-	CommonValueProvider(const T value) : ValueProvider(value), isNull(false) {}
+	CommonValueProvider(const T value) : ValueProvider<T>(value), isNull(false) {}
 	~CommonValueProvider() {}
 
 	T operator=(const T right) {
 		SetValue(right);
-		return value;
+		return ValueProvider<T>::value;
 	}
-	T operator->() { return value; }
-	operator T() const { return value; }
+	T operator->() { return ValueProvider<T>::value; }
+	operator T() const { return ValueProvider<T>::value; }
 
   protected:
 	template <class> friend class JsonCommonValue;
