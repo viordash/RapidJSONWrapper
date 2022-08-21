@@ -121,39 +121,75 @@ TEST(JsonNumericValueGroup, JsonUIntField_Equals_Test) {
 	JsonFieldsContainer container;
 	JsonValue<unsigned int> testable1(&container, "test", 100);
 	JsonValue<unsigned int> testable01(&container, "test", 100);
+	JsonValue<unsigned int> testable001(&container, "testOtherField", 100);
 
 	JsonValue<uint32_t> testable2(&container, "test", 101);
 	JsonValue<uint32_t> testable02(&container, "test", 101);
+	JsonValue<uint32_t> testable002(&container, "testOtherField", 101);
 
 	JsonValue<uint16_t> testable3(&container, "test", 102);
 	JsonValue<uint16_t> testable03(&container, "test", 102);
+	JsonValue<uint16_t> testable003(&container, "testOtherField", 102);
 
 	JsonValue<uint8_t> testable4(&container, "test", 103);
 	JsonValue<uint8_t> testable04(&container, "test", 103);
+	JsonValue<uint8_t> testable004(&container, "testOtherField", 103);
 
 	CHECK_TRUE(testable1 == testable01);
 	CHECK_FALSE(testable1 != testable01);
+	CHECK_TRUE(testable1.Equals(&testable01));
+	CHECK_TRUE(testable01.Equals(&testable1));
 	testable01.Value = testable01.Value + 1;
 	CHECK_TRUE(testable1 != testable01);
 	CHECK_FALSE(testable1 == testable01);
+	CHECK_FALSE(testable1.Equals(&testable01));
+	CHECK_FALSE(testable01.Equals(&testable1));
+	CHECK_FALSE(testable001 == testable1);
+	CHECK_FALSE(testable1 == testable001);
+	CHECK_FALSE(testable001.Equals(&testable1));
+	CHECK_FALSE(testable1.Equals(&testable001));
 
 	CHECK_TRUE(testable2 == testable02);
 	CHECK_FALSE(testable2 != testable02);
+	CHECK_TRUE(testable2.Equals(&testable02));
+	CHECK_TRUE(testable02.Equals(&testable2));
 	testable02.Value = testable02.Value + 1;
 	CHECK_TRUE(testable2 != testable02);
 	CHECK_FALSE(testable2 == testable02);
+	CHECK_FALSE(testable2.Equals(&testable02));
+	CHECK_FALSE(testable02.Equals(&testable2));
+	CHECK_FALSE(testable002 == testable2);
+	CHECK_FALSE(testable2 == testable002);
+	CHECK_FALSE(testable002.Equals(&testable2));
+	CHECK_FALSE(testable2.Equals(&testable002));
 
 	CHECK_TRUE(testable3 == testable03);
 	CHECK_FALSE(testable3 != testable03);
+	CHECK_TRUE(testable3.Equals(&testable03));
+	CHECK_TRUE(testable03.Equals(&testable3));
 	testable03.Value = testable03.Value + 1;
 	CHECK_TRUE(testable3 != testable03);
 	CHECK_FALSE(testable3 == testable03);
+	CHECK_FALSE(testable3.Equals(&testable03));
+	CHECK_FALSE(testable03.Equals(&testable3));
+	CHECK_FALSE(testable003 == testable3);
+	CHECK_FALSE(testable3 == testable003);
+	CHECK_FALSE(testable003.Equals(&testable3));
+	CHECK_FALSE(testable3.Equals(&testable003));
 
 	CHECK_TRUE(testable4 == testable04);
 	CHECK_FALSE(testable4 != testable04);
+	CHECK_TRUE(testable4.Equals(&testable04));
+	CHECK_TRUE(testable04.Equals(&testable4));
 	testable04.Value = testable04.Value + 1;
 	CHECK_TRUE(testable4 != testable04);
 	CHECK_FALSE(testable4 == testable04);
+	CHECK_FALSE(testable4.Equals(&testable04));
+	CHECK_FALSE(testable04.Equals(&testable4));
+	CHECK_FALSE(testable004 == testable4);
+	CHECK_FALSE(testable4 == testable004);
+	CHECK_FALSE(testable004.Equals(&testable4));
+	CHECK_FALSE(testable4.Equals(&testable004));
 }
 
 TEST(JsonNumericValueGroup, JsonUIntField_CloneTo_Test) {
@@ -276,39 +312,75 @@ TEST(JsonNumericValueGroup, JsonIntField_Equals_Test) {
 	JsonFieldsContainer container;
 	JsonValue<int> testable1(&container, "test", 100);
 	JsonValue<int> testable01(&container, "test", 100);
+	JsonValue<int> testable001(&container, "testOtherField", 100);
 
 	JsonValue<int32_t> testable2(&container, "test", 101);
 	JsonValue<int32_t> testable02(&container, "test", 101);
+	JsonValue<int32_t> testable002(&container, "testOtherField", 101);
 
 	JsonValue<int16_t> testable3(&container, "test", 102);
 	JsonValue<int16_t> testable03(&container, "test", 102);
+	JsonValue<int16_t> testable003(&container, "testOtherField", 102);
 
 	JsonValue<int8_t> testable4(&container, "test", 103);
 	JsonValue<int8_t> testable04(&container, "test", 103);
+	JsonValue<int8_t> testable004(&container, "testOtherField", 103);
 
 	CHECK_TRUE(testable1 == testable01);
 	CHECK_FALSE(testable1 != testable01);
+	CHECK_TRUE(testable1.Equals(&testable01));
+	CHECK_TRUE(testable01.Equals(&testable1));
 	testable01.Value = testable01.Value + 1;
 	CHECK_TRUE(testable1 != testable01);
 	CHECK_FALSE(testable1 == testable01);
+	CHECK_FALSE(testable1.Equals(&testable01));
+	CHECK_FALSE(testable01.Equals(&testable1));
+	CHECK_FALSE(testable001 == testable1);
+	CHECK_FALSE(testable1 == testable001);
+	CHECK_FALSE(testable001.Equals(&testable1));
+	CHECK_FALSE(testable1.Equals(&testable001));
 
 	CHECK_TRUE(testable2 == testable02);
 	CHECK_FALSE(testable2 != testable02);
+	CHECK_TRUE(testable2.Equals(&testable02));
+	CHECK_TRUE(testable02.Equals(&testable2));
 	testable02.Value = testable02.Value + 1;
 	CHECK_TRUE(testable2 != testable02);
 	CHECK_FALSE(testable2 == testable02);
+	CHECK_FALSE(testable2.Equals(&testable02));
+	CHECK_FALSE(testable02.Equals(&testable2));
+	CHECK_FALSE(testable002 == testable2);
+	CHECK_FALSE(testable2 == testable002);
+	CHECK_FALSE(testable002.Equals(&testable2));
+	CHECK_FALSE(testable2.Equals(&testable002));
 
 	CHECK_TRUE(testable3 == testable03);
 	CHECK_FALSE(testable3 != testable03);
+	CHECK_TRUE(testable3.Equals(&testable03));
+	CHECK_TRUE(testable03.Equals(&testable3));
 	testable03.Value = testable03.Value + 1;
 	CHECK_TRUE(testable3 != testable03);
 	CHECK_FALSE(testable3 == testable03);
+	CHECK_FALSE(testable3.Equals(&testable03));
+	CHECK_FALSE(testable03.Equals(&testable3));
+	CHECK_FALSE(testable003 == testable3);
+	CHECK_FALSE(testable3 == testable003);
+	CHECK_FALSE(testable003.Equals(&testable3));
+	CHECK_FALSE(testable3.Equals(&testable003));
 
 	CHECK_TRUE(testable4 == testable04);
 	CHECK_FALSE(testable4 != testable04);
+	CHECK_TRUE(testable4.Equals(&testable04));
+	CHECK_TRUE(testable04.Equals(&testable4));
 	testable04.Value = testable04.Value + 1;
 	CHECK_TRUE(testable4 != testable04);
 	CHECK_FALSE(testable4 == testable04);
+	CHECK_FALSE(testable4.Equals(&testable04));
+	CHECK_FALSE(testable04.Equals(&testable4));
+	CHECK_FALSE(testable004 == testable4);
+	CHECK_FALSE(testable4 == testable004);
+	CHECK_FALSE(testable004.Equals(&testable4));
+	CHECK_FALSE(testable4.Equals(&testable004));
 }
 
 TEST(JsonNumericValueGroup, JsonIntField_CloneTo_Test) {
@@ -385,12 +457,21 @@ TEST(JsonNumericValueGroup, JsonBoolField_Equals_Test) {
 	JsonFieldsContainer container;
 	JsonValue<bool> testable1(&container, "test", true);
 	JsonValue<bool> testable01(&container, "test", true);
+	JsonValue<bool> testable001(&container, "testOtherField", true);
 
 	CHECK_TRUE(testable1 == testable01);
 	CHECK_FALSE(testable1 != testable01);
+	CHECK_TRUE(testable1.Equals(&testable01));
+	CHECK_TRUE(testable01.Equals(&testable1));
 	testable01.Value = !testable01.Value;
 	CHECK_TRUE(testable1 != testable01);
 	CHECK_FALSE(testable1 == testable01);
+	CHECK_FALSE(testable1.Equals(&testable01));
+	CHECK_FALSE(testable01.Equals(&testable1));
+	CHECK_FALSE(testable001 == testable1);
+	CHECK_FALSE(testable1 == testable001);
+	CHECK_FALSE(testable001.Equals(&testable1));
+	CHECK_FALSE(testable1.Equals(&testable001));
 }
 
 TEST(JsonNumericValueGroup, JsonBoolField_CloneTo_Test) {
@@ -624,21 +705,39 @@ TEST(JsonNumericValueGroup, JsonFloatField_Equals_Test) {
 	JsonFieldsContainer container;
 	JsonValue<float> testable1(&container, "test", 100.5);
 	JsonValue<float> testable01(&container, "test", 100.5);
+	JsonValue<float> testable001(&container, "testOtherField", 100.5);
 
 	JsonValue<double> testable2(&container, "test", 101.75);
 	JsonValue<double> testable02(&container, "test", 101.75);
+	JsonValue<double> testable002(&container, "testOtherField", 101.75);
 
 	CHECK_TRUE(testable1 == testable01);
 	CHECK_FALSE(testable1 != testable01);
+	CHECK_TRUE(testable1.Equals(&testable01));
+	CHECK_TRUE(testable01.Equals(&testable1));
 	testable01.Value = testable01.Value + 1;
 	CHECK_TRUE(testable1 != testable01);
 	CHECK_FALSE(testable1 == testable01);
+	CHECK_FALSE(testable1.Equals(&testable01));
+	CHECK_FALSE(testable01.Equals(&testable1));
+	CHECK_FALSE(testable001 == testable1);
+	CHECK_FALSE(testable1 == testable001);
+	CHECK_FALSE(testable001.Equals(&testable1));
+	CHECK_FALSE(testable1.Equals(&testable001));
 
 	CHECK_TRUE(testable2 == testable02);
 	CHECK_FALSE(testable2 != testable02);
+	CHECK_TRUE(testable2.Equals(&testable02));
+	CHECK_TRUE(testable02.Equals(&testable2));
 	testable02.Value = testable02.Value + 1;
 	CHECK_TRUE(testable2 != testable02);
 	CHECK_FALSE(testable2 == testable02);
+	CHECK_FALSE(testable2.Equals(&testable02));
+	CHECK_FALSE(testable02.Equals(&testable2));
+	CHECK_FALSE(testable002 == testable2);
+	CHECK_FALSE(testable2 == testable002);
+	CHECK_FALSE(testable002.Equals(&testable2));
+	CHECK_FALSE(testable2.Equals(&testable002));
 }
 
 TEST(JsonNumericValueGroup, JsonFloatField_CloneTo_Test) {
