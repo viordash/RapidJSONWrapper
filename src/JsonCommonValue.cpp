@@ -183,8 +183,8 @@ template <> bool JsonCommonValue<float>::TryParse(TJsonDocument *doc) {
 		return true;
 	}
 	presented = true;
-	if (jsonVal->IsDouble()) {
-		Value = jsonVal->GetDouble();
+	if (jsonVal->IsFloat()) {
+		Value = jsonVal->GetFloat();
 		isNull = false;
 		return true;
 	}
