@@ -48,7 +48,7 @@ class GoodsDto : public JsonObject {
 class GoodsList : public JsonObjectsArray {
   public:
 	bool Validate(JsonObject *item) override { return item->Validate(); }
-	JsonObject *CreateInstance() { return new GoodsDto(); }
+	JsonObject *CreateInstance() override { return new GoodsDto(); }
 };
 
 class OrderDto : public JsonObject {
@@ -71,7 +71,7 @@ class OrderDto : public JsonObject {
 class OrdersList : public JsonObjectsArray {
   public:
 	bool Validate(JsonObject *item) override { return item->Validate(); }
-	JsonObject *CreateInstance() { return new OrderDto(); }
+	JsonObject *CreateInstance() override { return new OrderDto(); }
 };
 
 class CustomerDto : public JsonObject {
