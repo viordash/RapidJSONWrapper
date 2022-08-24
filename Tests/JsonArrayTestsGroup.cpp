@@ -481,6 +481,8 @@ TEST(JsonArrayTestsGroup, JsonStringArray_Remove_Test) {
 	list1.Remove("user 2");
 	list1.Remove(NULL);
 	CHECK_EQUAL(list1.Size(), 2);
+	list1.Remove("user Not exists");
+	CHECK_EQUAL(list1.Size(), 2);
 }
 
 TEST(JsonArrayTestsGroup, JsonStringArray_Add_Test) {
