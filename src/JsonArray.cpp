@@ -5,10 +5,9 @@
 #include "JsonWrapper.h"
 
 template <> std::vector<char *>::iterator JsonArray<char *>::Find(char *item) {
-	if (item != NULL) {
-		for (auto iter = Items.begin(); iter != Items.end(); iter++) {
-			if (strcmp(*iter, item) == 0) { return iter; }
-		}
+	for (auto iter = Items.begin(); iter != Items.end(); iter++) {
+		if (*iter == item) { return iter; }
+		if (*iter != NULL && item != NULL && strcmp(*iter, item) == 0) { return iter; }
 	}
 	return Items.end();
 }
@@ -87,7 +86,14 @@ template <> void JsonArray<char *>::WriteToDoc(TJsonDocument *doc) {
 	doc->SetArray();
 	doc->Reserve(Items.size(), doc->GetAllocator());
 	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
-	for (const auto &item : Items) { doc->PushBack(rapidjson::Value(rapidjson::StringRef((char *)item)).Move(), allocator); }
+	for (const auto &item : Items) {
+		if ((char *)item != NULL) {
+			doc->PushBack(rapidjson::Value(rapidjson::StringRef((char *)item)).Move(), allocator);
+		} else {
+			rapidjson::Value json_val;
+			doc->PushBack(json_val.SetNull(), allocator);
+		}
+	}
 }
 template <> void JsonArray<TBoolArray>::WriteToDoc(TJsonDocument *doc) {
 	doc->SetArray();
@@ -160,11 +166,15 @@ template <> void JsonArray<float>::WriteToDoc(TJsonDocument *doc) {
 
 */
 template <> void JsonArray<char *>::AddInternal(char *item) {
-	auto len = strlen((char *)item);
-	auto newItem = new char[len + 1];
-	memcpy(newItem, (char *)item, len);
-	newItem[len] = 0;
-	Items.push_back(newItem);
+	if (item == NULL) {
+		Items.push_back(item);
+	} else {
+		auto len = strlen((char *)item);
+		auto newItem = new char[len + 1];
+		memcpy(newItem, (char *)item, len);
+		newItem[len] = 0;
+		Items.push_back(newItem);
+	}
 }
 template <> void JsonArray<TBoolArray>::AddInternal(TBoolArray item) { Items.push_back(item); }
 template <> void JsonArray<int64_t>::AddInternal(int64_t item) { Items.push_back(item); }
@@ -340,7 +350,12 @@ template <> void JsonArray<float>::Remove(float item) {
 template <> bool JsonArray<char *>::Equals(JsonArrayBase *other) {
 	if (Items.size() != ((JsonArray<char *> *)other)->Items.size()) { return false; }
 	for (size_t i = 0; i < Items.size(); i++) {
-		if (strcmp(Items[i], ((JsonArray<char *> *)other)->Items[i]) != 0) { return false; }
+		char *s1 = Items[i];
+		char *s2 = ((JsonArray<char *> *)other)->Items[i];
+
+		if (s1 == s2) { continue; }
+		if (s1 == NULL || s2 == NULL) { return false; }
+		if (strcmp(s1, s2) != 0) { return false; }
 	}
 	return true;
 }
@@ -493,11 +508,15 @@ template <> void JsonArray<float>::CloneTo(JsonArrayBase *other) {
 template <> bool JsonArray<char *>::Update(size_t index, char *item) {
 	if (index >= Size() || !Validate(item)) { return false; }
 	DeleteItem(Items[index]);
-	auto len = strlen((char *)item);
-	auto newItem = new char[len + 1];
-	memcpy(newItem, (char *)item, len);
-	newItem[len] = 0;
-	Items[index] = newItem;
+	if (item == NULL) {
+		Items[index] = item;
+	} else {
+		auto len = strlen(item);
+		auto newItem = new char[len + 1];
+		memcpy(newItem, item, len);
+		newItem[len] = 0;
+		Items[index] = newItem;
+	}
 	return true;
 }
 template <> bool JsonArray<TBoolArray>::Update(size_t index, TBoolArray item) {
@@ -575,7 +594,17 @@ template <> bool JsonArray<char *>::TryDocParse(TJsonDocument *doc) {
 	auto jArray = doc->GetArray();
 	Items.reserve(jArray.Size());
 	for (const auto &jItem : jArray) {
-		if (!jItem.IsString() || !Add((char *)jItem.GetString())) {
+		if (jItem.IsString()) {
+			if (!Add((char *)jItem.GetString())) {
+				Items.shrink_to_fit();
+				return false;
+			}
+		} else if (jItem.IsNull()) {
+			if (!Add(NULL)) {
+				Items.shrink_to_fit();
+				return false;
+			}
+		} else {
 			Items.shrink_to_fit();
 			return false;
 		}
