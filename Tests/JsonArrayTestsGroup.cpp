@@ -32,7 +32,7 @@ class UsersList : public JsonObjectsArray {
 
 class StringsList : public JsonArray<char *> {
   public:
-	bool Validate(char *item) override { return Size() < maxCount && item != NULL && strcmp(item, "notValid") != 0; }
+	bool Validate(char *item) override { return Size() < maxCount && (item == NULL || strcmp(item, "notValid") != 0); }
 };
 
 class BoolList : public JsonArray<TBoolArray> {
@@ -356,6 +356,17 @@ TEST(JsonArrayTestsGroup, JsonStringArray_Parse_Test) {
 	STRCMP_EQUAL(list.Item(2), "User3");
 }
 
+TEST(JsonArrayTestsGroup, JsonStringArray_Parse_With_Null_Values_Test) {
+	StringsList list;
+
+	CHECK_TRUE(list.TryParse("[\"User1\",null,\"User3\"]"));
+	CHECK_EQUAL(list.Size(), 3);
+
+	STRCMP_EQUAL(list.Item(0), "User1");
+	CHECK_EQUAL(list.Item(1), NULL);
+	STRCMP_EQUAL(list.Item(2), "User3");
+}
+
 TEST(JsonArrayTestsGroup, JsonStringArray_WriteTo_Test) {
 	char buffer[2048];
 	StringsList list;
@@ -369,18 +380,31 @@ TEST(JsonArrayTestsGroup, JsonStringArray_WriteTo_Test) {
 	STRCMP_EQUAL(buffer, "[\"user 1\",\"user 2\",\"user 3\",\"user 4\"]");
 }
 
+TEST(JsonArrayTestsGroup, JsonStringArray_WriteTo_With_Null_Values_Test) {
+	char buffer[2048];
+	StringsList list;
+	CHECK_TRUE(list.Add("user 1"));
+	CHECK_TRUE(list.Add(NULL));
+	CHECK_TRUE(list.Add("user 3"));
+
+	CHECK_EQUAL(list.WriteToString(buffer, sizeof(buffer)), 24);
+	STRCMP_EQUAL(buffer, "[\"user 1\",null,\"user 3\"]");
+}
+
 TEST(JsonArrayTestsGroup, JsonStringArray_Equals_Test) {
 	StringsList list1;
 	list1.Add("user 1");
 	list1.Add("user 2");
 	list1.Add("user 3");
 	list1.Add("user 4");
+	list1.Add(NULL);
 
 	StringsList list2;
 	list2.Add("user 1");
 	list2.Add("user 2");
 	list2.Add("user 3");
 	list2.Add("user 4");
+	list2.Add(NULL);
 
 	CHECK_TRUE(list1 == list2);
 	CHECK_FALSE(list1 != list2);
@@ -392,6 +416,18 @@ TEST(JsonArrayTestsGroup, JsonStringArray_Equals_Test) {
 	list2.Remove("user 2");
 	CHECK_TRUE(list1 != list2);
 	CHECK_FALSE(list1 == list2);
+
+	list1.Remove("user 2");
+	list1.Update(0, NULL);
+	CHECK_TRUE(list1 != list2);
+	CHECK_FALSE(list1 == list2);
+	list2.Update(0, NULL);
+	list1.Update(1, NULL);
+	CHECK_TRUE(list1 != list2);
+	CHECK_FALSE(list1 == list2);
+	list2.Update(1, NULL);
+	CHECK_TRUE(list1 == list2);
+	CHECK_FALSE(list1 != list2);
 }
 
 TEST(JsonArrayTestsGroup, JsonStringArray_Clone_Test) {
@@ -400,6 +436,7 @@ TEST(JsonArrayTestsGroup, JsonStringArray_Clone_Test) {
 	list1->Add("user 2");
 	list1->Add("user 3");
 	list1->Add("user 4");
+	list1->Add(NULL);
 
 	StringsList list2;
 	list2.Add("1");
@@ -407,9 +444,10 @@ TEST(JsonArrayTestsGroup, JsonStringArray_Clone_Test) {
 
 	list1->CloneTo(&list2);
 	delete list1;
-	CHECK_EQUAL(list2.Size(), 4);
+	CHECK_EQUAL(list2.Size(), 5);
 	STRCMP_EQUAL(list2.Item(2), "user 3");
 	STRCMP_EQUAL(list2.Item(3), "user 4");
+	STRCMP_EQUAL(list2.Item(4), NULL);
 }
 
 TEST(JsonArrayTestsGroup, JsonStringArray_Find_Test) {
@@ -418,10 +456,12 @@ TEST(JsonArrayTestsGroup, JsonStringArray_Find_Test) {
 	list1.Add("user 2");
 	list1.Add("user 3");
 	list1.Add("user 4");
+	list1.Add(NULL);
 
-	CHECK(list1.Find("user 2") != list1.End());
+	CHECK_TRUE(list1.Find("user 2") != list1.End());
 	STRCMP_EQUAL(*(list1.Find("user 2")), "user 2");
 	CHECK_TRUE(list1.Find("error") == list1.End());
+	CHECK_EQUAL(*(list1.Find(NULL)), NULL);
 }
 
 static char *CreateTestString(const char *str) {
@@ -435,29 +475,29 @@ TEST(JsonArrayTestsGroup, JsonStringArray_Remove_Test) {
 	list1.Add("user 2");
 	list1.Add("user 3");
 	list1.Add("user 4");
+	list1.Add(NULL);
 
-	auto item1 = CreateTestString("user 3");
-	list1.Remove(item1);
-	delete[] item1;
-
-	auto item2 = CreateTestString("user 2");
-	list1.Remove(item2);
-	delete[] item2;
+	list1.Remove("user 3");
+	list1.Remove("user 2");
+	list1.Remove(NULL);
+	CHECK_EQUAL(list1.Size(), 2);
+	list1.Remove("user Not exists");
 	CHECK_EQUAL(list1.Size(), 2);
 }
 
 TEST(JsonArrayTestsGroup, JsonStringArray_Add_Test) {
 	StringsList list1;
-	auto item1 = CreateTestString("user 1");
-	CHECK_TRUE(list1.Add(item1));
-	delete[] item1;
+	CHECK_TRUE(list1.Add("user 1"));
 
 	auto item2 = CreateTestString("user 2");
 	CHECK_TRUE(list1.Add(item2));
 	delete[] item2;
+	CHECK_TRUE(list1.Add(NULL));
 
-	CHECK_EQUAL(list1.Size(), 2);
+	CHECK_EQUAL(list1.Size(), 3);
 	STRCMP_EQUAL(list1.Item(0), "user 1");
+	STRCMP_EQUAL(list1.Item(1), "user 2");
+	CHECK_EQUAL(list1.Item(2), NULL);
 }
 
 TEST(JsonArrayTestsGroup, JsonStringArray_Incorrect_Add_Test) {
@@ -483,9 +523,11 @@ TEST(JsonArrayTestsGroup, JsonStringArray_Update_Test) {
 	CHECK_TRUE(list1.Update(0, item3));
 	delete[] item3;
 
+	CHECK_TRUE(list1.Update(1, NULL));
 	CHECK_EQUAL(list1.Size(), 2);
 
 	STRCMP_EQUAL(list1.Item(0), "user 3");
+	STRCMP_EQUAL(list1.Item(1), NULL);
 }
 
 TEST(JsonArrayTestsGroup, JsonStringArray_Incorrect_Update_Test) {
@@ -501,7 +543,6 @@ TEST(JsonArrayTestsGroup, JsonStringArray_Incorrect_Update_Test) {
 	CHECK_FALSE(list1.Update(0, item4));
 	delete[] item4;
 
-	CHECK_FALSE(list1.Update(0, NULL));
 	CHECK_EQUAL(list1.Size(), 2);
 
 	STRCMP_EQUAL(list1.Item(0), "user 1");
