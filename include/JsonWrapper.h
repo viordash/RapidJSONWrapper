@@ -65,7 +65,7 @@ class JsonObject : public JsonFieldsContainer {
 
 	virtual bool Validate() { return true; }
 	virtual bool Equals(JsonObject *other);
-	void CloneTo(JsonObject *other);
+	virtual void CloneTo(JsonObject *other);
 
 	friend bool operator!=(const JsonObject &v1, const JsonObject &v2);
 	friend bool operator==(const JsonObject &v1, const JsonObject &v2);
