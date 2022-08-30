@@ -17,6 +17,7 @@ template <class T> class JsonCommonValue;
 
 class JsonArrayBase {
   public:
+	virtual ~JsonArrayBase(){};
 	virtual bool TryDocParse(TJsonDocument *doc) = 0;
 	bool TryParse(const char *jsonStr, size_t length = 0);
 	TJsonDocument *BeginTryParse(const char *jsonStr, size_t length = 0);
