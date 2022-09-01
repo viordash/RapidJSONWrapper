@@ -101,8 +101,6 @@ template <class TItem> class JsonArray : public JsonArrayBase {
   protected:
 	std::vector<TItem> Items;
 	virtual bool Validate(TItem item) = 0;
-
-  private:
 	void AddInternal(TItem item);
 	void DeleteItem(TItem item);
 };
@@ -136,8 +134,6 @@ class JsonObjectsArray : public JsonArrayBase {
 	std::vector<JsonObject *> Items;
 	virtual bool Validate(JsonObject *item) = 0;
 	virtual JsonObject *CreateItem() = 0;
-	void DeleteItem(JsonObject *item);
-
-  private:
 	void AddInternal(JsonObject *item);
+	void DeleteItem(JsonObject *item);
 };
