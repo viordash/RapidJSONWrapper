@@ -400,7 +400,7 @@ static uint64_t testArrayWriteTo(CustomerList *customerList, size_t *size) {
 
 static uint64_t testArrayTryParse(CustomerList *customerList, const char *jsonStr, size_t size) {
 	auto start = std::chrono::high_resolution_clock::now();
-	CHECK(customerList->TryParse(jsonStr, size));
+	CHECK(customerList->TryStringParse(jsonStr, size));
 	auto finish = std::chrono::high_resolution_clock::now();
 	return std::chrono::duration_cast<std::chrono::microseconds>(finish - start).count();
 }

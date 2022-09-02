@@ -192,7 +192,7 @@ int main(const int argc, const char *argv[]) {
 	JsonStringValue_CloneTo_Test();
 	JsonStringCommonValue_CloneTo_Test();
 
-	// 	auto res = intObj.TryParse("{\"test\":19}");
+	// 	auto res = intObj.TryStringParse("{\"test\":19}");
 	// 	printf("intObj.TryParse res:%d, val:%d\n", res, (int)intObj.Value);
 
 	// 	rapidjson::Document doc;
@@ -207,7 +207,7 @@ int main(const int argc, const char *argv[]) {
 	// {
 	// 	JsonFieldsContainer container;
 	// 	JsonValue<char *, false> strObj(&container, "testStr", "hello json");
-	// 	auto res = strObj.TryParse("{\"testStr\":\"0123456 abcdef\"}");
+	// 	auto res = strObj.TryStringParse("{\"testStr\":\"0123456 abcdef\"}");
 	// 	printf("strObj.TryParse res:%d, val:%s\n", res, (char *)strObj.Value);
 
 	// 	rapidjson::Document doc;

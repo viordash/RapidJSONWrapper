@@ -54,9 +54,9 @@ class JsonObject : public JsonFieldsContainer {
 	virtual ~JsonObject(){};
 
 	virtual bool TryParse(TJsonDocument *doc);
-	virtual bool TryParse(const char *jsonStr, size_t length = 0);
-	TJsonDocument *BeginTryParse(const char *jsonStr, size_t length = 0);
-	void EndTryParse(TJsonDocument *doc);
+	virtual bool TryStringParse(const char *jsonStr, size_t length = 0);
+	TJsonDocument *BeginStringTryParse(const char *jsonStr, size_t length = 0);
+	void EndStringTryParse(TJsonDocument *doc);
 
 	void WriteToDoc(TJsonDocument *doc);
 	size_t WriteToString(char *outBuffer, size_t outBufferSize);
