@@ -83,6 +83,7 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 	typename std::vector<TItem>::iterator const Begin() { return Items.begin(); }
 	typename std::vector<TItem>::iterator const End() { return Items.end(); }
 	void Reserve(size_t capacity) { Items.reserve(capacity); }
+	bool Empty() { return Items.empty(); }
 
 	bool TryDocParse(TJsonDocument *doc) override final;
 	void WriteToDoc(TJsonDocument *doc) override final;
@@ -114,6 +115,7 @@ class JsonObjectsArray : public JsonArrayBase {
 	typename std::vector<JsonObject *>::iterator const Begin() { return Items.begin(); }
 	typename std::vector<JsonObject *>::iterator const End() { return Items.end(); }
 	void Reserve(size_t capacity) { Items.reserve(capacity); }
+	bool Empty() { return Items.empty(); }
 
 	bool TryDocParse(TJsonDocument *doc) override final;
 	void WriteToDoc(TJsonDocument *doc) override final;
