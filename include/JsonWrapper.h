@@ -126,14 +126,14 @@ class JsonObjectsArray : public JsonArrayBase {
 
 	bool Equals(JsonArrayBase *other) override final;
 	void CloneTo(JsonArrayBase *other) override final;
+	virtual bool Validate(JsonObject *item) = 0;
+	virtual JsonObject *CreateItem() = 0;
 
 	friend bool operator!=(const JsonObjectsArray &v1, const JsonObjectsArray &v2);
 	friend bool operator==(const JsonObjectsArray &v1, const JsonObjectsArray &v2);
 
   protected:
 	std::vector<JsonObject *> Items;
-	virtual bool Validate(JsonObject *item) = 0;
-	virtual JsonObject *CreateItem() = 0;
 	void AddInternal(JsonObject *item);
 	void DeleteItem(JsonObject *item);
 };
