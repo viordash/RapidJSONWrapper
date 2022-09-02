@@ -230,12 +230,12 @@ TEST(JsonObjectTestsGroup, JsonObject_Parse_With_Nullable_Values_Test) {
 
 TEST(JsonObjectTestsGroup, JsonObject_Parse_With_Begin_End_Stages_Test) {
 	GoodsDto goods;
-	auto doc = goods.BeginStringTryParse("{\"Id\":1,\"Created\":1657052048,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}");
+	auto doc = goods.BeginTryStringParse("{\"Id\":1,\"Created\":1657052048,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}");
 
 	CHECK(doc != NULL);
 	CHECK_EQUAL(goods.Created.Value, 1657052048);
 	STRCMP_EQUAL(goods.Group.Value, "Vegetables");
-	goods.EndStringTryParse(doc);
+	goods.EndTryStringParse(doc);
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_WriteTo_Test) {
@@ -356,7 +356,7 @@ TEST(JsonObjectTestsGroup, JsonObject_With_Blob_Field_Test) {
 	delete[] picture;
 
 	CustomerDto customerDto2;
-	auto doc = customerDto2.BeginStringTryParse(DirectWriteTestBuffer, size);
+	auto doc = customerDto2.BeginTryStringParse(DirectWriteTestBuffer, size);
 	CHECK(doc != NULL);
 
 	CHECK_EQUAL(customerDto2.Id.Value, 1234567890123456789LL);
@@ -367,7 +367,7 @@ TEST(JsonObjectTestsGroup, JsonObject_With_Blob_Field_Test) {
 	CHECK_EQUAL(((TJsonRawData)customerDto2.Blob.Value).Size, pictureSize);
 	CHECK_FALSE(((TJsonRawData)customerDto2.Blob.Value).Data == picture);
 	for (size_t i = 0; i < pictureSize; i++) { CHECK_EQUAL(((TJsonRawData)customerDto2.Blob.Value).Data[i], 'A' + (i % 58)); }
-	customerDto2.EndStringTryParse(doc);
+	customerDto2.EndTryStringParse(doc);
 
 	delete[] DirectWriteTestBuffer;
 }
@@ -440,7 +440,7 @@ TEST(JsonObjectTestsGroup, JsonObject_Optional_TryParse_Test) {
 TEST(JsonObjectTestsGroup, JsonObject_Values_Without_Instance_Parse_Test) {
 	ValuesWoInstance valuesWoInstance;
 
-	auto doc = valuesWoInstance.BeginStringTryParse("{\"id\":123,\"name\":\"Tomato\",\"blob\":\"ABCDEFGHIJKLMNOPQR\"}");
+	auto doc = valuesWoInstance.BeginTryStringParse("{\"id\":123,\"name\":\"Tomato\",\"blob\":\"ABCDEFGHIJKLMNOPQR\"}");
 	CHECK(doc != NULL);
 
 	auto id = (JsonValue<uint64_t> *)valuesWoInstance.GetField("id");
@@ -457,7 +457,7 @@ TEST(JsonObjectTestsGroup, JsonObject_Values_Without_Instance_Parse_Test) {
 
 	auto notExistsValue = (JsonValue<uint32_t> *)valuesWoInstance.GetField("notExistsValue");
 	CHECK_TRUE(notExistsValue == NULL);
-	valuesWoInstance.EndStringTryParse(doc);
+	valuesWoInstance.EndTryStringParse(doc);
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_Values_Without_Instance_WriteTo_Test) {

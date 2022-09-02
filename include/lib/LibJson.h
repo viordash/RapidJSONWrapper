@@ -20,8 +20,8 @@ class JsonArrayBase {
 	virtual ~JsonArrayBase(){};
 	virtual bool TryDocParse(TJsonDocument *doc) = 0;
 	bool TryStringParse(const char *jsonStr, size_t length = 0);
-	TJsonDocument *BeginStringTryParse(const char *jsonStr, size_t length = 0);
-	void EndStringTryParse(TJsonDocument *doc);
+	TJsonDocument *BeginTryStringParse(const char *jsonStr, size_t length = 0);
+	void EndTryStringParse(TJsonDocument *doc);
 
 	virtual void WriteToDoc(TJsonDocument *doc) = 0;
 	size_t WriteToString(char *outBuffer, size_t outBufferSize);

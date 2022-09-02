@@ -120,7 +120,7 @@ TEST(JsonArrayTestsGroup, JsonObjectArray_Parse_Error_Test) {
 
 TEST(JsonArrayTestsGroup, JsonObjectArray_Parse_With_Begin_End_Stages_Test) {
 	UsersList list;
-	auto doc = list.BeginStringTryParse("[{\"name\":\"User1\",\"role\":100},{\"name\":\"User2\",\"role\":0},{\"name\":\"User3\","
+	auto doc = list.BeginTryStringParse("[{\"name\":\"User1\",\"role\":100},{\"name\":\"User2\",\"role\":0},{\"name\":\"User3\","
 								  "\"role\":255}]");
 
 	CHECK(doc != NULL);
@@ -128,12 +128,12 @@ TEST(JsonArrayTestsGroup, JsonObjectArray_Parse_With_Begin_End_Stages_Test) {
 
 	STRCMP_EQUAL(list.Item<UserDto *>(0)->Name.Value, "User1");
 	CHECK_EQUAL(list.Item<UserDto *>(0)->Role.Value, 100);
-	list.EndStringTryParse(doc);
+	list.EndTryStringParse(doc);
 }
 
 TEST(JsonArrayTestsGroup, JsonObjectArray_Parse_With_Begin_End_Stages_And_Specified_Length_Test) {
 	UsersList list;
-	auto doc = list.BeginStringTryParse("[{\"name\":\"User1\",\"role\":100},{\"name\":\"User2\",\"role\":0},{\"name\":\"User3\","
+	auto doc = list.BeginTryStringParse("[{\"name\":\"User1\",\"role\":100},{\"name\":\"User2\",\"role\":0},{\"name\":\"User3\","
 								  "\"role\":255}]  some data 0123456                     ",
 								  83);
 
@@ -142,7 +142,7 @@ TEST(JsonArrayTestsGroup, JsonObjectArray_Parse_With_Begin_End_Stages_And_Specif
 
 	STRCMP_EQUAL(list.Item<UserDto *>(2)->Name.Value, "User3");
 	CHECK_EQUAL(list.Item<UserDto *>(2)->Role.Value, 255);
-	list.EndStringTryParse(doc);
+	list.EndTryStringParse(doc);
 }
 
 TEST(JsonArrayTestsGroup, JsonObjectArray_WriteTo_Test) {

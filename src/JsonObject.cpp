@@ -22,7 +22,7 @@ bool JsonObject::TryParse(TJsonDocument *doc) {
 	return true;
 }
 
-TJsonDocument *JsonObject::BeginStringTryParse(const char *jsonStr, size_t length) {
+TJsonDocument *JsonObject::BeginTryStringParse(const char *jsonStr, size_t length) {
 	if (jsonStr == NULL) { return NULL; }
 
 	auto doc = new rapidjson::Document();
@@ -38,12 +38,12 @@ TJsonDocument *JsonObject::BeginStringTryParse(const char *jsonStr, size_t lengt
 	return doc;
 }
 
-void JsonObject::EndStringTryParse(TJsonDocument *doc) { delete doc; }
+void JsonObject::EndTryStringParse(TJsonDocument *doc) { delete doc; }
 
 bool JsonObject::TryStringParse(const char *jsonStr, size_t length) {
-	auto doc = BeginStringTryParse(jsonStr, length);
+	auto doc = BeginTryStringParse(jsonStr, length);
 	if (doc == NULL) { return false; }
-	EndStringTryParse(doc);
+	EndTryStringParse(doc);
 	return true;
 }
 
