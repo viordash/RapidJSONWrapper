@@ -10,12 +10,11 @@ typedef struct {
 
 template <class T> class JsonValue : public JsonValueBase {
   public:
-	ValueProvider<T> Value;
-
-	JsonValue(JsonFieldsContainer *container, size_t nameLen, const char *name, T value = T()) : JsonValueBase(container, name, nameLen), Value(value) {}
+	JsonValue(JsonFieldsContainer *container, size_t nameLen, const char *name, size_t valueLen, T value) : JsonValueBase(container, name, nameLen) { InitValue(value, valueLen); }
+	JsonValue(JsonFieldsContainer *container, size_t nameLen, const char *name, T value = T()) : JsonValue(container, nameLen, name, size_t(), value) {}
 	template <size_t N> JsonValue(JsonFieldsContainer *container, const char (&name)[N], T value = T()) : JsonValue(container, N - 1, name, value) {}
 
-	virtual ~JsonValue() {}
+	virtual ~JsonValue() { DeleteValue(); }
 
 	bool TryParse(TJsonDocument *doc) override final;
 	void WriteToDoc(TJsonDocument *doc) override final;
@@ -23,17 +22,27 @@ template <class T> class JsonValue : public JsonValueBase {
 	bool Equals(JsonValueBase *other) override final;
 	void CloneTo(JsonValueBase *other) override final;
 
+	T Get() { return value; }
+	void Set(T newValue, size_t newValueLen = size_t()) {
+		DeleteValue();
+		InitValue(newValue, newValueLen);
+	}
+
   protected:
+	T value;
+	void InitValue(T value, size_t valueLen);
+	void DeleteValue();
 };
 
 template <class T> class JsonCommonValue : public JsonValueBase {
   public:
-	CommonValueProvider<T> Value;
-
-	JsonCommonValue(JsonFieldsContainer *container, size_t nameLen, const char *name, T value = T()) : JsonValueBase(container, name, nameLen), presented(false), Value(value) {}
+	JsonCommonValue(JsonFieldsContainer *container, size_t nameLen, const char *name, size_t valueLen, T value) : JsonValueBase(container, name, nameLen), presented(false), isNull(false) {
+		InitValue(value, valueLen);
+	}
+	JsonCommonValue(JsonFieldsContainer *container, size_t nameLen, const char *name, T value = T()) : JsonCommonValue(container, nameLen, name, size_t(), value) {}
 	template <size_t N> JsonCommonValue(JsonFieldsContainer *container, const char (&name)[N], T value = T()) : JsonCommonValue(container, N - 1, name, value) {}
 
-	virtual ~JsonCommonValue() {}
+	virtual ~JsonCommonValue() { DeleteValue(); }
 
 	bool TryParse(TJsonDocument *doc) override final;
 	void WriteToDoc(TJsonDocument *doc) override final;
@@ -45,8 +54,18 @@ template <class T> class JsonCommonValue : public JsonValueBase {
 	bool IsNull();
 	void ResetToNull();
 
+	T Get() { return value; }
+	void Set(T newValue, size_t newValueLen = size_t()) {
+		DeleteValue();
+		InitValue(newValue, newValueLen);
+	}
+
   protected:
 	bool presented;
+	bool isNull;
+	T value;
+	void InitValue(T value, size_t valueLen);
+	void DeleteValue();
 };
 
 class JsonObject : public JsonFieldsContainer {

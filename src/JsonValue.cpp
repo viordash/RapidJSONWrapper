@@ -7,67 +7,67 @@
 template <> bool JsonValue<bool>::TryParse(TJsonDocument *doc) {
 	auto jsonVal = JsonValueBase::GetMember(doc, this->Name);
 	if (jsonVal == NULL || !jsonVal->IsBool()) { return false; }
-	Value = jsonVal->GetBool();
+	Set(jsonVal->GetBool());
 	return true;
 }
 template <> bool JsonValue<int8_t>::TryParse(TJsonDocument *doc) {
 	auto jsonVal = JsonValueBase::GetMember(doc, this->Name);
 	if (jsonVal == NULL || !jsonVal->IsInt()) { return false; }
-	Value = jsonVal->GetInt();
+	Set(jsonVal->GetInt());
 	return true;
 }
 template <> bool JsonValue<int16_t>::TryParse(TJsonDocument *doc) {
 	auto jsonVal = JsonValueBase::GetMember(doc, this->Name);
 	if (jsonVal == NULL || !jsonVal->IsInt()) { return false; }
-	Value = jsonVal->GetInt();
+	Set(jsonVal->GetInt());
 	return true;
 }
 template <> bool JsonValue<int32_t>::TryParse(TJsonDocument *doc) {
 	auto jsonVal = JsonValueBase::GetMember(doc, this->Name);
 	if (jsonVal == NULL || !jsonVal->IsInt()) { return false; }
-	Value = jsonVal->GetInt();
+	Set(jsonVal->GetInt());
 	return true;
 }
 template <> bool JsonValue<int64_t>::TryParse(TJsonDocument *doc) {
 	auto jsonVal = JsonValueBase::GetMember(doc, this->Name);
 	if (jsonVal == NULL || !jsonVal->IsInt64()) { return false; }
-	Value = jsonVal->GetInt64();
+	Set(jsonVal->GetInt64());
 	return true;
 }
 template <> bool JsonValue<uint8_t>::TryParse(TJsonDocument *doc) {
 	auto jsonVal = JsonValueBase::GetMember(doc, this->Name);
 	if (jsonVal == NULL || !jsonVal->IsUint()) { return false; }
-	Value = jsonVal->GetUint();
+	Set(jsonVal->GetUint());
 	return true;
 }
 template <> bool JsonValue<uint16_t>::TryParse(TJsonDocument *doc) {
 	auto jsonVal = JsonValueBase::GetMember(doc, this->Name);
 	if (jsonVal == NULL || !jsonVal->IsUint()) { return false; }
-	Value = jsonVal->GetUint();
+	Set(jsonVal->GetUint());
 	return true;
 }
 template <> bool JsonValue<uint32_t>::TryParse(TJsonDocument *doc) {
 	auto jsonVal = JsonValueBase::GetMember(doc, this->Name);
 	if (jsonVal == NULL || !jsonVal->IsUint()) { return false; }
-	Value = jsonVal->GetUint();
+	Set(jsonVal->GetUint());
 	return true;
 }
 template <> bool JsonValue<uint64_t>::TryParse(TJsonDocument *doc) {
 	auto jsonVal = JsonValueBase::GetMember(doc, this->Name);
 	if (jsonVal == NULL || !jsonVal->IsUint64()) { return false; }
-	Value = jsonVal->GetUint64();
+	Set(jsonVal->GetUint64());
 	return true;
 }
 template <> bool JsonValue<float>::TryParse(TJsonDocument *doc) {
 	auto jsonVal = JsonValueBase::GetMember(doc, this->Name);
 	if (jsonVal == NULL || !jsonVal->IsFloat()) { return false; }
-	Value = (float)jsonVal->GetFloat();
+	Set((float)jsonVal->GetFloat());
 	return true;
 }
 template <> bool JsonValue<double>::TryParse(TJsonDocument *doc) {
 	auto jsonVal = JsonValueBase::GetMember(doc, this->Name);
 	if (jsonVal == NULL || !jsonVal->IsDouble()) { return false; }
-	Value = jsonVal->GetDouble();
+	Set(jsonVal->GetDouble());
 	return true;
 }
 template <> bool JsonValue<char *>::TryParse(TJsonDocument *doc) {
@@ -75,16 +75,12 @@ template <> bool JsonValue<char *>::TryParse(TJsonDocument *doc) {
 	if (jsonVal == NULL) { return false; }
 	if (!jsonVal->IsString()) {
 		if (jsonVal->IsNull()) {
-			Value = NULL;
+			Set(NULL);
 			return true;
 		}
 		return false;
 	}
-	Value.DeleteValue();
-	size_t len = jsonVal->GetStringLength();
-	Value.value = new char[len + 1];
-	memcpy(Value.value, (char *)jsonVal->GetString(), len);
-	Value.value[len] = 0;
+	Set((char *)jsonVal->GetString(), jsonVal->GetStringLength());
 	return true;
 }
 template <> bool JsonValue<TJsonRawData>::TryParse(TJsonDocument *doc) {
@@ -92,80 +88,80 @@ template <> bool JsonValue<TJsonRawData>::TryParse(TJsonDocument *doc) {
 	if (jsonVal == NULL) { return false; }
 	if (!jsonVal->IsString()) {
 		if (jsonVal->IsNull()) {
-			Value = {};
+			Set({});
 			return true;
 		}
 		return false;
 	}
 	TJsonRawData rawData = {(uint8_t *)jsonVal->GetString(), jsonVal->GetStringLength()};
-	Value = rawData;
+	Set(rawData);
 	return true;
 }
 template <> bool JsonValue<JsonObject *>::TryParse(TJsonDocument *doc) {
 	auto jsonVal = JsonValueBase::GetMember(doc, this->Name);
-	return jsonVal != NULL && jsonVal->IsObject() && (/*jsonVal->ObjectEmpty() ||*/ Value->TryParse((TJsonDocument *)jsonVal));
+	return jsonVal != NULL && jsonVal->IsObject() && (/*jsonVal->ObjectEmpty() ||*/ value->TryParse((TJsonDocument *)jsonVal));
 }
 template <> bool JsonValue<JsonArrayBase *>::TryParse(TJsonDocument *doc) {
 	auto jsonVal = JsonValueBase::GetMember(doc, this->Name);
-	return jsonVal != NULL && jsonVal->IsArray() && Value->TryDocParse((TJsonDocument *)jsonVal);
+	return jsonVal != NULL && jsonVal->IsArray() && value->TryDocParse((TJsonDocument *)jsonVal);
 }
 /*
 
 
 */
-template <> bool JsonValue<bool>::Equals(JsonValueBase *other) { return JsonValueBase::NamesCompare(Name, other->Name) && Value == ((JsonValue<bool> *)other)->Value; }
-template <> bool JsonValue<int8_t>::Equals(JsonValueBase *other) { return JsonValueBase::NamesCompare(Name, other->Name) && Value == ((JsonValue<int8_t> *)other)->Value; }
-template <> bool JsonValue<int16_t>::Equals(JsonValueBase *other) { return JsonValueBase::NamesCompare(Name, other->Name) && Value == ((JsonValue<int16_t> *)other)->Value; }
-template <> bool JsonValue<int32_t>::Equals(JsonValueBase *other) { return JsonValueBase::NamesCompare(Name, other->Name) && Value == ((JsonValue<int32_t> *)other)->Value; }
-template <> bool JsonValue<int64_t>::Equals(JsonValueBase *other) { return JsonValueBase::NamesCompare(Name, other->Name) && Value == ((JsonValue<int64_t> *)other)->Value; }
-template <> bool JsonValue<uint8_t>::Equals(JsonValueBase *other) { return JsonValueBase::NamesCompare(Name, other->Name) && Value == ((JsonValue<uint8_t> *)other)->Value; }
-template <> bool JsonValue<uint16_t>::Equals(JsonValueBase *other) { return JsonValueBase::NamesCompare(Name, other->Name) && Value == ((JsonValue<uint16_t> *)other)->Value; }
-template <> bool JsonValue<uint32_t>::Equals(JsonValueBase *other) { return JsonValueBase::NamesCompare(Name, other->Name) && Value == ((JsonValue<uint32_t> *)other)->Value; }
-template <> bool JsonValue<uint64_t>::Equals(JsonValueBase *other) { return JsonValueBase::NamesCompare(Name, other->Name) && Value == ((JsonValue<uint64_t> *)other)->Value; }
-template <> bool JsonValue<float>::Equals(JsonValueBase *other) { return JsonValueBase::NamesCompare(Name, other->Name) && Value == ((JsonValue<float> *)other)->Value; }
-template <> bool JsonValue<double>::Equals(JsonValueBase *other) { return JsonValueBase::NamesCompare(Name, other->Name) && Value == ((JsonValue<double> *)other)->Value; }
+template <> bool JsonValue<bool>::Equals(JsonValueBase *other) { return JsonValueBase::NamesCompare(Name, other->Name) && value == ((JsonValue<bool> *)other)->value; }
+template <> bool JsonValue<int8_t>::Equals(JsonValueBase *other) { return JsonValueBase::NamesCompare(Name, other->Name) && value == ((JsonValue<int8_t> *)other)->value; }
+template <> bool JsonValue<int16_t>::Equals(JsonValueBase *other) { return JsonValueBase::NamesCompare(Name, other->Name) && value == ((JsonValue<int16_t> *)other)->value; }
+template <> bool JsonValue<int32_t>::Equals(JsonValueBase *other) { return JsonValueBase::NamesCompare(Name, other->Name) && value == ((JsonValue<int32_t> *)other)->value; }
+template <> bool JsonValue<int64_t>::Equals(JsonValueBase *other) { return JsonValueBase::NamesCompare(Name, other->Name) && value == ((JsonValue<int64_t> *)other)->value; }
+template <> bool JsonValue<uint8_t>::Equals(JsonValueBase *other) { return JsonValueBase::NamesCompare(Name, other->Name) && value == ((JsonValue<uint8_t> *)other)->value; }
+template <> bool JsonValue<uint16_t>::Equals(JsonValueBase *other) { return JsonValueBase::NamesCompare(Name, other->Name) && value == ((JsonValue<uint16_t> *)other)->value; }
+template <> bool JsonValue<uint32_t>::Equals(JsonValueBase *other) { return JsonValueBase::NamesCompare(Name, other->Name) && value == ((JsonValue<uint32_t> *)other)->value; }
+template <> bool JsonValue<uint64_t>::Equals(JsonValueBase *other) { return JsonValueBase::NamesCompare(Name, other->Name) && value == ((JsonValue<uint64_t> *)other)->value; }
+template <> bool JsonValue<float>::Equals(JsonValueBase *other) { return JsonValueBase::NamesCompare(Name, other->Name) && value == ((JsonValue<float> *)other)->value; }
+template <> bool JsonValue<double>::Equals(JsonValueBase *other) { return JsonValueBase::NamesCompare(Name, other->Name) && value == ((JsonValue<double> *)other)->value; }
 template <> bool JsonValue<char *>::Equals(JsonValueBase *other) { //
 	return JsonValueBase::NamesCompare(Name, other->Name)
-		&& (Value == ((JsonValue<char *> *)other)->Value || (Value != NULL && ((JsonValue<char *> *)other)->Value != NULL && strcmp(Value, ((JsonValue<char *> *)other)->Value) == 0));
+		&& (value == ((JsonValue<char *> *)other)->value || (value != NULL && ((JsonValue<char *> *)other)->value != NULL && strcmp(value, ((JsonValue<char *> *)other)->value) == 0));
 }
 template <> bool JsonValue<TJsonRawData>::Equals(JsonValueBase *other) {
-	return JsonValueBase::NamesCompare(Name, other->Name)																  //
-		&& ((TJsonRawData)Value).Data == ((TJsonRawData)(((JsonValue<TJsonRawData> *)other)->Value)).Data //
-		&& ((TJsonRawData)Value).Size == ((TJsonRawData)(((JsonValue<TJsonRawData> *)other)->Value)).Size;
+	return JsonValueBase::NamesCompare(Name, other->Name)												  //
+		&& ((TJsonRawData)value).Data == ((TJsonRawData)(((JsonValue<TJsonRawData> *)other)->value)).Data //
+		&& ((TJsonRawData)value).Size == ((TJsonRawData)(((JsonValue<TJsonRawData> *)other)->value)).Size;
 }
 template <> bool JsonValue<JsonObject *>::Equals(JsonValueBase *other) {
-	return JsonValueBase::NamesCompare(Name, other->Name) && (JsonObject *)Value->Equals((JsonObject *)((JsonValue<JsonObject *> *)other)->Value);
+	return JsonValueBase::NamesCompare(Name, other->Name) && (JsonObject *)value->Equals((JsonObject *)((JsonValue<JsonObject *> *)other)->value);
 }
 template <> bool JsonValue<JsonArrayBase *>::Equals(JsonValueBase *other) {
-	return JsonValueBase::NamesCompare(Name, other->Name) && (JsonObject *)Value->Equals((JsonArrayBase *)(((JsonValue<JsonArrayBase *> *)other)->Value));
+	return JsonValueBase::NamesCompare(Name, other->Name) && (JsonObject *)value->Equals((JsonArrayBase *)(((JsonValue<JsonArrayBase *> *)other)->value));
 }
 /*
 
 
 */
-template <> void JsonValue<bool>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (bool)Value, doc->GetAllocator()); }
-template <> void JsonValue<int8_t>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (int8_t)Value, doc->GetAllocator()); }
-template <> void JsonValue<int16_t>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (int16_t)Value, doc->GetAllocator()); }
-template <> void JsonValue<int32_t>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (int32_t)Value, doc->GetAllocator()); }
-template <> void JsonValue<int64_t>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (int64_t)Value, doc->GetAllocator()); }
-template <> void JsonValue<uint8_t>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (uint8_t)Value, doc->GetAllocator()); }
-template <> void JsonValue<uint16_t>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (uint16_t)Value, doc->GetAllocator()); }
-template <> void JsonValue<uint32_t>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (uint32_t)Value, doc->GetAllocator()); }
-template <> void JsonValue<uint64_t>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (uint64_t)Value, doc->GetAllocator()); }
-template <> void JsonValue<float>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (float)Value, doc->GetAllocator()); }
-template <> void JsonValue<double>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (double)Value, doc->GetAllocator()); }
+template <> void JsonValue<bool>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (bool)value, doc->GetAllocator()); }
+template <> void JsonValue<int8_t>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (int8_t)value, doc->GetAllocator()); }
+template <> void JsonValue<int16_t>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (int16_t)value, doc->GetAllocator()); }
+template <> void JsonValue<int32_t>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (int32_t)value, doc->GetAllocator()); }
+template <> void JsonValue<int64_t>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (int64_t)value, doc->GetAllocator()); }
+template <> void JsonValue<uint8_t>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (uint8_t)value, doc->GetAllocator()); }
+template <> void JsonValue<uint16_t>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (uint16_t)value, doc->GetAllocator()); }
+template <> void JsonValue<uint32_t>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (uint32_t)value, doc->GetAllocator()); }
+template <> void JsonValue<uint64_t>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (uint64_t)value, doc->GetAllocator()); }
+template <> void JsonValue<float>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (float)value, doc->GetAllocator()); }
+template <> void JsonValue<double>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (double)value, doc->GetAllocator()); }
 template <> void JsonValue<char *>::WriteToDoc(TJsonDocument *doc) {
 	rapidjson::Value json_val;
-	if (Value == NULL) {
+	if (value == NULL) {
 		json_val.SetNull();
 	} else {
-		json_val.SetString(rapidjson::StringRef((char *)Value));
+		json_val.SetString(rapidjson::StringRef((char *)value));
 	}
 	doc->AddMember(Name, json_val, doc->GetAllocator());
 }
 template <> void JsonValue<TJsonRawData>::WriteToDoc(TJsonDocument *doc) {
 	rapidjson::Value json_val;
-	TJsonRawData rawData = Value;
+	TJsonRawData rawData = value;
 	if (rawData.Data == NULL) {
 		json_val.SetNull();
 	} else {
@@ -176,39 +172,88 @@ template <> void JsonValue<TJsonRawData>::WriteToDoc(TJsonDocument *doc) {
 template <> void JsonValue<JsonObject *>::WriteToDoc(TJsonDocument *doc) {
 	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
 	rapidjson::Document jObject(&allocator);
-	Value->WriteToDoc(&jObject);
+	value->WriteToDoc(&jObject);
 	doc->AddMember(Name, jObject, allocator);
 }
 template <> void JsonValue<JsonArrayBase *>::WriteToDoc(TJsonDocument *doc) {
 	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
 	rapidjson::Document jArray(&allocator);
-	Value->WriteToDoc(&jArray);
+	value->WriteToDoc(&jArray);
 	doc->AddMember(Name, jArray, allocator);
 }
 /*
 
 
 */
-template <> void JsonValue<bool>::CloneTo(JsonValueBase *other) { ((JsonValue<bool> *)other)->Value = (bool)this->Value; }
-template <> void JsonValue<int8_t>::CloneTo(JsonValueBase *other) { ((JsonValue<int8_t> *)other)->Value = (int8_t)this->Value; }
-template <> void JsonValue<int16_t>::CloneTo(JsonValueBase *other) { ((JsonValue<int16_t> *)other)->Value = (int16_t)this->Value; }
-template <> void JsonValue<int32_t>::CloneTo(JsonValueBase *other) { ((JsonValue<int32_t> *)other)->Value = (int32_t)this->Value; }
-template <> void JsonValue<int64_t>::CloneTo(JsonValueBase *other) { ((JsonValue<int64_t> *)other)->Value = (int64_t)this->Value; }
-template <> void JsonValue<uint8_t>::CloneTo(JsonValueBase *other) { ((JsonValue<uint8_t> *)other)->Value = (uint8_t)this->Value; }
-template <> void JsonValue<uint16_t>::CloneTo(JsonValueBase *other) { ((JsonValue<uint16_t> *)other)->Value = (uint16_t)this->Value; }
-template <> void JsonValue<uint32_t>::CloneTo(JsonValueBase *other) { ((JsonValue<uint32_t> *)other)->Value = (uint32_t)this->Value; }
-template <> void JsonValue<uint64_t>::CloneTo(JsonValueBase *other) { ((JsonValue<uint64_t> *)other)->Value = (uint64_t)this->Value; }
-template <> void JsonValue<float>::CloneTo(JsonValueBase *other) { ((JsonValue<float> *)other)->Value = (float)this->Value; }
-template <> void JsonValue<double>::CloneTo(JsonValueBase *other) { ((JsonValue<double> *)other)->Value = (double)this->Value; }
-template <> void JsonValue<char *>::CloneTo(JsonValueBase *other) { ((JsonValue<char *> *)other)->Value = (char *)this->Value; }
-template <> void JsonValue<TJsonRawData>::CloneTo(JsonValueBase *other) { ((JsonValue<TJsonRawData> *)other)->Value = (TJsonRawData)this->Value; }
+template <> void JsonValue<bool>::CloneTo(JsonValueBase *other) { ((JsonValue<bool> *)other)->Set((bool)this->value); }
+template <> void JsonValue<int8_t>::CloneTo(JsonValueBase *other) { ((JsonValue<int8_t> *)other)->Set((int8_t)this->value); }
+template <> void JsonValue<int16_t>::CloneTo(JsonValueBase *other) { ((JsonValue<int16_t> *)other)->Set((int16_t)this->value); }
+template <> void JsonValue<int32_t>::CloneTo(JsonValueBase *other) { ((JsonValue<int32_t> *)other)->Set((int32_t)this->value); }
+template <> void JsonValue<int64_t>::CloneTo(JsonValueBase *other) { ((JsonValue<int64_t> *)other)->Set((int64_t)this->value); }
+template <> void JsonValue<uint8_t>::CloneTo(JsonValueBase *other) { ((JsonValue<uint8_t> *)other)->Set((uint8_t)this->value); }
+template <> void JsonValue<uint16_t>::CloneTo(JsonValueBase *other) { ((JsonValue<uint16_t> *)other)->Set((uint16_t)this->value); }
+template <> void JsonValue<uint32_t>::CloneTo(JsonValueBase *other) { ((JsonValue<uint32_t> *)other)->Set((uint32_t)this->value); }
+template <> void JsonValue<uint64_t>::CloneTo(JsonValueBase *other) { ((JsonValue<uint64_t> *)other)->Set((uint64_t)this->value); }
+template <> void JsonValue<float>::CloneTo(JsonValueBase *other) { ((JsonValue<float> *)other)->Set((float)this->value); }
+template <> void JsonValue<double>::CloneTo(JsonValueBase *other) { ((JsonValue<double> *)other)->Set((double)this->value); }
+template <> void JsonValue<char *>::CloneTo(JsonValueBase *other) { ((JsonValue<char *> *)other)->Set((char *)this->value); }
+template <> void JsonValue<TJsonRawData>::CloneTo(JsonValueBase *other) { ((JsonValue<TJsonRawData> *)other)->Set((TJsonRawData)this->value); }
 template <> void JsonValue<JsonObject *>::CloneTo(JsonValueBase *other) {
-	auto thisObject = ((JsonObject *)Value);
-	auto otherObject = ((JsonObject *)((JsonValue<JsonObject *> *)other)->Value);
+	auto thisObject = ((JsonObject *)value);
+	auto otherObject = ((JsonObject *)((JsonValue<JsonObject *> *)other)->value);
 	thisObject->CloneTo(otherObject);
 }
 template <> void JsonValue<JsonArrayBase *>::CloneTo(JsonValueBase *other) {
-	auto thisArray = ((JsonArrayBase *)Value);
-	auto otherArray = ((JsonArrayBase *)((JsonValue<JsonArrayBase *> *)other)->Value);
+	auto thisArray = ((JsonArrayBase *)value);
+	auto otherArray = ((JsonArrayBase *)((JsonValue<JsonArrayBase *> *)other)->value);
 	thisArray->CloneTo(otherArray);
 }
+/*
+
+
+*/
+template <> void JsonValue<bool>::DeleteValue() {}
+template <> void JsonValue<int8_t>::DeleteValue() {}
+template <> void JsonValue<int16_t>::DeleteValue() {}
+template <> void JsonValue<int32_t>::DeleteValue() {}
+template <> void JsonValue<int64_t>::DeleteValue() {}
+template <> void JsonValue<uint8_t>::DeleteValue() {}
+template <> void JsonValue<uint16_t>::DeleteValue() {}
+template <> void JsonValue<uint32_t>::DeleteValue() {}
+template <> void JsonValue<uint64_t>::DeleteValue() {}
+template <> void JsonValue<float>::DeleteValue() {}
+template <> void JsonValue<double>::DeleteValue() {}
+template <> void JsonValue<char *>::DeleteValue() { delete[] this->value; }
+template <> void JsonValue<TJsonRawData>::DeleteValue() {}
+template <> void JsonValue<JsonObject *>::DeleteValue() {}
+template <> void JsonValue<JsonArrayBase *>::DeleteValue() {}
+/*
+
+
+*/
+template <> void JsonValue<bool>::InitValue(bool value, size_t valueLen) { this->value = value; }
+template <> void JsonValue<int8_t>::InitValue(int8_t value, size_t valueLen) { this->value = value; }
+template <> void JsonValue<int16_t>::InitValue(int16_t value, size_t valueLen) { this->value = value; }
+template <> void JsonValue<int32_t>::InitValue(int32_t value, size_t valueLen) { this->value = value; }
+template <> void JsonValue<int64_t>::InitValue(int64_t value, size_t valueLen) { this->value = value; }
+template <> void JsonValue<uint8_t>::InitValue(uint8_t value, size_t valueLen) { this->value = value; }
+template <> void JsonValue<uint16_t>::InitValue(uint16_t value, size_t valueLen) { this->value = value; }
+template <> void JsonValue<uint32_t>::InitValue(uint32_t value, size_t valueLen) { this->value = value; }
+template <> void JsonValue<uint64_t>::InitValue(uint64_t value, size_t valueLen) { this->value = value; }
+template <> void JsonValue<float>::InitValue(float value, size_t valueLen) { this->value = value; }
+template <> void JsonValue<double>::InitValue(double value, size_t valueLen) { this->value = value; }
+template <> void JsonValue<char *>::InitValue(char *value, size_t valueLen) {
+	if (value == NULL) {
+		this->value = NULL;
+	} else {
+		size_t len = valueLen != size_t() //
+					   ? valueLen		  //
+					   : strlen(value);
+		this->value = new char[len + 1];
+		memcpy(this->value, value, len);
+		this->value[len] = 0;
+	}
+}
+template <> void JsonValue<TJsonRawData>::InitValue(TJsonRawData value, size_t valueLen) { this->value = value; }
+template <> void JsonValue<JsonObject *>::InitValue(JsonObject *value, size_t valueLen) { this->value = value; }
+template <> void JsonValue<JsonArrayBase *>::InitValue(JsonArrayBase *value, size_t valueLen) { this->value = value; }

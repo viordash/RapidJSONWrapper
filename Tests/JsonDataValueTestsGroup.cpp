@@ -18,12 +18,12 @@ TEST(JsonDataValueGroup, JsonDataValue_TryParse_Test) {
 	doc.Parse("{\"testString\":\"User1\"}");
 	CHECK_TRUE(testable.TryParse(&doc));
 
-	MEMCMP_EQUAL(((TJsonRawData)testable.Value).Data, "User1", ((TJsonRawData)testable.Value).Size);
+	MEMCMP_EQUAL(((TJsonRawData)testable.Get()).Data, "User1", ((TJsonRawData)testable.Get()).Size);
 
 	doc.Parse("{\"testString\":null}");
 	CHECK_TRUE(testable.TryParse(&doc));
-	CHECK_EQUAL(((TJsonRawData)testable.Value).Data, NULL);
-	CHECK_EQUAL(((TJsonRawData)testable.Value).Size, 0);
+	CHECK_EQUAL(((TJsonRawData)testable.Get()).Data, NULL);
+	CHECK_EQUAL(((TJsonRawData)testable.Get()).Size, 0);
 }
 
 TEST(JsonDataValueGroup, JsonDataValue_WriteTo_Test) {
@@ -80,9 +80,9 @@ TEST(JsonDataValueGroup, JsonDataValue_WriteToJson_Binary_Test) {
 	rapidjson::Document readDoc;
 	doc.Parse(jsonStr);
 	CHECK(readTestable.TryParse(&doc));
-	CHECK(((TJsonRawData)readTestable.Value).Data != NULL);
-	CHECK_EQUAL(((TJsonRawData)readTestable.Value).Size, sizeof(data));
-	MEMCMP_EQUAL(data, ((TJsonRawData)readTestable.Value).Data, ((TJsonRawData)readTestable.Value).Size);
+	CHECK(((TJsonRawData)readTestable.Get()).Data != NULL);
+	CHECK_EQUAL(((TJsonRawData)readTestable.Get()).Size, sizeof(data));
+	MEMCMP_EQUAL(data, ((TJsonRawData)readTestable.Get()).Data, ((TJsonRawData)readTestable.Get()).Size);
 }
 
 TEST(JsonDataValueGroup, JsonDataValue_WriteTo_For_Null_Test) {
@@ -105,12 +105,12 @@ TEST(JsonDataValueGroup, JsonDataValue_WriteTo_For_Null_Test) {
 TEST(JsonDataValueGroup, JsonDataValue_SetValue_Test) {
 	JsonFieldsContainer container;
 	JsonValue<TJsonRawData> testable(&container, "testString");
-	CHECK_EQUAL(((TJsonRawData)testable.Value).Data, NULL);
-	CHECK_EQUAL(((TJsonRawData)testable.Value).Size, 0);
+	CHECK_EQUAL(((TJsonRawData)testable.Get()).Data, NULL);
+	CHECK_EQUAL(((TJsonRawData)testable.Get()).Size, 0);
 
-	testable.Value = {(uint8_t *)"0123456789", sizeof("0123456789") - 1};
-	STRCMP_EQUAL((char *)((TJsonRawData)testable.Value).Data, "0123456789");
-	CHECK_EQUAL(((TJsonRawData)testable.Value).Size, sizeof("0123456789") - 1);
+	testable.Set({(uint8_t *)"0123456789", sizeof("0123456789") - 1});
+	STRCMP_EQUAL((char *)((TJsonRawData)testable.Get()).Data, "0123456789");
+	CHECK_EQUAL(((TJsonRawData)testable.Get()).Size, sizeof("0123456789") - 1);
 }
 
 TEST(JsonDataValueGroup, JsonDataValue_Equals_Test) {
@@ -121,7 +121,7 @@ TEST(JsonDataValueGroup, JsonDataValue_Equals_Test) {
 
 	CHECK_TRUE(testable1 == testable01);
 	CHECK_FALSE(testable1 != testable01);
-	testable01.Value = {(uint8_t *)"otherValue", sizeof("otherValue")};
+	testable01.Set({(uint8_t *)"otherValue", sizeof("otherValue")});
 	CHECK_TRUE(testable1 != testable01);
 	CHECK_FALSE(testable1 == testable01);
 }
@@ -133,8 +133,8 @@ TEST(JsonDataValueGroup, JsonDataValue_CloneTo_Test) {
 	JsonValue<TJsonRawData> clone1(&container, "test");
 
 	testable1.CloneTo((JsonValueBase *)&clone1);
-	testable1.Value = {(uint8_t *)"check the full data buffer is cloned", sizeof("check the full data buffer is cloned")};
-	STRCMP_EQUAL((char *)((TJsonRawData)clone1.Value).Data, "0123456789");
+	testable1.Get() = {(uint8_t *)"check the full data buffer is cloned", sizeof("check the full data buffer is cloned")};
+	STRCMP_EQUAL((char *)((TJsonRawData)clone1.Get()).Data, "0123456789");
 }
 
 TEST(JsonDataValueGroup, JsonDataValue_Common_TryParse_Test) {
@@ -150,12 +150,11 @@ TEST(JsonDataValueGroup, JsonDataValue_Common_TryParse_Test) {
 	CHECK_FALSE(testable1.Presented());
 	CHECK_FALSE(testable1.IsNull());
 
-	
 	testable1.ResetToNull();
 	doc.Parse("{\"test\":\"01234\"}");
 	CHECK_TRUE(testable1.TryParse(&doc));
-	STRCMP_EQUAL((char *)((TJsonRawData)testable1.Value).Data, "01234");
-	CHECK_EQUAL(((TJsonRawData)testable1.Value).Size, sizeof("01234") - 1);
+	STRCMP_EQUAL((char *)((TJsonRawData)testable1.Get()).Data, "01234");
+	CHECK_EQUAL(((TJsonRawData)testable1.Get()).Size, sizeof("01234") - 1);
 	CHECK_TRUE(testable1.Presented());
 	CHECK_FALSE(testable1.IsNull());
 
