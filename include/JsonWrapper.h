@@ -10,9 +10,9 @@ typedef struct {
 
 template <class T> class JsonValue : public JsonValueBase {
   public:
-	JsonValue(JsonFieldsContainer *container, size_t nameLen, const char *name, size_t valueLen, const T value) : JsonValueBase(container, name, nameLen) { InitValue(value, valueLen); }
-	JsonValue(JsonFieldsContainer *container, size_t nameLen, const char *name, const T value = T()) : JsonValue(container, nameLen, name, size_t(), value) {}
-	template <size_t N> JsonValue(JsonFieldsContainer *container, const char (&name)[N], const T value = T()) : JsonValue(container, N - 1, name, value) {}
+	JsonValue(JsonFieldsContainer *container, size_t nameLen, const char *name, size_t valueLen, T value) : JsonValueBase(container, name, nameLen) { InitValue(value, valueLen); }
+	JsonValue(JsonFieldsContainer *container, size_t nameLen, const char *name, T value = T()) : JsonValue(container, nameLen, name, size_t(), value) {}
+	template <size_t N> JsonValue(JsonFieldsContainer *container, const char (&name)[N], T value = T()) : JsonValue(container, N - 1, name, value) {}
 
 	virtual ~JsonValue() { DeleteValue(); }
 
@@ -23,24 +23,24 @@ template <class T> class JsonValue : public JsonValueBase {
 	void CloneTo(JsonValueBase *other) override final;
 
 	T Get() { return value; }
-	void Set(const T newValue, size_t newValueLen = size_t()) {
+	void Set(T newValue, size_t newValueLen = size_t()) {
 		DeleteValue();
 		InitValue(newValue, newValueLen);
 	}
 
   protected:
 	T value;
-	void InitValue(const T value, size_t valueLen);
+	void InitValue(T value, size_t valueLen);
 	void DeleteValue();
 };
 
 template <class T> class JsonCommonValue : public JsonValueBase {
   public:
-	JsonCommonValue(JsonFieldsContainer *container, size_t nameLen, const char *name, size_t valueLen, const T value) : JsonValueBase(container, name, nameLen), presented(false), isNull(false) {
+	JsonCommonValue(JsonFieldsContainer *container, size_t nameLen, const char *name, size_t valueLen, T value) : JsonValueBase(container, name, nameLen), presented(false), isNull(false) {
 		InitValue(value, valueLen);
 	}
-	JsonCommonValue(JsonFieldsContainer *container, size_t nameLen, const char *name, const T value = T()) : JsonCommonValue(container, nameLen, name, size_t(), value) {}
-	template <size_t N> JsonCommonValue(JsonFieldsContainer *container, const char (&name)[N], const T value = T()) : JsonCommonValue(container, N - 1, name, value) {}
+	JsonCommonValue(JsonFieldsContainer *container, size_t nameLen, const char *name, T value = T()) : JsonCommonValue(container, nameLen, name, size_t(), value) {}
+	template <size_t N> JsonCommonValue(JsonFieldsContainer *container, const char (&name)[N], T value = T()) : JsonCommonValue(container, N - 1, name, value) {}
 
 	virtual ~JsonCommonValue() { DeleteValue(); }
 
@@ -55,7 +55,7 @@ template <class T> class JsonCommonValue : public JsonValueBase {
 	void ResetToNull();
 
 	T Get() { return value; }
-	void Set(const T newValue, size_t newValueLen = size_t()) {
+	void Set(T newValue, size_t newValueLen = size_t()) {
 		DeleteValue();
 		InitValue(newValue, newValueLen);
 	}
@@ -64,7 +64,7 @@ template <class T> class JsonCommonValue : public JsonValueBase {
 	bool presented;
 	bool isNull;
 	T value;
-	void InitValue(const T value, size_t valueLen);
+	void InitValue(T value, size_t valueLen);
 	void DeleteValue();
 };
 
