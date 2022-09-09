@@ -32,57 +32,57 @@ class UsersList : public JsonObjectsArray {
 
 class StringsList : public JsonArray<char *> {
   public:
-	bool Validate(char *item) override { return Size() < maxCount && (item == NULL || strcmp(item, "notValid") != 0); }
+	bool Validate(const char *item) override { return Size() < maxCount && (item == NULL || strcmp(item, "notValid") != 0); }
 };
 
 class BoolList : public JsonArray<TBoolArray> {
   public:
-	bool Validate(TBoolArray item) override { return Size() < maxCount; }
+	bool Validate(const TBoolArray item) override { return Size() < maxCount; }
 };
 
 class Int64List : public JsonArray<int64_t> {
   public:
-	bool Validate(int64_t item) override { return Size() < maxCount && item < 5188146770730811392LL + 1LL; }
+	bool Validate(const int64_t item) override { return Size() < maxCount && item < 5188146770730811392LL + 1LL; }
 };
 class Uint64List : public JsonArray<uint64_t> {
   public:
-	bool Validate(uint64_t item) override { return Size() < maxCount && item < 10188146770730811392ULL + 1ULL; }
+	bool Validate(const uint64_t item) override { return Size() < maxCount && item < 10188146770730811392ULL + 1ULL; }
 };
 
 class Int32List : public JsonArray<int32_t> {
   public:
-	bool Validate(int32_t item) override { return Size() < maxCount; }
+	bool Validate(const int32_t item) override { return Size() < maxCount; }
 };
 class Uint32List : public JsonArray<uint32_t> {
   public:
-	bool Validate(uint32_t item) override { return Size() < maxCount; }
+	bool Validate(const uint32_t item) override { return Size() < maxCount; }
 };
 
 class Int16List : public JsonArray<int16_t> {
   public:
-	bool Validate(int16_t item) override { return Size() < maxCount; }
+	bool Validate(const int16_t item) override { return Size() < maxCount; }
 };
 class Uint16List : public JsonArray<uint16_t> {
   public:
-	bool Validate(uint16_t item) override { return Size() < maxCount; }
+	bool Validate(const uint16_t item) override { return Size() < maxCount; }
 };
 
 class Int8List : public JsonArray<int8_t> {
   public:
-	bool Validate(int8_t item) override { return Size() < maxCount; }
+	bool Validate(const int8_t item) override { return Size() < maxCount; }
 };
 class Uint8List : public JsonArray<uint8_t> {
   public:
-	bool Validate(uint8_t item) override { return Size() < maxCount; }
+	bool Validate(const uint8_t item) override { return Size() < maxCount; }
 };
 
 class DoubleList : public JsonArray<double> {
   public:
-	bool Validate(double item) override { return Size() < maxCount; }
+	bool Validate(const double item) override { return Size() < maxCount; }
 };
 class FloatList : public JsonArray<float> {
   public:
-	bool Validate(float item) override { return Size() < maxCount; }
+	bool Validate(const float item) override { return Size() < maxCount; }
 };
 
 TEST(JsonArrayTestsGroup, JsonObjectArray_Parse_Test) {

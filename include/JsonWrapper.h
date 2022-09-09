@@ -100,6 +100,7 @@ class JsonObject : public JsonFieldsContainer {
 
 template <class TItem> class JsonArray : public JsonArrayBase {
   public:
+	typedef typename std::conditional<std::is_same<TItem, char *>::value, const char *, typename std::add_const<TItem>::type>::type ConstTItem;
 	virtual ~JsonArray();
 
 	TItem Item(size_t index) { return (TItem)Items[index]; }
@@ -112,10 +113,10 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 	bool TryDocParse(TJsonDocument *doc) override final;
 	void WriteToDoc(TJsonDocument *doc) override final;
 
-	virtual bool Add(TItem item);
-	virtual bool Update(size_t index, TItem item);
-	virtual void Remove(TItem item);
-	typename std::vector<TItem>::iterator Find(TItem item);
+	virtual bool Add(ConstTItem item);
+	virtual bool Update(size_t index, ConstTItem item);
+	virtual void Remove(ConstTItem item);
+	typename std::vector<TItem>::iterator Find(ConstTItem item);
 
 	bool Equals(JsonArrayBase *other) override final;
 	void CloneTo(JsonArrayBase *other) override final;
@@ -125,9 +126,9 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 
   protected:
 	std::vector<TItem> Items;
-	virtual bool Validate(TItem item) = 0;
-	void AddInternal(TItem item);
-	void DeleteItem(TItem item);
+	virtual bool Validate(ConstTItem item) = 0;
+	void AddInternal(ConstTItem item);
+	void DeleteItem(ConstTItem item);
 };
 
 class JsonObjectsArray : public JsonArrayBase {
