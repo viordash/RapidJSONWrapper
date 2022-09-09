@@ -26,7 +26,7 @@ class UserDto : public JsonObject {
 	JsonValue<char *> Name;
 	JsonValue<uint32_t> Role;
 
-	UserDto(char *name = {}, TUserRole role = {})
+	UserDto(const char *name = {}, const TUserRole role = {})
 		: Name(this, "name", name), //
 		  Role(this, "role", role){};
 };
@@ -71,7 +71,8 @@ class GoodsDto : public JsonObject {
 	JsonValue<bool> Deleted;
 	JsonValue<char *> StoreName;
 
-	GoodsDto(int id = {}, uint32_t created = {}, char *group = {}, char *name = {}, float price = {}, double quantity = {}, bool deleted = {}, char *storeName = {})
+	GoodsDto(const int id = {}, const uint32_t created = {}, const char *group = {}, const char *name = {}, const float price = {}, const double quantity = {}, const bool deleted = {},
+			 const char *storeName = {})
 		: Id(this, "Id", id),					//
 		  Created(this, "Created", created),	//
 		  Group(this, "Group", group),			//
@@ -187,7 +188,7 @@ class OrderDto : public JsonObject {
 	GoodsList goodsList;
 	UserDto userDto;
 
-	OrderDto(char *supplier = {}, uint32_t dateTime = {}, char *userName = {}, TUserRole userRole = {})
+	OrderDto(const char *supplier = {}, const uint32_t dateTime = {}, const char *userName = {}, const TUserRole userRole = {})
 		: Supplier(this, "supplier", supplier), //
 		  DateTime(this, "dateTime", dateTime), //
 		  Goods(this, "goods", &goodsList),		//
@@ -277,7 +278,7 @@ class CustomerDto : public JsonObject {
 	JsonValue<JsonArrayBase *> Orders;
 	OrdersList ordersList;
 
-	CustomerDto(uint64_t id = {}, char *name = {}, TJsonRawData blob = {})
+	CustomerDto(const uint64_t id = {}, const char *name = {}, const TJsonRawData blob = {})
 		: Id(this, "id", id),		//
 		  Name(this, "name", name), //
 		  Blob(this, "blob", blob), //

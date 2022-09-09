@@ -18,7 +18,7 @@ class UserDto : public JsonObject {
 	JsonValue<char *> Name;
 	JsonCommonValue<uint32_t> Role;
 
-	UserDto(char *name = {}, TUserRole role = {})
+	UserDto(const char *name = {}, const TUserRole role = {})
 		: Name(this, "name", name), //
 		  Role(this, "role", role){};
 };
@@ -34,7 +34,8 @@ class GoodsDto : public JsonObject {
 	JsonCommonValue<bool> Deleted;
 	JsonCommonValue<char *> StoreName;
 
-	GoodsDto(int id = {}, uint32_t created = {}, char *group = {}, char *name = {}, float price = {}, double quantity = {}, bool deleted = {}, char *storeName = {})
+	GoodsDto(const int id = {}, uint32_t created = {}, const char *group = {}, const char *name = {}, const float price = {}, const double quantity = {}, const bool deleted = {},
+			 const char *storeName = {})
 		: Id(this, "Id", id),					//
 		  Created(this, "Created", created),	//
 		  Group(this, "Group", group),			//
@@ -60,12 +61,14 @@ class OrderDto : public JsonObject {
 	GoodsList goodsList;
 	UserDto userDto;
 
-	OrderDto(char *supplier = {}, uint32_t dateTime = {}, char *userName = {}, TUserRole userRole = {})
+	OrderDto(const char *supplier = {}, const uint32_t dateTime = {}, const char *userName = {}, const TUserRole userRole = {})
 		: Supplier(this, "supplier", supplier), //
 		  DateTime(this, "dateTime", dateTime), //
 		  Goods(this, "goods", &goodsList),		//
 		  userDto(userName, userRole),			//
 		  User(this, "user", &userDto){};
+
+	~OrderDto() {}
 };
 
 class OrdersList : public JsonObjectsArray {
@@ -82,7 +85,7 @@ class CustomerDto : public JsonObject {
 	JsonValue<JsonArrayBase *> Orders;
 	OrdersList ordersList;
 
-	CustomerDto(uint64_t id = {}, char *name = {}, TJsonRawData blob = {})
+	CustomerDto(const uint64_t id = {}, const char *name = {}, const TJsonRawData blob = {})
 		: Id(this, "id", id),		//
 		  Name(this, "name", name), //
 		  Blob(this, "blob", blob), //
@@ -91,7 +94,7 @@ class CustomerDto : public JsonObject {
 
 class ValuesWoInstance : public JsonObject {
   public:
-	ValuesWoInstance(uint64_t id = {}, char *name = {}, TJsonRawData blob = {}) {
+	ValuesWoInstance(const uint64_t id = {}, const char *name = {}, const TJsonRawData blob = {}) {
 		new JsonValue<uint64_t>(this, "id", id);
 		new JsonValue<char *>(this, "name", name);
 		new JsonValue<TJsonRawData>(this, "blob", blob);
@@ -310,7 +313,7 @@ TEST(JsonObjectTestsGroup, JsonObject_Equals_Test) {
 	CHECK_TRUE(orderDto1 == orderDto2);
 	CHECK_FALSE(orderDto1 != orderDto2);
 	CHECK_TRUE(orderDto1.Equals(&orderDto2));
-	orderDto1.DateTime.Set( orderDto1.DateTime.Get() + 1);
+	orderDto1.DateTime.Set(orderDto1.DateTime.Get() + 1);
 	CHECK_TRUE(orderDto1 != orderDto2);
 	CHECK_FALSE(orderDto1 == orderDto2);
 	CHECK_FALSE(orderDto1.Equals(&orderDto2));

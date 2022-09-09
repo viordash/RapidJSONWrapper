@@ -15,7 +15,7 @@ class UserDto : public JsonObject {
 	JsonValue<char *> Name;
 	JsonValue<uint32_t> Role;
 
-	UserDto(char *name = {}, uint32_t role = {}, bool optional = {})
+	UserDto(const char *name = {}, const uint32_t role = {}, const bool optional = {})
 		: Name(this, "name", name), //
 		  Role(this, "role", role){};
 

@@ -485,51 +485,51 @@ template <> void JsonCommonValue<JsonArrayBase *>::DeleteValue() {}
 
 
 */
-template <> void JsonCommonValue<bool>::InitValue(bool value, size_t valueLen) {
+template <> void JsonCommonValue<bool>::InitValue(const bool value, size_t valueLen) {
 	this->value = value;
 	this->isNull = false;
 }
-template <> void JsonCommonValue<int8_t>::InitValue(int8_t value, size_t valueLen) {
+template <> void JsonCommonValue<int8_t>::InitValue(const int8_t value, size_t valueLen) {
 	this->value = value;
 	this->isNull = false;
 }
-template <> void JsonCommonValue<int16_t>::InitValue(int16_t value, size_t valueLen) {
+template <> void JsonCommonValue<int16_t>::InitValue(const int16_t value, size_t valueLen) {
 	this->value = value;
 	this->isNull = false;
 }
-template <> void JsonCommonValue<int32_t>::InitValue(int32_t value, size_t valueLen) {
+template <> void JsonCommonValue<int32_t>::InitValue(const int32_t value, size_t valueLen) {
 	this->value = value;
 	this->isNull = false;
 }
-template <> void JsonCommonValue<int64_t>::InitValue(int64_t value, size_t valueLen) {
+template <> void JsonCommonValue<int64_t>::InitValue(const int64_t value, size_t valueLen) {
 	this->value = value;
 	this->isNull = false;
 }
-template <> void JsonCommonValue<uint8_t>::InitValue(uint8_t value, size_t valueLen) {
+template <> void JsonCommonValue<uint8_t>::InitValue(const uint8_t value, size_t valueLen) {
 	this->value = value;
 	this->isNull = false;
 }
-template <> void JsonCommonValue<uint16_t>::InitValue(uint16_t value, size_t valueLen) {
+template <> void JsonCommonValue<uint16_t>::InitValue(const uint16_t value, size_t valueLen) {
 	this->value = value;
 	this->isNull = false;
 }
-template <> void JsonCommonValue<uint32_t>::InitValue(uint32_t value, size_t valueLen) {
+template <> void JsonCommonValue<uint32_t>::InitValue(const uint32_t value, size_t valueLen) {
 	this->value = value;
 	this->isNull = false;
 }
-template <> void JsonCommonValue<uint64_t>::InitValue(uint64_t value, size_t valueLen) {
+template <> void JsonCommonValue<uint64_t>::InitValue(const uint64_t value, size_t valueLen) {
 	this->value = value;
 	this->isNull = false;
 }
-template <> void JsonCommonValue<float>::InitValue(float value, size_t valueLen) {
+template <> void JsonCommonValue<float>::InitValue(const float value, size_t valueLen) {
 	this->value = value;
 	this->isNull = false;
 }
-template <> void JsonCommonValue<double>::InitValue(double value, size_t valueLen) {
+template <> void JsonCommonValue<double>::InitValue(const double value, size_t valueLen) {
 	this->value = value;
 	this->isNull = false;
 }
-template <> void JsonCommonValue<char *>::InitValue(char *value, size_t valueLen) {
+template <> void JsonCommonValue<char *>::InitValue(const char *value, size_t valueLen) {
 	if (value == NULL) {
 		this->value = NULL;
 	} else {
@@ -542,7 +542,7 @@ template <> void JsonCommonValue<char *>::InitValue(char *value, size_t valueLen
 	}
 	this->isNull = this->value == NULL;
 }
-template <> void JsonCommonValue<TJsonRawData>::InitValue(TJsonRawData value, size_t valueLen) {
+template <> void JsonCommonValue<TJsonRawData>::InitValue(const TJsonRawData value, size_t valueLen) {
 	this->value = value;
 	this->isNull = this->value.Data == NULL;
 }

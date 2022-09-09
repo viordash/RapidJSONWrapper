@@ -231,18 +231,18 @@ template <> void JsonValue<JsonArrayBase *>::DeleteValue() {}
 
 
 */
-template <> void JsonValue<bool>::InitValue(bool value, size_t valueLen) { this->value = value; }
-template <> void JsonValue<int8_t>::InitValue(int8_t value, size_t valueLen) { this->value = value; }
-template <> void JsonValue<int16_t>::InitValue(int16_t value, size_t valueLen) { this->value = value; }
-template <> void JsonValue<int32_t>::InitValue(int32_t value, size_t valueLen) { this->value = value; }
-template <> void JsonValue<int64_t>::InitValue(int64_t value, size_t valueLen) { this->value = value; }
-template <> void JsonValue<uint8_t>::InitValue(uint8_t value, size_t valueLen) { this->value = value; }
-template <> void JsonValue<uint16_t>::InitValue(uint16_t value, size_t valueLen) { this->value = value; }
-template <> void JsonValue<uint32_t>::InitValue(uint32_t value, size_t valueLen) { this->value = value; }
-template <> void JsonValue<uint64_t>::InitValue(uint64_t value, size_t valueLen) { this->value = value; }
-template <> void JsonValue<float>::InitValue(float value, size_t valueLen) { this->value = value; }
-template <> void JsonValue<double>::InitValue(double value, size_t valueLen) { this->value = value; }
-template <> void JsonValue<char *>::InitValue(char *value, size_t valueLen) {
+template <> void JsonValue<bool>::InitValue(const bool value, size_t valueLen) { this->value = value; }
+template <> void JsonValue<int8_t>::InitValue(const int8_t value, size_t valueLen) { this->value = value; }
+template <> void JsonValue<int16_t>::InitValue(const int16_t value, size_t valueLen) { this->value = value; }
+template <> void JsonValue<int32_t>::InitValue(const int32_t value, size_t valueLen) { this->value = value; }
+template <> void JsonValue<int64_t>::InitValue(const int64_t value, size_t valueLen) { this->value = value; }
+template <> void JsonValue<uint8_t>::InitValue(const uint8_t value, size_t valueLen) { this->value = value; }
+template <> void JsonValue<uint16_t>::InitValue(const uint16_t value, size_t valueLen) { this->value = value; }
+template <> void JsonValue<uint32_t>::InitValue(const uint32_t value, size_t valueLen) { this->value = value; }
+template <> void JsonValue<uint64_t>::InitValue(const uint64_t value, size_t valueLen) { this->value = value; }
+template <> void JsonValue<float>::InitValue(const float value, size_t valueLen) { this->value = value; }
+template <> void JsonValue<double>::InitValue(const double value, size_t valueLen) { this->value = value; }
+template <> void JsonValue<char *>::InitValue(const char *value, size_t valueLen) {
 	if (value == NULL) {
 		this->value = NULL;
 	} else {
@@ -254,6 +254,6 @@ template <> void JsonValue<char *>::InitValue(char *value, size_t valueLen) {
 		this->value[len] = 0;
 	}
 }
-template <> void JsonValue<TJsonRawData>::InitValue(TJsonRawData value, size_t valueLen) { this->value = value; }
+template <> void JsonValue<TJsonRawData>::InitValue(const TJsonRawData value, size_t valueLen) { this->value = value; }
 template <> void JsonValue<JsonObject *>::InitValue(JsonObject *value, size_t valueLen) { this->value = value; }
 template <> void JsonValue<JsonArrayBase *>::InitValue(JsonArrayBase *value, size_t valueLen) { this->value = value; }
