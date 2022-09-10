@@ -170,7 +170,7 @@ static std::vector<TGoodsDto *> *DeserializeGoodsList(rapidjson::Value *doc) {
 	for (const auto &jItem : jArray) {
 		auto goods = DeserializeGoodsDto((rapidjson::Value *)&jItem);
 		if (goods == NULL) {
-			for (const auto item : *goodsList) { delete item; }
+			for (const auto& item : *goodsList) { delete item; }
 			delete goodsList;
 			return NULL;
 		}
@@ -261,7 +261,7 @@ static std::vector<TOrderDto *> *DeserializeOrdersList(rapidjson::Value *doc) {
 	for (const auto &jItem : jArray) {
 		auto goods = DeserializeOrderDto((rapidjson::Value *)&jItem);
 		if (goods == NULL) {
-			for (const auto item : *ordersList) { delete item; }
+			for (const auto& item : *ordersList) { delete item; }
 			delete ordersList;
 			return NULL;
 		}
@@ -349,7 +349,7 @@ static std::vector<TCustomerDto *> *DeserializeCustomerList(rapidjson::Value *do
 	for (const auto &jItem : jArray) {
 		auto customer = DeserializeCustomerDto((rapidjson::Value *)&jItem);
 		if (customer == NULL) {
-			for (const auto item : *customerList) { delete item; }
+			for (const auto& item : *customerList) { delete item; }
 			delete customerList;
 			return NULL;
 		}
