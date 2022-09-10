@@ -36,7 +36,7 @@ void JsonObjectsArray::AddInternal(JsonObject *item) { Items.push_back(item); }
 bool JsonObjectsArray::Update(size_t index, JsonObject *item) {
 	if (index >= Size() || !Validate(item)) { return false; }
 	DeleteItem(Items[index]);
-	Items[index] = (JsonObject *)item;
+	Items[index] = item;
 	return true;
 }
 
@@ -50,13 +50,13 @@ void JsonObjectsArray::Remove(JsonObject *item) {
 std::vector<JsonObject *>::iterator JsonObjectsArray::Find(JsonObject *item) {
 	if (item != NULL) {
 		for (auto iter = Items.begin(); iter != Items.end(); iter++) {
-			if (*((JsonObject *)*iter) == *((JsonObject *)item)) { return iter; }
+			if (*(*iter) == *item) { return iter; }
 		}
 	}
 	return Items.end();
 }
 
-void JsonObjectsArray::DeleteItem(JsonObject *item) { delete ((JsonObject *)item); }
+void JsonObjectsArray::DeleteItem(JsonObject *item) { delete item; }
 
 void JsonObjectsArray::WriteToDoc(TJsonDocument *doc) {
 	auto &allocator = doc->GetAllocator();
@@ -65,7 +65,7 @@ void JsonObjectsArray::WriteToDoc(TJsonDocument *doc) {
 
 	for (const auto &item : Items) {
 		rapidjson::Document childDoc(&allocator);
-		JsonObject *jObject = (JsonObject *)item;
+		JsonObject *jObject = item;
 		jObject->WriteToDoc(&childDoc);
 		doc->PushBack(childDoc, allocator);
 	}
@@ -77,14 +77,14 @@ bool operator==(const JsonObjectsArray &v1, const JsonObjectsArray &v2) { return
 bool JsonObjectsArray::Equals(JsonArrayBase *other) {
 	if (Items.size() != ((JsonObjectsArray *)other)->Items.size()) { return false; }
 	for (size_t i = 0; i < Items.size(); i++) {
-		if (*((JsonObject *)Items[i]) != *((JsonObject *)((JsonObjectsArray *)other)->Items[i])) { return false; }
+		if (*(Items[i]) != *(((JsonObjectsArray *)other)->Items[i])) { return false; }
 	}
 	return true;
 }
 
 void JsonObjectsArray::CloneTo(JsonArrayBase *other) {
 	auto otherArray = ((JsonObjectsArray *)other);
-	for (const auto &item : otherArray->Items) { delete (JsonObject *)item; }
+	for (const auto &item : otherArray->Items) { delete item; }
 	otherArray->Items.clear();
 
 	for (const auto &item : Items) {
