@@ -199,7 +199,7 @@ template <> bool JsonCommonValue<char *>::TryParse(TJsonDocument *doc) {
 	}
 	presented = true;
 	if (jsonVal->IsString()) {
-		Set((char *)jsonVal->GetString(), jsonVal->GetStringLength());
+		Set(jsonVal->GetString(), jsonVal->GetStringLength());
 		return true;
 	}
 	if (jsonVal->IsNull()) {
@@ -401,7 +401,7 @@ template <> void JsonCommonValue<char *>::WriteToDoc(TJsonDocument *doc) {
 	if (isNull || value == NULL) {
 		json_val.SetNull();
 	} else {
-		json_val.SetString(rapidjson::StringRef((char *)value));
+		json_val.SetString(rapidjson::StringRef(value));
 	}
 	doc->AddMember(Name, json_val, doc->GetAllocator());
 }
@@ -439,18 +439,18 @@ template <> void JsonCommonValue<JsonArrayBase *>::WriteToDoc(TJsonDocument *doc
 
 
 */
-template <> void JsonCommonValue<bool>::CloneTo(JsonValueBase *other) { ((JsonCommonValue<bool> *)other)->Set((bool)this->value); }
-template <> void JsonCommonValue<int8_t>::CloneTo(JsonValueBase *other) { ((JsonCommonValue<int8_t> *)other)->Set((int8_t)this->value); }
-template <> void JsonCommonValue<int16_t>::CloneTo(JsonValueBase *other) { ((JsonCommonValue<int16_t> *)other)->Set((int16_t)this->value); }
-template <> void JsonCommonValue<int32_t>::CloneTo(JsonValueBase *other) { ((JsonCommonValue<int32_t> *)other)->Set((int32_t)this->value); }
-template <> void JsonCommonValue<int64_t>::CloneTo(JsonValueBase *other) { ((JsonCommonValue<int64_t> *)other)->Set((int64_t)this->value); }
-template <> void JsonCommonValue<uint8_t>::CloneTo(JsonValueBase *other) { ((JsonCommonValue<uint8_t> *)other)->Set((uint8_t)this->value); }
-template <> void JsonCommonValue<uint16_t>::CloneTo(JsonValueBase *other) { ((JsonCommonValue<uint16_t> *)other)->Set((uint16_t)this->value); }
-template <> void JsonCommonValue<uint32_t>::CloneTo(JsonValueBase *other) { ((JsonCommonValue<uint32_t> *)other)->Set((uint32_t)this->value); }
-template <> void JsonCommonValue<uint64_t>::CloneTo(JsonValueBase *other) { ((JsonCommonValue<uint64_t> *)other)->Set((uint64_t)this->value); }
-template <> void JsonCommonValue<float>::CloneTo(JsonValueBase *other) { ((JsonCommonValue<float> *)other)->Set((float)this->value); }
-template <> void JsonCommonValue<double>::CloneTo(JsonValueBase *other) { ((JsonCommonValue<double> *)other)->Set((double)this->value); }
-template <> void JsonCommonValue<char *>::CloneTo(JsonValueBase *other) { ((JsonCommonValue<char *> *)other)->Set((char *)this->value); }
+template <> void JsonCommonValue<bool>::CloneTo(JsonValueBase *other) { ((JsonCommonValue<bool> *)other)->Set(this->value); }
+template <> void JsonCommonValue<int8_t>::CloneTo(JsonValueBase *other) { ((JsonCommonValue<int8_t> *)other)->Set(this->value); }
+template <> void JsonCommonValue<int16_t>::CloneTo(JsonValueBase *other) { ((JsonCommonValue<int16_t> *)other)->Set(this->value); }
+template <> void JsonCommonValue<int32_t>::CloneTo(JsonValueBase *other) { ((JsonCommonValue<int32_t> *)other)->Set(this->value); }
+template <> void JsonCommonValue<int64_t>::CloneTo(JsonValueBase *other) { ((JsonCommonValue<int64_t> *)other)->Set(this->value); }
+template <> void JsonCommonValue<uint8_t>::CloneTo(JsonValueBase *other) { ((JsonCommonValue<uint8_t> *)other)->Set(this->value); }
+template <> void JsonCommonValue<uint16_t>::CloneTo(JsonValueBase *other) { ((JsonCommonValue<uint16_t> *)other)->Set(this->value); }
+template <> void JsonCommonValue<uint32_t>::CloneTo(JsonValueBase *other) { ((JsonCommonValue<uint32_t> *)other)->Set(this->value); }
+template <> void JsonCommonValue<uint64_t>::CloneTo(JsonValueBase *other) { ((JsonCommonValue<uint64_t> *)other)->Set(this->value); }
+template <> void JsonCommonValue<float>::CloneTo(JsonValueBase *other) { ((JsonCommonValue<float> *)other)->Set(this->value); }
+template <> void JsonCommonValue<double>::CloneTo(JsonValueBase *other) { ((JsonCommonValue<double> *)other)->Set(this->value); }
+template <> void JsonCommonValue<char *>::CloneTo(JsonValueBase *other) { ((JsonCommonValue<char *> *)other)->Set(this->value); }
 template <> void JsonCommonValue<TJsonRawData>::CloneTo(JsonValueBase *other) { ((JsonCommonValue<TJsonRawData> *)other)->Set((TJsonRawData)this->value); }
 template <> void JsonCommonValue<JsonObject *>::CloneTo(JsonValueBase *other) {
 	auto thisObject = ((JsonObject *)value);

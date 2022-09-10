@@ -139,24 +139,24 @@ void JsonFloatCommonField_Equals_Test() {
 
 void JsonStringValue_CloneTo_Test() {
 	JsonFieldsContainer container;
-	JsonValue<char *> testable1(&container, "test", (char *)"0123456789");
+	JsonValue<char *> testable1(&container, "test", "0123456789");
 
 	JsonValue<char *> clone1(&container, "test");
 
 	testable1.CloneTo((JsonValueBase *)&clone1);
-	testable1.Set((char *)"check the full data buffer is cloned");
-	if (clone1.Get() == (char *)"0123456789") { printf("1000\n"); }
+	testable1.Set("check the full data buffer is cloned");
+	if (clone1.Get() == "0123456789") { printf("1000\n"); }
 }
 
 void JsonStringCommonValue_CloneTo_Test() {
 	JsonFieldsContainer container;
-	JsonCommonValue<char *> testable1(&container, "test", (char *)"0123456789");
+	JsonCommonValue<char *> testable1(&container, "test", "0123456789");
 
 	JsonCommonValue<char *> clone1(&container, "test");
 
 	testable1.CloneTo((JsonValueBase *)&clone1);
-	testable1.Set((char *)"check the full data buffer is cloned");
-	if (clone1.Get() == (char *)"0123456789") { printf("1000\n"); }
+	testable1.Set("check the full data buffer is cloned");
+	if (clone1.Get() == "0123456789") { printf("1000\n"); }
 }
 
 int main(const int argc, const char *argv[]) {
@@ -208,7 +208,7 @@ int main(const int argc, const char *argv[]) {
 	// 	JsonFieldsContainer container;
 	// 	JsonValue<char *, false> strObj(&container, "testStr", "hello json");
 	// 	auto res = strObj.TryStringParse("{\"testStr\":\"0123456 abcdef\"}");
-	// 	printf("strObj.TryParse res:%d, val:%s\n", res, (char *)strObj.Get());
+	// 	printf("strObj.TryParse res:%d, val:%s\n", res, strObj.Get());
 
 	// 	rapidjson::Document doc;
 	// 	doc.SetObject();

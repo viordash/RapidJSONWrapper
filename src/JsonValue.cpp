@@ -80,7 +80,7 @@ template <> bool JsonValue<char *>::TryParse(TJsonDocument *doc) {
 		}
 		return false;
 	}
-	Set((char *)jsonVal->GetString(), jsonVal->GetStringLength());
+	Set(jsonVal->GetString(), jsonVal->GetStringLength());
 	return true;
 }
 template <> bool JsonValue<TJsonRawData>::TryParse(TJsonDocument *doc) {
@@ -139,23 +139,23 @@ template <> bool JsonValue<JsonArrayBase *>::Equals(JsonValueBase *other) {
 
 
 */
-template <> void JsonValue<bool>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (bool)value, doc->GetAllocator()); }
-template <> void JsonValue<int8_t>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (int8_t)value, doc->GetAllocator()); }
-template <> void JsonValue<int16_t>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (int16_t)value, doc->GetAllocator()); }
-template <> void JsonValue<int32_t>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (int32_t)value, doc->GetAllocator()); }
-template <> void JsonValue<int64_t>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (int64_t)value, doc->GetAllocator()); }
-template <> void JsonValue<uint8_t>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (uint8_t)value, doc->GetAllocator()); }
-template <> void JsonValue<uint16_t>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (uint16_t)value, doc->GetAllocator()); }
-template <> void JsonValue<uint32_t>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (uint32_t)value, doc->GetAllocator()); }
-template <> void JsonValue<uint64_t>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (uint64_t)value, doc->GetAllocator()); }
-template <> void JsonValue<float>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (float)value, doc->GetAllocator()); }
-template <> void JsonValue<double>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, (double)value, doc->GetAllocator()); }
+template <> void JsonValue<bool>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, value, doc->GetAllocator()); }
+template <> void JsonValue<int8_t>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, value, doc->GetAllocator()); }
+template <> void JsonValue<int16_t>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, value, doc->GetAllocator()); }
+template <> void JsonValue<int32_t>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, value, doc->GetAllocator()); }
+template <> void JsonValue<int64_t>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, value, doc->GetAllocator()); }
+template <> void JsonValue<uint8_t>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, value, doc->GetAllocator()); }
+template <> void JsonValue<uint16_t>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, value, doc->GetAllocator()); }
+template <> void JsonValue<uint32_t>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, value, doc->GetAllocator()); }
+template <> void JsonValue<uint64_t>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, value, doc->GetAllocator()); }
+template <> void JsonValue<float>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, value, doc->GetAllocator()); }
+template <> void JsonValue<double>::WriteToDoc(TJsonDocument *doc) { doc->AddMember(Name, value, doc->GetAllocator()); }
 template <> void JsonValue<char *>::WriteToDoc(TJsonDocument *doc) {
 	rapidjson::Value json_val;
 	if (value == NULL) {
 		json_val.SetNull();
 	} else {
-		json_val.SetString(rapidjson::StringRef((char *)value));
+		json_val.SetString(rapidjson::StringRef(value));
 	}
 	doc->AddMember(Name, json_val, doc->GetAllocator());
 }
@@ -185,18 +185,18 @@ template <> void JsonValue<JsonArrayBase *>::WriteToDoc(TJsonDocument *doc) {
 
 
 */
-template <> void JsonValue<bool>::CloneTo(JsonValueBase *other) { ((JsonValue<bool> *)other)->Set((bool)this->value); }
-template <> void JsonValue<int8_t>::CloneTo(JsonValueBase *other) { ((JsonValue<int8_t> *)other)->Set((int8_t)this->value); }
-template <> void JsonValue<int16_t>::CloneTo(JsonValueBase *other) { ((JsonValue<int16_t> *)other)->Set((int16_t)this->value); }
-template <> void JsonValue<int32_t>::CloneTo(JsonValueBase *other) { ((JsonValue<int32_t> *)other)->Set((int32_t)this->value); }
-template <> void JsonValue<int64_t>::CloneTo(JsonValueBase *other) { ((JsonValue<int64_t> *)other)->Set((int64_t)this->value); }
-template <> void JsonValue<uint8_t>::CloneTo(JsonValueBase *other) { ((JsonValue<uint8_t> *)other)->Set((uint8_t)this->value); }
-template <> void JsonValue<uint16_t>::CloneTo(JsonValueBase *other) { ((JsonValue<uint16_t> *)other)->Set((uint16_t)this->value); }
-template <> void JsonValue<uint32_t>::CloneTo(JsonValueBase *other) { ((JsonValue<uint32_t> *)other)->Set((uint32_t)this->value); }
-template <> void JsonValue<uint64_t>::CloneTo(JsonValueBase *other) { ((JsonValue<uint64_t> *)other)->Set((uint64_t)this->value); }
-template <> void JsonValue<float>::CloneTo(JsonValueBase *other) { ((JsonValue<float> *)other)->Set((float)this->value); }
-template <> void JsonValue<double>::CloneTo(JsonValueBase *other) { ((JsonValue<double> *)other)->Set((double)this->value); }
-template <> void JsonValue<char *>::CloneTo(JsonValueBase *other) { ((JsonValue<char *> *)other)->Set((char *)this->value); }
+template <> void JsonValue<bool>::CloneTo(JsonValueBase *other) { ((JsonValue<bool> *)other)->Set(this->value); }
+template <> void JsonValue<int8_t>::CloneTo(JsonValueBase *other) { ((JsonValue<int8_t> *)other)->Set(this->value); }
+template <> void JsonValue<int16_t>::CloneTo(JsonValueBase *other) { ((JsonValue<int16_t> *)other)->Set(this->value); }
+template <> void JsonValue<int32_t>::CloneTo(JsonValueBase *other) { ((JsonValue<int32_t> *)other)->Set(this->value); }
+template <> void JsonValue<int64_t>::CloneTo(JsonValueBase *other) { ((JsonValue<int64_t> *)other)->Set(this->value); }
+template <> void JsonValue<uint8_t>::CloneTo(JsonValueBase *other) { ((JsonValue<uint8_t> *)other)->Set(this->value); }
+template <> void JsonValue<uint16_t>::CloneTo(JsonValueBase *other) { ((JsonValue<uint16_t> *)other)->Set(this->value); }
+template <> void JsonValue<uint32_t>::CloneTo(JsonValueBase *other) { ((JsonValue<uint32_t> *)other)->Set(this->value); }
+template <> void JsonValue<uint64_t>::CloneTo(JsonValueBase *other) { ((JsonValue<uint64_t> *)other)->Set(this->value); }
+template <> void JsonValue<float>::CloneTo(JsonValueBase *other) { ((JsonValue<float> *)other)->Set(this->value); }
+template <> void JsonValue<double>::CloneTo(JsonValueBase *other) { ((JsonValue<double> *)other)->Set(this->value); }
+template <> void JsonValue<char *>::CloneTo(JsonValueBase *other) { ((JsonValue<char *> *)other)->Set(this->value); }
 template <> void JsonValue<TJsonRawData>::CloneTo(JsonValueBase *other) { ((JsonValue<TJsonRawData> *)other)->Set((TJsonRawData)this->value); }
 template <> void JsonValue<JsonObject *>::CloneTo(JsonValueBase *other) {
 	auto thisObject = ((JsonObject *)value);
