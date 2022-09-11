@@ -86,7 +86,7 @@ template <> void JsonArray<char *>::WriteToDoc(TJsonDocument *doc) {
 	doc->SetArray();
 	doc->Reserve(Items.size(), doc->GetAllocator());
 	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
-	for (const auto& item : Items) {
+	for (const auto &item : Items) {
 		if (item != NULL) {
 			doc->PushBack(rapidjson::Value(rapidjson::StringRef(item)).Move(), allocator);
 		} else {
@@ -99,67 +99,67 @@ template <> void JsonArray<TBoolArray>::WriteToDoc(TJsonDocument *doc) {
 	doc->SetArray();
 	doc->Reserve(Items.size(), doc->GetAllocator());
 	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
-	for (const auto& item : Items) { doc->PushBack(rapidjson::Value((bool)item).Move(), allocator); }
+	for (const auto &item : Items) { doc->PushBack(rapidjson::Value((bool)item).Move(), allocator); }
 }
 template <> void JsonArray<int64_t>::WriteToDoc(TJsonDocument *doc) {
 	doc->SetArray();
 	doc->Reserve(Items.size(), doc->GetAllocator());
 	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
-	for (const auto& item : Items) { doc->PushBack(rapidjson::Value(item).Move(), allocator); }
+	for (const auto &item : Items) { doc->PushBack(rapidjson::Value(item).Move(), allocator); }
 }
 template <> void JsonArray<uint64_t>::WriteToDoc(TJsonDocument *doc) {
 	doc->SetArray();
 	doc->Reserve(Items.size(), doc->GetAllocator());
 	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
-	for (const auto& item : Items) { doc->PushBack(rapidjson::Value(item).Move(), allocator); }
+	for (const auto &item : Items) { doc->PushBack(rapidjson::Value(item).Move(), allocator); }
 }
 template <> void JsonArray<int32_t>::WriteToDoc(TJsonDocument *doc) {
 	doc->SetArray();
 	doc->Reserve(Items.size(), doc->GetAllocator());
 	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
-	for (const auto& item : Items) { doc->PushBack(rapidjson::Value(item).Move(), allocator); }
+	for (const auto &item : Items) { doc->PushBack(rapidjson::Value(item).Move(), allocator); }
 }
 template <> void JsonArray<uint32_t>::WriteToDoc(TJsonDocument *doc) {
 	doc->SetArray();
 	doc->Reserve(Items.size(), doc->GetAllocator());
 	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
-	for (const auto& item : Items) { doc->PushBack(rapidjson::Value(item).Move(), allocator); }
+	for (const auto &item : Items) { doc->PushBack(rapidjson::Value(item).Move(), allocator); }
 }
 template <> void JsonArray<int16_t>::WriteToDoc(TJsonDocument *doc) {
 	doc->SetArray();
 	doc->Reserve(Items.size(), doc->GetAllocator());
 	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
-	for (const auto& item : Items) { doc->PushBack(rapidjson::Value(item).Move(), allocator); }
+	for (const auto &item : Items) { doc->PushBack(rapidjson::Value(item).Move(), allocator); }
 }
 template <> void JsonArray<uint16_t>::WriteToDoc(TJsonDocument *doc) {
 	doc->SetArray();
 	doc->Reserve(Items.size(), doc->GetAllocator());
 	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
-	for (const auto& item : Items) { doc->PushBack(rapidjson::Value(item).Move(), allocator); }
+	for (const auto &item : Items) { doc->PushBack(rapidjson::Value(item).Move(), allocator); }
 }
 template <> void JsonArray<int8_t>::WriteToDoc(TJsonDocument *doc) {
 	doc->SetArray();
 	doc->Reserve(Items.size(), doc->GetAllocator());
 	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
-	for (const auto& item : Items) { doc->PushBack(rapidjson::Value(item).Move(), allocator); }
+	for (const auto &item : Items) { doc->PushBack(rapidjson::Value(item).Move(), allocator); }
 }
 template <> void JsonArray<uint8_t>::WriteToDoc(TJsonDocument *doc) {
 	doc->SetArray();
 	doc->Reserve(Items.size(), doc->GetAllocator());
 	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
-	for (const auto& item : Items) { doc->PushBack(rapidjson::Value(item).Move(), allocator); }
+	for (const auto &item : Items) { doc->PushBack(rapidjson::Value(item).Move(), allocator); }
 }
 template <> void JsonArray<double>::WriteToDoc(TJsonDocument *doc) {
 	doc->SetArray();
 	doc->Reserve(Items.size(), doc->GetAllocator());
 	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
-	for (const auto& item : Items) { doc->PushBack(rapidjson::Value(item).Move(), allocator); }
+	for (const auto &item : Items) { doc->PushBack(rapidjson::Value(item).Move(), allocator); }
 }
 template <> void JsonArray<float>::WriteToDoc(TJsonDocument *doc) {
 	doc->SetArray();
 	doc->Reserve(Items.size(), doc->GetAllocator());
 	rapidjson::Document::AllocatorType &allocator = doc->GetAllocator();
-	for (const auto& item : Items) { doc->PushBack(rapidjson::Value(item).Move(), allocator); }
+	for (const auto &item : Items) { doc->PushBack(rapidjson::Value(item).Move(), allocator); }
 }
 /*
 
@@ -442,64 +442,64 @@ template <> bool JsonArray<float>::Equals(JsonArrayBase *other) {
 */
 template <> void JsonArray<char *>::CloneTo(JsonArrayBase *other) {
 	auto otherArray = ((JsonArray<char *> *)other);
-	for (const auto& item : otherArray->Items) { delete[] item; }
+	for (const auto &item : otherArray->Items) { delete[] item; }
 	otherArray->Items.clear();
-	for (const auto& item : Items) { otherArray->AddInternal(item); }
+	for (const auto &item : Items) { otherArray->AddInternal(item); }
 }
 template <> void JsonArray<TBoolArray>::CloneTo(JsonArrayBase *other) {
 	auto otherArray = ((JsonArray<TBoolArray> *)other);
 	otherArray->Items.clear();
-	for (const auto& item : Items) { otherArray->AddInternal(item); }
+	for (const auto &item : Items) { otherArray->AddInternal(item); }
 }
 template <> void JsonArray<int64_t>::CloneTo(JsonArrayBase *other) {
 	auto otherArray = ((JsonArray<int64_t> *)other);
 	otherArray->Items.clear();
-	for (const auto& item : Items) { otherArray->AddInternal(item); }
+	for (const auto &item : Items) { otherArray->AddInternal(item); }
 }
 template <> void JsonArray<uint64_t>::CloneTo(JsonArrayBase *other) {
 	auto otherArray = ((JsonArray<uint64_t> *)other);
 	otherArray->Items.clear();
-	for (const auto& item : Items) { otherArray->AddInternal(item); }
+	for (const auto &item : Items) { otherArray->AddInternal(item); }
 }
 template <> void JsonArray<int32_t>::CloneTo(JsonArrayBase *other) {
 	auto otherArray = ((JsonArray<int32_t> *)other);
 	otherArray->Items.clear();
-	for (const auto& item : Items) { otherArray->AddInternal(item); }
+	for (const auto &item : Items) { otherArray->AddInternal(item); }
 }
 template <> void JsonArray<uint32_t>::CloneTo(JsonArrayBase *other) {
 	auto otherArray = ((JsonArray<uint32_t> *)other);
 	otherArray->Items.clear();
-	for (const auto& item : Items) { otherArray->AddInternal(item); }
+	for (const auto &item : Items) { otherArray->AddInternal(item); }
 }
 template <> void JsonArray<int16_t>::CloneTo(JsonArrayBase *other) {
 	auto otherArray = ((JsonArray<int16_t> *)other);
 	otherArray->Items.clear();
-	for (const auto& item : Items) { otherArray->AddInternal(item); }
+	for (const auto &item : Items) { otherArray->AddInternal(item); }
 }
 template <> void JsonArray<uint16_t>::CloneTo(JsonArrayBase *other) {
 	auto otherArray = ((JsonArray<uint16_t> *)other);
 	otherArray->Items.clear();
-	for (const auto& item : Items) { otherArray->AddInternal(item); }
+	for (const auto &item : Items) { otherArray->AddInternal(item); }
 }
 template <> void JsonArray<int8_t>::CloneTo(JsonArrayBase *other) {
 	auto otherArray = ((JsonArray<int8_t> *)other);
 	otherArray->Items.clear();
-	for (const auto& item : Items) { otherArray->AddInternal(item); }
+	for (const auto &item : Items) { otherArray->AddInternal(item); }
 }
 template <> void JsonArray<uint8_t>::CloneTo(JsonArrayBase *other) {
 	auto otherArray = ((JsonArray<uint8_t> *)other);
 	otherArray->Items.clear();
-	for (const auto& item : Items) { otherArray->AddInternal(item); }
+	for (const auto &item : Items) { otherArray->AddInternal(item); }
 }
 template <> void JsonArray<double>::CloneTo(JsonArrayBase *other) {
 	auto otherArray = ((JsonArray<double> *)other);
 	otherArray->Items.clear();
-	for (const auto& item : Items) { otherArray->AddInternal(item); }
+	for (const auto &item : Items) { otherArray->AddInternal(item); }
 }
 template <> void JsonArray<float>::CloneTo(JsonArrayBase *other) {
 	auto otherArray = ((JsonArray<float> *)other);
 	otherArray->Items.clear();
-	for (const auto& item : Items) { otherArray->AddInternal(item); }
+	for (const auto &item : Items) { otherArray->AddInternal(item); }
 }
 /*
 
