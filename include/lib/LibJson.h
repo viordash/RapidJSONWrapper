@@ -30,6 +30,7 @@ class JsonArrayBase {
 
 	virtual bool Equals(JsonArrayBase *other) = 0;
 	virtual void CloneTo(JsonArrayBase *other) = 0;
+	virtual void Clear() = 0;
 
   protected:
 };

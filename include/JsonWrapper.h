@@ -101,7 +101,7 @@ class JsonObject : public JsonFieldsContainer {
 template <class TItem> class JsonArray : public JsonArrayBase {
   public:
 	typedef typename std::conditional<std::is_same<TItem, char *>::value, const char *, typename std::add_const<TItem>::type>::type ConstTItem;
-	virtual ~JsonArray();
+	virtual ~JsonArray() { Clear(); }
 
 	TItem Item(size_t index) { return (TItem)Items[index]; }
 	size_t Size() { return Items.size(); }
@@ -120,6 +120,7 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 
 	bool Equals(JsonArrayBase *other) override final;
 	void CloneTo(JsonArrayBase *other) override final;
+	void Clear() override final;
 
 	friend bool operator!=(const JsonArray<TItem> &v1, const JsonArray<TItem> &v2) { return !((JsonArray<TItem> *)&v1)->Equals((JsonArray<TItem> *)&v2); }
 	friend bool operator==(const JsonArray<TItem> &v1, const JsonArray<TItem> &v2) { return !(v1 != v2); }
@@ -153,6 +154,7 @@ class JsonObjectsArray : public JsonArrayBase {
 
 	bool Equals(JsonArrayBase *other) override final;
 	void CloneTo(JsonArrayBase *other) override final;
+	void Clear() override final;
 	virtual bool Validate(JsonObject *item) = 0;
 	virtual JsonObject *CreateItem() = 0;
 

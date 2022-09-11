@@ -759,39 +759,51 @@ template <> bool JsonArray<float>::TryDocParse(TJsonDocument *doc) {
 
 
 */
-template <> JsonArray<char *>::~JsonArray() {
-	for (const auto& item : Items) { DeleteItem(item); }
+template <> void JsonArray<char *>::Clear() {
+	for (const auto &item : Items) { DeleteItem(item); }
+	Items.clear();
 }
-template <> JsonArray<TBoolArray>::~JsonArray() {
-	for (const auto& item : Items) { DeleteItem(item); }
+template <> void JsonArray<TBoolArray>::Clear() {
+	for (const auto &item : Items) { DeleteItem(item); }
+	Items.clear();
 }
-template <> JsonArray<int64_t>::~JsonArray() {
-	for (const auto& item : Items) { DeleteItem(item); }
+template <> void JsonArray<int64_t>::Clear() {
+	for (const auto &item : Items) { DeleteItem(item); }
+	Items.clear();
 }
-template <> JsonArray<uint64_t>::~JsonArray() {
-	for (const auto& item : Items) { DeleteItem(item); }
+template <> void JsonArray<uint64_t>::Clear() {
+	for (const auto &item : Items) { DeleteItem(item); }
+	Items.clear();
 }
-template <> JsonArray<int32_t>::~JsonArray() {
-	for (const auto& item : Items) { DeleteItem(item); }
+template <> void JsonArray<int32_t>::Clear() {
+	for (const auto &item : Items) { DeleteItem(item); }
+	Items.clear();
 }
-template <> JsonArray<uint32_t>::~JsonArray() {
-	for (const auto& item : Items) { DeleteItem(item); }
+template <> void JsonArray<uint32_t>::Clear() {
+	for (const auto &item : Items) { DeleteItem(item); }
+	Items.clear();
 }
-template <> JsonArray<int16_t>::~JsonArray() {
-	for (const auto& item : Items) { DeleteItem(item); }
+template <> void JsonArray<int16_t>::Clear() {
+	for (const auto &item : Items) { DeleteItem(item); }
+	Items.clear();
 }
-template <> JsonArray<uint16_t>::~JsonArray() {
-	for (const auto& item : Items) { DeleteItem(item); }
+template <> void JsonArray<uint16_t>::Clear() {
+	for (const auto &item : Items) { DeleteItem(item); }
+	Items.clear();
 }
-template <> JsonArray<int8_t>::~JsonArray() {
-	for (const auto& item : Items) { DeleteItem(item); }
+template <> void JsonArray<int8_t>::Clear() {
+	for (const auto &item : Items) { DeleteItem(item); }
+	Items.clear();
 }
-template <> JsonArray<uint8_t>::~JsonArray() {
-	for (const auto& item : Items) { DeleteItem(item); }
+template <> void JsonArray<uint8_t>::Clear() {
+	for (const auto &item : Items) { DeleteItem(item); }
+	Items.clear();
 }
-template <> JsonArray<double>::~JsonArray() {
-	for (const auto& item : Items) { DeleteItem(item); }
+template <> void JsonArray<double>::Clear() {
+	for (const auto &item : Items) { DeleteItem(item); }
+	Items.clear();
 }
-template <> JsonArray<float>::~JsonArray() {
-	for (const auto& item : Items) { DeleteItem(item); }
+template <> void JsonArray<float>::Clear() {
+	for (const auto &item : Items) { DeleteItem(item); }
+	Items.clear();
 }

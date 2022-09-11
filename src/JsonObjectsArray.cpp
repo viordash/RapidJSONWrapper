@@ -93,3 +93,8 @@ void JsonObjectsArray::CloneTo(JsonArrayBase *other) {
 		otherArray->AddInternal(newItem);
 	}
 }
+
+void JsonObjectsArray::Clear() {
+	for (const auto &item : Items) { DeleteItem(item); }
+	Items.clear();
+}
