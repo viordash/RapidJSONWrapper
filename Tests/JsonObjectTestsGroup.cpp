@@ -355,11 +355,25 @@ TEST(JsonObjectTestsGroup, JsonObject_With_Blob_Field_Test) {
 
 	auto size = customerDto1->DirectWriteTo(0, OnReady);
 	CHECK_EQUAL(size, 10173299);
+
+	auto doc = customerDto1->BeginTryStringParse(DirectWriteTestBuffer, size);
+	CHECK(doc != NULL);
+
+	CHECK_EQUAL(customerDto1->Id.Get(), 1234567890123456789LL);
+	STRCMP_EQUAL(customerDto1->Name.Get(), "Viordash");
+	CHECK_EQUAL(customerDto1->ordersList.Size(), 2);
+	CHECK_EQUAL(customerDto1->ordersList.Item<OrderDto *>(0)->goodsList.Size(), 3);
+	CHECK_EQUAL(customerDto1->ordersList.Item<OrderDto *>(1)->goodsList.Size(), 2);
+	CHECK_EQUAL(((TJsonRawData)customerDto1->Blob.Get()).Size, pictureSize);
+	CHECK_FALSE(((TJsonRawData)customerDto1->Blob.Get()).Data == picture);
+	for (size_t i = 0; i < pictureSize; i++) { CHECK_EQUAL(((TJsonRawData)customerDto1->Blob.Get()).Data[i], 'A' + (i % 58)); }
+	customerDto1->EndTryStringParse(doc);
+
 	delete customerDto1;
 	delete[] picture;
 
 	CustomerDto customerDto2;
-	auto doc = customerDto2.BeginTryStringParse(DirectWriteTestBuffer, size);
+	doc = customerDto2.BeginTryStringParse(DirectWriteTestBuffer, size);
 	CHECK(doc != NULL);
 
 	CHECK_EQUAL(customerDto2.Id.Get(), 1234567890123456789LL);
