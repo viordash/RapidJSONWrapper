@@ -10,6 +10,8 @@ JsonObjectsArray::~JsonObjectsArray() {
 
 bool JsonObjectsArray::TryDocParse(TJsonDocument *doc) {
 	if (!doc->IsArray()) { return false; }
+	for (const auto &item : Items) { DeleteItem(item); }
+	Items.clear();
 	auto jArray = doc->GetArray();
 	Items.reserve(jArray.Size());
 

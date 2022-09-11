@@ -346,6 +346,16 @@ TEST(JsonArrayTestsGroup, JsonObjectArray_Field_Optional_Test) {
 	delete testableWithOptional;
 }
 
+TEST(JsonArrayTestsGroup, JsonObjectArray_Parse_Are_Remove_Old_Items_Test) {
+	UsersList list;
+	CHECK_TRUE(list.Add(new UserDto("user 1", 0)));
+	CHECK_TRUE(list.Add(new UserDto("user 2", 10)));
+	CHECK_EQUAL(list.Size(), 2);
+	CHECK_TRUE(list.TryStringParse("[{\"name\":\"User1\",\"role\":100},{\"name\":\"User2\",\"role\":0},{\"name\":\"User3\","
+								   "\"role\":255}]"));
+	CHECK_EQUAL(list.Size(), 3);
+}
+
 TEST(JsonArrayTestsGroup, JsonStringArray_Parse_Test) {
 	StringsList list;
 
@@ -548,6 +558,15 @@ TEST(JsonArrayTestsGroup, JsonStringArray_Incorrect_Update_Test) {
 	STRCMP_EQUAL(list1.Item(0), "user 1");
 }
 
+TEST(JsonArrayTestsGroup, JsonStringArray_Parse_Are_Remove_Old_Items_Test) {
+	StringsList list;
+	CHECK_TRUE(list.Add("user 1"));
+	CHECK_TRUE(list.Add("user 2"));
+	CHECK_EQUAL(list.Size(), 2);
+	CHECK_TRUE(list.TryStringParse("[\"User1\",\"User2\",\"User3\"]"));
+	CHECK_EQUAL(list.Size(), 3);
+}
+
 TEST(JsonArrayTestsGroup, JsonBoolArray_Parse_Test) {
 	BoolList list;
 
@@ -661,6 +680,15 @@ TEST(JsonArrayTestsGroup, JsonBoolArray_Incorrect_Update_Test) {
 	CHECK_FALSE(list1.Update(100, false));
 	CHECK_EQUAL(list1.Size(), 2);
 	CHECK_EQUAL(list1.Item(0), (TBoolArray) true);
+}
+
+TEST(JsonArrayTestsGroup, JsonBoolArray_Parse_Are_Remove_Old_Items_Test) {
+	BoolList list;
+	CHECK_TRUE(list.Add(true));
+	CHECK_TRUE(list.Add(false));
+	CHECK_EQUAL(list.Size(), 2);
+	CHECK_TRUE(list.TryStringParse("[true,false,true,false]"));
+	CHECK_EQUAL(list.Size(), 4);
 }
 
 TEST(JsonArrayTestsGroup, JsonInt64Array_Parse_Test) {
@@ -781,6 +809,15 @@ TEST(JsonArrayTestsGroup, JsonInt64Array_Incorrect_Update_Test) {
 	CHECK_EQUAL(list1.Item(0), 5188146770730811392LL);
 }
 
+TEST(JsonArrayTestsGroup, JsonInt64Array_Parse_Are_Remove_Old_Items_Test) {
+	Int64List list;
+	CHECK_TRUE(list.Add(5188146770730811392LL));
+	CHECK_TRUE(list.Add(-5188146770730811392LL));
+	CHECK_EQUAL(list.Size(), 2);
+	CHECK_TRUE(list.TryStringParse("[0,1,-5188146770730811392,5188146770730811392]"));
+	CHECK_EQUAL(list.Size(), 4);
+}
+
 TEST(JsonArrayTestsGroup, JsonUint64Array_Parse_Test) {
 	Uint64List list;
 	CHECK_TRUE(list.TryStringParse("[1,0,10188146770730811392]"));
@@ -898,6 +935,15 @@ TEST(JsonArrayTestsGroup, JsonUint64Array_Incorrect_Update_Test) {
 	CHECK_EQUAL(list1.Item(0), 5188146770730811392LL);
 }
 
+TEST(JsonArrayTestsGroup, JsonUint64Array_Parse_Are_Remove_Old_Items_Test) {
+	Uint64List list;
+	CHECK_TRUE(list.Add(5188146770730811392LL));
+	CHECK_TRUE(list.Add(-10188146770730811392ULL));
+	CHECK_EQUAL(list.Size(), 2);
+	CHECK_TRUE(list.TryStringParse("[1,0,10188146770730811392]"));
+	CHECK_EQUAL(list.Size(), 3);
+}
+
 TEST(JsonArrayTestsGroup, JsonInt32Array_Parse_Test) {
 	Int32List list;
 	CHECK_TRUE(list.TryStringParse("[0,-2147483647,2147483647]"));
@@ -1005,6 +1051,15 @@ TEST(JsonArrayTestsGroup, JsonInt32Array_Incorrect_Update_Test) {
 	CHECK_EQUAL(list1.Item(0), -2147483647);
 }
 
+TEST(JsonArrayTestsGroup, JsonInt32Array_Parse_Are_Remove_Old_Items_Test) {
+	Int32List list;
+	CHECK_TRUE(list.Add(2147483647));
+	CHECK_TRUE(list.Add(-2147483647));
+	CHECK_EQUAL(list.Size(), 2);
+	CHECK_TRUE(list.TryStringParse("[0,-2147483647,2147483647]"));
+	CHECK_EQUAL(list.Size(), 3);
+}
+
 TEST(JsonArrayTestsGroup, JsonUint32Array_Parse_Test) {
 	Uint32List list;
 	CHECK_TRUE(list.TryStringParse("[0,4294967295]"));
@@ -1109,6 +1164,15 @@ TEST(JsonArrayTestsGroup, JsonUint32Array_Incorrect_Update_Test) {
 
 	CHECK_EQUAL(list1.Size(), 2);
 	CHECK_EQUAL(list1.Item(0), 147483647);
+}
+
+TEST(JsonArrayTestsGroup, JsonUint32Array_Parse_Are_Remove_Old_Items_Test) {
+	Uint32List list;
+	CHECK_TRUE(list.Add(2147483647));
+	CHECK_TRUE(list.Add(147483647));
+	CHECK_EQUAL(list.Size(), 2);
+	CHECK_TRUE(list.TryStringParse("[0,4294967295]"));
+	CHECK_EQUAL(list.Size(), 2);
 }
 
 TEST(JsonArrayTestsGroup, JsonInt16Array_Parse_Test) {
@@ -1222,6 +1286,15 @@ TEST(JsonArrayTestsGroup, JsonInt16Array_Incorrect_Update_Test) {
 	CHECK_EQUAL(list1.Item(0), -32768);
 }
 
+TEST(JsonArrayTestsGroup, JsonInt16Array_Parse_Are_Remove_Old_Items_Test) {
+	Int16List list;
+	CHECK_TRUE(list.Add(-32768));
+	CHECK_TRUE(list.Add(32767));
+	CHECK_EQUAL(list.Size(), 2);
+	CHECK_TRUE(list.TryStringParse("[0,-32768,32767,-2147483647,2147483647]"));
+	CHECK_EQUAL(list.Size(), 5);
+}
+
 TEST(JsonArrayTestsGroup, JsonUint16Array_Parse_Test) {
 	Uint16List list;
 	CHECK_TRUE(list.TryStringParse("[0,65535,2147483647]"));
@@ -1328,6 +1401,15 @@ TEST(JsonArrayTestsGroup, JsonUint16Array_Incorrect_Update_Test) {
 
 	CHECK_EQUAL(list1.Size(), 2);
 	CHECK_EQUAL(list1.Item(0), 0);
+}
+
+TEST(JsonArrayTestsGroup, JsonUint16Array_Parse_Are_Remove_Old_Items_Test) {
+	Uint16List list;
+	CHECK_TRUE(list.Add(0));
+	CHECK_TRUE(list.Add(65535));
+	CHECK_EQUAL(list.Size(), 2);
+	CHECK_TRUE(list.TryStringParse("[0,65535,2147483647]"));
+	CHECK_EQUAL(list.Size(), 3);
 }
 
 TEST(JsonArrayTestsGroup, JsonInt8Array_Parse_Test) {
@@ -1443,6 +1525,15 @@ TEST(JsonArrayTestsGroup, JsonInt8Array_Incorrect_Update_Test) {
 	CHECK_EQUAL(list1.Item(0), -128);
 }
 
+TEST(JsonArrayTestsGroup, JsonInt8Array_Parse_Are_Remove_Old_Items_Test) {
+	Int8List list;
+	CHECK_TRUE(list.Add(-128));
+	CHECK_TRUE(list.Add(0));
+	CHECK_EQUAL(list.Size(), 2);
+	CHECK_TRUE(list.TryStringParse("[0,-128,127,-2147483647,2147483647]"));
+	CHECK_EQUAL(list.Size(), 5);
+}
+
 TEST(JsonArrayTestsGroup, JsonUint8Array_Parse_Test) {
 	Uint8List list;
 	CHECK_TRUE(list.TryStringParse("[0,254,65535,2147483647]"));
@@ -1551,6 +1642,15 @@ TEST(JsonArrayTestsGroup, JsonUint8Array_Incorrect_Update_Test) {
 
 	CHECK_EQUAL(list1.Size(), 2);
 	CHECK_EQUAL(list1.Item(0), 0);
+}
+
+TEST(JsonArrayTestsGroup, JsonUint8Array_Parse_Are_Remove_Old_Items_Test) {
+	Uint8List list;
+	CHECK_TRUE(list.Add(0));
+	CHECK_TRUE(list.Add(254));
+	CHECK_EQUAL(list.Size(), 2);
+	CHECK_TRUE(list.TryStringParse("[0,254,65535,2147483647]"));
+	CHECK_EQUAL(list.Size(), 4);
 }
 
 TEST(JsonArrayTestsGroup, JsonDoubleArray_Parse_Test) {
@@ -1663,6 +1763,15 @@ TEST(JsonArrayTestsGroup, JsonDoubleArray_Incorrect_Update_Test) {
 	CHECK_EQUAL(list1.Item(0), 0);
 }
 
+TEST(JsonArrayTestsGroup, JsonDoubleArray_Parse_Are_Remove_Old_Items_Test) {
+	DoubleList list;
+	CHECK_TRUE(list.Add(0));
+	CHECK_TRUE(list.Add(1.254));
+	CHECK_EQUAL(list.Size(), 2);
+	CHECK_TRUE(list.TryStringParse("[0.00001,254.123,-65535.523,2147483647.1]"));
+	CHECK_EQUAL(list.Size(), 4);
+}
+
 TEST(JsonArrayTestsGroup, JsonFloatArray_Parse_Test) {
 	FloatList list;
 	CHECK_TRUE(list.TryStringParse("[0.1,254.1,-65535.5,214748.1]"));
@@ -1771,4 +1880,13 @@ TEST(JsonArrayTestsGroup, JsonFloatArray_Incorrect_Update_Test) {
 
 	CHECK_EQUAL(list1.Size(), 2);
 	CHECK_EQUAL(list1.Item(0), 0);
+}
+
+TEST(JsonArrayTestsGroup, JsonFloatArray_Parse_Are_Remove_Old_Items_Test) {
+	DoubleList list;
+	CHECK_TRUE(list.Add(0));
+	CHECK_TRUE(list.Add(1.254f));
+	CHECK_EQUAL(list.Size(), 2);
+	CHECK_TRUE(list.TryStringParse("[0.1,254.1,-65535.5,214748.1]"));
+	CHECK_EQUAL(list.Size(), 4);
 }

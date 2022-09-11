@@ -591,6 +591,8 @@ template <> bool JsonArray<float>::Update(size_t index, const float item) {
 */
 template <> bool JsonArray<char *>::TryDocParse(TJsonDocument *doc) {
 	if (!doc->IsArray()) { return false; }
+	for (const auto &item : Items) { DeleteItem(item); }
+	Items.clear();
 	auto jArray = doc->GetArray();
 	Items.reserve(jArray.Size());
 	for (const auto &jItem : jArray) {
@@ -614,6 +616,8 @@ template <> bool JsonArray<char *>::TryDocParse(TJsonDocument *doc) {
 }
 template <> bool JsonArray<TBoolArray>::TryDocParse(TJsonDocument *doc) {
 	if (!doc->IsArray()) { return false; }
+	for (const auto &item : Items) { DeleteItem(item); }
+	Items.clear();
 	auto jArray = doc->GetArray();
 	Items.reserve(jArray.Size());
 	for (const auto &jItem : jArray) {
@@ -627,6 +631,8 @@ template <> bool JsonArray<TBoolArray>::TryDocParse(TJsonDocument *doc) {
 }
 template <> bool JsonArray<int64_t>::TryDocParse(TJsonDocument *doc) {
 	if (!doc->IsArray()) { return false; }
+	for (const auto &item : Items) { DeleteItem(item); }
+	Items.clear();
 	auto jArray = doc->GetArray();
 	Items.reserve(jArray.Size());
 	for (const auto &jItem : jArray) {
@@ -640,6 +646,8 @@ template <> bool JsonArray<int64_t>::TryDocParse(TJsonDocument *doc) {
 }
 template <> bool JsonArray<uint64_t>::TryDocParse(TJsonDocument *doc) {
 	if (!doc->IsArray()) { return false; }
+	for (const auto &item : Items) { DeleteItem(item); }
+	Items.clear();
 	auto jArray = doc->GetArray();
 	Items.reserve(jArray.Size());
 	for (const auto &jItem : jArray) {
@@ -653,6 +661,8 @@ template <> bool JsonArray<uint64_t>::TryDocParse(TJsonDocument *doc) {
 }
 template <> bool JsonArray<int32_t>::TryDocParse(TJsonDocument *doc) {
 	if (!doc->IsArray()) { return false; }
+	for (const auto &item : Items) { DeleteItem(item); }
+	Items.clear();
 	auto jArray = doc->GetArray();
 	Items.reserve(jArray.Size());
 	for (const auto &jItem : jArray) {
@@ -666,6 +676,8 @@ template <> bool JsonArray<int32_t>::TryDocParse(TJsonDocument *doc) {
 }
 template <> bool JsonArray<uint32_t>::TryDocParse(TJsonDocument *doc) {
 	if (!doc->IsArray()) { return false; }
+	for (const auto &item : Items) { DeleteItem(item); }
+	Items.clear();
 	auto jArray = doc->GetArray();
 	Items.reserve(jArray.Size());
 	for (const auto &jItem : jArray) {
@@ -679,6 +691,8 @@ template <> bool JsonArray<uint32_t>::TryDocParse(TJsonDocument *doc) {
 }
 template <> bool JsonArray<int16_t>::TryDocParse(TJsonDocument *doc) {
 	if (!doc->IsArray()) { return false; }
+	for (const auto &item : Items) { DeleteItem(item); }
+	Items.clear();
 	auto jArray = doc->GetArray();
 	Items.reserve(jArray.Size());
 	for (const auto &jItem : jArray) {
@@ -692,6 +706,8 @@ template <> bool JsonArray<int16_t>::TryDocParse(TJsonDocument *doc) {
 }
 template <> bool JsonArray<uint16_t>::TryDocParse(TJsonDocument *doc) {
 	if (!doc->IsArray()) { return false; }
+	for (const auto &item : Items) { DeleteItem(item); }
+	Items.clear();
 	auto jArray = doc->GetArray();
 	Items.reserve(jArray.Size());
 	for (const auto &jItem : jArray) {
@@ -705,6 +721,8 @@ template <> bool JsonArray<uint16_t>::TryDocParse(TJsonDocument *doc) {
 }
 template <> bool JsonArray<int8_t>::TryDocParse(TJsonDocument *doc) {
 	if (!doc->IsArray()) { return false; }
+	for (const auto &item : Items) { DeleteItem(item); }
+	Items.clear();
 	auto jArray = doc->GetArray();
 	Items.reserve(jArray.Size());
 	for (const auto &jItem : jArray) {
@@ -718,6 +736,8 @@ template <> bool JsonArray<int8_t>::TryDocParse(TJsonDocument *doc) {
 }
 template <> bool JsonArray<uint8_t>::TryDocParse(TJsonDocument *doc) {
 	if (!doc->IsArray()) { return false; }
+	for (const auto &item : Items) { DeleteItem(item); }
+	Items.clear();
 	auto jArray = doc->GetArray();
 	Items.reserve(jArray.Size());
 	for (const auto &jItem : jArray) {
@@ -731,6 +751,8 @@ template <> bool JsonArray<uint8_t>::TryDocParse(TJsonDocument *doc) {
 }
 template <> bool JsonArray<double>::TryDocParse(TJsonDocument *doc) {
 	if (!doc->IsArray()) { return false; }
+	for (const auto &item : Items) { DeleteItem(item); }
+	Items.clear();
 	auto jArray = doc->GetArray();
 	Items.reserve(jArray.Size());
 	for (const auto &jItem : jArray) {
@@ -744,6 +766,8 @@ template <> bool JsonArray<double>::TryDocParse(TJsonDocument *doc) {
 }
 template <> bool JsonArray<float>::TryDocParse(TJsonDocument *doc) {
 	if (!doc->IsArray()) { return false; }
+	for (const auto &item : Items) { DeleteItem(item); }
+	Items.clear();
 	auto jArray = doc->GetArray();
 	Items.reserve(jArray.Size());
 	for (const auto &jItem : jArray) {
