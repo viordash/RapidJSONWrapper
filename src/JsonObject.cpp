@@ -19,6 +19,7 @@ bool JsonObject::TryParse(TJsonDocument *doc) {
 		auto field = *item;
 		if (!field->TryParse(doc)) { return false; }
 	}
+	if (!this->Validate()) { return false; }
 	return true;
 }
 

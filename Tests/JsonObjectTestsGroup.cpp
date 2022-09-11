@@ -21,6 +21,8 @@ class UserDto : public JsonObject {
 	UserDto(const char *name = {}, const TUserRole role = {})
 		: Name(this, "name", name), //
 		  Role(this, "role", role){};
+
+	bool Validate() override { return Role.Get() < 1000; }
 };
 
 class GoodsDto : public JsonObject {
@@ -483,4 +485,14 @@ TEST(JsonObjectTestsGroup, JsonObject_Values_Without_Instance_WriteTo_Test) {
 	valuesWoInstance.WriteToString(buffer, sizeof(buffer));
 
 	STRCMP_EQUAL(buffer, "{\"id\":1657052789,\"name\":\"Tomato\",\"blob\":\"ABCDEFGHIJKLMNOPQR\"}");
+}
+
+TEST(JsonObjectTestsGroup, JsonObject_Validate_Test) {
+	auto userDto = new UserDto();
+	CHECK_TRUE(userDto->Validate());
+	userDto->Role.Set(1000);
+	CHECK_FALSE(userDto->Validate());
+	CHECK_TRUE(userDto->TryStringParse("{\"name\":\"Joe Doe\",\"role\":999}"));
+	CHECK_FALSE(userDto->TryStringParse("{\"name\":\"Joe Doe\",\"role\":1000}"));
+	delete userDto;
 }
