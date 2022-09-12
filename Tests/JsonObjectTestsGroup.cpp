@@ -363,9 +363,11 @@ TEST(JsonObjectTestsGroup, JsonObject_With_Blob_Field_Test) {
 
 	CHECK_EQUAL(customerDto1->Id.Get(), 1234567890123456789LL);
 	STRCMP_EQUAL(customerDto1->Name.Get(), "Viordash");
-	CHECK_EQUAL(customerDto1->ordersList.Size(), 2);
+	CHECK_EQUAL(customerDto1->ordersList.Size(), 4);
 	CHECK_EQUAL(customerDto1->ordersList.Item<OrderDto *>(0)->goodsList.Size(), 3);
 	CHECK_EQUAL(customerDto1->ordersList.Item<OrderDto *>(1)->goodsList.Size(), 2);
+	CHECK_EQUAL(customerDto1->ordersList.Item<OrderDto *>(2)->goodsList.Size(), 3);
+	CHECK_EQUAL(customerDto1->ordersList.Item<OrderDto *>(3)->goodsList.Size(), 2);
 	CHECK_EQUAL(((TJsonRawData)customerDto1->Blob.Get()).Size, pictureSize);
 	CHECK_FALSE(((TJsonRawData)customerDto1->Blob.Get()).Data == picture);
 	for (size_t i = 0; i < pictureSize; i++) { CHECK_EQUAL(((TJsonRawData)customerDto1->Blob.Get()).Data[i], 'A' + (i % 58)); }
