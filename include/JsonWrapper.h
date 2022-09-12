@@ -118,9 +118,9 @@ template <class TItem> class JsonArray : public JsonArrayBase {
 	virtual void Remove(ConstTItem item);
 	typename std::vector<TItem>::iterator Find(ConstTItem item);
 
-	bool Equals(JsonArrayBase *other) override final;
-	void CloneTo(JsonArrayBase *other) override final;
-	void Clear() override final;
+	bool Equals(JsonArrayBase *other) override;
+	void CloneTo(JsonArrayBase *other) override;
+	void Clear() override;
 
 	friend bool operator!=(const JsonArray<TItem> &v1, const JsonArray<TItem> &v2) { return !((JsonArray<TItem> *)&v1)->Equals((JsonArray<TItem> *)&v2); }
 	friend bool operator==(const JsonArray<TItem> &v1, const JsonArray<TItem> &v2) { return !(v1 != v2); }
@@ -152,9 +152,9 @@ class JsonObjectsArray : public JsonArrayBase {
 
 	typename std::vector<JsonObject *>::iterator Find(JsonObject *item);
 
-	bool Equals(JsonArrayBase *other) override final;
-	void CloneTo(JsonArrayBase *other) override final;
-	void Clear() override final;
+	bool Equals(JsonArrayBase *other) override;
+	void CloneTo(JsonArrayBase *other) override;
+	void Clear() override;
 	virtual bool Validate(JsonObject *item) = 0;
 	virtual JsonObject *CreateItem() = 0;
 
