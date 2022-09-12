@@ -133,7 +133,7 @@ TEST(JsonDataValueGroup, JsonDataValue_CloneTo_Test) {
 	JsonValue<TJsonRawData> clone1(&container, "test");
 
 	testable1.CloneTo((JsonValueBase *)&clone1);
-	testable1.Get() = {(uint8_t *)"check the full data buffer is cloned", sizeof("check the full data buffer is cloned")};
+	testable1.Set({(uint8_t *)"check the full data buffer is cloned", sizeof("check the full data buffer is cloned")});
 	STRCMP_EQUAL((char *)((TJsonRawData)clone1.Get()).Data, "0123456789");
 }
 

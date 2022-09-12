@@ -24,7 +24,7 @@ template <class T> class JsonValue : public JsonValueBase {
 	bool Equals(JsonValueBase *other) override final;
 	void CloneTo(JsonValueBase *other) override final;
 
-	T Get() { return value; }
+	ConstT Get() { return value; }
 
 	void Set(ConstT newValue, size_t newValueLen = size_t()) {
 		DeleteValue();
@@ -59,7 +59,7 @@ template <class T> class JsonCommonValue : public JsonValueBase {
 	bool IsNull();
 	void ResetToNull();
 
-	T Get() { return value; }
+	ConstT Get() { return value; }
 	void Set(ConstT newValue, size_t newValueLen = size_t()) {
 		DeleteValue();
 		InitValue(newValue, newValueLen);
