@@ -163,3 +163,26 @@ TEST(JsonStringValueGroup, JsonStringValue_Null_And_Empty_Value_Test) {
 	testCommonEmpty.Set(NULL);
 	CHECK_EQUAL(testCommonEmpty.Get(), NULL);
 }
+
+TEST(JsonStringValueGroup, JsonStringValue_Common_Change_Presented_After_Set_Value_Test) {
+	JsonFieldsContainer container;
+	JsonCommonValue<char *> testable1(&container, "test");
+
+	CHECK_FALSE(testable1.Presented());
+
+	testable1.Set("");
+	CHECK_TRUE(testable1.Presented());
+}
+
+TEST(JsonStringValueGroup, JsonStringValue_Common_Change_IsNull_After_Set_Value_Test) {
+	JsonFieldsContainer container;
+	JsonCommonValue<char *> testable1(&container, "test");
+
+	rapidjson::Document doc;
+	doc.Parse("{\"test\":null}");
+	CHECK_TRUE(testable1.TryParse(&doc));
+	CHECK_TRUE(testable1.IsNull());
+
+	testable1.Set("");
+	CHECK_FALSE(testable1.IsNull());
+}

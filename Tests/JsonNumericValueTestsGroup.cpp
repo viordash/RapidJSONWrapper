@@ -783,6 +783,65 @@ TEST(JsonNumericValueGroup, JsonUIntField_Common_WriteTo_Test) {
 	}
 }
 
+TEST(JsonNumericValueGroup, JsonUIntField_Common_Change_Presented_After_Set_Value_Test) {
+	JsonFieldsContainer container;
+	JsonCommonValue<unsigned int> testable1(&container, "test");
+	JsonCommonValue<uint32_t> testable2(&container, "test");
+	JsonCommonValue<uint16_t> testable3(&container, "test");
+	JsonCommonValue<uint8_t> testable4(&container, "test");
+	JsonCommonValue<uint64_t> testable5(&container, "test");
+
+	CHECK_FALSE(testable1.Presented());
+	CHECK_FALSE(testable2.Presented());
+	CHECK_FALSE(testable3.Presented());
+	CHECK_FALSE(testable4.Presented());
+	CHECK_FALSE(testable5.Presented());
+
+	testable1.Set(1);
+	testable2.Set(1);
+	testable3.Set(1);
+	testable4.Set(1);
+	testable5.Set(1);
+	CHECK_TRUE(testable1.Presented());
+	CHECK_TRUE(testable2.Presented());
+	CHECK_TRUE(testable3.Presented());
+	CHECK_TRUE(testable4.Presented());
+	CHECK_TRUE(testable5.Presented());
+}
+
+TEST(JsonNumericValueGroup, JsonUIntField_Common_Change_IsNull_After_Set_Value_Test) {
+	JsonFieldsContainer container;
+	JsonCommonValue<unsigned int> testable1(&container, "test");
+	JsonCommonValue<uint32_t> testable2(&container, "test");
+	JsonCommonValue<uint16_t> testable3(&container, "test");
+	JsonCommonValue<uint8_t> testable4(&container, "test");
+	JsonCommonValue<uint64_t> testable5(&container, "test");
+
+	rapidjson::Document doc;
+	doc.Parse("{\"test\":null}");
+	CHECK_TRUE(testable1.TryParse(&doc));
+	CHECK_TRUE(testable2.TryParse(&doc));
+	CHECK_TRUE(testable3.TryParse(&doc));
+	CHECK_TRUE(testable4.TryParse(&doc));
+	CHECK_TRUE(testable5.TryParse(&doc));
+	CHECK_TRUE(testable1.IsNull());
+	CHECK_TRUE(testable2.IsNull());
+	CHECK_TRUE(testable3.IsNull());
+	CHECK_TRUE(testable4.IsNull());
+	CHECK_TRUE(testable5.IsNull());
+
+	testable1.Set(1);
+	testable2.Set(1);
+	testable3.Set(1);
+	testable4.Set(1);
+	testable5.Set(1);
+	CHECK_FALSE(testable1.IsNull());
+	CHECK_FALSE(testable2.IsNull());
+	CHECK_FALSE(testable3.IsNull());
+	CHECK_FALSE(testable4.IsNull());
+	CHECK_FALSE(testable5.IsNull());
+}
+
 TEST(JsonNumericValueGroup, JsonIntField_Common_TryParse_Test) {
 	JsonFieldsContainer container;
 	JsonCommonValue<int> testable1(&container, "test", 100);
@@ -965,6 +1024,65 @@ TEST(JsonNumericValueGroup, JsonIntField_Common_WriteTo_Test) {
 	}
 }
 
+TEST(JsonNumericValueGroup, JsonIntField_Common_Change_Presented_After_Set_Value_Test) {
+	JsonFieldsContainer container;
+	JsonCommonValue<int> testable1(&container, "test");
+	JsonCommonValue<int32_t> testable2(&container, "test");
+	JsonCommonValue<int16_t> testable3(&container, "test");
+	JsonCommonValue<int8_t> testable4(&container, "test");
+	JsonCommonValue<int64_t> testable5(&container, "test");
+
+	CHECK_FALSE(testable1.Presented());
+	CHECK_FALSE(testable2.Presented());
+	CHECK_FALSE(testable3.Presented());
+	CHECK_FALSE(testable4.Presented());
+	CHECK_FALSE(testable5.Presented());
+
+	testable1.Set(1);
+	testable2.Set(1);
+	testable3.Set(1);
+	testable4.Set(1);
+	testable5.Set(1);
+	CHECK_TRUE(testable1.Presented());
+	CHECK_TRUE(testable2.Presented());
+	CHECK_TRUE(testable3.Presented());
+	CHECK_TRUE(testable4.Presented());
+	CHECK_TRUE(testable5.Presented());
+}
+
+TEST(JsonNumericValueGroup, JsonIntField_Common_Change_IsNull_After_Set_Value_Test) {
+	JsonFieldsContainer container;
+	JsonCommonValue<int> testable1(&container, "test");
+	JsonCommonValue<int32_t> testable2(&container, "test");
+	JsonCommonValue<int16_t> testable3(&container, "test");
+	JsonCommonValue<int8_t> testable4(&container, "test");
+	JsonCommonValue<int64_t> testable5(&container, "test");
+
+	rapidjson::Document doc;
+	doc.Parse("{\"test\":null}");
+	CHECK_TRUE(testable1.TryParse(&doc));
+	CHECK_TRUE(testable2.TryParse(&doc));
+	CHECK_TRUE(testable3.TryParse(&doc));
+	CHECK_TRUE(testable4.TryParse(&doc));
+	CHECK_TRUE(testable5.TryParse(&doc));
+	CHECK_TRUE(testable1.IsNull());
+	CHECK_TRUE(testable2.IsNull());
+	CHECK_TRUE(testable3.IsNull());
+	CHECK_TRUE(testable4.IsNull());
+	CHECK_TRUE(testable5.IsNull());
+
+	testable1.Set(1);
+	testable2.Set(1);
+	testable3.Set(1);
+	testable4.Set(1);
+	testable5.Set(1);
+	CHECK_FALSE(testable1.IsNull());
+	CHECK_FALSE(testable2.IsNull());
+	CHECK_FALSE(testable3.IsNull());
+	CHECK_FALSE(testable4.IsNull());
+	CHECK_FALSE(testable5.IsNull());
+}
+
 TEST(JsonNumericValueGroup, JsonBoolField_Common_TryParse_Test) {
 	JsonFieldsContainer container;
 	JsonCommonValue<bool> testable1(&container, "test", false);
@@ -1014,6 +1132,29 @@ TEST(JsonNumericValueGroup, JsonBoolField_Common_WriteTo_Test) {
 		doc.Accept(writer);
 		STRCMP_EQUAL(buffer.GetString(), "{\"test\":null}");
 	}
+}
+
+TEST(JsonNumericValueGroup, JsonBoolField_Common_Change_Presented_After_Set_Value_Test) {
+	JsonFieldsContainer container;
+	JsonCommonValue<bool> testable1(&container, "test");
+
+	CHECK_FALSE(testable1.Presented());
+
+	testable1.Set(true);
+	CHECK_TRUE(testable1.Presented());
+}
+
+TEST(JsonNumericValueGroup, JsonBoolField_Common_Change_IsNull_After_Set_Value_Test) {
+	JsonFieldsContainer container;
+	JsonCommonValue<bool> testable1(&container, "test");
+
+	rapidjson::Document doc;
+	doc.Parse("{\"test\":null}");
+	CHECK_TRUE(testable1.TryParse(&doc));
+	CHECK_TRUE(testable1.IsNull());
+
+	testable1.Set(true);
+	CHECK_FALSE(testable1.IsNull());
 }
 
 TEST(JsonNumericValueGroup, JsonFloatField_Common_TryParse_Test) {
@@ -1097,4 +1238,36 @@ TEST(JsonNumericValueGroup, JsonFloatField_Common_WriteTo_Test) {
 		doc.Accept(writer);
 		STRCMP_EQUAL(buffer.GetString(), "{\"test\":null}");
 	}
+}
+
+TEST(JsonNumericValueGroup, JsonFloatField_Common_Change_Presented_After_Set_Value_Test) {
+	JsonFieldsContainer container;
+	JsonCommonValue<float> testable1(&container, "test");
+	JsonCommonValue<double> testable2(&container, "test");
+
+	CHECK_FALSE(testable1.Presented());
+	CHECK_FALSE(testable2.Presented());
+
+	testable1.Set(1);
+	testable2.Set(1);
+	CHECK_TRUE(testable1.Presented());
+	CHECK_TRUE(testable2.Presented());
+}
+
+TEST(JsonNumericValueGroup, JsonFloatField_Common_Change_IsNull_After_Set_Value_Test) {
+	JsonFieldsContainer container;
+	JsonCommonValue<float> testable1(&container, "test");
+	JsonCommonValue<double> testable2(&container, "test");
+
+	rapidjson::Document doc;
+	doc.Parse("{\"test\":null}");
+	CHECK_TRUE(testable1.TryParse(&doc));
+	CHECK_TRUE(testable2.TryParse(&doc));
+	CHECK_TRUE(testable1.IsNull());
+	CHECK_TRUE(testable2.IsNull());
+
+	testable1.Set(1);
+	testable2.Set(1);
+	CHECK_FALSE(testable1.IsNull());
+	CHECK_FALSE(testable2.IsNull());
 }

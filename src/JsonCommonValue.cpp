@@ -272,54 +272,67 @@ template <> void JsonCommonValue<JsonArrayBase *>::InitValue(JsonArrayBase *valu
 template <> void JsonCommonValue<bool>::Set(const bool newValue, size_t newValueLen) {
 	DeleteValue();
 	InitValue(newValue, newValueLen);
+	presented = true;
 }
 template <> void JsonCommonValue<int8_t>::Set(const int8_t newValue, size_t newValueLen) {
 	DeleteValue();
 	InitValue(newValue, newValueLen);
+	presented = true;
 }
 template <> void JsonCommonValue<int16_t>::Set(const int16_t newValue, size_t newValueLen) {
 	DeleteValue();
 	InitValue(newValue, newValueLen);
+	presented = true;
 }
 template <> void JsonCommonValue<int32_t>::Set(const int32_t newValue, size_t newValueLen) {
 	DeleteValue();
 	InitValue(newValue, newValueLen);
+	presented = true;
 }
 template <> void JsonCommonValue<int64_t>::Set(const int64_t newValue, size_t newValueLen) {
 	DeleteValue();
 	InitValue(newValue, newValueLen);
+	presented = true;
 }
 template <> void JsonCommonValue<uint8_t>::Set(const uint8_t newValue, size_t newValueLen) {
 	DeleteValue();
 	InitValue(newValue, newValueLen);
+	presented = true;
 }
 template <> void JsonCommonValue<uint16_t>::Set(const uint16_t newValue, size_t newValueLen) {
 	DeleteValue();
 	InitValue(newValue, newValueLen);
+	presented = true;
 }
 template <> void JsonCommonValue<uint32_t>::Set(const uint32_t newValue, size_t newValueLen) {
 	DeleteValue();
 	InitValue(newValue, newValueLen);
+	presented = true;
 }
 template <> void JsonCommonValue<uint64_t>::Set(const uint64_t newValue, size_t newValueLen) {
 	DeleteValue();
 	InitValue(newValue, newValueLen);
+	presented = true;
 }
 template <> void JsonCommonValue<float>::Set(const float newValue, size_t newValueLen) {
 	DeleteValue();
 	InitValue(newValue, newValueLen);
+	presented = true;
 }
 template <> void JsonCommonValue<double>::Set(const double newValue, size_t newValueLen) {
 	DeleteValue();
 	InitValue(newValue, newValueLen);
+	presented = true;
 }
 template <> void JsonCommonValue<char *>::Set(const char *newValue, size_t newValueLen) {
 	DeleteValue();
 	InitValue(newValue, newValueLen);
+	presented = true;
 }
 template <> void JsonCommonValue<TJsonRawData>::Set(const TJsonRawData newValue, size_t newValueLen) {
 	DeleteValue();
 	InitValue(newValue, newValueLen);
+	presented = true;
 }
 template <> void JsonCommonValue<JsonObject *>::Set(JsonObject *newValue, size_t newValueLen) {
 	if (this->value == NULL) {
@@ -328,6 +341,7 @@ template <> void JsonCommonValue<JsonObject *>::Set(JsonObject *newValue, size_t
 		newValue->CloneTo(this->value);
 	}
 	this->isNull = this->value == NULL;
+	presented = true;
 }
 template <> void JsonCommonValue<JsonArrayBase *>::Set(JsonArrayBase *newValue, size_t newValueLen) {
 	if (this->value == NULL) {
@@ -336,6 +350,7 @@ template <> void JsonCommonValue<JsonArrayBase *>::Set(JsonArrayBase *newValue, 
 		newValue->CloneTo(this->value);
 	}
 	this->isNull = this->value == NULL;
+	presented = true;
 }
 /*
 
