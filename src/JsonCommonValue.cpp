@@ -322,10 +322,20 @@ template <> void JsonCommonValue<TJsonRawData>::Set(const TJsonRawData newValue,
 	InitValue(newValue, newValueLen);
 }
 template <> void JsonCommonValue<JsonObject *>::Set(JsonObject *newValue, size_t newValueLen) {
-	if (newValue != NULL) { newValue->CloneTo(this->value); }
+	if (this->value == NULL) {
+		this->value = newValue;
+	} else if (newValue != NULL) {
+		newValue->CloneTo(this->value);
+	}
+	this->isNull = this->value == NULL;
 }
 template <> void JsonCommonValue<JsonArrayBase *>::Set(JsonArrayBase *newValue, size_t newValueLen) {
-	if (newValue != NULL) { newValue->CloneTo(this->value); }
+	if (this->value == NULL) {
+		this->value = newValue;
+	} else if (newValue != NULL) {
+		newValue->CloneTo(this->value);
+	}
+	this->isNull = this->value == NULL;
 }
 /*
 

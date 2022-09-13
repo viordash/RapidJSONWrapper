@@ -553,3 +553,50 @@ TEST(JsonObjectTestsGroup, JsonObject_Update_ObjectValue_Test) {
 	STRCMP_EQUAL(testDto.userDto.Name.Get(), "User 1");
 	CHECK_EQUAL(testDto.userDto.Role.Get(), TUserRole::uAdmin);
 }
+
+class NullValueObjectDto : public JsonObject {
+  public:
+	JsonValue<int> Id;
+	JsonCommonValue<JsonArrayBase *> Goods;
+	JsonCommonValue<JsonObject *> User;
+
+	NullValueObjectDto(int id = {})
+		: Id(this, "id", id),	//
+		  Goods(this, "goods"), //
+		  User(this, "user"){};
+};
+
+TEST(JsonObjectTestsGroup, JsonObject_Update_Nulled_ArrayValue_Test) {
+	NullValueObjectDto testDto(1657058000);
+
+	GoodsList newGoodsList;
+	newGoodsList.Add(new GoodsDto(100, 1111, "Keyboards-111", "K111-100", 1158.25, 1148.2));
+	newGoodsList.Add(new GoodsDto(200, 2222, "Keyboards-222", "K222-100", 22158.25, 22448.2));
+
+	testDto.Goods.Set(&newGoodsList);
+
+	CHECK_EQUAL(((GoodsList *)testDto.Goods.Get())->Size(), 2);
+	CHECK_EQUAL(((GoodsList *)testDto.Goods.Get())->Item<GoodsDto *>(0)->Id.Get(), 100);
+	CHECK_EQUAL(((GoodsList *)testDto.Goods.Get())->Item<GoodsDto *>(0)->Created.Get(), 1111);
+	STRCMP_EQUAL(((GoodsList *)testDto.Goods.Get())->Item<GoodsDto *>(0)->Group.Get(), "Keyboards-111");
+	STRCMP_EQUAL(((GoodsList *)testDto.Goods.Get())->Item<GoodsDto *>(0)->Name.Get(), "K111-100");
+	CHECK_EQUAL(((GoodsList *)testDto.Goods.Get())->Item<GoodsDto *>(0)->Price.Get(), 1158.25);
+	CHECK_EQUAL(((GoodsList *)testDto.Goods.Get())->Item<GoodsDto *>(0)->Quantity.Get(), 1148.2);
+
+	CHECK_EQUAL(((GoodsList *)testDto.Goods.Get())->Item<GoodsDto *>(1)->Id.Get(), 200);
+	CHECK_EQUAL(((GoodsList *)testDto.Goods.Get())->Item<GoodsDto *>(1)->Created.Get(), 2222);
+	STRCMP_EQUAL(((GoodsList *)testDto.Goods.Get())->Item<GoodsDto *>(1)->Group.Get(), "Keyboards-222");
+	STRCMP_EQUAL(((GoodsList *)testDto.Goods.Get())->Item<GoodsDto *>(1)->Name.Get(), "K222-100");
+	CHECK_EQUAL(((GoodsList *)testDto.Goods.Get())->Item<GoodsDto *>(1)->Price.Get(), 22158.25);
+	CHECK_EQUAL(((GoodsList *)testDto.Goods.Get())->Item<GoodsDto *>(1)->Quantity.Get(), 22448.2);
+}
+
+TEST(JsonObjectTestsGroup, JsonObject_Update_Nulled_ObjectValue_Test) {
+	NullValueObjectDto testDto(1657058000);
+
+	UserDto userDto("User 1", TUserRole::uAdmin);
+
+	testDto.User.Set(&userDto);
+	STRCMP_EQUAL(((UserDto *)testDto.User.Get())->Name.Get(), "User 1");
+	CHECK_EQUAL(((UserDto *)testDto.User.Get())->Role.Get(), TUserRole::uAdmin);
+}

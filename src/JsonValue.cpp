@@ -182,10 +182,18 @@ template <> void JsonValue<TJsonRawData>::Set(const TJsonRawData newValue, size_
 	InitValue(newValue, newValueLen);
 }
 template <> void JsonValue<JsonObject *>::Set(JsonObject *newValue, size_t newValueLen) {
-	if (newValue != NULL) { newValue->CloneTo(this->value); }
+	if (this->value == NULL) {
+		this->value = newValue;
+	} else if (newValue != NULL) {
+		newValue->CloneTo(this->value);
+	}
 }
 template <> void JsonValue<JsonArrayBase *>::Set(JsonArrayBase *newValue, size_t newValueLen) {
-	if (newValue != NULL) { newValue->CloneTo(this->value); }
+	if (this->value == NULL) {
+		this->value = newValue;
+	} else if (newValue != NULL) {
+		newValue->CloneTo(this->value);
+	}
 }
 /*
 
