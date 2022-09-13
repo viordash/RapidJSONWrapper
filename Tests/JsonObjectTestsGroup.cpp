@@ -498,3 +498,58 @@ TEST(JsonObjectTestsGroup, JsonObject_Validate_Test) {
 	CHECK_FALSE(userDto->TryStringParse("{\"name\":\"Joe Doe\",\"role\":1000}"));
 	delete userDto;
 }
+
+class SetValueObjectDto : public JsonObject {
+  public:
+	JsonValue<int> Id;
+	JsonCommonValue<JsonArrayBase *> Goods;
+	JsonCommonValue<JsonObject *> User;
+	GoodsList goodsList;
+	UserDto userDto;
+
+	SetValueObjectDto(int id = {}, char *userName = {}, TUserRole userRole = {})
+		: Id(this, "id", id),				//
+		  Goods(this, "goods", &goodsList), //
+		  userDto(userName, userRole),		//
+		  User(this, "user", &userDto){};
+};
+
+TEST(JsonObjectTestsGroup, JsonObject_Update_ArrayValue_Test) {
+	SetValueObjectDto testDto(1657058000, "Joe Doe", TUserRole::uViewer);
+	testDto.goodsList.Add(new GoodsDto(1, 1657052789, "Keyboards", "K1-100", 58.25, 48.2));
+	testDto.goodsList.Add(new GoodsDto(2, 1657053789, "Keyboards", "K2-100", 158.25, 448.2));
+	testDto.goodsList.Add(new GoodsDto(3, 1657054789, "Keyboards", "K3-100", 258.25, 548.2));
+	testDto.goodsList.Add(new GoodsDto(4, 1657055789, "Keyboards", "K4-100", 358.25, 648.2));
+	CHECK_EQUAL(testDto.goodsList.Size(), 4);
+
+	GoodsList newGoodsList;
+	newGoodsList.Add(new GoodsDto(100, 1111, "Keyboards-111", "K111-100", 1158.25, 1148.2));
+	newGoodsList.Add(new GoodsDto(200, 2222, "Keyboards-222", "K222-100", 22158.25, 22448.2));
+
+	testDto.Goods.Set(&newGoodsList);
+
+	CHECK_EQUAL(testDto.goodsList.Size(), 2);
+	CHECK_EQUAL(testDto.goodsList.Item<GoodsDto *>(0)->Id.Get(), 100);
+	CHECK_EQUAL(testDto.goodsList.Item<GoodsDto *>(0)->Created.Get(), 1111);
+	STRCMP_EQUAL(testDto.goodsList.Item<GoodsDto *>(0)->Group.Get(), "Keyboards-111");
+	STRCMP_EQUAL(testDto.goodsList.Item<GoodsDto *>(0)->Name.Get(), "K111-100");
+	CHECK_EQUAL(testDto.goodsList.Item<GoodsDto *>(0)->Price.Get(), 1158.25);
+	CHECK_EQUAL(testDto.goodsList.Item<GoodsDto *>(0)->Quantity.Get(), 1148.2);
+
+	CHECK_EQUAL(testDto.goodsList.Item<GoodsDto *>(1)->Id.Get(), 200);
+	CHECK_EQUAL(testDto.goodsList.Item<GoodsDto *>(1)->Created.Get(), 2222);
+	STRCMP_EQUAL(testDto.goodsList.Item<GoodsDto *>(1)->Group.Get(), "Keyboards-222");
+	STRCMP_EQUAL(testDto.goodsList.Item<GoodsDto *>(1)->Name.Get(), "K222-100");
+	CHECK_EQUAL(testDto.goodsList.Item<GoodsDto *>(1)->Price.Get(), 22158.25);
+	CHECK_EQUAL(testDto.goodsList.Item<GoodsDto *>(1)->Quantity.Get(), 22448.2);
+}
+
+TEST(JsonObjectTestsGroup, JsonObject_Update_ObjectValue_Test) {
+	SetValueObjectDto testDto(1657058000, "Joe Doe", TUserRole::uViewer);
+
+	UserDto userDto("User 1", TUserRole::uAdmin);
+
+	testDto.User.Set(&userDto);
+	STRCMP_EQUAL(testDto.userDto.Name.Get(), "User 1");
+	CHECK_EQUAL(testDto.userDto.Role.Get(), TUserRole::uAdmin);
+}

@@ -257,3 +257,65 @@ template <> void JsonValue<char *>::InitValue(const char *value, size_t valueLen
 template <> void JsonValue<TJsonRawData>::InitValue(const TJsonRawData value, size_t valueLen) { this->value = value; }
 template <> void JsonValue<JsonObject *>::InitValue(JsonObject *value, size_t valueLen) { this->value = value; }
 template <> void JsonValue<JsonArrayBase *>::InitValue(JsonArrayBase *value, size_t valueLen) { this->value = value; }
+/*
+
+
+*/
+template <> void JsonValue<bool>::Set(const bool newValue, size_t newValueLen) {
+	DeleteValue();
+	InitValue(newValue, newValueLen);
+}
+template <> void JsonValue<int8_t>::Set(const int8_t newValue, size_t newValueLen) {
+	DeleteValue();
+	InitValue(newValue, newValueLen);
+}
+template <> void JsonValue<int16_t>::Set(const int16_t newValue, size_t newValueLen) {
+	DeleteValue();
+	InitValue(newValue, newValueLen);
+}
+template <> void JsonValue<int32_t>::Set(const int32_t newValue, size_t newValueLen) {
+	DeleteValue();
+	InitValue(newValue, newValueLen);
+}
+template <> void JsonValue<int64_t>::Set(const int64_t newValue, size_t newValueLen) {
+	DeleteValue();
+	InitValue(newValue, newValueLen);
+}
+template <> void JsonValue<uint8_t>::Set(const uint8_t newValue, size_t newValueLen) {
+	DeleteValue();
+	InitValue(newValue, newValueLen);
+}
+template <> void JsonValue<uint16_t>::Set(const uint16_t newValue, size_t newValueLen) {
+	DeleteValue();
+	InitValue(newValue, newValueLen);
+}
+template <> void JsonValue<uint32_t>::Set(const uint32_t newValue, size_t newValueLen) {
+	DeleteValue();
+	InitValue(newValue, newValueLen);
+}
+template <> void JsonValue<uint64_t>::Set(const uint64_t newValue, size_t newValueLen) {
+	DeleteValue();
+	InitValue(newValue, newValueLen);
+}
+template <> void JsonValue<float>::Set(const float newValue, size_t newValueLen) {
+	DeleteValue();
+	InitValue(newValue, newValueLen);
+}
+template <> void JsonValue<double>::Set(const double newValue, size_t newValueLen) {
+	DeleteValue();
+	InitValue(newValue, newValueLen);
+}
+template <> void JsonValue<char *>::Set(const char *newValue, size_t newValueLen) {
+	DeleteValue();
+	InitValue(newValue, newValueLen);
+}
+template <> void JsonValue<TJsonRawData>::Set(const TJsonRawData newValue, size_t newValueLen) {
+	DeleteValue();
+	InitValue(newValue, newValueLen);
+}
+template <> void JsonValue<JsonObject *>::Set(JsonObject *newValue, size_t newValueLen) {
+	if (newValue != NULL) { newValue->CloneTo(this->value); }
+}
+template <> void JsonValue<JsonArrayBase *>::Set(JsonArrayBase *newValue, size_t newValueLen) {
+	if (newValue != NULL) { newValue->CloneTo(this->value); }
+}

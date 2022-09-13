@@ -26,10 +26,7 @@ template <class T> class JsonValue : public JsonValueBase {
 
 	ConstT Get() { return value; }
 
-	void Set(ConstT newValue, size_t newValueLen = size_t()) {
-		DeleteValue();
-		InitValue(newValue, newValueLen);
-	}
+	void Set(ConstT newValue, size_t newValueLen = size_t());
 
   protected:
 	T value;
@@ -60,10 +57,7 @@ template <class T> class JsonCommonValue : public JsonValueBase {
 	void ResetToNull();
 
 	ConstT Get() { return value; }
-	void Set(ConstT newValue, size_t newValueLen = size_t()) {
-		DeleteValue();
-		InitValue(newValue, newValueLen);
-	}
+	void Set(ConstT newValue, size_t newValueLen = size_t());
 
   protected:
 	bool presented;
