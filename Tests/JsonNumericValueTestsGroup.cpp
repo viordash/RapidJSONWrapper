@@ -17,9 +17,9 @@ TEST(JsonNumericValueGroup, JsonField_Equals_By_Name_Test) {
 	JsonValue<unsigned int> testable02(&container, "other", 100);
 
 	CHECK_TRUE(testable1 == testable01);
-	testable01.Value = testable01.Value + 1;
+	testable01.Set(testable01.Get() + 1);
 	CHECK_FALSE(testable1 == testable01);
-	testable1.Value = testable1.Value + 1;
+	testable1.Set(testable1.Get() + 1);
 	CHECK_TRUE(testable1 == testable01);
 	CHECK_FALSE(testable1 == testable02);
 }
@@ -30,15 +30,15 @@ TEST(JsonNumericValueGroup, JsonUIntField_SetValue_Test) {
 	JsonValue<uint32_t> testable2(&container, "test");
 	JsonValue<uint16_t> testable3(&container, "test");
 	JsonValue<uint8_t> testable4(&container, "test");
-	testable1.Value = 0xFFFFFFFF;
-	testable2.Value = 0xFFFFFFFF;
-	testable3.Value = 0xFFFFFFFF;
-	testable4.Value = 0xFFFFFFFF;
+	testable1.Set(0xFFFFFFFF);
+	testable2.Set(0xFFFFFFFF);
+	testable3.Set(0xFFFFFFFF);
+	testable4.Set(0xFFFFFFFF);
 
-	CHECK_EQUAL(testable1.Value, 4294967295);
-	CHECK_EQUAL(testable2.Value, 4294967295);
-	CHECK_EQUAL(testable3.Value, 65535);
-	CHECK_EQUAL(testable4.Value, 255);
+	CHECK_EQUAL(testable1.Get(), 4294967295);
+	CHECK_EQUAL(testable2.Get(), 4294967295);
+	CHECK_EQUAL(testable3.Get(), 65535);
+	CHECK_EQUAL(testable4.Get(), 255);
 }
 
 TEST(JsonNumericValueGroup, JsonUIntField_TryParse_Test) {
@@ -54,10 +54,10 @@ TEST(JsonNumericValueGroup, JsonUIntField_TryParse_Test) {
 	CHECK_TRUE(testable2.TryParse(&doc));
 	CHECK_TRUE(testable3.TryParse(&doc));
 	CHECK_TRUE(testable4.TryParse(&doc));
-	CHECK_EQUAL(testable1.Value, 153000);
-	CHECK_EQUAL(testable2.Value, 153000);
-	CHECK_EQUAL(testable3.Value, 21928);
-	CHECK_EQUAL(testable4.Value, 168);
+	CHECK_EQUAL(testable1.Get(), 153000);
+	CHECK_EQUAL(testable2.Get(), 153000);
+	CHECK_EQUAL(testable3.Get(), 21928);
+	CHECK_EQUAL(testable4.Get(), 168);
 
 	doc.Parse("{\"testOther\":42}");
 	CHECK_FALSE(testable1.TryParse(&doc));
@@ -139,7 +139,7 @@ TEST(JsonNumericValueGroup, JsonUIntField_Equals_Test) {
 	CHECK_FALSE(testable1 != testable01);
 	CHECK_TRUE(testable1.Equals(&testable01));
 	CHECK_TRUE(testable01.Equals(&testable1));
-	testable01.Value = testable01.Value + 1;
+	testable01.Set(testable01.Get() + 1);
 	CHECK_TRUE(testable1 != testable01);
 	CHECK_FALSE(testable1 == testable01);
 	CHECK_FALSE(testable1.Equals(&testable01));
@@ -153,7 +153,7 @@ TEST(JsonNumericValueGroup, JsonUIntField_Equals_Test) {
 	CHECK_FALSE(testable2 != testable02);
 	CHECK_TRUE(testable2.Equals(&testable02));
 	CHECK_TRUE(testable02.Equals(&testable2));
-	testable02.Value = testable02.Value + 1;
+	testable02.Set(testable02.Get() + 1);
 	CHECK_TRUE(testable2 != testable02);
 	CHECK_FALSE(testable2 == testable02);
 	CHECK_FALSE(testable2.Equals(&testable02));
@@ -167,7 +167,7 @@ TEST(JsonNumericValueGroup, JsonUIntField_Equals_Test) {
 	CHECK_FALSE(testable3 != testable03);
 	CHECK_TRUE(testable3.Equals(&testable03));
 	CHECK_TRUE(testable03.Equals(&testable3));
-	testable03.Value = testable03.Value + 1;
+	testable03.Set(testable03.Get() + 1);
 	CHECK_TRUE(testable3 != testable03);
 	CHECK_FALSE(testable3 == testable03);
 	CHECK_FALSE(testable3.Equals(&testable03));
@@ -181,7 +181,7 @@ TEST(JsonNumericValueGroup, JsonUIntField_Equals_Test) {
 	CHECK_FALSE(testable4 != testable04);
 	CHECK_TRUE(testable4.Equals(&testable04));
 	CHECK_TRUE(testable04.Equals(&testable4));
-	testable04.Value = testable04.Value + 1;
+	testable04.Set(testable04.Get() + 1);
 	CHECK_TRUE(testable4 != testable04);
 	CHECK_FALSE(testable4 == testable04);
 	CHECK_FALSE(testable4.Equals(&testable04));
@@ -209,10 +209,10 @@ TEST(JsonNumericValueGroup, JsonUIntField_CloneTo_Test) {
 	testable3.CloneTo((JsonValueBase *)&clone3);
 	testable4.CloneTo((JsonValueBase *)&clone4);
 
-	CHECK_EQUAL(clone1.Value, 100);
-	CHECK_EQUAL(clone2.Value, 101);
-	CHECK_EQUAL(clone3.Value, 102);
-	CHECK_EQUAL(clone4.Value, 103);
+	CHECK_EQUAL(clone1.Get(), 100);
+	CHECK_EQUAL(clone2.Get(), 101);
+	CHECK_EQUAL(clone3.Get(), 102);
+	CHECK_EQUAL(clone4.Get(), 103);
 }
 
 TEST(JsonNumericValueGroup, JsonIntField_SetValue_Test) {
@@ -221,15 +221,15 @@ TEST(JsonNumericValueGroup, JsonIntField_SetValue_Test) {
 	JsonValue<int32_t> testable2(&container, "test");
 	JsonValue<int16_t> testable3(&container, "test");
 	JsonValue<int8_t> testable4(&container, "test");
-	testable1.Value = 0xFFFFFFFF;
-	testable2.Value = 0xFFFFFFFF;
-	testable3.Value = 0xFFFFFFFF;
-	testable4.Value = 0xFFFFFFFF;
+	testable1.Set(0xFFFFFFFF);
+	testable2.Set(0xFFFFFFFF);
+	testable3.Set(0xFFFFFFFF);
+	testable4.Set(0xFFFFFFFF);
 
-	CHECK_EQUAL(testable1.Value, -1);
-	CHECK_EQUAL(testable2.Value, -1);
-	CHECK_EQUAL(testable3.Value, -1);
-	CHECK_EQUAL(testable4.Value, -1);
+	CHECK_EQUAL(testable1.Get(), -1);
+	CHECK_EQUAL(testable2.Get(), -1);
+	CHECK_EQUAL(testable3.Get(), -1);
+	CHECK_EQUAL(testable4.Get(), -1);
 }
 
 TEST(JsonNumericValueGroup, JsonIntField_TryParse_Test) {
@@ -245,10 +245,10 @@ TEST(JsonNumericValueGroup, JsonIntField_TryParse_Test) {
 	CHECK(testable2.TryParse(&doc));
 	CHECK(testable3.TryParse(&doc));
 	CHECK(testable4.TryParse(&doc));
-	CHECK_EQUAL(testable1.Value, 153000);
-	CHECK_EQUAL(testable2.Value, 153000);
-	CHECK_EQUAL(testable3.Value, 21928);
-	CHECK_EQUAL(testable4.Value, -88);
+	CHECK_EQUAL(testable1.Get(), 153000);
+	CHECK_EQUAL(testable2.Get(), 153000);
+	CHECK_EQUAL(testable3.Get(), 21928);
+	CHECK_EQUAL(testable4.Get(), -88);
 
 	doc.Parse("{\"testOther\":42}");
 	CHECK_FALSE(testable1.TryParse(&doc));
@@ -330,7 +330,7 @@ TEST(JsonNumericValueGroup, JsonIntField_Equals_Test) {
 	CHECK_FALSE(testable1 != testable01);
 	CHECK_TRUE(testable1.Equals(&testable01));
 	CHECK_TRUE(testable01.Equals(&testable1));
-	testable01.Value = testable01.Value + 1;
+	testable01.Set(testable01.Get() + 1);
 	CHECK_TRUE(testable1 != testable01);
 	CHECK_FALSE(testable1 == testable01);
 	CHECK_FALSE(testable1.Equals(&testable01));
@@ -344,7 +344,7 @@ TEST(JsonNumericValueGroup, JsonIntField_Equals_Test) {
 	CHECK_FALSE(testable2 != testable02);
 	CHECK_TRUE(testable2.Equals(&testable02));
 	CHECK_TRUE(testable02.Equals(&testable2));
-	testable02.Value = testable02.Value + 1;
+	testable02.Set(testable02.Get() + 1);
 	CHECK_TRUE(testable2 != testable02);
 	CHECK_FALSE(testable2 == testable02);
 	CHECK_FALSE(testable2.Equals(&testable02));
@@ -358,7 +358,7 @@ TEST(JsonNumericValueGroup, JsonIntField_Equals_Test) {
 	CHECK_FALSE(testable3 != testable03);
 	CHECK_TRUE(testable3.Equals(&testable03));
 	CHECK_TRUE(testable03.Equals(&testable3));
-	testable03.Value = testable03.Value + 1;
+	testable03.Set(testable03.Get() + 1);
 	CHECK_TRUE(testable3 != testable03);
 	CHECK_FALSE(testable3 == testable03);
 	CHECK_FALSE(testable3.Equals(&testable03));
@@ -372,7 +372,7 @@ TEST(JsonNumericValueGroup, JsonIntField_Equals_Test) {
 	CHECK_FALSE(testable4 != testable04);
 	CHECK_TRUE(testable4.Equals(&testable04));
 	CHECK_TRUE(testable04.Equals(&testable4));
-	testable04.Value = testable04.Value + 1;
+	testable04.Set(testable04.Get() + 1);
 	CHECK_TRUE(testable4 != testable04);
 	CHECK_FALSE(testable4 == testable04);
 	CHECK_FALSE(testable4.Equals(&testable04));
@@ -400,10 +400,10 @@ TEST(JsonNumericValueGroup, JsonIntField_CloneTo_Test) {
 	testable3.CloneTo((JsonValueBase *)&clone3);
 	testable4.CloneTo((JsonValueBase *)&clone4);
 
-	CHECK_EQUAL(clone1.Value, 100);
-	CHECK_EQUAL(clone2.Value, 101);
-	CHECK_EQUAL(clone3.Value, 102);
-	CHECK_EQUAL(clone4.Value, 103);
+	CHECK_EQUAL(clone1.Get(), 100);
+	CHECK_EQUAL(clone2.Get(), 101);
+	CHECK_EQUAL(clone3.Get(), 102);
+	CHECK_EQUAL(clone4.Get(), 103);
 }
 
 /*
@@ -415,16 +415,16 @@ TEST(JsonNumericValueGroup, JsonIntField_CloneTo_Test) {
 TEST(JsonNumericValueGroup, JsonBoolField_SetValue_Test) {
 	JsonFieldsContainer container;
 	JsonValue<bool> testable1(&container, "test");
-	testable1.Value = 0xFFFFFFFF;
-	CHECK_EQUAL(testable1.Value, true);
-	testable1.Value = 0;
-	CHECK_EQUAL(testable1.Value, false);
-	testable1.Value = 1;
-	CHECK_EQUAL(testable1.Value, true);
-	testable1.Value = false;
-	CHECK_EQUAL(testable1.Value, false);
-	testable1.Value = true;
-	CHECK_EQUAL(testable1.Value, true);
+	testable1.Set(0xFFFFFFFF);
+	CHECK_EQUAL(testable1.Get(), true);
+	testable1.Set(0);
+	CHECK_EQUAL(testable1.Get(), false);
+	testable1.Set(1);
+	CHECK_EQUAL(testable1.Get(), true);
+	testable1.Set(false);
+	CHECK_EQUAL(testable1.Get(), false);
+	testable1.Set(true);
+	CHECK_EQUAL(testable1.Get(), true);
 }
 
 TEST(JsonNumericValueGroup, JsonBoolField_TryParse_Test) {
@@ -434,7 +434,7 @@ TEST(JsonNumericValueGroup, JsonBoolField_TryParse_Test) {
 	rapidjson::Document doc;
 	doc.Parse("{\"test\":true}");
 	CHECK(testable1.TryParse(&doc));
-	CHECK_EQUAL(testable1.Value, true);
+	CHECK_EQUAL(testable1.Get(), true);
 
 	doc.Parse("{\"test\":null}");
 	CHECK_FALSE(testable1.TryParse(&doc));
@@ -463,7 +463,7 @@ TEST(JsonNumericValueGroup, JsonBoolField_Equals_Test) {
 	CHECK_FALSE(testable1 != testable01);
 	CHECK_TRUE(testable1.Equals(&testable01));
 	CHECK_TRUE(testable01.Equals(&testable1));
-	testable01.Value = !testable01.Value;
+	testable01.Set(!testable01.Get());
 	CHECK_TRUE(testable1 != testable01);
 	CHECK_FALSE(testable1 == testable01);
 	CHECK_FALSE(testable1.Equals(&testable01));
@@ -481,7 +481,7 @@ TEST(JsonNumericValueGroup, JsonBoolField_CloneTo_Test) {
 
 	testable1.CloneTo((JsonValueBase *)&clone1);
 
-	CHECK_EQUAL(clone1.Value, true);
+	CHECK_EQUAL(clone1.Get(), true);
 }
 /*
 
@@ -491,11 +491,11 @@ TEST(JsonNumericValueGroup, JsonFloatField_SetValue_Test) {
 	JsonFieldsContainer container;
 	JsonValue<float> testable1(&container, "test");
 	JsonValue<double> testable2(&container, "test");
-	testable1.Value = 429496729.5;
-	testable2.Value = 42949672.95;
+	testable1.Set(429496729.5);
+	testable2.Set(42949672.95);
 
-	CHECK_EQUAL(testable1.Value, 429496729.5F);
-	CHECK_EQUAL(testable2.Value, 42949672.95);
+	CHECK_EQUAL(testable1.Get(), 429496729.5F);
+	CHECK_EQUAL(testable2.Get(), 42949672.95);
 }
 
 TEST(JsonNumericValueGroup, JsonFloatField_TryParse_Test) {
@@ -507,8 +507,8 @@ TEST(JsonNumericValueGroup, JsonFloatField_TryParse_Test) {
 	doc.Parse("{\"test\":150.25}");
 	CHECK_TRUE(testable1.TryParse(&doc));
 	CHECK_TRUE(testable2.TryParse(&doc));
-	CHECK_EQUAL(testable1.Value, 150.25F);
-	CHECK_EQUAL(testable2.Value, 150.25);
+	CHECK_EQUAL(testable1.Get(), 150.25F);
+	CHECK_EQUAL(testable2.Get(), 150.25);
 
 	doc.Parse("{\"testOther\":42.1}");
 	CHECK_FALSE(testable1.TryParse(&doc));
@@ -558,7 +558,7 @@ TEST(JsonNumericValueGroup, JsonFloatField_Equals_Test) {
 	CHECK_FALSE(testable1 != testable01);
 	CHECK_TRUE(testable1.Equals(&testable01));
 	CHECK_TRUE(testable01.Equals(&testable1));
-	testable01.Value = testable01.Value + 1;
+	testable01.Set(testable01.Get() + 1);
 	CHECK_TRUE(testable1 != testable01);
 	CHECK_FALSE(testable1 == testable01);
 	CHECK_FALSE(testable1.Equals(&testable01));
@@ -572,7 +572,7 @@ TEST(JsonNumericValueGroup, JsonFloatField_Equals_Test) {
 	CHECK_FALSE(testable2 != testable02);
 	CHECK_TRUE(testable2.Equals(&testable02));
 	CHECK_TRUE(testable02.Equals(&testable2));
-	testable02.Value = testable02.Value + 1;
+	testable02.Set(testable02.Get() + 1);
 	CHECK_TRUE(testable2 != testable02);
 	CHECK_FALSE(testable2 == testable02);
 	CHECK_FALSE(testable2.Equals(&testable02));
@@ -594,8 +594,8 @@ TEST(JsonNumericValueGroup, JsonFloatField_CloneTo_Test) {
 	testable1.CloneTo((JsonValueBase *)&clone1);
 	testable2.CloneTo((JsonValueBase *)&clone2);
 
-	CHECK_EQUAL(clone1.Value, 100.5);
-	CHECK_EQUAL(clone2.Value, 101.15);
+	CHECK_EQUAL(clone1.Get(), 100.5);
+	CHECK_EQUAL(clone2.Get(), 101.15);
 }
 /*
 
@@ -644,11 +644,11 @@ TEST(JsonNumericValueGroup, JsonUIntField_Common_TryParse_Test) {
 	CHECK_TRUE(testable3.TryParse(&doc));
 	CHECK_TRUE(testable4.TryParse(&doc));
 	CHECK_TRUE(testable5.TryParse(&doc));
-	CHECK_EQUAL(testable1.Value, 42);
-	CHECK_EQUAL(testable2.Value, 42);
-	CHECK_EQUAL(testable3.Value, 42);
-	CHECK_EQUAL(testable4.Value, 42);
-	CHECK_EQUAL(testable5.Value, 42);
+	CHECK_EQUAL(testable1.Get(), 42);
+	CHECK_EQUAL(testable2.Get(), 42);
+	CHECK_EQUAL(testable3.Get(), 42);
+	CHECK_EQUAL(testable4.Get(), 42);
+	CHECK_EQUAL(testable5.Get(), 42);
 	CHECK_TRUE(testable1.Presented());
 	CHECK_TRUE(testable2.Presented());
 	CHECK_TRUE(testable3.Presented());
@@ -783,6 +783,65 @@ TEST(JsonNumericValueGroup, JsonUIntField_Common_WriteTo_Test) {
 	}
 }
 
+TEST(JsonNumericValueGroup, JsonUIntField_Common_Change_Presented_After_Set_Value_Test) {
+	JsonFieldsContainer container;
+	JsonCommonValue<unsigned int> testable1(&container, "test");
+	JsonCommonValue<uint32_t> testable2(&container, "test");
+	JsonCommonValue<uint16_t> testable3(&container, "test");
+	JsonCommonValue<uint8_t> testable4(&container, "test");
+	JsonCommonValue<uint64_t> testable5(&container, "test");
+
+	CHECK_FALSE(testable1.Presented());
+	CHECK_FALSE(testable2.Presented());
+	CHECK_FALSE(testable3.Presented());
+	CHECK_FALSE(testable4.Presented());
+	CHECK_FALSE(testable5.Presented());
+
+	testable1.Set(1);
+	testable2.Set(1);
+	testable3.Set(1);
+	testable4.Set(1);
+	testable5.Set(1);
+	CHECK_TRUE(testable1.Presented());
+	CHECK_TRUE(testable2.Presented());
+	CHECK_TRUE(testable3.Presented());
+	CHECK_TRUE(testable4.Presented());
+	CHECK_TRUE(testable5.Presented());
+}
+
+TEST(JsonNumericValueGroup, JsonUIntField_Common_Change_IsNull_After_Set_Value_Test) {
+	JsonFieldsContainer container;
+	JsonCommonValue<unsigned int> testable1(&container, "test");
+	JsonCommonValue<uint32_t> testable2(&container, "test");
+	JsonCommonValue<uint16_t> testable3(&container, "test");
+	JsonCommonValue<uint8_t> testable4(&container, "test");
+	JsonCommonValue<uint64_t> testable5(&container, "test");
+
+	rapidjson::Document doc;
+	doc.Parse("{\"test\":null}");
+	CHECK_TRUE(testable1.TryParse(&doc));
+	CHECK_TRUE(testable2.TryParse(&doc));
+	CHECK_TRUE(testable3.TryParse(&doc));
+	CHECK_TRUE(testable4.TryParse(&doc));
+	CHECK_TRUE(testable5.TryParse(&doc));
+	CHECK_TRUE(testable1.IsNull());
+	CHECK_TRUE(testable2.IsNull());
+	CHECK_TRUE(testable3.IsNull());
+	CHECK_TRUE(testable4.IsNull());
+	CHECK_TRUE(testable5.IsNull());
+
+	testable1.Set(1);
+	testable2.Set(1);
+	testable3.Set(1);
+	testable4.Set(1);
+	testable5.Set(1);
+	CHECK_FALSE(testable1.IsNull());
+	CHECK_FALSE(testable2.IsNull());
+	CHECK_FALSE(testable3.IsNull());
+	CHECK_FALSE(testable4.IsNull());
+	CHECK_FALSE(testable5.IsNull());
+}
+
 TEST(JsonNumericValueGroup, JsonIntField_Common_TryParse_Test) {
 	JsonFieldsContainer container;
 	JsonCommonValue<int> testable1(&container, "test", 100);
@@ -826,11 +885,11 @@ TEST(JsonNumericValueGroup, JsonIntField_Common_TryParse_Test) {
 	CHECK_TRUE(testable3.TryParse(&doc));
 	CHECK_TRUE(testable4.TryParse(&doc));
 	CHECK_TRUE(testable5.TryParse(&doc));
-	CHECK_EQUAL(testable1.Value, 42);
-	CHECK_EQUAL(testable2.Value, 42);
-	CHECK_EQUAL(testable3.Value, 42);
-	CHECK_EQUAL(testable4.Value, 42);
-	CHECK_EQUAL(testable5.Value, 42);
+	CHECK_EQUAL(testable1.Get(), 42);
+	CHECK_EQUAL(testable2.Get(), 42);
+	CHECK_EQUAL(testable3.Get(), 42);
+	CHECK_EQUAL(testable4.Get(), 42);
+	CHECK_EQUAL(testable5.Get(), 42);
 	CHECK_TRUE(testable1.Presented());
 	CHECK_TRUE(testable2.Presented());
 	CHECK_TRUE(testable3.Presented());
@@ -965,6 +1024,65 @@ TEST(JsonNumericValueGroup, JsonIntField_Common_WriteTo_Test) {
 	}
 }
 
+TEST(JsonNumericValueGroup, JsonIntField_Common_Change_Presented_After_Set_Value_Test) {
+	JsonFieldsContainer container;
+	JsonCommonValue<int> testable1(&container, "test");
+	JsonCommonValue<int32_t> testable2(&container, "test");
+	JsonCommonValue<int16_t> testable3(&container, "test");
+	JsonCommonValue<int8_t> testable4(&container, "test");
+	JsonCommonValue<int64_t> testable5(&container, "test");
+
+	CHECK_FALSE(testable1.Presented());
+	CHECK_FALSE(testable2.Presented());
+	CHECK_FALSE(testable3.Presented());
+	CHECK_FALSE(testable4.Presented());
+	CHECK_FALSE(testable5.Presented());
+
+	testable1.Set(1);
+	testable2.Set(1);
+	testable3.Set(1);
+	testable4.Set(1);
+	testable5.Set(1);
+	CHECK_TRUE(testable1.Presented());
+	CHECK_TRUE(testable2.Presented());
+	CHECK_TRUE(testable3.Presented());
+	CHECK_TRUE(testable4.Presented());
+	CHECK_TRUE(testable5.Presented());
+}
+
+TEST(JsonNumericValueGroup, JsonIntField_Common_Change_IsNull_After_Set_Value_Test) {
+	JsonFieldsContainer container;
+	JsonCommonValue<int> testable1(&container, "test");
+	JsonCommonValue<int32_t> testable2(&container, "test");
+	JsonCommonValue<int16_t> testable3(&container, "test");
+	JsonCommonValue<int8_t> testable4(&container, "test");
+	JsonCommonValue<int64_t> testable5(&container, "test");
+
+	rapidjson::Document doc;
+	doc.Parse("{\"test\":null}");
+	CHECK_TRUE(testable1.TryParse(&doc));
+	CHECK_TRUE(testable2.TryParse(&doc));
+	CHECK_TRUE(testable3.TryParse(&doc));
+	CHECK_TRUE(testable4.TryParse(&doc));
+	CHECK_TRUE(testable5.TryParse(&doc));
+	CHECK_TRUE(testable1.IsNull());
+	CHECK_TRUE(testable2.IsNull());
+	CHECK_TRUE(testable3.IsNull());
+	CHECK_TRUE(testable4.IsNull());
+	CHECK_TRUE(testable5.IsNull());
+
+	testable1.Set(1);
+	testable2.Set(1);
+	testable3.Set(1);
+	testable4.Set(1);
+	testable5.Set(1);
+	CHECK_FALSE(testable1.IsNull());
+	CHECK_FALSE(testable2.IsNull());
+	CHECK_FALSE(testable3.IsNull());
+	CHECK_FALSE(testable4.IsNull());
+	CHECK_FALSE(testable5.IsNull());
+}
+
 TEST(JsonNumericValueGroup, JsonBoolField_Common_TryParse_Test) {
 	JsonFieldsContainer container;
 	JsonCommonValue<bool> testable1(&container, "test", false);
@@ -975,13 +1093,13 @@ TEST(JsonNumericValueGroup, JsonBoolField_Common_TryParse_Test) {
 	rapidjson::Document doc;
 	doc.Parse("{\"testOther\":true}");
 	CHECK_TRUE(testable1.TryParse(&doc));
-	CHECK_EQUAL(testable1.Value, false);
+	CHECK_EQUAL(testable1.Get(), false);
 	CHECK_FALSE(testable1.Presented());
 	CHECK_FALSE(testable1.IsNull());
 
 	doc.Parse("{\"test\":true}");
 	CHECK_TRUE(testable1.TryParse(&doc));
-	CHECK_EQUAL(testable1.Value, true);
+	CHECK_EQUAL(testable1.Get(), true);
 	CHECK_TRUE(testable1.Presented());
 	CHECK_FALSE(testable1.IsNull());
 
@@ -1016,6 +1134,29 @@ TEST(JsonNumericValueGroup, JsonBoolField_Common_WriteTo_Test) {
 	}
 }
 
+TEST(JsonNumericValueGroup, JsonBoolField_Common_Change_Presented_After_Set_Value_Test) {
+	JsonFieldsContainer container;
+	JsonCommonValue<bool> testable1(&container, "test");
+
+	CHECK_FALSE(testable1.Presented());
+
+	testable1.Set(true);
+	CHECK_TRUE(testable1.Presented());
+}
+
+TEST(JsonNumericValueGroup, JsonBoolField_Common_Change_IsNull_After_Set_Value_Test) {
+	JsonFieldsContainer container;
+	JsonCommonValue<bool> testable1(&container, "test");
+
+	rapidjson::Document doc;
+	doc.Parse("{\"test\":null}");
+	CHECK_TRUE(testable1.TryParse(&doc));
+	CHECK_TRUE(testable1.IsNull());
+
+	testable1.Set(true);
+	CHECK_FALSE(testable1.IsNull());
+}
+
 TEST(JsonNumericValueGroup, JsonFloatField_Common_TryParse_Test) {
 	JsonFieldsContainer container;
 	JsonCommonValue<float> testable1(&container, "test", 100);
@@ -1038,8 +1179,8 @@ TEST(JsonNumericValueGroup, JsonFloatField_Common_TryParse_Test) {
 	doc.Parse("{\"test\":42.0}");
 	CHECK_TRUE(testable1.TryParse(&doc));
 	CHECK_TRUE(testable2.TryParse(&doc));
-	CHECK_EQUAL(testable1.Value, 42);
-	CHECK_EQUAL(testable2.Value, 42);
+	CHECK_EQUAL(testable1.Get(), 42);
+	CHECK_EQUAL(testable2.Get(), 42);
 	CHECK_TRUE(testable1.Presented());
 	CHECK_TRUE(testable2.Presented());
 	CHECK_FALSE(testable1.IsNull());
@@ -1097,4 +1238,36 @@ TEST(JsonNumericValueGroup, JsonFloatField_Common_WriteTo_Test) {
 		doc.Accept(writer);
 		STRCMP_EQUAL(buffer.GetString(), "{\"test\":null}");
 	}
+}
+
+TEST(JsonNumericValueGroup, JsonFloatField_Common_Change_Presented_After_Set_Value_Test) {
+	JsonFieldsContainer container;
+	JsonCommonValue<float> testable1(&container, "test");
+	JsonCommonValue<double> testable2(&container, "test");
+
+	CHECK_FALSE(testable1.Presented());
+	CHECK_FALSE(testable2.Presented());
+
+	testable1.Set(1);
+	testable2.Set(1);
+	CHECK_TRUE(testable1.Presented());
+	CHECK_TRUE(testable2.Presented());
+}
+
+TEST(JsonNumericValueGroup, JsonFloatField_Common_Change_IsNull_After_Set_Value_Test) {
+	JsonFieldsContainer container;
+	JsonCommonValue<float> testable1(&container, "test");
+	JsonCommonValue<double> testable2(&container, "test");
+
+	rapidjson::Document doc;
+	doc.Parse("{\"test\":null}");
+	CHECK_TRUE(testable1.TryParse(&doc));
+	CHECK_TRUE(testable2.TryParse(&doc));
+	CHECK_TRUE(testable1.IsNull());
+	CHECK_TRUE(testable2.IsNull());
+
+	testable1.Set(1);
+	testable2.Set(1);
+	CHECK_FALSE(testable1.IsNull());
+	CHECK_FALSE(testable2.IsNull());
 }

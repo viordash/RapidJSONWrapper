@@ -10,12 +10,13 @@ typedef struct {
 
 template <class T> class JsonValue : public JsonValueBase {
   public:
-	ValueProvider<T> Value;
+	typedef typename std::conditional<std::is_same<T, char *>::value, const char *, typename std::add_const<T>::type>::type ConstT;
 
-	JsonValue(JsonFieldsContainer *container, size_t nameLen, const char *name, T value = T()) : JsonValueBase(container, name, nameLen), Value(value) {}
-	template <size_t N> JsonValue(JsonFieldsContainer *container, const char (&name)[N], T value = T()) : JsonValue(container, N - 1, name, value) {}
+	JsonValue(JsonFieldsContainer *container, size_t nameLen, const char *name, size_t valueLen, ConstT value) : JsonValueBase(container, name, nameLen) { InitValue(value, valueLen); }
+	JsonValue(JsonFieldsContainer *container, size_t nameLen, const char *name, ConstT value = T()) : JsonValue(container, nameLen, name, size_t(), value) {}
+	template <size_t N> JsonValue(JsonFieldsContainer *container, const char (&name)[N], ConstT value = T()) : JsonValue(container, N - 1, name, value) {}
 
-	virtual ~JsonValue() {}
+	virtual ~JsonValue() { DeleteValue(); }
 
 	bool TryParse(TJsonDocument *doc) override final;
 	void WriteToDoc(TJsonDocument *doc) override final;
@@ -23,17 +24,27 @@ template <class T> class JsonValue : public JsonValueBase {
 	bool Equals(JsonValueBase *other) override final;
 	void CloneTo(JsonValueBase *other) override final;
 
+	ConstT Get() { return value; }
+
+	void Set(ConstT newValue, size_t newValueLen = size_t());
+
   protected:
+	T value;
+	void InitValue(ConstT value, size_t valueLen);
+	void DeleteValue();
 };
 
 template <class T> class JsonCommonValue : public JsonValueBase {
   public:
-	CommonValueProvider<T> Value;
+	typedef typename std::conditional<std::is_same<T, char *>::value, const char *, typename std::add_const<T>::type>::type ConstT;
 
-	JsonCommonValue(JsonFieldsContainer *container, size_t nameLen, const char *name, T value = T()) : JsonValueBase(container, name, nameLen), presented(false), Value(value) {}
-	template <size_t N> JsonCommonValue(JsonFieldsContainer *container, const char (&name)[N], T value = T()) : JsonCommonValue(container, N - 1, name, value) {}
+	JsonCommonValue(JsonFieldsContainer *container, size_t nameLen, const char *name, size_t valueLen, ConstT value) : JsonValueBase(container, name, nameLen), presented(false), isNull(false) {
+		InitValue(value, valueLen);
+	}
+	JsonCommonValue(JsonFieldsContainer *container, size_t nameLen, const char *name, ConstT value = T()) : JsonCommonValue(container, nameLen, name, size_t(), value) {}
+	template <size_t N> JsonCommonValue(JsonFieldsContainer *container, const char (&name)[N], ConstT value = T()) : JsonCommonValue(container, N - 1, name, value) {}
 
-	virtual ~JsonCommonValue() {}
+	virtual ~JsonCommonValue() { DeleteValue(); }
 
 	bool TryParse(TJsonDocument *doc) override final;
 	void WriteToDoc(TJsonDocument *doc) override final;
@@ -45,8 +56,15 @@ template <class T> class JsonCommonValue : public JsonValueBase {
 	bool IsNull();
 	void ResetToNull();
 
+	ConstT Get() { return value; }
+	void Set(ConstT newValue, size_t newValueLen = size_t());
+
   protected:
 	bool presented;
+	bool isNull;
+	T value;
+	void InitValue(ConstT value, size_t valueLen);
+	void DeleteValue();
 };
 
 class JsonObject : public JsonFieldsContainer {
@@ -54,9 +72,9 @@ class JsonObject : public JsonFieldsContainer {
 	virtual ~JsonObject(){};
 
 	virtual bool TryParse(TJsonDocument *doc);
-	virtual bool TryParse(const char *jsonStr, size_t length = 0);
-	TJsonDocument *BeginTryParse(const char *jsonStr, size_t length = 0);
-	void EndTryParse(TJsonDocument *doc);
+	virtual bool TryStringParse(const char *jsonStr, size_t length = 0);
+	TJsonDocument *BeginTryStringParse(const char *jsonStr, size_t length = 0);
+	void EndTryStringParse(TJsonDocument *doc);
 
 	void WriteToDoc(TJsonDocument *doc);
 	size_t WriteToString(char *outBuffer, size_t outBufferSize);
@@ -65,7 +83,7 @@ class JsonObject : public JsonFieldsContainer {
 
 	virtual bool Validate() { return true; }
 	virtual bool Equals(JsonObject *other);
-	void CloneTo(JsonObject *other);
+	virtual void CloneTo(JsonObject *other);
 
 	friend bool operator!=(const JsonObject &v1, const JsonObject &v2);
 	friend bool operator==(const JsonObject &v1, const JsonObject &v2);
@@ -76,35 +94,36 @@ class JsonObject : public JsonFieldsContainer {
 
 template <class TItem> class JsonArray : public JsonArrayBase {
   public:
-	virtual ~JsonArray();
+	typedef typename std::conditional<std::is_same<TItem, char *>::value, const char *, typename std::add_const<TItem>::type>::type ConstTItem;
+	virtual ~JsonArray() { Clear(); }
 
 	TItem Item(size_t index) { return (TItem)Items[index]; }
 	size_t Size() { return Items.size(); }
 	typename std::vector<TItem>::iterator const Begin() { return Items.begin(); }
 	typename std::vector<TItem>::iterator const End() { return Items.end(); }
 	void Reserve(size_t capacity) { Items.reserve(capacity); }
+	bool Empty() { return Items.empty(); }
 
 	bool TryDocParse(TJsonDocument *doc) override final;
 	void WriteToDoc(TJsonDocument *doc) override final;
 
-	virtual bool Add(TItem item);
-	virtual bool Update(size_t index, TItem item);
-	virtual void Remove(TItem item);
-	typename std::vector<TItem>::iterator Find(TItem item);
+	virtual bool Add(ConstTItem item);
+	virtual bool Update(size_t index, ConstTItem item);
+	virtual void Remove(ConstTItem item);
+	typename std::vector<TItem>::iterator Find(ConstTItem item);
 
-	bool Equals(JsonArrayBase *other) override final;
-	void CloneTo(JsonArrayBase *other) override final;
+	bool Equals(JsonArrayBase *other) override;
+	void CloneTo(JsonArrayBase *other) override;
+	void Clear() override;
 
 	friend bool operator!=(const JsonArray<TItem> &v1, const JsonArray<TItem> &v2) { return !((JsonArray<TItem> *)&v1)->Equals((JsonArray<TItem> *)&v2); }
 	friend bool operator==(const JsonArray<TItem> &v1, const JsonArray<TItem> &v2) { return !(v1 != v2); }
 
   protected:
 	std::vector<TItem> Items;
-	virtual bool Validate(TItem item) = 0;
-
-  private:
-	void AddInternal(TItem item);
-	void DeleteItem(TItem item);
+	virtual bool Validate(ConstTItem item) = 0;
+	void AddInternal(ConstTItem item);
+	void DeleteItem(ConstTItem item);
 };
 
 class JsonObjectsArray : public JsonArrayBase {
@@ -116,6 +135,7 @@ class JsonObjectsArray : public JsonArrayBase {
 	typename std::vector<JsonObject *>::iterator const Begin() { return Items.begin(); }
 	typename std::vector<JsonObject *>::iterator const End() { return Items.end(); }
 	void Reserve(size_t capacity) { Items.reserve(capacity); }
+	bool Empty() { return Items.empty(); }
 
 	bool TryDocParse(TJsonDocument *doc) override final;
 	void WriteToDoc(TJsonDocument *doc) override final;
@@ -126,18 +146,17 @@ class JsonObjectsArray : public JsonArrayBase {
 
 	typename std::vector<JsonObject *>::iterator Find(JsonObject *item);
 
-	bool Equals(JsonArrayBase *other) override final;
-	void CloneTo(JsonArrayBase *other) override final;
+	bool Equals(JsonArrayBase *other) override;
+	void CloneTo(JsonArrayBase *other) override;
+	void Clear() override;
+	virtual bool Validate(JsonObject *item) = 0;
+	virtual JsonObject *CreateItem() = 0;
 
 	friend bool operator!=(const JsonObjectsArray &v1, const JsonObjectsArray &v2);
 	friend bool operator==(const JsonObjectsArray &v1, const JsonObjectsArray &v2);
 
   protected:
 	std::vector<JsonObject *> Items;
-	virtual bool Validate(JsonObject *item) = 0;
-	virtual JsonObject *CreateItem() = 0;
-	void DeleteItem(JsonObject *item);
-
-  private:
 	void AddInternal(JsonObject *item);
+	void DeleteItem(JsonObject *item);
 };

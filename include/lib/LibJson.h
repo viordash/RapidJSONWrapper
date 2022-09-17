@@ -17,10 +17,11 @@ template <class T> class JsonCommonValue;
 
 class JsonArrayBase {
   public:
+	virtual ~JsonArrayBase(){};
 	virtual bool TryDocParse(TJsonDocument *doc) = 0;
-	bool TryParse(const char *jsonStr, size_t length = 0);
-	TJsonDocument *BeginTryParse(const char *jsonStr, size_t length = 0);
-	void EndTryParse(TJsonDocument *doc);
+	bool TryStringParse(const char *jsonStr, size_t length = 0);
+	TJsonDocument *BeginTryStringParse(const char *jsonStr, size_t length = 0);
+	void EndTryStringParse(TJsonDocument *doc);
 
 	virtual void WriteToDoc(TJsonDocument *doc) = 0;
 	size_t WriteToString(char *outBuffer, size_t outBufferSize);
@@ -29,6 +30,7 @@ class JsonArrayBase {
 
 	virtual bool Equals(JsonArrayBase *other) = 0;
 	virtual void CloneTo(JsonArrayBase *other) = 0;
+	virtual void Clear() = 0;
 
   protected:
 };
@@ -60,49 +62,4 @@ class JsonValueBase {
   protected:
 	static TJsonValue *GetMember(TJsonDocument *doc, const char *name);
 	static bool NamesCompare(const char *name1, const char *name2);
-};
-
-template <class T> struct ValueProvider {
-  public:
-	ValueProvider(const T value) { InitValue(value); }
-
-	T operator=(const T right) {
-		SetValue(right);
-		return value;
-	}
-	T operator->() { return value; }
-	operator T() const { return value; }
-
-  protected:
-	template <class> friend class JsonValue;
-	template <class> friend class JsonCommonValue;
-
-	T value;
-
-	~ValueProvider() { DeleteValue(); }
-	void InitValue(T value);
-	void DeleteValue();
-	virtual void SetValue(T value) {
-		DeleteValue();
-		InitValue(value);
-	}
-};
-
-template <class T> struct CommonValueProvider : public ValueProvider<T> {
-  public:
-	CommonValueProvider(const T value) : ValueProvider<T>(value), isNull(false) {}
-
-	T operator=(const T right) {
-		SetValue(right);
-		return ValueProvider<T>::value;
-	}
-	T operator->() { return ValueProvider<T>::value; }
-	operator T() const { return ValueProvider<T>::value; }
-
-  protected:
-	template <class> friend class JsonCommonValue;
-
-	~CommonValueProvider() {}
-	void SetValue(T value) override final;
-	bool isNull;
 };

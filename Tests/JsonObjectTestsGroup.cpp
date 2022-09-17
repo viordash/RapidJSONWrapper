@@ -18,9 +18,11 @@ class UserDto : public JsonObject {
 	JsonValue<char *> Name;
 	JsonCommonValue<uint32_t> Role;
 
-	UserDto(char *name = {}, TUserRole role = {})
+	UserDto(const char *name = {}, const TUserRole role = {})
 		: Name(this, "name", name), //
 		  Role(this, "role", role){};
+
+	bool Validate() override { return Role.Get() < 1000; }
 };
 
 class GoodsDto : public JsonObject {
@@ -34,7 +36,8 @@ class GoodsDto : public JsonObject {
 	JsonCommonValue<bool> Deleted;
 	JsonCommonValue<char *> StoreName;
 
-	GoodsDto(int id = {}, uint32_t created = {}, char *group = {}, char *name = {}, float price = {}, double quantity = {}, bool deleted = {}, char *storeName = {})
+	GoodsDto(const int id = {}, uint32_t created = {}, const char *group = {}, const char *name = {}, const float price = {}, const double quantity = {}, const bool deleted = {},
+			 const char *storeName = {})
 		: Id(this, "Id", id),					//
 		  Created(this, "Created", created),	//
 		  Group(this, "Group", group),			//
@@ -60,12 +63,14 @@ class OrderDto : public JsonObject {
 	GoodsList goodsList;
 	UserDto userDto;
 
-	OrderDto(char *supplier = {}, uint32_t dateTime = {}, char *userName = {}, TUserRole userRole = {})
+	OrderDto(const char *supplier = {}, const uint32_t dateTime = {}, const char *userName = {}, const TUserRole userRole = {})
 		: Supplier(this, "supplier", supplier), //
 		  DateTime(this, "dateTime", dateTime), //
 		  Goods(this, "goods", &goodsList),		//
 		  userDto(userName, userRole),			//
 		  User(this, "user", &userDto){};
+
+	~OrderDto() {}
 };
 
 class OrdersList : public JsonObjectsArray {
@@ -82,7 +87,7 @@ class CustomerDto : public JsonObject {
 	JsonValue<JsonArrayBase *> Orders;
 	OrdersList ordersList;
 
-	CustomerDto(uint64_t id = {}, char *name = {}, TJsonRawData blob = {})
+	CustomerDto(const uint64_t id = {}, const char *name = {}, const TJsonRawData blob = {})
 		: Id(this, "id", id),		//
 		  Name(this, "name", name), //
 		  Blob(this, "blob", blob), //
@@ -91,7 +96,7 @@ class CustomerDto : public JsonObject {
 
 class ValuesWoInstance : public JsonObject {
   public:
-	ValuesWoInstance(uint64_t id = {}, char *name = {}, TJsonRawData blob = {}) {
+	ValuesWoInstance(const uint64_t id = {}, const char *name = {}, const TJsonRawData blob = {}) {
 		new JsonValue<uint64_t>(this, "id", id);
 		new JsonValue<char *>(this, "name", name);
 		new JsonValue<TJsonRawData>(this, "blob", blob);
@@ -104,138 +109,138 @@ class ValuesWoInstance : public JsonObject {
 
 TEST(JsonObjectTestsGroup, JsonObject_Parse_Test) {
 	GoodsDto goods;
-	CHECK_TRUE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}"));
+	CHECK_TRUE(goods.TryStringParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}"));
 
-	CHECK_EQUAL(goods.Id.Value, 1);
-	CHECK_EQUAL(goods.Created.Value, 1657052045);
-	STRCMP_EQUAL(goods.Group.Value, "Vegetables");
-	STRCMP_EQUAL(goods.Name.Value, "Tomato");
-	CHECK_EQUAL(goods.Price.Value, 123.25);
-	CHECK_EQUAL(goods.Quantity.Value, 165.052045);
-	CHECK_EQUAL(goods.Deleted.Value, false);
-	STRCMP_EQUAL(goods.StoreName.Value, NULL);
+	CHECK_EQUAL(goods.Id.Get(), 1);
+	CHECK_EQUAL(goods.Created.Get(), 1657052045);
+	STRCMP_EQUAL(goods.Group.Get(), "Vegetables");
+	STRCMP_EQUAL(goods.Name.Get(), "Tomato");
+	CHECK_EQUAL(goods.Price.Get(), 123.25);
+	CHECK_EQUAL(goods.Quantity.Get(), 165.052045);
+	CHECK_EQUAL(goods.Deleted.Get(), false);
+	STRCMP_EQUAL(goods.StoreName.Get(), NULL);
 
-	CHECK_TRUE(goods.TryParse("{\"Id\":1,\"Created\":1657052046,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045,"
-							  "\"StoreName\":\"Store #1\"}               \t  \r\n"));
-	CHECK_EQUAL(goods.Created.Value, 1657052046);
+	CHECK_TRUE(goods.TryStringParse("{\"Id\":1,\"Created\":1657052046,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045,"
+									"\"StoreName\":\"Store #1\"}               \t  \r\n"));
+	CHECK_EQUAL(goods.Created.Get(), 1657052046);
 
-	CHECK_TRUE(goods.TryParse("     \r\n    \t   "
-							  "{\"Id\":1,\"Created\":1657052047,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045,"
-							  "\"StoreName\":\"Store #1\"}               \t  \r\n"));
-	CHECK_EQUAL(goods.Created.Value, 1657052047);
+	CHECK_TRUE(goods.TryStringParse("     \r\n    \t   "
+									"{\"Id\":1,\"Created\":1657052047,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045,"
+									"\"StoreName\":\"Store #1\"}               \t  \r\n"));
+	CHECK_EQUAL(goods.Created.Get(), 1657052047);
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_Complex_TryParse_Test) {
 	OrderDto order;
 
-	CHECK(order.TryParse("{\"supplier\":\"Dell\",\"dateTime\":1657058000,\"goods\":[{\"Id\":1,\"Created\":1657052789,\"Group\":\"Keyboards\",\"Name\":\"K1-100\",\"Price\":58."
-						 "25,\"Quantity\":48.2,\"Deleted\":false,\"StoreName\":\"\"},{\"Id\":3,\"Created\":1657054789,\"Group\":\"Keyboards\",\"Name\":\"K3-100\",\"Price\":"
-						 "258.25,\"Quantity\":548.2,\"Deleted\":false,\"StoreName\":\"\"},{\"Id\":4,\"Created\":1657055789,\"Group\":\"Keyboards\",\"Name\":\"K4-100\","
-						 "\"Price\":358.25,\"Quantity\":648.2,\"Deleted\":false,\"StoreName\":\"\"}],\"user\":{\"name\":\"Joe Doe\",\"role\":1}}"));
+	CHECK(order.TryStringParse("{\"supplier\":\"Dell\",\"dateTime\":1657058000,\"goods\":[{\"Id\":1,\"Created\":1657052789,\"Group\":\"Keyboards\",\"Name\":\"K1-100\",\"Price\":58."
+							   "25,\"Quantity\":48.2,\"Deleted\":false,\"StoreName\":\"\"},{\"Id\":3,\"Created\":1657054789,\"Group\":\"Keyboards\",\"Name\":\"K3-100\",\"Price\":"
+							   "258.25,\"Quantity\":548.2,\"Deleted\":false,\"StoreName\":\"\"},{\"Id\":4,\"Created\":1657055789,\"Group\":\"Keyboards\",\"Name\":\"K4-100\","
+							   "\"Price\":358.25,\"Quantity\":648.2,\"Deleted\":false,\"StoreName\":\"\"}],\"user\":{\"name\":\"Joe Doe\",\"role\":1}}"));
 	CHECK_EQUAL(order.goodsList.Size(), 3);
-	CHECK_EQUAL(order.goodsList.Item<GoodsDto *>(0)->Created.Value, 1657052789);
-	STRCMP_EQUAL(order.goodsList.Item<GoodsDto *>(2)->Name.Value, "K4-100");
-	STRCMP_EQUAL(order.userDto.Name.Value, "Joe Doe");
+	CHECK_EQUAL(order.goodsList.Item<GoodsDto *>(0)->Created.Get(), 1657052789);
+	STRCMP_EQUAL(order.goodsList.Item<GoodsDto *>(2)->Name.Get(), "K4-100");
+	STRCMP_EQUAL(order.userDto.Name.Get(), "Joe Doe");
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_Parse_With_Optionaly_Fields_Test) {
 	GoodsDto goods;
-	CHECK_TRUE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045,\"Deleted\":true}"));
-	CHECK_EQUAL(goods.Id.Value, 1);
-	CHECK_EQUAL(goods.Created.Value, 1657052045);
-	STRCMP_EQUAL(goods.Group.Value, "Vegetables");
-	STRCMP_EQUAL(goods.Name.Value, "Tomato");
-	CHECK_EQUAL(goods.Price.Value, 123.25);
-	CHECK_EQUAL(goods.Quantity.Value, 165.052045);
+	CHECK_TRUE(goods.TryStringParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045,\"Deleted\":true}"));
+	CHECK_EQUAL(goods.Id.Get(), 1);
+	CHECK_EQUAL(goods.Created.Get(), 1657052045);
+	STRCMP_EQUAL(goods.Group.Get(), "Vegetables");
+	STRCMP_EQUAL(goods.Name.Get(), "Tomato");
+	CHECK_EQUAL(goods.Price.Get(), 123.25);
+	CHECK_EQUAL(goods.Quantity.Get(), 165.052045);
 	CHECK_EQUAL(goods.Deleted.Presented(), true);
-	CHECK_EQUAL(goods.Deleted.Value, true);
-	STRCMP_EQUAL(goods.StoreName.Value, NULL);
+	CHECK_EQUAL(goods.Deleted.Get(), true);
+	STRCMP_EQUAL(goods.StoreName.Get(), NULL);
 
-	CHECK_TRUE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045,\"StoreName\":\"Store #1\"}"));
+	CHECK_TRUE(goods.TryStringParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045,\"StoreName\":\"Store #1\"}"));
 	CHECK_EQUAL(goods.Deleted.Presented(), false);
-	STRCMP_EQUAL(goods.StoreName.Value, "Store #1");
+	STRCMP_EQUAL(goods.StoreName.Get(), "Store #1");
 
-	CHECK_TRUE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045,"
-							  "\"Deleted\":true,\"StoreName\":\"Store #2\"}"));
-	CHECK_EQUAL(goods.Deleted.Value, true);
-	STRCMP_EQUAL(goods.StoreName.Value, "Store #2");
+	CHECK_TRUE(goods.TryStringParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045,"
+									"\"Deleted\":true,\"StoreName\":\"Store #2\"}"));
+	CHECK_EQUAL(goods.Deleted.Get(), true);
+	STRCMP_EQUAL(goods.StoreName.Get(), "Store #2");
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_Parse_Error_Test) {
 	GoodsDto goods;
-	CHECK_FALSE(goods.TryParse("{\"Id\":1  \"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}"));
-	CHECK_FALSE(goods.TryParse("{\"Id\":1,,\"Quantity\":165.052045}"));
-	CHECK_FALSE(goods.TryParse("\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}"));
-	CHECK_FALSE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045"));
-	CHECK_FALSE(goods.TryParse("{\"Id\":1,Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}"));
-	CHECK_FALSE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":}"));
-	CHECK_FALSE(goods.TryParse("     \r\n some text   \t   "
-							   "{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045,"
-							   "\"StoreName\":\"Store #1\"}               \t  \r\n"));
-	CHECK_FALSE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":} some text"));
-	CHECK_FALSE(goods.TryParse(NULL, 1));
+	CHECK_FALSE(goods.TryStringParse("{\"Id\":1  \"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}"));
+	CHECK_FALSE(goods.TryStringParse("{\"Id\":1,,\"Quantity\":165.052045}"));
+	CHECK_FALSE(goods.TryStringParse("\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}"));
+	CHECK_FALSE(goods.TryStringParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045"));
+	CHECK_FALSE(goods.TryStringParse("{\"Id\":1,Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}"));
+	CHECK_FALSE(goods.TryStringParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":}"));
+	CHECK_FALSE(goods.TryStringParse("     \r\n some text   \t   "
+									 "{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045,"
+									 "\"StoreName\":\"Store #1\"}               \t  \r\n"));
+	CHECK_FALSE(goods.TryStringParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":} some text"));
+	CHECK_FALSE(goods.TryStringParse(NULL, 1));
 
-	CHECK_EQUAL(goods.Id.Value, 0);
-	CHECK_EQUAL(goods.Created.Value, 0);
-	STRCMP_EQUAL(goods.Group.Value, NULL);
-	STRCMP_EQUAL(goods.Name.Value, NULL);
-	CHECK_EQUAL(goods.Price.Value, 0.0);
-	CHECK_EQUAL(goods.Quantity.Value, 0.0);
-	CHECK_EQUAL(goods.Deleted.Value, false);
-	STRCMP_EQUAL(goods.StoreName.Value, NULL);
+	CHECK_EQUAL(goods.Id.Get(), 0);
+	CHECK_EQUAL(goods.Created.Get(), 0);
+	STRCMP_EQUAL(goods.Group.Get(), NULL);
+	STRCMP_EQUAL(goods.Name.Get(), NULL);
+	CHECK_EQUAL(goods.Price.Get(), 0.0);
+	CHECK_EQUAL(goods.Quantity.Get(), 0.0);
+	CHECK_EQUAL(goods.Deleted.Get(), false);
+	STRCMP_EQUAL(goods.StoreName.Get(), NULL);
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_Parse_With_Reordered_Fields_Test) {
 	GoodsDto goods;
-	CHECK_TRUE(goods.TryParse("{\"Created\":1657052045,\"Group\":\"Vegetables\",\"Id\":1,\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}"));
-	CHECK_EQUAL(goods.Created.Value, 1657052045);
-	CHECK_TRUE(goods.TryParse("{\"Created\":1657052046,\"Price\":123.25,\"Group\":\"Vegetables\",\"Id\":1,\"Name\":\"Tomato\",\"Quantity\":165.052045}"));
-	CHECK_EQUAL(goods.Created.Value, 1657052046);
-	CHECK_TRUE(goods.TryParse("{\"Created\":1657052047,\"Price\":123.25,\"Id\":1,\"Name\":\"Tomato\",\"Quantity\":165.052045,\"StoreName\":\"Store #1\",\"Group\":\"Vegetables\"}"));
-	CHECK_EQUAL(goods.Created.Value, 1657052047);
-	CHECK_TRUE(goods.TryParse("{\"Deleted\":true, \"Created\":1657052048,\"Price\":123.25,\"Id\":1,\"Name\":\"Tomato\",\"Quantity\":165.052045,\"StoreName\":\"Store "
-							  "#1\",\"Group\":\"Vegetables\"}"));
+	CHECK_TRUE(goods.TryStringParse("{\"Created\":1657052045,\"Group\":\"Vegetables\",\"Id\":1,\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}"));
+	CHECK_EQUAL(goods.Created.Get(), 1657052045);
+	CHECK_TRUE(goods.TryStringParse("{\"Created\":1657052046,\"Price\":123.25,\"Group\":\"Vegetables\",\"Id\":1,\"Name\":\"Tomato\",\"Quantity\":165.052045}"));
+	CHECK_EQUAL(goods.Created.Get(), 1657052046);
+	CHECK_TRUE(goods.TryStringParse("{\"Created\":1657052047,\"Price\":123.25,\"Id\":1,\"Name\":\"Tomato\",\"Quantity\":165.052045,\"StoreName\":\"Store #1\",\"Group\":\"Vegetables\"}"));
+	CHECK_EQUAL(goods.Created.Get(), 1657052047);
+	CHECK_TRUE(goods.TryStringParse("{\"Deleted\":true, \"Created\":1657052048,\"Price\":123.25,\"Id\":1,\"Name\":\"Tomato\",\"Quantity\":165.052045,\"StoreName\":\"Store "
+									"#1\",\"Group\":\"Vegetables\"}"));
 
-	CHECK_EQUAL(goods.Id.Value, 1);
-	CHECK_EQUAL(goods.Created.Value, 1657052048);
-	STRCMP_EQUAL(goods.Group.Value, "Vegetables");
-	STRCMP_EQUAL(goods.Name.Value, "Tomato");
-	CHECK_EQUAL(goods.Price.Value, 123.25);
-	CHECK_EQUAL(goods.Quantity.Value, 165.052045);
-	CHECK_EQUAL(goods.Deleted.Value, true);
-	STRCMP_EQUAL(goods.StoreName.Value, "Store #1");
+	CHECK_EQUAL(goods.Id.Get(), 1);
+	CHECK_EQUAL(goods.Created.Get(), 1657052048);
+	STRCMP_EQUAL(goods.Group.Get(), "Vegetables");
+	STRCMP_EQUAL(goods.Name.Get(), "Tomato");
+	CHECK_EQUAL(goods.Price.Get(), 123.25);
+	CHECK_EQUAL(goods.Quantity.Get(), 165.052045);
+	CHECK_EQUAL(goods.Deleted.Get(), true);
+	STRCMP_EQUAL(goods.StoreName.Get(), "Store #1");
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_Parse_And_Length_Defined_Test) {
 	GoodsDto goods;
-	CHECK_TRUE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}", 103));
-	CHECK_TRUE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}", 2000));
-	CHECK_TRUE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}", 0));
-	CHECK_FALSE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}", 102));
-	CHECK_FALSE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}", 1));
+	CHECK_TRUE(goods.TryStringParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}", 103));
+	CHECK_TRUE(goods.TryStringParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}", 2000));
+	CHECK_TRUE(goods.TryStringParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}", 0));
+	CHECK_FALSE(goods.TryStringParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}", 102));
+	CHECK_FALSE(goods.TryStringParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}", 1));
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_Parse_With_Nullable_Values_Test) {
 	GoodsDto goods;
-	CHECK_FALSE(goods.TryParse("{\"Id\":1,\"Created\":null,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}"));
-	CHECK_TRUE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":null,\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}"));
-	CHECK_FALSE(goods.TryParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":null}"));
-	CHECK_FALSE(goods.TryParse("{\"Id\":null,\"Created\":null,\"Group\":null,\"Name\":null,\"Price\":null,\"Quantity\":null}"));
+	CHECK_FALSE(goods.TryStringParse("{\"Id\":1,\"Created\":null,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}"));
+	CHECK_TRUE(goods.TryStringParse("{\"Id\":1,\"Created\":1657052045,\"Group\":null,\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}"));
+	CHECK_FALSE(goods.TryStringParse("{\"Id\":1,\"Created\":1657052045,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":null}"));
+	CHECK_FALSE(goods.TryStringParse("{\"Id\":null,\"Created\":null,\"Group\":null,\"Name\":null,\"Price\":null,\"Quantity\":null}"));
 
 	CustomerDto customerDto;
-	CHECK_TRUE(
-		customerDto.TryParse("{\"id\":123,\"name\":\"sh\",\"blob\":null,\"orders\":[{\"supplier\":\"Dell1\",\"dateTime\":1657058001,\"goods\":[{\"Id\":1,\"Created\":1657052789,"
-							 "\"Group\":\"Keyboards\",\"Name\":\"K1-100\",\"Price\":58.25,\"Quantity\":48.2,\"Deleted\":false,\"StoreName\":\"\"}],\"user\":{\"name\":\"Joe Doe\",\"role\":1}}]}"));
+	CHECK_TRUE(customerDto.TryStringParse(
+		"{\"id\":123,\"name\":\"sh\",\"blob\":null,\"orders\":[{\"supplier\":\"Dell1\",\"dateTime\":1657058001,\"goods\":[{\"Id\":1,\"Created\":1657052789,"
+		"\"Group\":\"Keyboards\",\"Name\":\"K1-100\",\"Price\":58.25,\"Quantity\":48.2,\"Deleted\":false,\"StoreName\":\"\"}],\"user\":{\"name\":\"Joe Doe\",\"role\":1}}]}"));
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_Parse_With_Begin_End_Stages_Test) {
 	GoodsDto goods;
-	auto doc = goods.BeginTryParse("{\"Id\":1,\"Created\":1657052048,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}");
+	auto doc = goods.BeginTryStringParse("{\"Id\":1,\"Created\":1657052048,\"Group\":\"Vegetables\",\"Name\":\"Tomato\",\"Price\":123.25,\"Quantity\":165.052045}");
 
 	CHECK(doc != NULL);
-	CHECK_EQUAL(goods.Created.Value, 1657052048);
-	STRCMP_EQUAL(goods.Group.Value, "Vegetables");
-	goods.EndTryParse(doc);
+	CHECK_EQUAL(goods.Created.Get(), 1657052048);
+	STRCMP_EQUAL(goods.Group.Get(), "Vegetables");
+	goods.EndTryStringParse(doc);
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_WriteTo_Test) {
@@ -310,7 +315,7 @@ TEST(JsonObjectTestsGroup, JsonObject_Equals_Test) {
 	CHECK_TRUE(orderDto1 == orderDto2);
 	CHECK_FALSE(orderDto1 != orderDto2);
 	CHECK_TRUE(orderDto1.Equals(&orderDto2));
-	orderDto1.DateTime.Value = orderDto1.DateTime.Value + 1;
+	orderDto1.DateTime.Set(orderDto1.DateTime.Get() + 1);
 	CHECK_TRUE(orderDto1 != orderDto2);
 	CHECK_FALSE(orderDto1 == orderDto2);
 	CHECK_FALSE(orderDto1.Equals(&orderDto2));
@@ -326,12 +331,12 @@ TEST(JsonObjectTestsGroup, JsonObject_Clone_Test) {
 	orderDto1->CloneTo(&orderDto2);
 	delete orderDto1;
 
-	STRCMP_EQUAL(orderDto2.Supplier.Value, "Dell");
-	CHECK_EQUAL(orderDto2.DateTime.Value, 1657058000);
+	STRCMP_EQUAL(orderDto2.Supplier.Get(), "Dell");
+	CHECK_EQUAL(orderDto2.DateTime.Get(), 1657058000);
 	CHECK_EQUAL(orderDto2.goodsList.Size(), 2);
-	CHECK_EQUAL(orderDto2.goodsList.Item<GoodsDto *>(0)->Created.Value, 1657052789);
-	STRCMP_EQUAL(orderDto2.goodsList.Item<GoodsDto *>(1)->Name.Value, "K2-100");
-	STRCMP_EQUAL(orderDto2.userDto.Name.Value, "Joe Doe");
+	CHECK_EQUAL(orderDto2.goodsList.Item<GoodsDto *>(0)->Created.Get(), 1657052789);
+	STRCMP_EQUAL(orderDto2.goodsList.Item<GoodsDto *>(1)->Name.Get(), "K2-100");
+	STRCMP_EQUAL(orderDto2.userDto.Name.Get(), "Joe Doe");
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_With_Blob_Field_Test) {
@@ -352,22 +357,38 @@ TEST(JsonObjectTestsGroup, JsonObject_With_Blob_Field_Test) {
 
 	auto size = customerDto1->DirectWriteTo(0, OnReady);
 	CHECK_EQUAL(size, 10173299);
+
+	auto doc = customerDto1->BeginTryStringParse(DirectWriteTestBuffer, size);
+	CHECK(doc != NULL);
+
+	CHECK_EQUAL(customerDto1->Id.Get(), 1234567890123456789LL);
+	STRCMP_EQUAL(customerDto1->Name.Get(), "Viordash");
+	CHECK_EQUAL(customerDto1->ordersList.Size(), 4);
+	CHECK_EQUAL(customerDto1->ordersList.Item<OrderDto *>(0)->goodsList.Size(), 3);
+	CHECK_EQUAL(customerDto1->ordersList.Item<OrderDto *>(1)->goodsList.Size(), 2);
+	CHECK_EQUAL(customerDto1->ordersList.Item<OrderDto *>(2)->goodsList.Size(), 3);
+	CHECK_EQUAL(customerDto1->ordersList.Item<OrderDto *>(3)->goodsList.Size(), 2);
+	CHECK_EQUAL(((TJsonRawData)customerDto1->Blob.Get()).Size, pictureSize);
+	CHECK_FALSE(((TJsonRawData)customerDto1->Blob.Get()).Data == picture);
+	for (size_t i = 0; i < pictureSize; i++) { CHECK_EQUAL(((TJsonRawData)customerDto1->Blob.Get()).Data[i], 'A' + (i % 58)); }
+	customerDto1->EndTryStringParse(doc);
+
 	delete customerDto1;
 	delete[] picture;
 
 	CustomerDto customerDto2;
-	auto doc = customerDto2.BeginTryParse(DirectWriteTestBuffer, size);
+	doc = customerDto2.BeginTryStringParse(DirectWriteTestBuffer, size);
 	CHECK(doc != NULL);
 
-	CHECK_EQUAL(customerDto2.Id.Value, 1234567890123456789LL);
-	STRCMP_EQUAL(customerDto2.Name.Value, "Viordash");
+	CHECK_EQUAL(customerDto2.Id.Get(), 1234567890123456789LL);
+	STRCMP_EQUAL(customerDto2.Name.Get(), "Viordash");
 	CHECK_EQUAL(customerDto2.ordersList.Size(), 2);
 	CHECK_EQUAL(customerDto2.ordersList.Item<OrderDto *>(0)->goodsList.Size(), 3);
 	CHECK_EQUAL(customerDto2.ordersList.Item<OrderDto *>(1)->goodsList.Size(), 2);
-	CHECK_EQUAL(((TJsonRawData)customerDto2.Blob.Value).Size, pictureSize);
-	CHECK_FALSE(((TJsonRawData)customerDto2.Blob.Value).Data == picture);
-	for (size_t i = 0; i < pictureSize; i++) { CHECK_EQUAL(((TJsonRawData)customerDto2.Blob.Value).Data[i], 'A' + (i % 58)); }
-	customerDto2.EndTryParse(doc);
+	CHECK_EQUAL(((TJsonRawData)customerDto2.Blob.Get()).Size, pictureSize);
+	CHECK_FALSE(((TJsonRawData)customerDto2.Blob.Get()).Data == picture);
+	for (size_t i = 0; i < pictureSize; i++) { CHECK_EQUAL(((TJsonRawData)customerDto2.Blob.Get()).Data[i], 'A' + (i % 58)); }
+	customerDto2.EndTryStringParse(doc);
 
 	delete[] DirectWriteTestBuffer;
 }
@@ -377,10 +398,10 @@ TEST(JsonObjectTestsGroup, JsonObject_Optional_Values_Presented_Test) {
 
 	CHECK_FALSE(order.DateTime.Presented());
 
-	CHECK(order.TryParse("{\"supplier\":\"Dell\",\"dateTime\":1657058000,\"goods\":[],\"user\":{\"name\":\"Joe Doe\",\"role\":1}}"));
+	CHECK(order.TryStringParse("{\"supplier\":\"Dell\",\"dateTime\":1657058000,\"goods\":[],\"user\":{\"name\":\"Joe Doe\",\"role\":1}}"));
 	CHECK_TRUE(order.DateTime.Presented());
 
-	CHECK(order.TryParse("{\"supplier\":\"Dell\",\"goods\":[],\"user\":{\"name\":\"Joe Doe\",\"role\":1}}"));
+	CHECK(order.TryStringParse("{\"supplier\":\"Dell\",\"goods\":[],\"user\":{\"name\":\"Joe Doe\",\"role\":1}}"));
 	CHECK_FALSE(order.DateTime.Presented());
 }
 
@@ -402,35 +423,35 @@ class OptionalObjectDto : public JsonObject {
 TEST(JsonObjectTestsGroup, JsonObject_Optional_TryParse_Test) {
 	OptionalObjectDto optionalObjectDto;
 
-	CHECK_TRUE(optionalObjectDto.TryParse("{\"id\":1,\"goods\":[{\"Id\":1,\"Created\":1657052789,\"Group\":\"Keyboards\",\"Name\":\"K1-100\",\"Price\":58."
-										  "25,\"Quantity\":48.2,\"Deleted\":false,\"StoreName\":\"\"}],\"user\":{\"name\":\"Joe Doe\",\"role\":1}}"));
+	CHECK_TRUE(optionalObjectDto.TryStringParse("{\"id\":1,\"goods\":[{\"Id\":1,\"Created\":1657052789,\"Group\":\"Keyboards\",\"Name\":\"K1-100\",\"Price\":58."
+												"25,\"Quantity\":48.2,\"Deleted\":false,\"StoreName\":\"\"}],\"user\":{\"name\":\"Joe Doe\",\"role\":1}}"));
 	CHECK_TRUE(optionalObjectDto.Goods.Presented());
 	CHECK_FALSE(optionalObjectDto.Goods.IsNull());
 	CHECK_TRUE(optionalObjectDto.User.Presented());
 	CHECK_FALSE(optionalObjectDto.User.IsNull());
 
-	CHECK_TRUE(optionalObjectDto.TryParse("{\"id\":1,\"goods\":null,\"user\":{\"name\":\"Joe Doe\",\"role\":1}}"));
+	CHECK_TRUE(optionalObjectDto.TryStringParse("{\"id\":1,\"goods\":null,\"user\":{\"name\":\"Joe Doe\",\"role\":1}}"));
 	CHECK_TRUE(optionalObjectDto.Goods.Presented());
 	CHECK_TRUE(optionalObjectDto.Goods.IsNull());
 	CHECK_TRUE(optionalObjectDto.User.Presented());
 	CHECK_FALSE(optionalObjectDto.User.IsNull());
 
-	CHECK_TRUE(optionalObjectDto.TryParse("{\"id\":1,\"goods\":[{\"Id\":1,\"Created\":1657052789,\"Group\":\"Keyboards\",\"Name\":\"K1-100\",\"Price\":58."
-										  "25,\"Quantity\":48.2,\"Deleted\":false,\"StoreName\":\"\"}],\"user\":null}"));
+	CHECK_TRUE(optionalObjectDto.TryStringParse("{\"id\":1,\"goods\":[{\"Id\":1,\"Created\":1657052789,\"Group\":\"Keyboards\",\"Name\":\"K1-100\",\"Price\":58."
+												"25,\"Quantity\":48.2,\"Deleted\":false,\"StoreName\":\"\"}],\"user\":null}"));
 	CHECK_TRUE(optionalObjectDto.Goods.Presented());
 	CHECK_FALSE(optionalObjectDto.Goods.IsNull());
 	CHECK_TRUE(optionalObjectDto.User.Presented());
 	CHECK_TRUE(optionalObjectDto.User.IsNull());
 
-	CHECK_TRUE(optionalObjectDto.TryParse("{\"id\":1,\"goodsOther\":[{\"Id\":1,\"Created\":1657052789,\"Group\":\"Keyboards\",\"Name\":\"K1-100\",\"Price\":58."
-										  "25,\"Quantity\":48.2,\"Deleted\":false,\"StoreName\":\"\"}],\"user\":{\"name\":\"Joe Doe\",\"role\":1}}"));
+	CHECK_TRUE(optionalObjectDto.TryStringParse("{\"id\":1,\"goodsOther\":[{\"Id\":1,\"Created\":1657052789,\"Group\":\"Keyboards\",\"Name\":\"K1-100\",\"Price\":58."
+												"25,\"Quantity\":48.2,\"Deleted\":false,\"StoreName\":\"\"}],\"user\":{\"name\":\"Joe Doe\",\"role\":1}}"));
 	CHECK_FALSE(optionalObjectDto.Goods.Presented());
 	CHECK_FALSE(optionalObjectDto.Goods.IsNull());
 	CHECK_TRUE(optionalObjectDto.User.Presented());
 	CHECK_FALSE(optionalObjectDto.User.IsNull());
 
-	CHECK_TRUE(optionalObjectDto.TryParse("{\"id\":1,\"goods\":[{\"Id\":1,\"Created\":1657052789,\"Group\":\"Keyboards\",\"Name\":\"K1-100\",\"Price\":58."
-										  "25,\"Quantity\":48.2,\"Deleted\":false,\"StoreName\":\"\"}],\"userOther\":{\"name\":\"Joe Doe\",\"role\":1}}"));
+	CHECK_TRUE(optionalObjectDto.TryStringParse("{\"id\":1,\"goods\":[{\"Id\":1,\"Created\":1657052789,\"Group\":\"Keyboards\",\"Name\":\"K1-100\",\"Price\":58."
+												"25,\"Quantity\":48.2,\"Deleted\":false,\"StoreName\":\"\"}],\"userOther\":{\"name\":\"Joe Doe\",\"role\":1}}"));
 	CHECK_TRUE(optionalObjectDto.Goods.Presented());
 	CHECK_FALSE(optionalObjectDto.Goods.IsNull());
 	CHECK_FALSE(optionalObjectDto.User.Presented());
@@ -440,24 +461,24 @@ TEST(JsonObjectTestsGroup, JsonObject_Optional_TryParse_Test) {
 TEST(JsonObjectTestsGroup, JsonObject_Values_Without_Instance_Parse_Test) {
 	ValuesWoInstance valuesWoInstance;
 
-	auto doc = valuesWoInstance.BeginTryParse("{\"id\":123,\"name\":\"Tomato\",\"blob\":\"ABCDEFGHIJKLMNOPQR\"}");
+	auto doc = valuesWoInstance.BeginTryStringParse("{\"id\":123,\"name\":\"Tomato\",\"blob\":\"ABCDEFGHIJKLMNOPQR\"}");
 	CHECK(doc != NULL);
 
 	auto id = (JsonValue<uint64_t> *)valuesWoInstance.GetField("id");
 	CHECK_FALSE(id == NULL);
-	CHECK_EQUAL(id->Value, 123);
+	CHECK_EQUAL(id->Get(), 123);
 
 	auto name = (JsonValue<char *> *)valuesWoInstance.GetField("name");
 	CHECK_FALSE(name == NULL);
-	STRCMP_EQUAL(name->Value, "Tomato");
+	STRCMP_EQUAL(name->Get(), "Tomato");
 
 	auto blob = (JsonValue<TJsonRawData> *)valuesWoInstance.GetField("blob");
 	CHECK_FALSE(blob == NULL);
-	STRCMP_EQUAL((char *)((TJsonRawData)(blob->Value)).Data, "ABCDEFGHIJKLMNOPQR");
+	STRCMP_EQUAL((char *)((TJsonRawData)(blob->Get())).Data, "ABCDEFGHIJKLMNOPQR");
 
 	auto notExistsValue = (JsonValue<uint32_t> *)valuesWoInstance.GetField("notExistsValue");
 	CHECK_TRUE(notExistsValue == NULL);
-	valuesWoInstance.EndTryParse(doc);
+	valuesWoInstance.EndTryStringParse(doc);
 }
 
 TEST(JsonObjectTestsGroup, JsonObject_Values_Without_Instance_WriteTo_Test) {
@@ -466,4 +487,116 @@ TEST(JsonObjectTestsGroup, JsonObject_Values_Without_Instance_WriteTo_Test) {
 	valuesWoInstance.WriteToString(buffer, sizeof(buffer));
 
 	STRCMP_EQUAL(buffer, "{\"id\":1657052789,\"name\":\"Tomato\",\"blob\":\"ABCDEFGHIJKLMNOPQR\"}");
+}
+
+TEST(JsonObjectTestsGroup, JsonObject_Validate_Test) {
+	auto userDto = new UserDto();
+	CHECK_TRUE(userDto->Validate());
+	userDto->Role.Set(1000);
+	CHECK_FALSE(userDto->Validate());
+	CHECK_TRUE(userDto->TryStringParse("{\"name\":\"Joe Doe\",\"role\":999}"));
+	CHECK_FALSE(userDto->TryStringParse("{\"name\":\"Joe Doe\",\"role\":1000}"));
+	delete userDto;
+}
+
+class SetValueObjectDto : public JsonObject {
+  public:
+	JsonValue<int> Id;
+	JsonCommonValue<JsonArrayBase *> Goods;
+	JsonCommonValue<JsonObject *> User;
+	GoodsList goodsList;
+	UserDto userDto;
+
+	SetValueObjectDto(int id = {}, char *userName = {}, TUserRole userRole = {})
+		: Id(this, "id", id),				//
+		  Goods(this, "goods", &goodsList), //
+		  userDto(userName, userRole),		//
+		  User(this, "user", &userDto){};
+};
+
+TEST(JsonObjectTestsGroup, JsonObject_Update_ArrayValue_Test) {
+	SetValueObjectDto testDto(1657058000, "Joe Doe", TUserRole::uViewer);
+	testDto.goodsList.Add(new GoodsDto(1, 1657052789, "Keyboards", "K1-100", 58.25, 48.2));
+	testDto.goodsList.Add(new GoodsDto(2, 1657053789, "Keyboards", "K2-100", 158.25, 448.2));
+	testDto.goodsList.Add(new GoodsDto(3, 1657054789, "Keyboards", "K3-100", 258.25, 548.2));
+	testDto.goodsList.Add(new GoodsDto(4, 1657055789, "Keyboards", "K4-100", 358.25, 648.2));
+	CHECK_EQUAL(testDto.goodsList.Size(), 4);
+
+	GoodsList newGoodsList;
+	newGoodsList.Add(new GoodsDto(100, 1111, "Keyboards-111", "K111-100", 1158.25, 1148.2));
+	newGoodsList.Add(new GoodsDto(200, 2222, "Keyboards-222", "K222-100", 22158.25, 22448.2));
+
+	testDto.Goods.Set(&newGoodsList);
+
+	CHECK_EQUAL(testDto.goodsList.Size(), 2);
+	CHECK_EQUAL(testDto.goodsList.Item<GoodsDto *>(0)->Id.Get(), 100);
+	CHECK_EQUAL(testDto.goodsList.Item<GoodsDto *>(0)->Created.Get(), 1111);
+	STRCMP_EQUAL(testDto.goodsList.Item<GoodsDto *>(0)->Group.Get(), "Keyboards-111");
+	STRCMP_EQUAL(testDto.goodsList.Item<GoodsDto *>(0)->Name.Get(), "K111-100");
+	CHECK_EQUAL(testDto.goodsList.Item<GoodsDto *>(0)->Price.Get(), 1158.25);
+	CHECK_EQUAL(testDto.goodsList.Item<GoodsDto *>(0)->Quantity.Get(), 1148.2);
+
+	CHECK_EQUAL(testDto.goodsList.Item<GoodsDto *>(1)->Id.Get(), 200);
+	CHECK_EQUAL(testDto.goodsList.Item<GoodsDto *>(1)->Created.Get(), 2222);
+	STRCMP_EQUAL(testDto.goodsList.Item<GoodsDto *>(1)->Group.Get(), "Keyboards-222");
+	STRCMP_EQUAL(testDto.goodsList.Item<GoodsDto *>(1)->Name.Get(), "K222-100");
+	CHECK_EQUAL(testDto.goodsList.Item<GoodsDto *>(1)->Price.Get(), 22158.25);
+	CHECK_EQUAL(testDto.goodsList.Item<GoodsDto *>(1)->Quantity.Get(), 22448.2);
+}
+
+TEST(JsonObjectTestsGroup, JsonObject_Update_ObjectValue_Test) {
+	SetValueObjectDto testDto(1657058000, "Joe Doe", TUserRole::uViewer);
+
+	UserDto userDto("User 1", TUserRole::uAdmin);
+
+	testDto.User.Set(&userDto);
+	STRCMP_EQUAL(testDto.userDto.Name.Get(), "User 1");
+	CHECK_EQUAL(testDto.userDto.Role.Get(), TUserRole::uAdmin);
+}
+
+class NullValueObjectDto : public JsonObject {
+  public:
+	JsonValue<int> Id;
+	JsonCommonValue<JsonArrayBase *> Goods;
+	JsonCommonValue<JsonObject *> User;
+
+	NullValueObjectDto(int id = {})
+		: Id(this, "id", id),	//
+		  Goods(this, "goods"), //
+		  User(this, "user"){};
+};
+
+TEST(JsonObjectTestsGroup, JsonObject_Update_Nulled_ArrayValue_Test) {
+	NullValueObjectDto testDto(1657058000);
+
+	GoodsList newGoodsList;
+	newGoodsList.Add(new GoodsDto(100, 1111, "Keyboards-111", "K111-100", 1158.25, 1148.2));
+	newGoodsList.Add(new GoodsDto(200, 2222, "Keyboards-222", "K222-100", 22158.25, 22448.2));
+
+	testDto.Goods.Set(&newGoodsList);
+
+	CHECK_EQUAL(((GoodsList *)testDto.Goods.Get())->Size(), 2);
+	CHECK_EQUAL(((GoodsList *)testDto.Goods.Get())->Item<GoodsDto *>(0)->Id.Get(), 100);
+	CHECK_EQUAL(((GoodsList *)testDto.Goods.Get())->Item<GoodsDto *>(0)->Created.Get(), 1111);
+	STRCMP_EQUAL(((GoodsList *)testDto.Goods.Get())->Item<GoodsDto *>(0)->Group.Get(), "Keyboards-111");
+	STRCMP_EQUAL(((GoodsList *)testDto.Goods.Get())->Item<GoodsDto *>(0)->Name.Get(), "K111-100");
+	CHECK_EQUAL(((GoodsList *)testDto.Goods.Get())->Item<GoodsDto *>(0)->Price.Get(), 1158.25);
+	CHECK_EQUAL(((GoodsList *)testDto.Goods.Get())->Item<GoodsDto *>(0)->Quantity.Get(), 1148.2);
+
+	CHECK_EQUAL(((GoodsList *)testDto.Goods.Get())->Item<GoodsDto *>(1)->Id.Get(), 200);
+	CHECK_EQUAL(((GoodsList *)testDto.Goods.Get())->Item<GoodsDto *>(1)->Created.Get(), 2222);
+	STRCMP_EQUAL(((GoodsList *)testDto.Goods.Get())->Item<GoodsDto *>(1)->Group.Get(), "Keyboards-222");
+	STRCMP_EQUAL(((GoodsList *)testDto.Goods.Get())->Item<GoodsDto *>(1)->Name.Get(), "K222-100");
+	CHECK_EQUAL(((GoodsList *)testDto.Goods.Get())->Item<GoodsDto *>(1)->Price.Get(), 22158.25);
+	CHECK_EQUAL(((GoodsList *)testDto.Goods.Get())->Item<GoodsDto *>(1)->Quantity.Get(), 22448.2);
+}
+
+TEST(JsonObjectTestsGroup, JsonObject_Update_Nulled_ObjectValue_Test) {
+	NullValueObjectDto testDto(1657058000);
+
+	UserDto userDto("User 1", TUserRole::uAdmin);
+
+	testDto.User.Set(&userDto);
+	STRCMP_EQUAL(((UserDto *)testDto.User.Get())->Name.Get(), "User 1");
+	CHECK_EQUAL(((UserDto *)testDto.User.Get())->Role.Get(), TUserRole::uAdmin);
 }

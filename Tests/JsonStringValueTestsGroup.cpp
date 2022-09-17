@@ -27,11 +27,11 @@ TEST(JsonStringValueGroup, JsonStringValue_TryParse_Test) {
 	rapidjson::Document doc;
 	doc.Parse("{\"testString\":\"User1\"}");
 	CHECK_TRUE(testable.TryParse(&doc));
-	STRCMP_EQUAL(testable.Value, "User1");
+	STRCMP_EQUAL(testable.Get(), "User1");
 
 	doc.Parse("{\"testString\":null}");
 	CHECK_TRUE(testable.TryParse(&doc));
-	CHECK_EQUAL(testable.Value, NULL);
+	CHECK_EQUAL(testable.Get(), NULL);
 }
 
 TEST(JsonStringValueGroup, JsonStringValue_WriteTo_Test) {
@@ -55,10 +55,10 @@ TEST(JsonStringValueGroup, JsonStringValue_WriteTo_Test) {
 TEST(JsonStringValueGroup, JsonStringValue_SetValue_Test) {
 	JsonFieldsContainer container;
 	JsonValue<char *> testable(&container, "testString");
-	STRCMP_EQUAL(testable.Value, NULL);
+	STRCMP_EQUAL(testable.Get(), NULL);
 
-	testable.Value = "0123456789";
-	STRCMP_EQUAL(testable.Value, "0123456789");
+	testable.Set("0123456789");
+	STRCMP_EQUAL(testable.Get(), "0123456789");
 }
 
 TEST(JsonStringValueGroup, JsonStringValue_Equals_Test) {
@@ -71,7 +71,7 @@ TEST(JsonStringValueGroup, JsonStringValue_Equals_Test) {
 	CHECK_FALSE(testable1 != testable01);
 	CHECK_TRUE(testable1.Equals(&testable01));
 	CHECK_TRUE(testable01.Equals(&testable1));
-	testable01.Value = "otherValue";
+	testable01.Set("otherValue");
 	CHECK_TRUE(testable1 != testable01);
 	CHECK_FALSE(testable1 == testable01);
 	CHECK_FALSE(testable1.Equals(&testable01));
@@ -84,12 +84,12 @@ TEST(JsonStringValueGroup, JsonStringValue_Equals_Test) {
 	JsonValue<char *> testable2(&container, "test");
 	JsonValue<char *> testable02(&container, "test", NULL);
 	CHECK_TRUE(testable2 == testable02);
-	testable2.Value = "123";
+	testable2.Set("123");
 	CHECK_FALSE(testable2 == testable02);
 
-	testable2.Value = NULL;
+	testable2.Set(NULL);
 	CHECK_TRUE(testable2 == testable02);
-	testable02.Value = "123";
+	testable02.Set("123");
 	CHECK_FALSE(testable2 == testable02);
 }
 
@@ -100,8 +100,8 @@ TEST(JsonStringValueGroup, JsonStringValue_CloneTo_Test) {
 	JsonValue<char *> clone1(&container, "test");
 
 	testable1.CloneTo((JsonValueBase *)&clone1);
-	testable1.Value = "check the full data buffer is cloned";
-	STRCMP_EQUAL(clone1.Value, "0123456789");
+	testable1.Set("check the full data buffer is cloned");
+	STRCMP_EQUAL(clone1.Get(), "0123456789");
 }
 
 TEST(JsonStringValueGroup, JsonStringValue_Common_TryParse_Test) {
@@ -120,7 +120,7 @@ TEST(JsonStringValueGroup, JsonStringValue_Common_TryParse_Test) {
 	testable1.ResetToNull();
 	doc.Parse("{\"test\":\"01234\"}");
 	CHECK_TRUE(testable1.TryParse(&doc));
-	STRCMP_EQUAL(testable1.Value, "01234");
+	STRCMP_EQUAL(testable1.Get(), "01234");
 	CHECK_TRUE(testable1.Presented());
 	CHECK_FALSE(testable1.IsNull());
 
@@ -140,26 +140,49 @@ TEST(JsonStringValueGroup, JsonStringValue_Null_And_Empty_Value_Test) {
 	JsonCommonValue<char *> testCommonNull(&container, "testNull", NULL);
 	JsonCommonValue<char *> testCommonEmpty(&container, "testEmpty", "");
 
-	CHECK_EQUAL(testDefault.Value, NULL);
-	CHECK_EQUAL(testNull.Value, NULL);
-	STRCMP_EQUAL(testEmpty.Value, "");
+	CHECK_EQUAL(testDefault.Get(), NULL);
+	CHECK_EQUAL(testNull.Get(), NULL);
+	STRCMP_EQUAL(testEmpty.Get(), "");
 
 	CHECK_TRUE(testCommonDefault.IsNull());
 	CHECK_TRUE(testCommonNull.IsNull());
 	CHECK_FALSE(testCommonEmpty.IsNull());
-	CHECK_EQUAL(testCommonDefault.Value, NULL);
-	CHECK_EQUAL(testCommonNull.Value, NULL);
-	STRCMP_EQUAL(testCommonEmpty.Value, "");
+	CHECK_EQUAL(testCommonDefault.Get(), NULL);
+	CHECK_EQUAL(testCommonNull.Get(), NULL);
+	STRCMP_EQUAL(testCommonEmpty.Get(), "");
 
-	testDefault.Value = "";
-	STRCMP_EQUAL(testDefault.Value, "");
+	testDefault.Set("");
+	STRCMP_EQUAL(testDefault.Get(), "");
 
-	testEmpty.Value = NULL;
-	CHECK_EQUAL(testEmpty.Value, NULL);
+	testEmpty.Set(NULL);
+	CHECK_EQUAL(testEmpty.Get(), NULL);
 
-	testCommonDefault.Value = "";
-	STRCMP_EQUAL(testDefault.Value, "");
+	testCommonDefault.Set("");
+	STRCMP_EQUAL(testCommonDefault.Get(), "");
 
-	testCommonEmpty.Value = NULL;
-	CHECK_EQUAL(testEmpty.Value, NULL);
+	testCommonEmpty.Set(NULL);
+	CHECK_EQUAL(testCommonEmpty.Get(), NULL);
+}
+
+TEST(JsonStringValueGroup, JsonStringValue_Common_Change_Presented_After_Set_Value_Test) {
+	JsonFieldsContainer container;
+	JsonCommonValue<char *> testable1(&container, "test");
+
+	CHECK_FALSE(testable1.Presented());
+
+	testable1.Set("");
+	CHECK_TRUE(testable1.Presented());
+}
+
+TEST(JsonStringValueGroup, JsonStringValue_Common_Change_IsNull_After_Set_Value_Test) {
+	JsonFieldsContainer container;
+	JsonCommonValue<char *> testable1(&container, "test");
+
+	rapidjson::Document doc;
+	doc.Parse("{\"test\":null}");
+	CHECK_TRUE(testable1.TryParse(&doc));
+	CHECK_TRUE(testable1.IsNull());
+
+	testable1.Set("");
+	CHECK_FALSE(testable1.IsNull());
 }

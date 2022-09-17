@@ -104,13 +104,13 @@ void JsonFloatField_Equals_Test() {
 	if (testable1.Equals(&testable01)) { printf("111\n"); }
 	if (testable1 == testable01) { printf("111\n"); }
 	if (!(testable1 != testable01)) { printf("222\n"); }
-	testable01.Value = testable01.Value + 1;
+	testable01.Set(testable01.Get() + 1);
 	if (testable1 != testable01) { printf("333\n"); }
 	if (!(testable1 == testable01)) { printf("444\n"); }
 
 	if (testable2 == testable02) { printf("555\n"); }
 	if (!(testable2 != testable02)) { printf("777\n"); }
-	testable02.Value = testable02.Value + 1;
+	testable02.Set(testable02.Get() + 1);
 	if (testable2 != testable02) { printf("888\n"); }
 	if (!(testable2 == testable02)) { printf("999\n"); }
 }
@@ -126,37 +126,37 @@ void JsonFloatCommonField_Equals_Test() {
 	if (testable1.Equals(&testable01)) { printf("111\n"); }
 	if (testable1 == testable01) { printf("111\n"); }
 	if (!(testable1 != testable01)) { printf("222\n"); }
-	testable01.Value = testable01.Value + 1;
+	testable01.Set(testable01.Get() + 1);
 	if (testable1 != testable01) { printf("333\n"); }
 	if (!(testable1 == testable01)) { printf("444\n"); }
 
 	if (testable2 == testable02) { printf("555\n"); }
 	if (!(testable2 != testable02)) { printf("777\n"); }
-	testable02.Value = testable02.Value + 1;
+	testable02.Set(testable02.Get() + 1);
 	if (testable2 != testable02) { printf("888\n"); }
 	if (!(testable2 == testable02)) { printf("999\n"); }
 }
 
 void JsonStringValue_CloneTo_Test() {
 	JsonFieldsContainer container;
-	JsonValue<char *> testable1(&container, "test", (char *)"0123456789");
+	JsonValue<char *> testable1(&container, "test", "0123456789");
 
 	JsonValue<char *> clone1(&container, "test");
 
 	testable1.CloneTo((JsonValueBase *)&clone1);
-	testable1.Value = (char *)"check the full data buffer is cloned";
-	if (clone1.Value == (char *)"0123456789") { printf("1000\n"); }
+	testable1.Set("check the full data buffer is cloned");
+	if (clone1.Get() == "0123456789") { printf("1000\n"); }
 }
 
 void JsonStringCommonValue_CloneTo_Test() {
 	JsonFieldsContainer container;
-	JsonCommonValue<char *> testable1(&container, "test", (char *)"0123456789");
+	JsonCommonValue<char *> testable1(&container, "test", "0123456789");
 
 	JsonCommonValue<char *> clone1(&container, "test");
 
 	testable1.CloneTo((JsonValueBase *)&clone1);
-	testable1.Value = (char *)"check the full data buffer is cloned";
-	if (clone1.Value == (char *)"0123456789") { printf("1000\n"); }
+	testable1.Set("check the full data buffer is cloned");
+	if (clone1.Get() == "0123456789") { printf("1000\n"); }
 }
 
 int main(const int argc, const char *argv[]) {
@@ -192,8 +192,8 @@ int main(const int argc, const char *argv[]) {
 	JsonStringValue_CloneTo_Test();
 	JsonStringCommonValue_CloneTo_Test();
 
-	// 	auto res = intObj.TryParse("{\"test\":19}");
-	// 	printf("intObj.TryParse res:%d, val:%d\n", res, (int)intObj.Value);
+	// 	auto res = intObj.TryStringParse("{\"test\":19}");
+	// 	printf("intObj.TryParse res:%d, val:%d\n", res, (int)intObj.Get());
 
 	// 	rapidjson::Document doc;
 	// 	doc.SetObject();
@@ -207,8 +207,8 @@ int main(const int argc, const char *argv[]) {
 	// {
 	// 	JsonFieldsContainer container;
 	// 	JsonValue<char *, false> strObj(&container, "testStr", "hello json");
-	// 	auto res = strObj.TryParse("{\"testStr\":\"0123456 abcdef\"}");
-	// 	printf("strObj.TryParse res:%d, val:%s\n", res, (char *)strObj.Value);
+	// 	auto res = strObj.TryStringParse("{\"testStr\":\"0123456 abcdef\"}");
+	// 	printf("strObj.TryParse res:%d, val:%s\n", res, strObj.Get());
 
 	// 	rapidjson::Document doc;
 	// 	doc.SetObject();
@@ -224,7 +224,7 @@ int main(const int argc, const char *argv[]) {
 	// JsonStringField testableString("testName", "test1");
 	// JsonNumericField<uint32_t> testableUint("testName", 100);
 
-	// std::cout << testableString.Name << " " << testableString.Value << std::endl;
-	// std::cout << testableUint.Name << " " << testableUint.Value << std::endl;
+	// std::cout << testableString.Name << " " << testableString.Get() << std::endl;
+	// std::cout << testableUint.Name << " " << testableUint.Get() << std::endl;
 	return EXIT_SUCCESS;
 }

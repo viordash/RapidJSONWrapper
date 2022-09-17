@@ -4,14 +4,14 @@
 #include <stdlib.h>
 #include "JsonWrapper.h"
 
-bool JsonArrayBase::TryParse(const char *jsonStr, size_t length) {
-	auto doc = BeginTryParse(jsonStr, length);
+bool JsonArrayBase::TryStringParse(const char *jsonStr, size_t length) {
+	auto doc = BeginTryStringParse(jsonStr, length);
 	if (doc == NULL) { return false; }
-	EndTryParse(doc);
+	EndTryStringParse(doc);
 	return true;
 }
 
-TJsonDocument *JsonArrayBase::BeginTryParse(const char *jsonStr, size_t length) {
+TJsonDocument *JsonArrayBase::BeginTryStringParse(const char *jsonStr, size_t length) {
 	if (jsonStr == NULL) { return NULL; }
 
 	rapidjson::Document *doc = new rapidjson::Document();
@@ -27,7 +27,7 @@ TJsonDocument *JsonArrayBase::BeginTryParse(const char *jsonStr, size_t length) 
 	return doc;
 }
 
-void JsonArrayBase::EndTryParse(TJsonDocument *doc) { delete doc; }
+void JsonArrayBase::EndTryStringParse(TJsonDocument *doc) { delete doc; }
 
 size_t JsonArrayBase::WriteToString(char *outBuffer, size_t outBufferSize) {
 	rapidjson::Document doc;
