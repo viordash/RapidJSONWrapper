@@ -141,7 +141,7 @@
             "name": "(Windows) Launch",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Tests/Debug/RapidJSONWrapper.exe",
+            "program": "${workspaceFolder}/build/Debug/RapidJSONWrapper.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
