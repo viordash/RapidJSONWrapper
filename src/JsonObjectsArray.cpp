@@ -94,6 +94,21 @@ void JsonObjectsArray::CloneTo(JsonArrayBase *other) {
 	}
 }
 
+void JsonObjectsArray::MoveTo(JsonArrayBase *other, JsonObject *item) {
+	auto otherArray = ((JsonObjectsArray *)other);
+	auto iter = std::find(Items.begin(), Items.end(), item);
+	if (iter != Items.end()) {
+		otherArray->AddInternal(*iter);
+		Items.erase(iter);
+	}
+}
+
+void JsonObjectsArray::MoveAllTo(JsonArrayBase *other) {
+	auto otherArray = ((JsonObjectsArray *)other);
+	for (const auto &item : Items) { otherArray->AddInternal(item); }
+	Items.clear();
+}
+
 void JsonObjectsArray::Clear() {
 	for (const auto &item : Items) { DeleteItem(item); }
 	Items.clear();
