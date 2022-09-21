@@ -8,7 +8,13 @@
 
 int main(int ac, char **av) { return RUN_ALL_TESTS(ac, av); }
 
-TEST_GROUP(JsonArrayTestsGroup){void setup(){} void teardown(){}};
+size_t maxCount = 10;
+
+TEST_GROUP(JsonArrayTestsGroup){void setup(){maxCount = 10;
+}
+void teardown() {}
+}
+;
 
 class UserDto : public JsonObject {
   public:
@@ -21,8 +27,6 @@ class UserDto : public JsonObject {
 
 	bool Validate() override { return Role.Get() < 1000; }
 };
-
-static size_t maxCount = 10;
 
 class UsersList : public JsonObjectsArray {
   public:
@@ -388,6 +392,25 @@ TEST(JsonArrayTestsGroup, JsonObjectArray_MoveTo_Test) {
 	CHECK_EQUAL(list2.Item<UserDto *>(3)->Role.Get(), 10);
 }
 
+TEST(JsonArrayTestsGroup, JsonObjectArray_MoveTo_With_Validation_Test) {
+	maxCount = 3;
+	auto list1 = new UsersList();
+	list1->Add(new UserDto("user 1", 0));
+	list1->Add(new UserDto("user 2", 10));
+
+	UsersList list2;
+	list2.Add(new UserDto(" 1", 0));
+	list2.Add(new UserDto(" 2", 10));
+
+	auto item0 = list1->Item<UserDto *>(0);
+	auto item1 = list1->Item<UserDto *>(1);
+	list1->MoveTo(&list2, item0);
+	list1->MoveTo(&list2, item1);
+	CHECK_EQUAL(list1->Size(), 1);
+	delete list1;
+	CHECK_EQUAL(list2.Size(), 3);
+}
+
 TEST(JsonArrayTestsGroup, JsonObjectArray_MoveAllTo_Test) {
 	auto list1 = new UsersList();
 	list1->Add(new UserDto("user 1", 0));
@@ -416,6 +439,22 @@ TEST(JsonArrayTestsGroup, JsonObjectArray_MoveAllTo_Test) {
 	CHECK_EQUAL(list2.Item<UserDto *>(4)->Role.Get(), 100);
 	STRCMP_EQUAL(list2.Item<UserDto *>(5)->Name.Get(), "user 4");
 	CHECK_EQUAL(list2.Item<UserDto *>(5)->Role.Get(), 999);
+}
+
+TEST(JsonArrayTestsGroup, JsonObjectArray_MoveAllTo_With_Validation_Test) {
+	maxCount = 3;
+	auto list1 = new UsersList();
+	list1->Add(new UserDto("user 1", 0));
+	list1->Add(new UserDto("user 2", 10));
+
+	UsersList list2;
+	list2.Add(new UserDto(" 1", 0));
+	list2.Add(new UserDto(" 2", 10));
+
+	list1->MoveAllTo(&list2);
+	CHECK_EQUAL(list1->Size(), 1);
+	delete list1;
+	CHECK_EQUAL(list2.Size(), 3);
 }
 
 TEST(JsonArrayTestsGroup, JsonStringArray_Parse_Test) {

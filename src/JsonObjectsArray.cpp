@@ -98,15 +98,24 @@ void JsonObjectsArray::MoveTo(JsonArrayBase *other, JsonObject *item) {
 	auto otherArray = ((JsonObjectsArray *)other);
 	auto iter = std::find(Items.begin(), Items.end(), item);
 	if (iter != Items.end()) {
-		otherArray->AddInternal(*iter);
-		Items.erase(iter);
+		if (otherArray->Validate(*iter)) {
+			otherArray->AddInternal(*iter);
+			Items.erase(iter);
+		}
 	}
 }
 
 void JsonObjectsArray::MoveAllTo(JsonArrayBase *other) {
 	auto otherArray = ((JsonObjectsArray *)other);
-	for (const auto &item : Items) { otherArray->AddInternal(item); }
-	Items.clear();
+	auto iter = Items.begin();
+	while (iter != Items.end()) {
+		if (otherArray->Validate(*iter)) {
+			otherArray->AddInternal(*iter);
+			iter = Items.erase(iter);
+		} else {
+			iter++;
+		}
+	}
 }
 
 void JsonObjectsArray::Clear() {
