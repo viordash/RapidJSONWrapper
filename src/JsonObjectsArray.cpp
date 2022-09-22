@@ -101,6 +101,8 @@ typename std::vector<JsonObject *>::iterator JsonObjectsArray::MoveTo(JsonArrayB
 		if (otherArray->Validate(*iter)) {
 			otherArray->AddInternal(*iter);
 			iter = Items.erase(iter);
+		} else {
+			iter++;
 		}
 	}
 	return iter;

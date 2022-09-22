@@ -420,6 +420,7 @@ TEST(JsonArrayTestsGroup, JsonObjectArray_MoveTo_With_Validation_Test) {
 	auto list1 = new UsersList();
 	list1->Add(new UserDto("user 1", 0));
 	list1->Add(new UserDto("user 2", 10));
+	list1->Add(new UserDto("user 3", 100));
 
 	UsersList list2;
 	list2.Add(new UserDto(" 1", 0));
@@ -427,9 +428,12 @@ TEST(JsonArrayTestsGroup, JsonObjectArray_MoveTo_With_Validation_Test) {
 
 	auto item0 = list1->Item<UserDto *>(0);
 	auto item1 = list1->Item<UserDto *>(1);
-	list1->MoveTo(&list2, item0);
-	list1->MoveTo(&list2, item1);
-	CHECK_EQUAL(list1->Size(), 1);
+	auto iter = list1->MoveTo(&list2, item0);
+	STRCMP_EQUAL(((UserDto *)*iter)->Name.Get(), "user 2");
+
+	iter = list1->MoveTo(&list2, item1);
+	STRCMP_EQUAL(((UserDto *)*iter)->Name.Get(), "user 3");
+	CHECK_EQUAL(list1->Size(), 2);
 	delete list1;
 	CHECK_EQUAL(list2.Size(), 3);
 }
