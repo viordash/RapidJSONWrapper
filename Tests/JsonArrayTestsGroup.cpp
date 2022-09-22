@@ -376,8 +376,11 @@ TEST(JsonArrayTestsGroup, JsonObjectArray_MoveTo_Test) {
 
 	auto item0 = list1->Item<UserDto *>(0);
 	auto item1 = list1->Item<UserDto *>(1);
-	list1->MoveTo(&list2, item0);
-	list1->MoveTo(&list2, item1);
+	auto iter = list1->MoveTo(&list2, item0);
+	STRCMP_EQUAL(((UserDto *)*iter)->Name.Get(), "user 2");
+
+	iter = list1->MoveTo(&list2, item1);
+	STRCMP_EQUAL(((UserDto *)*iter)->Name.Get(), "user 3");
 	CHECK_EQUAL(list1->Size(), 2);
 	delete list1;
 	CHECK_EQUAL(list2.Size(), 4);
@@ -390,6 +393,26 @@ TEST(JsonArrayTestsGroup, JsonObjectArray_MoveTo_Test) {
 	CHECK_EQUAL(list2.Item<UserDto *>(2)->Role.Get(), 0);
 	STRCMP_EQUAL(list2.Item<UserDto *>(3)->Name.Get(), "user 2");
 	CHECK_EQUAL(list2.Item<UserDto *>(3)->Role.Get(), 10);
+}
+
+TEST(JsonArrayTestsGroup, JsonObjectArray_MoveTo_For_Non_Native_Test) {
+	auto list1 = new UsersList();
+	list1->Add(new UserDto("user 1", 0));
+	list1->Add(new UserDto("user 2", 10));
+
+	UsersList list2;
+	list2.Add(new UserDto(" 1", 0));
+
+	auto iter = list1->MoveTo(&list2, NULL);
+	CHECK(iter == list1->End());
+
+	UserDto other("user 1", 0);
+	iter = list1->MoveTo(&list2, &other);
+	CHECK(iter == list1->End());
+
+	iter = list1->MoveTo(&list2, *list2.Begin());
+	CHECK(iter == list1->End());
+	delete list1;
 }
 
 TEST(JsonArrayTestsGroup, JsonObjectArray_MoveTo_With_Validation_Test) {

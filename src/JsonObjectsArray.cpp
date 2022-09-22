@@ -94,15 +94,16 @@ void JsonObjectsArray::CloneTo(JsonArrayBase *other) {
 	}
 }
 
-void JsonObjectsArray::MoveTo(JsonArrayBase *other, JsonObject *item) {
+typename std::vector<JsonObject *>::iterator JsonObjectsArray::MoveTo(JsonArrayBase *other, JsonObject *item) {
 	auto otherArray = ((JsonObjectsArray *)other);
 	auto iter = std::find(Items.begin(), Items.end(), item);
 	if (iter != Items.end()) {
 		if (otherArray->Validate(*iter)) {
 			otherArray->AddInternal(*iter);
-			Items.erase(iter);
+			iter = Items.erase(iter);
 		}
 	}
+	return iter;
 }
 
 void JsonObjectsArray::MoveAllTo(JsonArrayBase *other) {
