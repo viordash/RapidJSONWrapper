@@ -148,6 +148,9 @@ class JsonObjectsArray : public JsonArrayBase {
 
 	bool Equals(JsonArrayBase *other) override;
 	void CloneTo(JsonArrayBase *other) override;
+	typename std::vector<JsonObject *>::iterator MoveTo(JsonArrayBase *other, JsonObject *item);
+	void MoveAllTo(JsonArrayBase *other);
+
 	void Clear() override;
 	virtual bool Validate(JsonObject *item) = 0;
 	virtual JsonObject *CreateItem() = 0;

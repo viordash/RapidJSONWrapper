@@ -8,7 +8,13 @@
 
 int main(int ac, char **av) { return RUN_ALL_TESTS(ac, av); }
 
-TEST_GROUP(JsonArrayTestsGroup){void setup(){} void teardown(){}};
+size_t maxCount = 10;
+
+TEST_GROUP(JsonArrayTestsGroup){void setup(){maxCount = 10;
+}
+void teardown() {}
+}
+;
 
 class UserDto : public JsonObject {
   public:
@@ -21,8 +27,6 @@ class UserDto : public JsonObject {
 
 	bool Validate() override { return Role.Get() < 1000; }
 };
-
-static size_t maxCount = 10;
 
 class UsersList : public JsonObjectsArray {
   public:
@@ -357,6 +361,127 @@ TEST(JsonArrayTestsGroup, JsonObjectArray_Clear_Test) {
 	CHECK_TRUE(list.TryStringParse("[{\"name\":\"User1\",\"role\":100},{\"name\":\"User2\",\"role\":0},{\"name\":\"User3\","
 								   "\"role\":255}]"));
 	CHECK_EQUAL(list.Size(), 3);
+}
+
+TEST(JsonArrayTestsGroup, JsonObjectArray_MoveTo_Test) {
+	auto list1 = new UsersList();
+	list1->Add(new UserDto("user 1", 0));
+	list1->Add(new UserDto("user 2", 10));
+	list1->Add(new UserDto("user 3", 100));
+	list1->Add(new UserDto("user 4", 999));
+
+	UsersList list2;
+	list2.Add(new UserDto(" 1", 0));
+	list2.Add(new UserDto(" 2", 10));
+
+	auto item0 = list1->Item<UserDto *>(0);
+	auto item1 = list1->Item<UserDto *>(1);
+	auto iter = list1->MoveTo(&list2, item0);
+	STRCMP_EQUAL(((UserDto *)*iter)->Name.Get(), "user 2");
+
+	iter = list1->MoveTo(&list2, item1);
+	STRCMP_EQUAL(((UserDto *)*iter)->Name.Get(), "user 3");
+	CHECK_EQUAL(list1->Size(), 2);
+	delete list1;
+	CHECK_EQUAL(list2.Size(), 4);
+
+	STRCMP_EQUAL(list2.Item<UserDto *>(0)->Name.Get(), " 1");
+	CHECK_EQUAL(list2.Item<UserDto *>(0)->Role.Get(), 0);
+	STRCMP_EQUAL(list2.Item<UserDto *>(1)->Name.Get(), " 2");
+	CHECK_EQUAL(list2.Item<UserDto *>(1)->Role.Get(), 10);
+	STRCMP_EQUAL(list2.Item<UserDto *>(2)->Name.Get(), "user 1");
+	CHECK_EQUAL(list2.Item<UserDto *>(2)->Role.Get(), 0);
+	STRCMP_EQUAL(list2.Item<UserDto *>(3)->Name.Get(), "user 2");
+	CHECK_EQUAL(list2.Item<UserDto *>(3)->Role.Get(), 10);
+}
+
+TEST(JsonArrayTestsGroup, JsonObjectArray_MoveTo_For_Non_Native_Test) {
+	auto list1 = new UsersList();
+	list1->Add(new UserDto("user 1", 0));
+	list1->Add(new UserDto("user 2", 10));
+
+	UsersList list2;
+	list2.Add(new UserDto(" 1", 0));
+
+	auto iter = list1->MoveTo(&list2, NULL);
+	CHECK(iter == list1->End());
+
+	UserDto other("user 1", 0);
+	iter = list1->MoveTo(&list2, &other);
+	CHECK(iter == list1->End());
+
+	iter = list1->MoveTo(&list2, *list2.Begin());
+	CHECK(iter == list1->End());
+	delete list1;
+}
+
+TEST(JsonArrayTestsGroup, JsonObjectArray_MoveTo_With_Validation_Test) {
+	maxCount = 3;
+	auto list1 = new UsersList();
+	list1->Add(new UserDto("user 1", 0));
+	list1->Add(new UserDto("user 2", 10));
+	list1->Add(new UserDto("user 3", 100));
+
+	UsersList list2;
+	list2.Add(new UserDto(" 1", 0));
+	list2.Add(new UserDto(" 2", 10));
+
+	auto item0 = list1->Item<UserDto *>(0);
+	auto item1 = list1->Item<UserDto *>(1);
+	auto iter = list1->MoveTo(&list2, item0);
+	STRCMP_EQUAL(((UserDto *)*iter)->Name.Get(), "user 2");
+
+	iter = list1->MoveTo(&list2, item1);
+	STRCMP_EQUAL(((UserDto *)*iter)->Name.Get(), "user 3");
+	CHECK_EQUAL(list1->Size(), 2);
+	delete list1;
+	CHECK_EQUAL(list2.Size(), 3);
+}
+
+TEST(JsonArrayTestsGroup, JsonObjectArray_MoveAllTo_Test) {
+	auto list1 = new UsersList();
+	list1->Add(new UserDto("user 1", 0));
+	list1->Add(new UserDto("user 2", 10));
+	list1->Add(new UserDto("user 3", 100));
+	list1->Add(new UserDto("user 4", 999));
+
+	UsersList list2;
+	list2.Add(new UserDto(" 1", 0));
+	list2.Add(new UserDto(" 2", 10));
+
+	list1->MoveAllTo(&list2);
+	CHECK_EQUAL(list1->Size(), 0);
+	delete list1;
+	CHECK_EQUAL(list2.Size(), 6);
+
+	STRCMP_EQUAL(list2.Item<UserDto *>(0)->Name.Get(), " 1");
+	CHECK_EQUAL(list2.Item<UserDto *>(0)->Role.Get(), 0);
+	STRCMP_EQUAL(list2.Item<UserDto *>(1)->Name.Get(), " 2");
+	CHECK_EQUAL(list2.Item<UserDto *>(1)->Role.Get(), 10);
+	STRCMP_EQUAL(list2.Item<UserDto *>(2)->Name.Get(), "user 1");
+	CHECK_EQUAL(list2.Item<UserDto *>(2)->Role.Get(), 0);
+	STRCMP_EQUAL(list2.Item<UserDto *>(3)->Name.Get(), "user 2");
+	CHECK_EQUAL(list2.Item<UserDto *>(3)->Role.Get(), 10);
+	STRCMP_EQUAL(list2.Item<UserDto *>(4)->Name.Get(), "user 3");
+	CHECK_EQUAL(list2.Item<UserDto *>(4)->Role.Get(), 100);
+	STRCMP_EQUAL(list2.Item<UserDto *>(5)->Name.Get(), "user 4");
+	CHECK_EQUAL(list2.Item<UserDto *>(5)->Role.Get(), 999);
+}
+
+TEST(JsonArrayTestsGroup, JsonObjectArray_MoveAllTo_With_Validation_Test) {
+	maxCount = 3;
+	auto list1 = new UsersList();
+	list1->Add(new UserDto("user 1", 0));
+	list1->Add(new UserDto("user 2", 10));
+
+	UsersList list2;
+	list2.Add(new UserDto(" 1", 0));
+	list2.Add(new UserDto(" 2", 10));
+
+	list1->MoveAllTo(&list2);
+	CHECK_EQUAL(list1->Size(), 1);
+	delete list1;
+	CHECK_EQUAL(list2.Size(), 3);
 }
 
 TEST(JsonArrayTestsGroup, JsonStringArray_Parse_Test) {

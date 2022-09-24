@@ -4,6 +4,7 @@
 #include "rapidjson/writer.h"
 #include "rapidjson/stringbuffer.h"
 #include <vector>
+#include <algorithm>
 
 typedef rapidjson::Document TJsonDocument;
 typedef rapidjson::Value::Array TJsonArray;
