@@ -138,7 +138,7 @@ static TGoodsDto *DeserializeGoodsDto(rapidjson::Value *doc) {
 
 	auto goodsDto = new TGoodsDto();
 	goodsDto->id = id->value.GetInt();
-	goodsDto->created = id->value.GetUint();
+	goodsDto->created = created->value.GetUint();
 	goodsDto->group = strDuplicate(group->value.GetString());
 	goodsDto->name = strDuplicate(name->value.GetString());
 	goodsDto->price = price->value.GetDouble();
