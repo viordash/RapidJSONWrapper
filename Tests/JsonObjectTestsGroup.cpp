@@ -474,7 +474,7 @@ TEST(JsonObjectTestsGroup, JsonObject_Values_Without_Instance_Parse_Test) {
 
 	auto blob = (JsonValue<TJsonRawData> *)valuesWoInstance.GetField("blob");
 	CHECK_FALSE(blob == NULL);
-	STRCMP_EQUAL((char *)((TJsonRawData)(blob->Get())).Data, "ABCDEFGHIJKLMNOPQR");
+	STRNCMP_EQUAL((char *)((TJsonRawData)(blob->Get())).Data, "ABCDEFGHIJKLMNOPQR", ((TJsonRawData)(blob->Get())).Size);
 
 	auto notExistsValue = (JsonValue<uint32_t> *)valuesWoInstance.GetField("notExistsValue");
 	CHECK_TRUE(notExistsValue == NULL);
