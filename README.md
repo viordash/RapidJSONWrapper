@@ -1,4 +1,6 @@
 # RapidJSONWrapper
+[![CMake](https://github.com/viordash/RapidJSONWrapper/actions/workflows/cmake.yml/badge.svg?branch=master)](https://github.com/viordash/RapidJSONWrapper/actions/workflows/cmake.yml)
+
 Wrap RapidJSON to be used as objects of predefined class
 
 
